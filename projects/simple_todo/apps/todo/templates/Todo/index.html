@@ -1,0 +1,29 @@
+{{extend "layout.html"}}
+
+{{block content}}
+<div class="box">
+    <div class="box todos">
+        <h2 class="box">待办事项</h2>
+        <ul>
+            {{for todo in todos:}}
+                <li>
+                    {{=todo.title}}
+                    &nbsp;
+                    <span class="action">
+                        <a href="/todo/edit/{{=todo.id}}">修改</a>,
+                        <a href="/todo/delete/{{=todo.id}}" 
+                            onclick="return confirm('删除以后不能恢复的，确定？')">删除</a>
+                    </span>
+                </li>
+            {{pass}}
+        </ul>
+    </div>
+    <div class="box post">
+        <h2>新增</h2>
+        <form action="/todo/new" method="post" id="post_new">
+            <p><input type="text" name="title" class="long_txt" /></p>
+            <p><input type="submit" class="submit" value="添加" /></p>
+        </form>
+    </div>
+</div>
+{{end}}

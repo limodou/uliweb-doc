@@ -1,0 +1,13 @@
+{{extend "layout.html"}}
+
+{{block content}}
+    <div class="content">
+        <h1 style="font-weight:400;">
+            出错了！{{=message}}
+        </h1>
+        <p>
+            <a href="javascript: history.back();">返回</a> |
+            <a href="/">首页</a>
+        </p>
+    </div>
+{{end}}
