@@ -658,5 +658,5 @@ templates中定义一个和Todo一样的目录，然后将index.html放到这个
 view的东西，我想有机会在下一个提高教程中向大家展示这个东西。当然，它会基于更多的
 依赖，所以未必会适合你，但是却是一个我认为不错的扩展的思路。
 
-写得比较仓促，欢迎与我讨论。程序代码可以从 http://code.google.com/p/uliweb-tests/
+写得比较仓促，欢迎与我讨论。程序代码可以从 https://github.com/limodou/uliweb-doc
 中的simple_todo中找到，包括我使用sphinx写的教程。
