@@ -12,6 +12,8 @@ Contents:
    :maxdepth: 2
    
    basic.rst
+   xmlrpc.rst
+   i18n.rst
 
 Indices and tables
 ==================
