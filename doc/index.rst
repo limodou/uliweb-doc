@@ -9,11 +9,12 @@ Simple Todo (Uliweb 版本) 教程
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    
    basic.rst
    xmlrpc.rst
    i18n.rst
+   mail.rst
 
 Indices and tables
 ==================
