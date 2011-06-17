@@ -12,8 +12,11 @@ URL管理的时候，Uliweb会自动将所有有效的app的视图文件在启�
 所有的URL的定义。因此，只要你按规则进行定义文件名，在其中定义的URL就可以被自动发现。因此像：
 views.py, views_about.py都是合法的view模块。
 
+基于函数的View方法
+-------------------
+
 view函数的定义
------------------
+=================
 
 在Uliweb中，一个view函数可以简单地定义为:
 
@@ -43,7 +46,7 @@ expose后面是可以没有参数的，如::
 省映射了。
 
 view函数的参数
----------------
+=================
 
 view函数是可以有参数的，但首先你需要先在它的URL中定义参数，如果URL中有参数，则view中就
 要定义参数，如果没有则view中一般也没有。带参数的例子::
@@ -52,7 +55,7 @@ view函数是可以有参数的，但首先你需要先在它的URL中定义参�
     def show_document(filename, lang):
         return _show(request, response, filename, env, lang, False)
 
-关于URL的参数定义，参见 `URL映射 <url_mapping>`_ 的文档。这里可以看出，定义了两个参数：
+关于URL的参数定义，参见 `URL映射 <url_mapping.html>`_ 的文档。这里可以看出，定义了两个参数：
 lang和filename，所以在下面的view函数中也定义了两个参数。
 
 但如果你的URL中没有那么多的参数怎么办？这个可以在URL的定义中解决，如::
@@ -65,7 +68,7 @@ lang和filename，所以在下面的view函数中也定义了两个参数。
 则在第一个URL的定义中，只有一个filename参数，因此可以使用defaults来定义缺省参数。
 
 view的环境
----------------
+=================
 
 在Uliweb中，一个view函数是运行在某种环境中的，当需要调用view函数时，在调用前，我会向
 函数的func_globals属性中注入一些对象，这些对象就可以直接在函数中使用了，你不再需要导入。
@@ -77,7 +80,7 @@ view的环境
 * request 请求对象。
 * response 应答对象。这个对象在传入时是一个空对象，你可以使用它，也可以自行构造一个Response
   的对象进行返回。
-* url_for 它是与expose是相反的，它用来生根据view函数生成反向的URL。详情见 `URL映射 <url_mapping>`_ 的文档。
+* url_for 它是与expose是相反的，它用来生根据view函数生成反向的URL。详情见 `URL映射 <url_mapping.html>`_ 的文档。
 * redirect 用于重定义处理，后面为一个URL信息。
 * error 用于输出错误信息，它将自动查找出错页面。你只要在任何app下的templates中增加
   error.html，然后出错信息可以自已来定制。它也不需要前面加return，也将抛出一个异常。
@@ -88,11 +91,11 @@ view的环境
 .. note::
 
     要注意，以上的环境只能用在view函数中，当view调用其它的方法时，还是需要传入相应的参数。
-    有些全局性的对象将放在 uliweb/__init__.py 中，因此可以直接导入。详情见 `全局环境 <globals>`_
+    有些全局性的对象将放在 uliweb/__init__.py 中，因此可以直接导入。详情见 `全局环境 <globals.html>`_
     的文档。
 
 view环境的扩展
----------------
+=================
 
 如果你认为上面的环境还不够，那么你可以直接向env中增加新的对象，然后在view方法中可以通过
 env.object的方式来使用它。你需要在某个app的settings.py文件中增加相应的插件处理。如::
@@ -107,7 +110,7 @@ Uliweb中已经定义了 ``prepare_default_env`` 这个plugin的插入点，你�
 作用就是向env中增加新的对象，如上面是增加了一个新的函数可以用来将文本转为HTML代码。
 
 view的返回
----------------
+=================
 
 在Uliweb中，view函数可以返回多种类型的结果。可能为：
 
@@ -123,7 +126,7 @@ view的返回
 在某些情况下，你可以调用象redirect, error来中止view的运行。
 
 view模块的入口处理
---------------------
+====================
 
 我建议将不同的view函数按照功能和处理分为不同的文件来存放。
 
@@ -138,3 +141,56 @@ Uliweb支持一种view模块的入口和出口的处理。即你可以在view模
         if not request.user:
             return redirect(url_for(login) + '?next=%s' % url_for(doto_index))
     
+基于类的View方法
+------------------
+
+目前Uliweb也支持类的方式来定义view，这样可以有更好的封装性。举个例子::
+
+    @expose('/user')
+    class UserView(object):
+        def __begin__(self):
+            if not request.user:
+                return redirect('/login?next=%s' % request.path)
+
+        @expose('/login')
+        def login(self):
+            #login process
+            #URL = /login
+            
+        def register(self, name):
+            #register process
+            #URL = /user/register/<name>
+            
+        @expose('add')
+        def add_user(self):
+            #add process
+            #URL = /user/add
+            
+        def _common(self):
+            #this function will not be exposed
+            
+以上只是一个示例。使用基于类的view除了是以类的方式进行组织外，与一般的view方法
+没有本质的区别，但同时又有一些其它的特性。
+
+* 建议使用New Style Class，即从object派生。不需要从特殊的基类派生。
+* Class-View也支持类似模块级别的__begin__的处理，但它是一个方法。Uliweb在处理
+  Class-View会自动调用。
+* 不要使用staticmethod对类方法进行处理。因此类方法可以是一般的方法或classmethod。
+* 如果方法名开始为'_'，则这个方法将不会被自动exposed，客户端将不能进行访问。这种
+  方式比较适合定义内部的函数。
+* 如果使用Class-View并且要在Class上使用expose，你需要安装Python 2.6。
+* 在简单情况下，你在类上使用expose('/url')，而类的方法上不使用expose，则会自动对有效的
+  方法生成形如：/url/method_name 的链接形式，如果还带参数，则自动生成字符串形式
+  的参数。例如上面的register函数。在注释中可以看到。
+* 在上面的例子中已经演示了大部分的情况：
+
+  * 类上使用expose
+  * 覆盖自动URL的生成，如login()方法。因为这里使用了'/login'，相当于绝对路径。
+  * 定义相对URL，如add()方法。
+  * 使用缺省expose方式，同时定义了参数，如register()方法。
+  * 内部函数，不会被客户端访问到，如_common()方法。
+  * 定义了__begin__()方法，可以在执行类方法前先被处理。
+
+.. note::
+    注意，一般不要定义__init__()。因为Uliweb在调用Class-View时，会自动创建类的
+    实例，如果定义__init__()则不要带参数或全部使用缺省值。

@@ -54,9 +54,7 @@ Uliweb按照BSD进行发布。
 * URL处理
 
   * 灵活强大的URL映射。采用Werkzeug的Routing模块，可以非常方便地定义URL，并与View函数
-    进行绑定。同时可以根据view函数反向生成URL。支持URL参数定义，支持缺省URL定义，如：
- 
-    ::
+    进行绑定。同时可以根据view函数反向生成URL。支持URL参数定义，支持缺省URL定义，如::
  
       appname/view_module/function_name
     
