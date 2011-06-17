@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'uliweb simple_todo tutorial'
+project = u'Uliweb Documentation'
 copyright = u'2011, limodou'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -179,7 +179,7 @@ htmlhelp_basename = 'uliwebsimple_todotutorialdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'uliwebsimple_todotutorial.tex', u'uliweb simple\\_todo tutorial Documentation',
+  ('index', 'uliwebsimple_todotutorial.tex', u'Uliweb Documentation',
    u'limodou', 'manual'),
 ]
 
@@ -212,6 +212,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'uliwebsimple_todotutorial', u'uliweb simple_todo tutorial Documentation',
+    ('index', 'uliwebsimple_todotutorial', u'Uliweb Documentation',
      [u'limodou'], 1)
 ]

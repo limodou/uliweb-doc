@@ -85,3 +85,16 @@ send_mail的原型为::
 * ``attachments`` 为附件，它是一个tuple或list。
 
 如果主题或内容有中文，建议使用unicode或utf-8编码。
+
+本机测试
+----------
+
+如果你没有环境怎么办，Python提供了这样的方法，在本机命令行执行::
+
+    python -m smtpd -n -c DebuggingServer localhost:1025
+    
+这样就启动了一个测试用的smtp服务器，将settings.ini中的HOST和PORT修改成：
+localhost和1025就可以在命令行下看到发送的文本了。不过要看效果的话可能还是要真正
+给自已发个邮件才行。
+
+再有就是，如果你可以直接Internet，可以使用上面的gmail的配置来测试。

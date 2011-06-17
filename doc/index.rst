@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Simple Todo (Uliweb 版本) 教程
+Uliweb 文档
 =======================================================
 
 Contents:
