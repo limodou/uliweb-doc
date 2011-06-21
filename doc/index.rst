@@ -27,6 +27,7 @@ Contents:
    template.rst
    url_mapping.rst
    views.rst
+   middleware.rst
 
 Indices and tables
 ==================
