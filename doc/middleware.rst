@@ -21,7 +21,7 @@ Uliweb中的Middleware是类似于django的Middleware，它可以在交易处理
             from uliweb.contrib.auth import get_user
             request.user = get_user(request)
 
-一个Middleware要从``Middleware``类派生。一般只需要定义三个方法::
+一个Middleware要从 ``Middleware`` 类派生。一般只需要定义三个方法::
 
     process_request(request)
     process_response(request, response)
@@ -29,7 +29,7 @@ Uliweb中的Middleware是类似于django的Middleware，它可以在交易处理
 
 不同的Middleware可以根据需要分别定义不同的方法。
 
-Middleware基类有一个缺省的``__init__``方法，如::
+Middleware基类有一个缺省的 ``__init__`` 方法，如::
 
     def __init__(self, application, settings):
         self.application = application
@@ -40,8 +40,8 @@ Middleware基类有一个缺省的``__init__``方法，如::
 执行顺序
 ----------
 
-从上面的示例中，可以看到AuthMiddle中定义了一个``ORDER``的属性。Uliweb在调用
-middlware时会根据``ORDER``的值先对Middleware进行排序，然后再根据顺序进行依次
+从上面的示例中，可以看到AuthMiddle中定义了一个 ``ORDER`` 的属性。Uliweb在调用
+middlware时会根据 ``ORDER`` 的值先对Middleware进行排序，然后再根据顺序进行依次
 调用。这里的顺序只是缺省的顺序，在用户进行配置时还可以进行修改。详见下面的配
 置说明。
 
