@@ -98,7 +98,7 @@ Uliweb缺省定义了一个::
 
 所以，不管你把MIDDLEWARE_CLASSES定义在哪里，都会由Uliweb自动将所有定义在不同的
 settings.ini文件中的MIDDLEWARE_CLASSES汇总到一起。这个功能是由Uliweb中的ini功能
-提供的。比如前面的AuthMiddle就是在uliweb/contrib/auth/settings.ini中有定义:
+提供的。比如前面的AuthMiddle就是在uliweb/contrib/auth/settings.ini中有定义::
 
     [GLOBAL]
     MIDDLEWARE_CLASSES = [
