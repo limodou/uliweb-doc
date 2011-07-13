@@ -16,6 +16,7 @@ Contents:
    architecture.rst
    globals.rst
    basic.rst
+   plugs_todo.rst
    hello_uliweb.rst
    guestbook.rst
    xmlrpc.rst

@@ -137,11 +137,14 @@ app即可。因为在它们的settings.ini中已经写好了MIDDLEWARE_CLASSES�
   用于i18n的处理，设置语言类型
 * 'uliweb.contrib.session.middle_session.SessionMiddle' ORDER=50 app='session'
   请求进来时自动读取session。请求结束时自动保存cookie。
+* 'uliweb.orm.middle_transaction.TransactionMiddle' ORDER=100 app='orm'
+  提供事务的支持。当view出错时，自动回滚，成功时自动提交。
 
-所以，当你使用了上面三个app时，它会自动按::
+所以，当你使用了上面几个app时，它会自动按::
 
     'uliweb.contrib.session.middle_session.SessionMiddle'
     'uliweb.contrib.auth.middle_auth.AuthMiddle'
+    'uliweb.orm.middle_transaction.TransactionMiddle'
     'uliweb.i18n.middle_i18n.I18nMiddle'
     
 的顺序来执行。
