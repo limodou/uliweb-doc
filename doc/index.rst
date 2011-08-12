@@ -6,7 +6,7 @@
 Uliweb 文档
 =======================================================
 
-Contents:
+介绍:
 
 .. toctree::
    :maxdepth: 1
@@ -15,10 +15,22 @@ Contents:
    installation.rst
    architecture.rst
    globals.rst
+
+教程:
+
+.. toctree::
+   :maxdepth: 1
+
    basic.rst
    plugs_todo.rst
    hello_uliweb.rst
    guestbook.rst
+
+技术文档:
+
+.. toctree::
+   :maxdepth: 1
+
    xmlrpc.rst
    i18n.rst
    mail.rst
@@ -29,6 +41,7 @@ Contents:
    url_mapping.rst
    views.rst
    middleware.rst
+   generic.rst
 
 Indices and tables
 ==================
