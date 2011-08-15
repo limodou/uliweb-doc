@@ -42,6 +42,7 @@ Uliweb 文档
    views.rst
    middleware.rst
    generic.rst
+   test.rst
 
 Indices and tables
 ==================
