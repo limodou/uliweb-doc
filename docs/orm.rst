@@ -25,6 +25,7 @@ select, update, join等。
     DEBUG_LOG = False
     AUTO_CREATE = True
     CONNECTION = 'sqlite:///database.db'
+    CONNECTION_ARGS = {}
 
 你可以在apps/settings.ini中覆盖它们。
 
@@ -80,6 +81,15 @@ uliweb reset命令。
     
     # firebird
     firebird_db = create_engine('firebird://scott:tiger@localhost/sometest.gdm')
+
+``CONNECTION_ARGS`` 用于除连接串之外的一些参数。SQLAlchemy中，创建引擎时要使用::
+
+    create_engine(connection, **args)
+    
+而CONNECTION_ARGS将传入到args中。在某些connection中其实还可以带一些类QUREY_STRING
+的东西，如在对mysql的连接中，可以在连接串后面添加 ``'?charset=utf8``` 。而这个参
+数是会直接传给更底层的mysql的驱动。而CONNECTION_ARGS是传给create_engine的，所以
+还是有所不同。
 
 Model 定义
 -------------------
@@ -430,7 +440,7 @@ Test对象有可能对应多个Test1对象（这就是多对一关系），所�
 后缀。但是，如果Test1中有多个字段都是到Test的Reference会出现什么情况。这时，
 Uliweb会抛出异常。原因是，这样会在Test类中出现多个同名的test1_set属性，这是
 有冲突的。所以当存在多个到同一个表的引用时，要进行改名。而Reference提供了一个
-``collection_name`` 的参数，可以用它来定义新的别名。比如上面的 ``tttt``。这样
+``collection_name`` 的参数，可以用它来定义新的别名。比如上面的 ``tttt`` 。这样
 在获取a1所对应的Test1的记录时，就可以使用 ``a1.tttt`` 来反向获取了。
 
 Refernce有以下几个参数可以使用:
@@ -818,6 +828,15 @@ remove(): None
     删除所有满足条件的记录。它其实是调用 Model.remove(condition)。可以和 ``all()``
     和 ``filter()`` 连用。
     
+update(\*\*kwargs): 
+    执行一条update语句。例如::
+    
+        User.filter(User.c.id==1).update(username='test')
+        
+    它等同于::
+    
+        do_(User.table.update().where(User.c.id==1).values(username='test'))
+    
 order_by(\*field): Result
     向查询中添加 ``ORDER BY`` 字句。例如::
     
@@ -884,7 +903,7 @@ has(\*objects): boolean
 事务处理
 --------------
 
-uliorm提供两种控制事务的方式，一种是能过Middleware，一种是手工处理。如果要使用
+uliorm提供两种控制事务的方式，一种是通过Middleware，一种是手工处理。如果要使用
 Middleware方式，你需要在settings.ini中添加::
 
     MIDDLEWARE_CLASSES = [
@@ -892,13 +911,16 @@ Middleware方式，你需要在settings.ini中添加::
     ]
 
 使用Mideleware，它将在每个view处理时生效。当view成功处理，没有异常时，事务会被
-自动提交。当view处理失败，抛出异常时，事务会被回滚。注意，这里一定要有异常事务
-才会被回滚。所以，如果你主动处理了异常返回了出错页面，因为Middleware捕获不到异
+自动提交。当view处理失败，抛出异常时，事务会被回滚。 **注意，这里一定要有异常事务
+才会被回滚。** 所以，如果你主动处理了异常返回了出错页面，因为Middleware捕获不到异
 常，所以仍然会提交。对于这种情况，你可能需要手工来处理事务。
     
-手工处理事务，一种是使用缺省的连接，一种是在指定的连接上。uliorm提供了: Begin(),
-Commit(), Rollback()来处理缺省的连接事务控制。如果你通过 ``db = get_connection()``
-来得到一个连接，可以调用db对象的 begin(), commit(), rollback() 来进行事务控制。
+手工处理事务，uliorm提供了基于线程模式的连接处理。uliorm提供了：Begin(), Commit(),
+和Rollback()函数。当执行Begin()时，它会先检查是否当前线程已经存在一个连接，
+如果存在，则直接使用，如果不存在则自动创建一个连接，并绑到当前的线程中。这样做
+以保证同一个线程可以共享同一个连接对象。因此后面的Commit()和Rollback()都会使用
+线程中已经存在的连接对象。如果你使用了TransactionMiddle中间件，它就是使用上述
+三个方法来进行事务处理，以保证一个请求可以共享相同线程的连接对象。
 
 Model注册和引用
 ----------------------------
@@ -943,20 +965,6 @@ uliorm在考虑Model的可替换性时，提供了一种注册机制。这种机
 如何在其它程序中使用 uliorm
 ----------------------------------
 
-MySql 的问题
-----------------
-
-编码设置
-~~~~~~~~~~~~~~~~~
-
-在MySql中创建表时，uliorm将缺省使用utf8编码来创建，即使MySql的缺省编码不是utf8。
-所以如果你使用的是MySql，你应该检查schema的缺省编码是不是utf8，如果不是则应该在
-connection连接串上添加charset信息，如::
-
-    [ORM]
-    CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'
-    
-当服务器的缺省编码不是utf8时， ``charset=utf8`` 是必须的，其它情况下可以不设置。
     
 模块级 API
 -------------------
@@ -992,9 +1000,174 @@ get_connection(connection='', metadata=_default_metadata, default=True, debug=No
 get_model(model)
     返回Model对应的Class。如果是字符串值，则需要根据Model配置的要求在settings.ini
     中定义Model的信息才有效果。也可以传入Model的类。
+
+Begin(db=None)
+    开始一个事务。同时如果不存在当前线程内的连接对象，则自动从连接池中取一个连接
+    并绑定到当前线程环境中。db为数据库引擎对象，如果没提供，则自动获取缺省的引擎
+    对象。
     
+Commit()
+    提交一个事务。使用当前线程的连接对象。
+    
+Rollback()
+    回滚一个事务。使用当前线程的连接对象。
+    
+do\_(sql)
+    执行一条SQL语句。使用当前的线程对象。只有当使用非ORM的API时才需要使用它
+    来处理，比如直接使用SQLAlchemy提供的：select, update, delete, insert时，可
+    以这样::
+    
+        from uliweb.orm import do_
+        
+        result = do_(select(User.c, User.c.username=='limodou'))
+        
+信号处理
+---------------
+
+uliorm提供类似django信号的处理机制，它会在一些重要的执行点调用发出信号，以便让
+其它的信号处理函数进行后续的工作。注意，uliorm的信号并不是真正的异步，它只是定
+义上的异步，调用还是同步的。
+
+预定义的几种信号
+~~~~~~~~~~~~~~~~~~~~
+
+uliorm已经提供了几种预定义好的信号，下面列举出来。在每个信号名的冒号后面所定义
+的是使用dispatch调用时使用的方法，分为call和get。其中call不需要返回值，并且会
+将所有订阅此信号的方法依次调用。而get需要一个返回值，一旦某个方法返回非None的值，
+则结束调用并将值返回。
+
+pre_save:call
+    保存一个对象 **前** 发出的信号
+    
+    参数： instance, created, data, old_data
+    
+    instance 
+        为保存的对象
+        
+    created  
+        True为创建，False为修改
+        
+    data     
+        新的数据
+        
+    old_data 
+        旧的数据
+        
+post_save:call
+    保存一个对象 **后** 发出的信号。参数同 ``pre_save``
+    
+pre_delete:call
+    删除一个对象 **前** 发出的信号
+
+    参数： instance
+
+    instance 
+        为待删除的对象
+
+post_delete:call
+    删除一个对象 **后** 发出的信号
+
+    参数： instance
+
+    instance 
+        为待删除的对象
+
+get_object:get
+    通过Model.get()获得一个对象 **前** 发出的信号。get_object和set_object
+    相结合可以实现简单的对get()方式的单对象的缓存处理。在uliweb中已经提供了一个
+    名为objcache的app，它可以在获取简单条件的对象时自动进行缓存的处理。
+    
+    参数: condition
+    
+    condition
+        调用get()方法所使用的条件，它是SQLAlchemy的一个表达式对象
+        
+set_object:call
+    通过Model.get()获得一个对象 **后** 发出的信号
+    
+    参数: condition, instance
+    
+    condition
+        调用get()方法所使用的条件，它是SQLAlchemy的一个表达式对象
+        
+    instance
+        所获得的对象实例
+        
+定义接收函数
+~~~~~~~~~~~~~~~~~
+
+当使用uliorm时，它会根据执行情况自动发出相应的信号，此时如果有订阅此信号的方法存
+在则将被自动调用，如果不存在，则继续后面的处理。在uliweb中，一般将订阅方法写在
+settings.ini中，以减少启动时的导入处理。举例如下::
+
+    [BINDS]
+    audit.post_save = 'post_save'
+    audit.pre_delete = 'pre_delete'
+
+在settings.ini中定义BINDS节，然后key是方法路径，值是对应的信号。方法路径的形式为::
+
+    module.function_name
+    
+为什么要这样定义？因为一个信号可以被多个方法来订阅，因此信号是可以重复的。
+
+Uliweb在启动时会自动读取settings.ini中的信号，然后将其与相应的信号进行绑定。相
+关的处理方法此时并不真正导入，而是当发出信号时，再动态导入。
+
+接收函数的定义形式为::
+
+    def receiver(sender, topic, **kwargs)
+    
+第一和第二个参数都是固定的，sender是发出信号的对象。在uliorm中都是Model类。
+topic是信号的名称。后面的kwargs对应每个信号可以接受的参数。不同的信号所接受的
+参数可能是不同的。    
+
 测试代码
 ---------------
 
 在 uliweb/test/test_orm.py 中有一些测试代码，你可以查看一些例子来了解如何使用
 uliorm。
+
+F&Q
+---------------
+
+如何处理Mysql中的 "MySQL server has gone away" 错误？
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+出现这个问题是因为Mysql有关于非活动连接超时断开的设置，缺省为8小时。当8小时以后
+现有的连接没有活动，则MySql会自动断开。因此再次访问时会抛出这个错误。uliorm
+使用SQLAlchemy的缺省的连接方式，会自动使用连接池。默认是5个连接。它有一个pool_recycle
+的参数，用于设置回收连接的时间。这样，只要你设置一个小于MySql断开的超时时间就
+可以了。示例如下::
+
+    [ORM]
+    CONNECTION_ARGS = {'pool_recycle':7200, 'echo_pool':True}
+    
+上述配置表示：连接池回收时间为7200秒(2小时)。echo_pool为True表示在日志中显示
+回收信息。这样是通过自动回收重建连接池避免了这个问题。
+
+MySQL 编码设置
+~~~~~~~~~~~~~~~~~
+
+在MySql中创建表时，uliorm将缺省使用utf8编码来创建，即使MySql的缺省编码不是utf8。
+所以如果你使用的是MySql，你应该检查schema的缺省编码是不是utf8，如果不是则应该在
+connection连接串上添加charset信息，如::
+
+    [ORM]
+    CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'
+    
+当服务器的缺省编码不是utf8时， ``charset=utf8`` 是必须的，其它情况下可以不设置。
+
+如何实现update table set field = field + 1类似的更新
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+举例如下::
+
+    User.filter(User.c.id==1).update(score=User.c.score+1)
+    
+    或
+    
+    User.filter(User.c.id==1).update(User.c.score=User.c.score+1)
+    
+或者使用底层的SQLAlchemy的写法::
+
+    do_(User.table.update().where(User.c.id==1).values(score=User.c.score+1))
