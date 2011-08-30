@@ -9,7 +9,8 @@ Uliweb提供了必要的运行环境和运行对象，因此我称之为全局�
 
 有一些全局性的对象可以方便地从 uliweb 中导入，如::
 
-    from uliweb import application, request, response, settings, Request, Response
+    from uliweb import (application, request, response, 
+        settings, Request, Response)
 
 application
 ~~~~~~~~~~~~~
@@ -95,8 +96,8 @@ settings
 
 如::
 
-    from uliweb import (redirect, json, POST, GET, post_view, 
-        pre_view, url_for, expose, get_app_dir, get_apps
+    from uliweb import (redirect, json, POST, GET, 
+        url_for, expose, get_app_dir, get_apps, function
         )
 
 redirect
@@ -159,3 +160,24 @@ get_apps
     def get_apps(apps_dir, include_apps=None):
     
 根据一个apps目录，分析出所有可用的App的名字列表。
+
+function
+~~~~~~~~~~~~~~
+
+::
+
+    func = function('function_name')
+    
+用户可以在settings.ini中配置供外部使用的函数路径，通过function可以获得这个函数
+的对象。例如在settings.ini中如下配置::
+
+    [FUNCTIONS]
+    has_role = 'uliweb.contrib.rbac.has_role'
+    has_permission = 'uliweb.contrib.rbac.has_permission'
+
+这是uliweb.contrib.rbac中的定义的两个方法，key为方法名，value为方法的路径。
+通过::
+        
+    has_role = function('has_role')
+    
+就可以导入真正的函数来使用。

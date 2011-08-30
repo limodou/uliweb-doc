@@ -190,7 +190,8 @@ Property 其它所有字段类的基类。所以它的一些属性和方法将�
 义为::
 
     Property(verbose_name=None, name=None, default=None, required=False, 
-        validators=None, choices=None, max_length=None)
+        validators=None, choices=None, max_length=None, type_class=None,
+        type_attrs=None)
 
 verbose_name
     用于显示字段的描述信息。一般是用在显示界面上。
@@ -250,6 +251,10 @@ unique
     
 nullable
     指示在数据库中，本字段是否可以为 ``NULL`` 。缺省为True。
+    
+type_class, type_attrs
+    可以用来设置指定的SQLAlchemy的字段类型并设置要传入的字段属性。如果有长度值，
+    则是在max_length中指定。
     
 字段列表
 ~~~~~~~~~~~
@@ -917,10 +922,76 @@ Middleware方式，你需要在settings.ini中添加::
     
 手工处理事务，uliorm提供了基于线程模式的连接处理。uliorm提供了：Begin(), Commit(),
 和Rollback()函数。当执行Begin()时，它会先检查是否当前线程已经存在一个连接，
-如果存在，则直接使用，如果不存在则自动创建一个连接，并绑到当前的线程中。这样做
-以保证同一个线程可以共享同一个连接对象。因此后面的Commit()和Rollback()都会使用
-线程中已经存在的连接对象。如果你使用了TransactionMiddle中间件，它就是使用上述
-三个方法来进行事务处理，以保证一个请求可以共享相同线程的连接对象。
+如果存在，则直接使用，如果不存在则，如果传入了create=True，则自动创建一个连接，
+并绑到当前的线程中。如果create=False，则使用engine的连接。同时Commit()和Rollback()
+都会使用类似的方式，以保证与Begin()中获得的连接一致。
+
+Web事务模式
+~~~~~~~~~~~~~~
+
+一般你要使用事务中间件，它的处理代码很简单，为::
+
+    class TransactionMiddle(Middleware):
+        ORDER = 100
+        
+        def __init__(self, application, settings):
+            pass
+            
+        def process_request(self, request):
+            Begin(create=True)
+    
+        def process_response(self, request, response):
+            try:
+                return response
+            finally:
+                Commit(close=True)
+                
+        def process_exception(self, request, exception):
+            Rollback(close=True)
+
+当请求进来时，执行 Begin(create=True) 以创建线程级别的连接对象。这样，如果在你的
+View中要手工处理事务，执行Begin()会自动使用当前线程的连接对象。
+
+应答成功时，执行Commit(close=True)，完成提交并关闭连接。而在View中手动控制一般
+只要调用Commit()就可以了，关闭连接交由中间件完成。
+
+如果中间处理抛出异常，则执行Rollback(close=True)，回滚当前事务，并关闭连接。而在
+View中手动控制，也只要简单调用Rollback()就可以了，关闭连接处理由中间件完成。
+
+在View中的处理，有几点要注意，Begin(), Commit(), Rollback() 都不带参数调用。
+在Uliorm中，SQL的执行分两种，一种是直接使用ORM的API处理，还有一种是使用SQLAlchemy
+的API进行处理(即非ORM的SQL)。为了保证正确使用线程的连接对象，ORM的API已经都使用
+do\_()进行了处理。do\_()可以保证执行的SQL语句在当前的合理的连接上执行。几种
+常见的SQL的书写样板::
+
+    #插入
+    do_(User.table.insert().values(username='limodou'))
+    #更新
+    do_(User.table.update().where(User.c.username='limodou').values(flag=True))
+    #删除
+    do_(User.table.delete().where(User.c.username='limodou'))
+    #查询
+    do_(select(User.c, User.c.username=='limodou'))
+    
+命令行事务模式
+~~~~~~~~~~~~~~~~~
+
+所谓命令行事务模式一般就是在命令行下运行，比如批处理。它们一般不存在多线程的环境，
+所以一个程序就是一个进程，使用一个连接就可以了。这时我们可以还使用engine的连接
+对象。使用时，只要简单的不带参数调用Begin(), Commit()和Rollback()就可以了。因为
+Begin()在没有参数调用的情况下，会自动先判断有没有线程级的连接对象，这时一定是没有，
+如果没有，则使用engine下的连接对象。
+
+这样，SQL语句既可以使用do\_()来运行，也可以使用原来的SQLAlchemy的执行方式，如::
+
+    #插入
+    User.table.insert().values(username='limodou').execute()
+    #更新
+    User.table.update().where(User.c.username='limodou').values(flag=True).execute()
+    #删除
+    User.table.delete().where(User.c.username='limodou').execute()
+    #查询
+    select(User.c, User.c.username=='limodou').execute()
 
 Model注册和引用
 ----------------------------
@@ -1001,15 +1072,15 @@ get_model(model)
     返回Model对应的Class。如果是字符串值，则需要根据Model配置的要求在settings.ini
     中定义Model的信息才有效果。也可以传入Model的类。
 
-Begin(db=None)
-    开始一个事务。同时如果不存在当前线程内的连接对象，则自动从连接池中取一个连接
+Begin(db=None, create=False)
+    开始一个事务。如果存在线程连接对象同时如果不存在当前线程内的连接对象，则自动从连接池中取一个连接
     并绑定到当前线程环境中。db为数据库引擎对象，如果没提供，则自动获取缺省的引擎
     对象。
     
-Commit()
+Commit(db=None, close=False)
     提交一个事务。使用当前线程的连接对象。
     
-Rollback()
+Rollback(db=None, close=False)
     回滚一个事务。使用当前线程的连接对象。
     
 do\_(sql)
@@ -1171,3 +1242,49 @@ connection连接串上添加charset信息，如::
 或者使用底层的SQLAlchemy的写法::
 
     do_(User.table.update().where(User.c.id==1).values(score=User.c.score+1))
+
+如何实现MySql中区分大小写字段定义和查询
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+MySql在定义字段和查询字段时，缺省是使用非大小写敏感方式进行处理的。有时我们需要
+进行大小写敏感方式的查询，因此这里涉及两种处理，一种是查询时的大小写区分，如::
+
+    from sqlalchemy.sql import func
+    
+    User.filter(User.c.username == func.binary('limodou'))
+    
+上述代码将按大小写对'limodou'进行查询。
+
+但是如果你把CHAR或VARCHAR设置为不重复的索引，在插入类似： ``Limodou`` 或 ``limodou``
+有可能会报重复。这就不是靠查询来解决的了。要通过将字段定义为区分大小写的形式。在
+MySql中一般是在VARCHAR之后添加Binary，如::
+
+    username VARCHAR(40) binary
+    
+那么在Uliorm或SQLAlchemy中如何做呢？代码如下::
+
+    from sqlalchemy.dialects.mysql import VARCHAR
+    
+    class Human(Model):
+        name = Field(str, verbose_name='姓名', max_length=40, required=True)
+        login_name = Field(str, verbose_name='登录名', required=True, 
+            max_length=40, unique=True, type_class=VARCHAR, 
+            type_attrs=dict(binary=True))
+    
+可以看到它使用了mysql的dialect的字段定义，并将其传入uliorm的字段定义中，其中参
+数 ``type_class`` 为字段类型， ``type_attrs`` 为字段相应的参数，这里设置 ``binary``
+为 ``True`` 。在SQLAlchemy中的定义示例如::
+
+    from sqlalchemy.dialects.mysql import VARCHAR
+    
+    Column('username', VARCHAR(40, binary=True))
+    
+这样在数据库中，就是区分大小写的，在查询时不再需要使用func.binary()来处理了。
+
+不过这种方式兼容性不好，所以还有一种变通的方式就是写一个sql文件，在命令行下对
+字段进行修改，这样Model就不需要修改了。比如::
+
+    use <database>;
+    ALTER TABLE human MODIFY COLUMN `login_name` VARCHAR(40) 
+        BINARY CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL;
+    
