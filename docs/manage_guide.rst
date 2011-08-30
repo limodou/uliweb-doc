@@ -309,6 +309,12 @@ dotcloud平台
     将额外拷贝requirements.txt和wsgi.py。不过一般情况下你有可能要修改requirements.txt
     以满足你的要求。
     
+shell
+~~~~~~~~~~~~~~~~~~~~
+
+在当前项目目录下，进入shell环境。可以直接使用如application, settings.ini等全局
+变量。
+    
 其它App包含的命令
 ---------------------
 
@@ -317,4 +323,186 @@ orm app
 
 orm app带有一系列针对数据库操作的命令，列举如下：
 
+syncdb
+^^^^^^^^^^^^^^
 
+自动根据已安装的app中settings.ini中所配置的MODELS信息，在数据库中创建不存在的表。
+如果只是写在models.py中，但是未在settings.ini中进行配置，则不能自动创建。
+
+settings.ini中的写法如::
+
+    [MODELS]
+    question = 'ticket.models.Question'
+    
+其中key是与Model对应的真正的表名，不能随便起。
+
+sql
+^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb sql <appname, appname, ...>
+    
+用于显示对应app的Create语句。但是目前还无法显示创建Index的信息。
+
+命令后面可以跟若干app名字，如果没有给出，则表示整个项目。
+    
+sqldot
+^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb sqldot <appname, appname, ...>
+    
+类似sql命令，但是它会将表及表的关系生成.dot文件，可以使用graphviz将dot文件转
+为图形文件。
+
+droptable
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb droptable <tablename, tablename, ...>
+    
+从数据库中删除某些表。
+
+dump
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb dump [options] <appname, appname, ...>
+    
+将数据从数据库中卸载下来。
+
+::
+
+    options:
+    
+    -o OUTPUT_DIR
+        数据文件输出路径。缺省在项目目录的./data目录下。
+        
+    -t, --text
+        将数据以纯文本格式卸载下来。
+        
+    --delimiter=DELIMITER
+        文本文件字段的分隔符。缺省为','。需要与-t连用。
+                          
+    --encoding=ENCODING
+        文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
+
+dumptable
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb dumptable [options] <tablename, tablename, ...>
+    
+将指定的表中的数据卸载下来。参数说明同dump。
+
+dumptablefile
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb dumptablefile [options] tablename text_filename
+    
+将指定的表数据卸载到指定的文件中。此命令与dump和dumptable不同的地方是：这个命令
+只处理一个表，并且可以指定输出文件名。而后两个命令不能指定文件名，它将按表名生
+成文件名，并且放到指定的目录下。
+
+::
+
+    options:
+    
+    -t, --text
+        将数据以纯文本格式卸载下来。
+        
+    --delimiter=DELIMITER
+        文本文件字段的分隔符。缺省为','。需要与-t连用。
+        
+    --encoding=ENCODING
+        文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
+
+load
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb load [options] <appname, appname, ...>
+    
+将数据装入到数据库中。
+
+::
+
+    options:
+    
+    -d DIR
+        数据文件所存放的目录。
+        
+    -t, --text
+        将数据以纯文本格式进行处理。
+        
+    --delimiter=DELIMITER
+        文本文件字段的分隔符。缺省为','。需要与-t连用。
+        
+    --encoding=ENCODING
+        文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
+    
+loadtable
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb loadtable [options] <tablename, tablename, ...>
+    
+只装入指定的表名数据到数据库中。参数同load。
+
+
+loadtablefile
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb loadtablefile [options] tablename text_filename
+    
+将指定的文件装入到对应的表中。
+
+::
+
+    options:
+    
+    -t, --text
+        将数据以纯文本格式进行处理。
+        
+    --delimiter=DELIMITER
+        文本文件字段的分隔符。缺省为','。需要与-t连用。
+        
+    --encoding=ENCODING
+        文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
+
+reset
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb reset <appname, appname, ...>
+    
+重置整个数据库或指定的app。
+
+resettable
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb resettable <tablename, tablename, ...>
+    
+重置指定的表。
+
+auth app
+~~~~~~~~~~~~~~
+
+createsuperuser
+^^^^^^^^^^^^^^^^^^^^^
+
+创建超级用户。
