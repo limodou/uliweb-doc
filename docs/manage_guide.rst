@@ -116,32 +116,32 @@ runserver
 
     Usage: uliweb runserver [options] 
     
-    options:
+参数说明:
     
-    -h HOSTNAME
+-h HOSTNAME
+
+    开发服务器的地址，缺省为localhost
     
-        开发服务器的地址，缺省为localhost
-        
-    -p PORT
+-p PORT
+
+    开发服务器端口，缺省为8000
     
-        开发服务器端口，缺省为8000
-        
-    --no-reload
+--no-reload
+
+    是否当修改代码后自动重新装载代码，缺省为True。
     
-        是否当修改代码后自动重新装载代码，缺省为True。
-        
-    --no-debug
+--no-debug
+
+    是否当出现错误时可以显示Debug页面，缺省为True。
     
-        是否当出现错误时可以显示Debug页面，缺省为True。
-        
-    --thread
+--thread
+
+    是否使用线程模式。缺省为False。
     
-        是否使用线程模式。缺省为False。
-        
-    --processes=PROCESSES
-    
-        启动时创建进程的个数。此命令在windows下不可用。因为它要使用os.fork来创
-        建进程。
+--processes=PROCESSES
+
+    启动时创建进程的个数。此命令在windows下不可用。因为它要使用os.fork来创
+    建进程。
         
 示例：
 
@@ -211,25 +211,25 @@ settings.py中设定了INSTALLED_APPS参数，则所有设定的app将被处理�
 
     Usage: uliweb exportstatic [options] outputdir
     
-    options:
+参数说明:
     
-    -c, --check
-        是否在拷贝时进行检查，一旦发现不符会在命令行进行指示。如果设定为
-        不检查，则直接进行覆盖。缺省为不检查。
-        
-    --js
-        和下面的-J连用，用于将js文件进行压缩处理。
+-c, --check
+    是否在拷贝时进行检查，一旦发现不符会在命令行进行指示。如果设定为
+    不检查，则直接进行覆盖。缺省为不检查。
     
-    -J JS_COMPRESSOR
-        JS压缩程序(Jar包)路径。缺省使用Google Clource Compiler(compiler.jar)来
-        进行处理。默认是从命令执行目录下查找compiler.jar包。
-        
-    --css
-        和下面的-C连用，用于将css文件进行压缩处理。
+--js
+    和下面的-J连用，用于将js文件进行压缩处理。
+
+-J JS_COMPRESSOR
+    JS压缩程序(Jar包)路径。缺省使用Google Clource Compiler(compiler.jar)来
+    进行处理。默认是从命令执行目录下查找compiler.jar包。
     
-    -C CSS_COMPRESSOR
-        CSS压缩程序(Jar包)路径。缺省使用Yahoo的Yui CSS Compressor(yuicompressor.jar)
-        来进行处理。默认是从命令执行目录下查找yuicompressor.jar包。
+--css
+    和下面的-C连用，用于将css文件进行压缩处理。
+
+-C CSS_COMPRESSOR
+    CSS压缩程序(Jar包)路径。缺省使用Yahoo的Yui CSS Compressor(yuicompressor.jar)
+    来进行处理。默认是从命令执行目录下查找yuicompressor.jar包。
         
 示例：
 
@@ -249,30 +249,30 @@ i18n处理工具，用来从项目中提取_()形式的信息，并生成.pot文
 
     Usage: uliweb i18n [options] <appname, appname, ...>
     
-    options:
+参数说明:
     
-    --apps
+--apps
+
+    对所有app进行处理。
     
-        对所有app进行处理。
+-p
+
+    处理整个项目。
+    
+-d DIRECTORY
+
+    处理指定目录。
+    
+--uliweb
+
+    只处理uliweb本身。
+
+-l LOCALE
+
+    如果没有指定则为en。否则按指定名字生成相应的目录。
         
-    -p
-    
-        处理整个项目。
-        
-    -d DIRECTORY
-    
-        处理指定目录。
-        
-    --uliweb
-    
-        只处理uliweb本身。
-    
-    -l LOCALE
-    
-        如果没有指定则为en。否则按指定名字生成相应的目录。
-        
-    如果最后给出app的列表，则会按指定的app进行处理。但一旦给出了--apps参数，
-    则app列表将无效。
+如果最后给出app的列表，则会按指定的app进行处理。但一旦给出了--apps参数，
+则app列表将无效。
         
         
 示例：
@@ -377,19 +377,19 @@ dump
 
 ::
 
-    options:
+参数说明:
     
-    -o OUTPUT_DIR
-        数据文件输出路径。缺省在项目目录的./data目录下。
-        
-    -t, --text
-        将数据以纯文本格式卸载下来。
-        
-    --delimiter=DELIMITER
-        文本文件字段的分隔符。缺省为','。需要与-t连用。
-                          
-    --encoding=ENCODING
-        文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
+-o OUTPUT_DIR
+    数据文件输出路径。缺省在项目目录的./data目录下。
+    
+-t, --text
+    将数据以纯文本格式卸载下来。
+    
+--delimiter=DELIMITER
+    文本文件字段的分隔符。缺省为','。需要与-t连用。
+                      
+--encoding=ENCODING
+    文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
 
 dumptable
 ^^^^^^^^^^^^^^^^^^
@@ -413,16 +413,16 @@ dumptablefile
 
 ::
 
-    options:
+参数说明:
     
-    -t, --text
-        将数据以纯文本格式卸载下来。
-        
-    --delimiter=DELIMITER
-        文本文件字段的分隔符。缺省为','。需要与-t连用。
-        
-    --encoding=ENCODING
-        文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
+-t, --text
+    将数据以纯文本格式卸载下来。
+    
+--delimiter=DELIMITER
+    文本文件字段的分隔符。缺省为','。需要与-t连用。
+    
+--encoding=ENCODING
+    文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
 
 load
 ^^^^^^^^^^^^^^^^^^
@@ -435,19 +435,19 @@ load
 
 ::
 
-    options:
+参数说明:
     
-    -d DIR
-        数据文件所存放的目录。
-        
-    -t, --text
-        将数据以纯文本格式进行处理。
-        
-    --delimiter=DELIMITER
-        文本文件字段的分隔符。缺省为','。需要与-t连用。
-        
-    --encoding=ENCODING
-        文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
+-d DIR
+    数据文件所存放的目录。
+    
+-t, --text
+    将数据以纯文本格式进行处理。
+    
+--delimiter=DELIMITER
+    文本文件字段的分隔符。缺省为','。需要与-t连用。
+    
+--encoding=ENCODING
+    文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
     
 loadtable
 ^^^^^^^^^^^^^^^^^^
@@ -470,16 +470,16 @@ loadtablefile
 
 ::
 
-    options:
+参数说明:
     
-    -t, --text
-        将数据以纯文本格式进行处理。
-        
-    --delimiter=DELIMITER
-        文本文件字段的分隔符。缺省为','。需要与-t连用。
-        
-    --encoding=ENCODING
-        文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
+-t, --text
+    将数据以纯文本格式进行处理。
+    
+--delimiter=DELIMITER
+    文本文件字段的分隔符。缺省为','。需要与-t连用。
+    
+--encoding=ENCODING
+    文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
 
 reset
 ^^^^^^^^^^^^^^^^^^
