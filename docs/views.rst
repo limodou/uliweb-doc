@@ -166,6 +166,10 @@ Uliweb支持一种view模块的入口和出口的处理。即你可以在view模
             #add process
             #URL = /user/add
             
+        @expose('')
+        def list(self):
+            #URL = /user here '' will just user UserView class URL prefix '/user'
+            
         def _common(self):
             #this function will not be exposed
             
@@ -188,9 +192,15 @@ Uliweb支持一种view模块的入口和出口的处理。即你可以在view模
   * 覆盖自动URL的生成，如login()方法。因为这里使用了'/login'，相当于绝对路径。
   * 定义相对URL，如add()方法。
   * 使用缺省expose方式，同时定义了参数，如register()方法。
+  * expose('')将直接使用类上的URL。
   * 内部函数，不会被客户端访问到，如_common()方法。
   * 定义了__begin__()方法，可以在执行类方法前先被处理。
 
 .. note::
     注意，一般不要定义__init__()。因为Uliweb在调用Class-View时，会自动创建类的
     实例，如果定义__init__()则不要带参数或全部使用缺省值。
+    
+.. note::
+    注意，如果在方法上还想使用decorator来进行修饰，如果方法无参数，则顺序不影响
+    最终的URL生成。如果方法有参数，建议不要使用缺省URL的生成方式，而是主动定义
+    expose，并且将expose放在所有其它的decorator之上。

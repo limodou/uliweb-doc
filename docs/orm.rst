@@ -1288,3 +1288,8 @@ MySql中一般是在VARCHAR之后添加Binary，如::
     ALTER TABLE human MODIFY COLUMN `login_name` VARCHAR(40) 
         BINARY CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL;
     
+RuntimeError: dictionary changed size during iteration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+在Uliweb下使用uliorm，要求将所有的Model都定义在settings.ini中，一旦出现某个Model
+没有在settings.ini中定义，就有可能出现上面的问题。

@@ -8,7 +8,7 @@ Hello, Uliweb
 准备
 -----
 
-安装请看 `安装Uliweb <installation>`_
+安装请看 `安装Uliweb <installation.html>`_
 
 创建新的项目
 -------------

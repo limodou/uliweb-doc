@@ -13,7 +13,14 @@ Uliweb使用Werkzeug的Routing来进行URL的处理。当你使用manage.py的ma
 expose说明
 -----------
 
-目前，Uliweb还不支持集中的URL配置，因此你需要在每个view方法前加上expose()来定义URL。
+目前，Uliweb取消了集中的URL配置，因此你需要在每个view方法前加上expose()来定义URL。
+但同时，Uliweb还允许你将URL定义在settings.ini，以方便实现URL的替換。
+
+Uliweb目前提供两种View函数的写法，一种是简单的函数方式，另一种是类方式的定义，下
+面分别进行描述。
+
+普通View函数的处理
+~~~~~~~~~~~~~~~~~~~
 
 基本用法为：
 
@@ -24,8 +31,12 @@ expose说明
         @expose()
         def index(arg1, arg2):
             return {}
+            
+        @expose
+        def index(arg1, arg2):
+            return {}
         
-   当expose()不带任何参数时，将进行缺省的映射。即URL将为:
+   当expose()不带任何参数(也可以不带括号)时，将进行缺省的映射。即URL将为:
 
    ::
 
@@ -82,16 +93,71 @@ expose说明
         文件服务了。但是有些文件的链接却是依赖于这个定义来反向生成的，因此为了不进行匹配，
         可以加上这个参数，这样在访问时不会进行匹配，但是在反向生成URL时还可以使用。
         
+    methods
+    
+        HTTP请求可以分为GET, POST等方法，使用methods可以用来指定要匹配的方法。比
+        如::
+        
+            @expose('/all', methods=['GET'])
+        
     关于参数更多的说明请参见werkzeug下的routing.py程序。
     
-.. note::
+类View函数的处理
+~~~~~~~~~~~~~~~~~~~~~
 
-    在非GAE环境下不需要导入，因为Uliewb已经将其放入__builtin__环境中，可以直接使用，但是
-    在GAE环境下需要导入，GAE不允许注入。
+详细的文档参见 `视图(View) <views.html>`_
+
+在settings.ini中定义URL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Uliweb也支持将URL定义到settings.ini，其主要目的是为了允许别人替換。比如已经开
+发了一个app，有一些常用的URL的定义。但是希望别人可以替換已经定义好的URL，如果
+直接写到views中，则不会进行替換，只会添加。所以放到settings.ini中就可以方便替
+換了。定义示例如下::
+
+    [EXPOSES]
+    /login = 'plugs.user.views.login'
+    /logout = 'uliweb.contrib.auth.views.logout'
+    /register = 'uliweb.contrib.auth.views.register'
+
+Key是URL的模式，可以带参数，如: /user/<id> 之类的。后面是对应的view方法的路径。
+它是由可导入的模块写法+方法名组成。比如： `'plugs.user.views'` 是一个模块，而
+`'login'` 是其中的方法。    
     
-    如果你使用makeapp来创建App目录，则在生成的views.py中已经加入了导入语句，因此可以直接
-    使用。
-    
+与decorator联用时的注意事项
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+有时我们希望通过使用decorator来修饰view方法，包括类的view方法。那么由于expose
+本身也是一个decorator，并且当函数有参数时，在expose不传入参数时，将自动对函数
+的参数进行解析，而decorator的处理方式，有可能会造成新生成的方法与原始的方法参
+数不同，会使得生成的URL出现问题。因此对于普通的view函数，建议将expose放在最下
+面，以保证expose先执行。而在使用类view方法时，对于只有self参数的简单方法，可以
+只加decorator，并且使用自动URL的处理。但对于带有除self之外的其它的参数，使用自
+动URL处理可能会出现问题，因此建议添加expose的修饰，并且放在其它的decorator之上，
+如::
+
+    @expose('/myview')
+    class MyView(object):
+        @_other
+        def test1(self):
+            #这个可以
+            
+        @_other
+        def test2(self, id):
+            #这样可能有问题，因为_other有可能创建新的函数，造成与test2的
+            #参数不同
+            
+        @expose('test3/<id>')
+        @_other
+        def test3(self, id):
+            #正确，添加显示的expose调用，并且使用相对URL的定义，以便和
+            #缺省URL的处理一致
+            
+        @_other
+        @expose('test3/<id>')
+        def test3(self, id):
+            #可能不正确
+
 url_for说明
 ---------------
 
