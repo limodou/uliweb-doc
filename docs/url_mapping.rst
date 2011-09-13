@@ -122,7 +122,13 @@ Uliweb也支持将URL定义到settings.ini，其主要目的是为了允许别�
 
 Key是URL的模式，可以带参数，如: /user/<id> 之类的。后面是对应的view方法的路径。
 它是由可导入的模块写法+方法名组成。比如： `'plugs.user.views'` 是一个模块，而
-`'login'` 是其中的方法。    
+`'login'` 是其中的方法。
+
+GET和POST
+~~~~~~~~~~~~~~~~
+
+为了方便处理expose(methods=['GET', 'POST'])这样的URL，uliweb还定义了GET和POST，
+分别用于处理GET和POST方法，其它的象DELETE要象上面这样定义。
     
 与decorator联用时的注意事项
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -44,6 +44,13 @@ Uliweb 文档
    generic.rst
    test.rst
 
+APP文档:
+
+.. toctree::
+   :maxdepth: 1
+
+   plugins.rst
+
 Indices and tables
 ==================
 
