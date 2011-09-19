@@ -43,13 +43,14 @@ Uliweb 文档
    middleware.rst
    generic.rst
    test.rst
+   log.rst
 
-APP文档:
+Uliweb内置APP文档:
 
 .. toctree::
    :maxdepth: 1
 
-   plugins.rst
+   staticfiles.rst
 
 Indices and tables
 ==================
