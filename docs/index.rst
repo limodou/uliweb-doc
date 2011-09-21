@@ -44,6 +44,7 @@ Uliweb 文档
    generic.rst
    test.rst
    log.rst
+   session.rst
 
 Uliweb内置APP文档:
 

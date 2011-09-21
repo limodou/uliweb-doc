@@ -229,6 +229,13 @@ uliweb.console主要日志输出是在命令行，所以比较简单。而uliweb
 在uliweb.utils.common中提供了一个全局的log对象，它是logging的别名。因此你使用它
 就相当于调用root logger。
 
+uliweb中log的初始化
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+在uliweb中，log的初始化目前是在Dispatch初始化的时候做的。因此，在命令行中使用
+uliweb的log时，注意最好在Dispatch或make_application之后使用。对于view中的处理，
+一般都不用考虑初始化顺序的问题。
+
 使用建议
 ~~~~~~~~~~
 
