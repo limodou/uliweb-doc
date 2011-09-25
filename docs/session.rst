@@ -186,3 +186,6 @@ session中的值一般为普通数据类型，因为当保存session时，会将
 是使用cPickle来处理的。
 
 session的保存是由session middleware来完成的，用户一般不用考虑。
+
+通过request.session.cookie可以访问每个session对应的cookie对象，你可以修改它的值
+以便保存到浏览器中。
