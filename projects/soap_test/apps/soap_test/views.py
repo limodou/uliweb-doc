@@ -1,5 +1,5 @@
 #coding=utf-8
-from uliweb import expose, decorators
+from uliweb import decorators
 from uliweb.contrib.soap import Date, DateTime, Decimal
 
 @decorators.soap('hello', returns={'a':str}, args={'a':str})

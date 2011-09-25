@@ -52,6 +52,7 @@ Uliweb内置APP文档:
    :maxdepth: 1
 
    staticfiles.rst
+   soap.rst
 
 Indices and tables
 ==================
