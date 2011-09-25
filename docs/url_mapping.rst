@@ -116,13 +116,16 @@ Uliweb也支持将URL定义到settings.ini，其主要目的是为了允许别�
 換了。定义示例如下::
 
     [EXPOSES]
-    /login = 'plugs.user.views.login'
-    /logout = 'uliweb.contrib.auth.views.logout'
-    /register = 'uliweb.contrib.auth.views.register'
+    login = '/login', 'plugs.user.views.login'
+    logout = '/logout', 'uliweb.contrib.auth.views.logout'
+    register = '/register', 'uliweb.contrib.auth.views.register'
 
-Key是URL的模式，可以带参数，如: /user/<id> 之类的。后面是对应的view方法的路径。
-它是由可导入的模块写法+方法名组成。比如： `'plugs.user.views'` 是一个模块，而
-`'login'` 是其中的方法。
+Key是URL的名字，值一般是二元或三元的tuple。形式为::
+
+    (url_pattern, view_function_path[, kwargs])
+    
+第一个为url模式，第二个为url对应的view函数的路径，第三个是可选的，应该是一个字典，
+它是将传入expose中的参数。
 
 GET和POST
 ~~~~~~~~~~~~~~~~
