@@ -2,9 +2,9 @@
 from uliweb import decorators
 from uliweb.contrib.soap import Date, DateTime, Decimal
 
-@decorators.soap('hello', returns={'a':str}, args={'a':str})
+@decorators.soap('hello', returns={}, args={'a':str})
 def hello(a):
-    return 'Hello:' + a
+    return
 
 @decorators.soap(returns={'a':str})
 def echo(request):

@@ -53,6 +53,7 @@ Uliweb内置APP文档:
 
    staticfiles.rst
    soap.rst
+   auth.rst
 
 Indices and tables
 ==================

@@ -8,13 +8,13 @@ client = SoapClient(
     namespace = "", 
     soap_ns='soap',
     wsdl="http://localhost:8000/SOAP?wsdl",
-    trace = False,
+    trace = True,
     ns = False)
 
 result = client.hello(a='limodou')
 print 'test1:', result
-#result = client.echo(value='hello')
-#print 'test2:', result
+result = client.echo('hello')
+print 'test2:', result
 result = client.add([1,2])
 print 'test3:', result
 result = client.service.string({'string':[u'中', u'国']})
