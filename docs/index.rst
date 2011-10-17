@@ -51,9 +51,10 @@ Uliweb内置APP文档:
 .. toctree::
    :maxdepth: 1
 
-   staticfiles.rst
-   soap.rst
-   auth.rst
+   app_staticfiles.rst
+   app_soap.rst
+   app_auth.rst
+   app_template.rst
 
 Indices and tables
 ==================

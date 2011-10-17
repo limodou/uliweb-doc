@@ -62,7 +62,7 @@ Uliweb中提供了auth app来进行用户识别、登录、注销甚至注册的
     * authenticate 用户认证
     * login 用户登录
     * logout 用户注销
-    * require_login decorator，用于检查用户是否登录，如果没登录则跳转到相应的URL上，缺省为 `'/login'`。而且require_login既是一个decorator也是一个普通函数，主要看第一个参数是否为function对象。
+    * require_login decorator，用于检查用户是否登录，如果没登录则跳转到相应的URL上，缺省为 `'/login'` 。而且require_login既是一个decorator也是一个普通函数，主要看第一个参数是否为function对象。
     * has_login 和require_login类似，但不是decorator
 * 缺省view方法：
     * login 用来处理用户登录，会显示登录界面和进行用户输入登录信息后的处理
