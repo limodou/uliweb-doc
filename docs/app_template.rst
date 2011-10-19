@@ -77,6 +77,9 @@ name为模块名，它需要定义在某个app的 `template_plugins` 目录下�
 
 你只要在某个.py中定义一个call函数，use标签在找到后，会自动调用。其中app, var, env是use会根据模板运行环境来提供。后面的参数是与{{use "name",xxxx}}中定义的参数相对应的。use会自动把name后的参数传入到call函数中。
 
+.. note::
+    因为uliweb的模板是编译后运行的，因此use中传入的参数只会在编译时生效，在运行时就无效了。所以对于运行时才生效的变量应该通过在view中传入或在模板中进行定义。
+
 在call中，你可以修改env，这样可以添加新的变量，不过目前很少有这么做的。另一个主要的作用就是返回链接信息。这些链接信息可以是.css, .js文件，比如上面的'jqutuils/spin.min.js'。use标签会自动根据后缀是.css, .js的转为静态的链接。其它的保持不变，因此你可以使用::
 
     a.append('<!--[if lt IE 9]>')
@@ -86,13 +89,16 @@ name为模块名，它需要定义在某个app的 `template_plugins` 目录下�
 
 传入一些代码片段。
 
-返回时，需要是一个dict，它有两个key，一个是 'toplinks', 一个是 'bottomlinks'。这是和前面所说的toplinks和bottomlinks的定义对应的。同时返回的dict中还可以包含一个depends键字，它是用来指示外部依赖模块的。它的写法就是::
+返回时，需要是一个dict，它有两个key，一个是 'toplinks', 一个是 'bottomlinks'。这是和前面所说的toplinks和bottomlinks的定义对应的。同时返回的dict中还可以包含depends或depends_after键字，它是用来指示外部依赖模块的。它的写法就是::
 
     'depends':['name1', 'name2']
     'depends':[('name1', {'var1':'value1'})]
     
 有两种主要写法。第一种是列出外部依赖的use模块，全部是使用缺省参数调用，即只传入app, var, env。第二种是带参数的依赖写法，每项内容为一个tuple，第一个元素是模块名，第二个是一个dict，列出相关要传入的参数。
 
+.. note::
+    depends用于定义所依赖的模块在本模块之前被定义。而depends_after用于定义所依赖的模块在当前模块之后被定义，例如:less.js的处理就要在.less文件之后被定义。
+    
 link 标签
 -----------------
 
