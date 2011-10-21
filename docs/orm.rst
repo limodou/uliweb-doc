@@ -581,6 +581,12 @@ Model级
 
     注意，在结果集上，你可以多个使用filter()连接多个 ``and`` 的条件，而get不支
     持这样的用法。比如你可以 User.filter(User.c.id=5).filter(User.c.year>30)。
+    
+::
+
+    user = User.get_or_notfound(5)
+    
+使用get_or_notfound可以当无满足条件的对象时抛出一个NotFound的异常。
 
 删除实例
 ^^^^^^^^^^^^^^^^^^^^
@@ -920,9 +926,7 @@ Middleware方式，你需要在settings.ini中添加::
 
 .. note::
     一般情况下，只有事务处理Middleware捕获到了异常时，才会自动对事务进行回滚。
-    因此，如果你自行捕获了异常并进行了处理，一般要自行去处理异常。同时，事务处理
-    中间件也支持在response对象上绑定一个error属性。如果为True，则事务处理中间件
-    也会回滚事务，因此使用这个方法对于自行处理了异常的情况进行事务回滚会非常方便。
+    因此，如果你自行捕获了异常并进行了处理，一般要自行去处理异常。
     
 手工处理事务，uliorm提供了基于线程模式的连接处理。uliorm提供了：Begin(), Commit(),
 和Rollback()函数。当执行Begin()时，它会先检查是否当前线程已经存在一个连接，
@@ -996,6 +1000,12 @@ Begin()在没有参数调用的情况下，会自动先判断有没有线程级�
     User.table.delete().where(User.c.username='limodou').execute()
     #查询
     select(User.c, User.c.username=='limodou').execute()
+
+NotFound异常
+-----------------
+
+当你使用get_or_notfound()或在使用instance.refernce_field时，如果对象没找到则会
+抛出NotFound异常。
 
 Model注册和引用
 ----------------------------
