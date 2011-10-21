@@ -143,6 +143,26 @@ runserver
     启动时创建进程的个数。此命令在windows下不可用。因为它要使用os.fork来创
     建进程。
         
+--ssl
+
+    是否启动https模式，需要安装pyOpenSSL，可以通过easy_install pyOpenSSL来安装。它与下面的ssl-key和ssl-cert是要一起使用的。
+    
+--ssl-key
+
+    ssl-key是指明要使用的ssl私钥文件，缺省为当前目录下的ssl.key文件。
+    
+--ssl-cert
+
+    ssl-cert是指明要使用的ssl语书文件，缺省为当前目录下的ssl.cert文件。
+    
+.. note::
+    在werkzeug的文档中有如何生成key和cert文件的方法，示例如下::
+    
+        $ openssl genrsa 1024 > ssl.key
+        $ openssl req -new -x509 -nodes -sha1 -days 365 -key ssl.key > ssl.cert
+
+    其中在生成cert文件时，会提许多的问题，按要求回答一下就好了。在windows下我是装了git环境，它带了一个openssl的工具，用起来很方便。
+    
 示例：
 
 ::
