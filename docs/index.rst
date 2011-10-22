@@ -54,6 +54,7 @@ Uliweb内置APP文档:
    app_staticfiles.rst
    app_soap.rst
    app_auth.rst
+   app_rbac.rst
    app_template.rst
 
 Indices and tables

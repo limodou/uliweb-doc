@@ -395,8 +395,6 @@ dump
     
 将数据从数据库中卸载下来。
 
-::
-
 参数说明:
     
 -o OUTPUT_DIR
@@ -431,8 +429,6 @@ dumptablefile
 只处理一个表，并且可以指定输出文件名。而后两个命令不能指定文件名，它将按表名生
 成文件名，并且放到指定的目录下。
 
-::
-
 参数说明:
     
 -t, --text
@@ -452,8 +448,6 @@ load
     Usage: uliweb load [options] <appname, appname, ...>
     
 将数据装入到数据库中。
-
-::
 
 参数说明:
     
@@ -487,8 +481,6 @@ loadtablefile
     Usage: uliweb loadtablefile [options] tablename text_filename
     
 将指定的文件装入到对应的表中。
-
-::
 
 参数说明:
     
