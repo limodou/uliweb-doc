@@ -181,3 +181,37 @@ function
     has_role = function('has_role')
     
 就可以导入真正的函数来使用。
+
+functions
+~~~~~~~~~~~~~
+
+这是一个对象，它的作用类似于function，不过它是以属性引用的方式来从settings.ini
+中的FUNCTIONS中导入方法，如::
+
+    from uliweb import functions
+    
+    func = functions.hello
+    
+相当于::
+
+    from uliweb import function
+    
+    func = function('hello')
+    
+decorators
+~~~~~~~~~~~~~~~
+
+它同functions类似的使用方法，但是需要在settings.ini中定义DECORATORS内容，如::
+
+    [DECORATORS]
+    check_role = 'uliweb.contrib.rbac.check_role'
+    check_permission = 'uliweb.contrib.rbac.check_permission'
+
+使用方法::
+
+    from uliweb import decorators
+    
+    @decorators.check_role('superuser')
+    @expose('/hello')
+    def hello():
+        #...
