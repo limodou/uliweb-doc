@@ -10,7 +10,8 @@ generic的一些功能。
 
 plugs是我在开发时把认为可以复用的一些app发布出来，供大家使用。它收集了象基本的
 页面布局，通用的view函数，jquery相关的一些界面代码和控件，以及其它的一些配套
-功能。但是在这个教程中只会使用部分功能。
+功能。但是在这个教程中只会使用部分功能。第一步请用 ``easy_install Uliweb`` 或者
+``pip install plugs`` 来安装plugs包。
 
 generic在plugs中存在一个app，它提供了封装好的view函数，可以直接使用。类似于django
 的generic_view的功能。它提供了class-based的view和function-based的view方法，你可
