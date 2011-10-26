@@ -56,6 +56,7 @@ Uliweb内置APP文档:
    app_auth.rst
    app_rbac.rst
    app_template.rst
+   app_upload.rst
 
 Indices and tables
 ==================

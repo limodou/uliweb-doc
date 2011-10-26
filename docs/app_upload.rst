@@ -1,0 +1,282 @@
+=======================
+upload(文件上传处理)
+=======================
+
+使用werkzeug进行处理
+-------------------------
+
+在Uliweb中对上传有一定的封装处理，下面先介绍一下，不使用Uliweb提供的功能，如何\
+使用底层的werkzeug来处理文件上传。
+
+当用户在前端通过<input type="file">来上传一个文件时，在request对象中的request.files\
+中可以得到相应的上传文件。其中是一个类dict的对象，存放多个文件对象属性，例如，\
+<input type="file" name="docfile">定义了一个docfile字段，当上传后，可以通过::
+
+    filename = request.files['docfile'].filename
+    file_obj = request.files['docfile'].stream
+    
+来分别处理上传的文件名和文件对象。后续你要保存到哪个目录，同时考虑到中文的问题，\
+你可能需要将上传的unicode文件名转为与操作系统对应的本身编码。因此，为了解决这些\
+问题，Uliweb提供了upload app来处理上传文件。
+
+upload 的安装与配置
+-----------------------
+
+在apps/settings.ini中的INSTALLED_APPS中添加::
+
+    'uliweb.contrib.upload'
+    
+upload缺省提供以下配置::
+
+    [UPLOAD]
+    TO_PATH = './uploads'
+    BUFFER_SIZE = 4096
+    
+    #X-Sendfile type: nginx, apache
+    X_SENDFILE = None
+    
+    #if not set, then will be set a default value that according to X_SENDFILE 
+    #nginx will be 'X-Accel-Redirect'
+    #apache will be 'X-Sendfile'
+    X_HEADER_NAME = ''
+    X_FILE_PREFIX = '/files'
+    
+    [EXPOSES]
+    file_serving = '/uploads/<path:filename>', 'uliweb.contrib.upload.file_serving'
+    
+其中：
+
+TO_PATH
+    为文件要保存的目录。缺省为当前路径下的uploads子目录。一般，当前路径就是你的\
+    项目目录。
+BUFFER_SIZE
+    保存文件时的块大小。
+
+目前upload还支持X-Sendfile的处理方式，这是目前apache, nginx中都有的一种方法，不\
+过细节上有所差异。关于X-Sendfile这里有一篇 `文章 <http://www.kuigg.com/xiazai-kongzhi>`_ \
+可以参考。简单地说就是在下载文件时可以对下载的过程进行控制，详情可参加下面的Nginx\
+配置示例。
+
+X_SENDFILE
+    X-Sendfile处理类型，目前只支持Nginx和Apache。根据需要可以输入'nginx'或'apache'。\
+    缺省为None，则表示不启动，则文件读取及下载是由Uliweb本身提供的。
+X_HEADER_NAME
+    当X_SENDFILE生效时，此选项用于指明将返回web server的头。目前已经知道Nginx和\
+    Apache要使用的头标识，其它的web server可以在这里指定。当保持为空时，则根据\
+    X_SENDFILE的值自动使用相应的头标识，对于Nginx则为 X-Accel-Redirect ，对于Apache\
+    则为 X-Sendfile。
+X_FILE_PREFIX
+    传给web server的头中新的URL的前缀。因为这个URL与原始的URL将不一样，所以利用\
+    这个前缀可以方便生成新的URL。这个前缀需要与web server中的内部URL相对应。不过\
+    对于Nginx和Apache的处理机制不完全相同，对于Nginx的方式，是通过返回一个新的URL，\
+    而对于Apache来说，则需要返回一个文件路径，不是一个URL。所以这个项的设置要根\
+    据所使用的web server而有所不同。对于Apache则可以认为是目录的前缀。对于Nginx\
+    则可以认为是新的URL的前缀。
+    
+EXPOSES/file_serving
+    用于定义一个缺省的View函数，以处理上传后的文件的下载。
+    
+其实这个配置中，真正与上传有关的就是前两项。后几项都是和下载有关的。在upload中，\
+不仅处理了上传还为了方便处理了下载。只不过，它与静态文件的下载不同，它的下载是\
+可以在非static目录下，并且可以有view的控制参与的。而静态文件是不需要进行控制处理的。
+
+文件上传的处理
+------------------
+
+其实在Uliweb有不同级别的文件上传处理，比如最原始的就是手工处理、然后就是利用upload\
+来处理、再有就是通过generic.py来处理。在处理时，有使用Form来处理的，也可以不使用\
+Form来处理，而是使用request，它们之间有一些差异。generic.py会专门在generic.py的\
+文档进行讲解，这里将根据几种情景进行说明。
+
+上传Form的定义
+~~~~~~~~~~~~~~~~~~~
+
+其实使用手工HTML或利用Uliweb提供的Form类来生成Form代码都没有太大关系，基本上是一样的。
+简单的话，就是使用Form类了，例如::
+
+    from uliweb.form import *
+
+    class F(Form):
+        file = FileField(label='file')
+
+    @expose('/show_upload')
+    def show_upload():
+        form = F(action='/upload')
+        return {'form':form}
+        
+上面定义了一个Form类，然后我们在show_upload()中将返回一个dict，用于模板的渲染。\
+这个view方法只处理了显示，上传还没有处理。在F创建时，我们传入action的值用于指定\
+上传文件后的处理URL。
+
+不使用upload app进行上传处理
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+当用户选择了文件，并提交上传后，信息将提交到/upload来。则对应的处理代码示例为::
+
+    import os
+    
+    @expose('/upload')
+    def upload():
+        
+        form = F(action='/upload')
+        if form.validate(request.params, request.files):
+            filename = request.files['file'].filename
+            target = os.path.join('./uploads', filename)
+            with open(target, 'wb') as f:
+                f.write(request.files['file'].stream.read())
+            return redirect('/ok')
+        else:
+            #指定将要使用的模板文件名
+            response.template = 'show_upload.html'
+            #如果校验失败，则再次返回Form，将带有错误信息  
+            return {'form':form}
+
+先生成保存目标的文件名，然后手工将上传的内容进行保存。不过，这里如果文件名有中\
+文有可能会报错。request中得到的文件名是unicode，你需要将其转为与操作系统相匹配\
+的编码。在Uliweb的全局配置项中提供了一个::
+
+    [GLOBAL]
+    FILESYSTEM_ENCODING = None
+    
+你可以考虑先对其进行配置，然后使用它来处理文件的编码。因此，你需要做的处理主要\
+就是:
+
+#. 生成目标文件名（可能要处理文件名编码的问题）
+#. 保存文件
+
+下面再看一看使用upload app的做法
+
+使用upload app进行上传处理
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+首先安装upload app。
+
+然后设置配置项，比如TO_PATH的值，缺省是./uploads。
+
+将上面的代码修改一下::
+
+    import os
+    
+    @expose('/upload')
+    def upload():
+        from uliweb.contrib.upload import save_file
+        
+        form = F(action='/upload')
+        if form.validate(request.params, request.files):
+            save_file(form.file.data.filename, form.file.data.file)
+            return redirect('/ok')
+        else:
+            #指定将要使用的模板文件名
+            response.template = 'show_upload.html'
+            #如果校验失败，则再次返回Form，将带有错误信息  
+            return {'form':form}
+    
+这里使用了upload中提供的save_file函数，它的原型为::
+
+    save_file(filename, fobj, replace=False)
+    
+这里只提供了两个参数，一个是文件名，一个是文件对象。第三个没有提供，因此如果存在
+同名的文件，将不会覆盖，而是自动添加象(1), (2)这样的内容。在save_file中会自动根
+据相关的配置项：文件系统编码、保存目录信息来自动生成目标文件名并转換成合适的编码，
+然后保存。
+
+为了方便处理Form字段，upload app还提供了save_file_field函数，具体使用参见下面的
+函数说明。
+
+放在一起的处理方式
+~~~~~~~~~~~~~~~~~~~~~~~
+
+我们可以考虑把显示和上传后的处理放在一起，也可以象这个例子一样，分开不同的URL。\
+如果放在一起，逻辑可以是::
+
+    def upload():
+        from uliweb.contrib.upload import save_file
+
+        form = F()
+        #GET是显示用，POST是提交用
+        if request.method == 'GET':
+            return {'form':form}
+        else:
+            #如果提交，则先进行校验，这里是使用Form的方式
+            #form有一个validate方法，可以传入多个值，这里将request.files传入
+            #以便形成完整的数据集，如果validate返回True，表示校验成功，并且
+            #上传的数据将按照Form字段定义的类型已经做了转換
+            if form.validate(request.params, request.files):
+                save_file(form.file.data.filename, form.file.data.file)
+                return redirect('/ok')
+            else:
+                #如果校验失败，则再次返回Form，将带有错误信息  
+                return {'form':form}
+                
+upload app提供方法说明
+----------------------------
+
+get_filename(filename, filesystem=False)
+    用于获得目标文件，即将TO_PATH与filename进行连接。同时，如果给出filesystem为
+    True，则将文件名转为文件系统的编码。否则返回的将是unicode。
+
+save_file(filename, fobj, replace=False)
+    用于保存一个文件。需要传入文件名和文件对象，这些都可以从request或form字段中
+    获得。如果replace设置为True，则表示当存在同名文件时自动覆盖，否则将自动添加
+    (1), (2)等内容，以保证文件不重名。save_file会把文件保存到指定的目录下，并根
+    据配置项进行相应的文件名编码的转換。
+
+save_file_field(field, replace=False, filename=None)
+    用于处理Form中的FileField字段。将自动从FileField中获得对应的文件名和文件对象。
+    也可以将文件保存为filename参数指定的文件名。
+
+save_image_field(field, resize_to=None, replace=False, filename=None)
+    和save_file_field类似，是用来处理ImageField(图像字段)的。不过，如果你设置了
+    resize_to参数的话，它还可以自动对图像进行缩放处理。
+
+delete_filename(filename)
+    删除上传目录下的某个文件。
+    
+get_url(filename)
+    获得上传目录下某个文件的URL，以便可以让浏览器进行访问。具体的文件返回是由
+    file_serving来处理的。
+                
+X-Sendfile Nginx配置说明
+-------------------------------
+
+简单的处理流程可以表示为:
+
+.. image:: _static/upload_01.png
+
+以上的处理可以理解为：
+
+#. 用户请求的url在后台经过处理后，由后台处理添加一个内部的头信息，头信息带有一个\
+   新的URL，并且返回内容为空，因此真正的内容将由Nginx完成，所以只要添加相应的头\
+   信息即可。同时你也可能会返回其它的头信息，如: `'Content-Disposition'`, `'Content-Type'` 等。
+#. Nginx在发现 `'X-Accel-Redirect'` 头之后会自动删除，并且根据URL的信息去对应的\
+   目录下查找相应的文件，然后返回。
+#. 因此用户看到的文件路径有可能和真正存放文件的路径不同。并且，允许后台处理根据\
+   需要来决定返回 `'X-Accel-Redirect'` 还是其它的信息，从而可以控制是否真正进行\
+   文件下载。一方面可以进行下载控制，另一方面可以对后台文件进行保护。
+
+Nginx的配置如下::
+
+    location /files {
+        internal;
+        alias /path/to/files;
+    }
+    
+在Nginx的conf文件中添加上面的内容，需要根据需要进行修改。其中:
+
+\/files
+    为你将在后台处理中要重新生成的URL的前缀。
+
+internal
+    表示内部使用，用户将无法直接通过URL来访问这个路径。
+
+alias
+    指明/files后对应的文件信息存放的路径。这里还可以考虑使用root，它们的区别就是:
+    
+        例如URL为 /files/filename，如果配置为 alias /download，则将要读取的文件\
+        应该是 /download/filename，而如果配置为 root /download，则将要读取的文件\
+        将是 /download/files/filename
+    
+启用Nginx进行文件下载处理的配置项应设置为::
+
+    [UPLOAD]
+    X_SENDFILE = 'nginx'
