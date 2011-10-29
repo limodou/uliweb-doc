@@ -1,6 +1,6 @@
-=======================
-upload(文件上传处理)
-=======================
+============================
+upload(文件上传及显示处理)
+============================
 
 使用werkzeug进行处理
 -------------------------
@@ -17,7 +17,8 @@ upload(文件上传处理)
     
 来分别处理上传的文件名和文件对象。后续你要保存到哪个目录，同时考虑到中文的问题，\
 你可能需要将上传的unicode文件名转为与操作系统对应的本身编码。因此，为了解决这些\
-问题，Uliweb提供了upload app来处理上传文件。
+问题，Uliweb提供了upload app来处理上传文件。同时upload app还提供上传后文件的访\
+问处理，包括X-Sendfile的支持。
 
 upload 的安装与配置
 -----------------------
@@ -208,8 +209,97 @@ Form来处理，而是使用request，它们之间有一些差异。generic.py�
                 #如果校验失败，则再次返回Form，将带有错误信息  
                 return {'form':form}
                 
+FileServing 类
+------------------
+
+upload 把文件和下载的管理组织成了类的形式。这个类就是FileServing，你可以根据需要
+从这个类进行派生。在缺省情况下，upload app会自动创建一个default_fileserving，而
+前面所看到的UPLOAD的配置项就是这个缺省的文件服务类。同时，基于这个缺省的实例，提
+供了下面的一些方法。在简单的情况下，你可以只使用缺省的文件服务对象就够了。
+
+FileServing的说明::
+
+    class FileServing(object):
+        options = {
+            'x_sendfile' : ('UPLOAD/X_SENDFILE', None),
+            'x_header_name': ('UPLOAD/X_HEADER_NAME', ''),
+            'x_file_prefix': ('UPLOAD/X_FILE_PREFIX', '/files'),
+            'to_path': ('UPLOAD/TO_PATH', './uploads'),
+            'buffer_size': ('UPLOAD/BUFFER_SIZE', 4096),
+        }
+        
+        #每个FileServing类有相应的settings配置项。因此FileServing的所有方法
+        #都是根据这些配置项计算来的
+        
+        def get_filename(self, filename, filesystem=False)
+            """
+            用于获得一个文件的实际路径。它是根据to_path计算得到的。如果
+            filesystem为True，则会将生成的文件名按settings中配置的文件
+            系统编码来进行转換。
+            """
+            
+        def download(self, filename, action=None, x_filename='', real_filename='')
+            """
+            提供下载处理，支持X-Sendfile的处理。action取值为'download'或
+            'inline'，它们分别对应不同的应答头:
+            
+            download
+                Content-Disposition:attachment; filename=<filename>
+            inline
+                Content-Disposition:inline; filename=<filename>
+                
+            如果action为None，则不显示上面的头信息。
+            
+            在这里，我们看到有三个文件名，都有什么用？
+            
+            filename一般是从数据库中取出来的文件名，比如我们将文件名保存到
+            FileProperty中，当取出来时是Unicode格式的，并且是相对于上传路径
+            的相对路径，所以我们要进行转換。
+            
+            如果不考虑X-Sendfile的情况，一般我们只提供filename就足够了，因
+            为可以自动根据to_path来计算出实际文件路径。不过当文件名并不存在
+            于to_path所指定的目录下时，我们还可以提供real_filename参数来指
+            明文件实际的路径。
+            
+            对于使用了X-Sendfile的情况，又复杂了一些。我们可能还需要指出
+            x_filename参数，比如在nginx下，它用来指明X-Accel-Redirect中的
+            文件名，而这个文件路径是一个URL，提供Nginx可以找到真正的文件。
+            所以x_sendfile其实是一个中间路径。
+            
+            所以x_sendfile和real_filename其实不会同时使用。在更底层的filedown
+            函数中会进行确实的处理。对于用户来说，如果想实现根据配置不同，
+            使用不同的下载方式，则么这些参数最好都提供。
+            """
+
+        def save_file(self, filename, fobj, replace=False)
+            """
+            将文件保存在to_path路径下。
+            """
+            
+        def save_file_field(self, field, replace=False, filename=None)
+            """
+            根据文件字段来保存。路径处理同save_file
+            """
+            
+        def save_image_field(self, field, resize_to=None, replace=False, filename=None)
+            """
+            根据图片字段来保存。路径处理同save_file
+            """
+            
+        def delete_filename(self, filename)
+            """
+            删除保存在to_path下的文件。
+            """
+            
+        def get_url(self, filename)
+            """
+            获取filename对应的URL。
+            """
+            
 upload app提供方法说明
 ----------------------------
+
+以下方法都是基于缺省的default_fileserving对象来处理的。
 
 get_filename(filename, filesystem=False)
     用于获得目标文件，即将TO_PATH与filename进行连接。同时，如果给出filesystem为
@@ -235,6 +325,11 @@ delete_filename(filename)
 get_url(filename)
     获得上传目录下某个文件的URL，以便可以让浏览器进行访问。具体的文件返回是由
     file_serving来处理的。
+    
+.. note::
+    如果上面的文件名使用的是相对路径，则会根据当前的FileServing对象来决定使用
+    什么配置信息，比如文件保存的路径。但是如果使用绝对路径，则将使用绝对路径进
+    行处理。
                 
 X-Sendfile Nginx配置说明
 -------------------------------
