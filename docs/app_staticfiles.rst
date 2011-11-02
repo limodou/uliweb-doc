@@ -53,3 +53,21 @@ wsgi_middleware_staticfiles/STATIC_URL
     静态URL的前缀。在Uliweb中，所有静态文件都有相同的前缀。
     
 其它的为内部使用。
+
+静态域名输出
+----------------
+
+目前在uliweb的default_settings.ini中増加了::
+
+    [DOMAINS]
+    default = {'domain':'', 'display':False}
+    static = {'domain':'', 'display':False}
+
+它定义了不同名字的域名信息。只要在你的settings中定义成::
+
+    [DOMAINS]
+    static = {'domain':'http://static.com', 'diaplay':True}
+    
+这样，当使用url_for_static时，静态URL将自动添加静态域名。如果display为False，则
+缺省不输出。但是如果向 url_for_static 中传入 _external=True 时，则也会输出域名
+信息。

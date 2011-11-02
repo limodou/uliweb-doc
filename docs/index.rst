@@ -40,6 +40,7 @@ Uliweb 文档
    template.rst
    url_mapping.rst
    views.rst
+   form.rst
    middleware.rst
    generic.rst
    test.rst
