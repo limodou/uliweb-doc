@@ -1047,9 +1047,59 @@ uliorm在考虑Model的可替换性时，提供了一种注册机制。这种机
 在定义关系时，象OneToOne, Reference和ManyToMany时既可以接受字符串的Model名，也
 可以直接传入Model的类，都可以。
 
-如何在其它程序中使用 uliorm
+如何在其它项目中使用 uliorm
 ----------------------------------
 
+uliorm是可以在非Uliweb项目和非web程序中使用的，因此根据是否有Uliweb项目，决定了
+可以使用不同的方式。
+
+非Uliweb项目
+~~~~~~~~~~~~~~
+
+Uliweb项目中，所有的Model都要配置到settings.ini中去，所以在非Uliweb项目中，你无
+法这样做，因此处理上会有所不同。因为没有了Model的配置，所以你需要在使用Model前
+先导入它们。然后你要考虑是自动建表还是手工建表。我建议是把自动建表单独处理，只
+在需要时执行。简单的一个代码示例::
+
+    from uliweb.orm import *
+    
+    class User(Model):
+        name = Field(unicode)
+    class Group(Model):
+        name = Field(str)
+        users = ManyToMany(User, collection_name = 'groups')
+    
+    if __name__ == '__main__':
+        db = get_connection('sqlite://')
+        db.metadata.drop_all()
+        db.metadata.create_all()
+        u1 = User(name='limodou')
+        u1.save()
+        g1 = Group(name='python')
+        g1.save()
+        g1.users.add(u1)
+    
+        print g1.users.one().groups.one().users.one().name
+        print u1.groups.one().users.one().groups.one().name
+    
+这里 ``db.metadata.create_all()`` 用于创建所有的表。
+
+Uliweb项目
+~~~~~~~~~~~~
+
+如果我们要在非web程序中使用uliorm时，我们还是希望使用Uliweb的管理机制，使用Uliweb
+项目的配置信息，这时我们可以::
+
+    from uliweb.manage import make_application
+    
+    app = make_application(start=False, debug_console=False, debug=False)
+    Begin()
+    try:
+        User = get_model('user')
+        print list(User.all())
+        Commit()
+    except:
+        Rollback()
     
 模块级 API
 -------------------

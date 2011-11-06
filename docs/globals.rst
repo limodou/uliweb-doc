@@ -97,7 +97,8 @@ settings
 如::
 
     from uliweb import (redirect, json, POST, GET, 
-        url_for, expose, get_app_dir, get_apps, function
+        url_for, expose, get_app_dir, get_apps, function,
+        functions, decorators
         )
 
 redirect
@@ -215,3 +216,8 @@ decorators
     @expose('/hello')
     def hello():
         #...
+        
+UliwebError
+---------------
+
+Uliweb提供了一个通用的异常类 - UliwebError，你可以考虑使用它。
