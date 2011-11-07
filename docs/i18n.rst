@@ -88,6 +88,10 @@ I18N字符串的定义
     
 所以要编辑的串，都要放在{{}}中，并且使用_()进行处理。
 
+.. attention::
+
+    在模板中_()中的字符串不要使用u''的形式，并且整个模板以utf-8来保存。
+
 settings.ini
 ===============
 
@@ -119,6 +123,8 @@ uliweb.contrib.i18n App提供了一个i18n的命令，在命令行下输入::
       -d DIRECTORY  If set, then extract translation messages from directory.
       --uliweb      If set, then extract translation messages from uliweb.
       -l LOCALE     Target locale. Default is "en".
+      -t TEMPLATE, --template=TEMPLATE
+                    PO variables definition, such as: charset, translater, etc.
     
 因此i18n支持几种语言提取方式:
 
@@ -134,3 +140,23 @@ uliweb.contrib.i18n App提供了一个i18n的命令，在命令行下输入::
     uliweb i18n -p -l zh_CN
     
 注意，-l 参数如果不提供则自动为'en'。因此，如果要翻译中文一定要加上``-l zh_CN``。
+
+#. ``-t`` 它允许你写一个po的模板文件，在uliweb.i18n下已经提供了一个示例，名为: ``po_template.ini``
+   其内容为::
+
+        [I18N]
+        First_Author = 'FIRST AUTHOR <EMAIL@ADDRESS>'
+        Project_Id_Version = 'PACKAGE VERSION'
+        Last_Translator = 'FULL NAME <EMAIL@ADDRESS>'
+        Language_Team = 'LANGUAGE <LL@li.org>'
+        Content_Type_Charset = 'utf-8'
+        Content_Transfer_Encoding = '8bit'
+        Plural_Forms = 'nplurals=1; plural=0;'
+
+   你可以修改其中的内容，它们将自动填充到生成的pot和po文件中。
+
+编码注意事项
+----------------
+
+在i18n中提供gettext和ugettext，它们的区别是：前者返回字符串，后者返回unicode。
+为了正确处理中文编码，建议：程序、模板包括ini文件都使用utf-8编码来处理。

@@ -52,6 +52,7 @@ project目录下运行uliweb命令时，它会根据当前project所安装的app
       dump
       dumptable
       dumptablefile
+      export
       exportstatic
       i18n
       load
@@ -173,6 +174,9 @@ develop
 ~~~~~~~~~~~~~~~~~~
 
 功能同runserver，但是会自动包含develop这个App。
+
+.. note::
+    使用这个命令，需要安装plugs。
 
 makeproject
 ~~~~~~~~~~~~~~~~~~
