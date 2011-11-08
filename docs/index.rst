@@ -31,7 +31,7 @@ Uliweb 文档
 .. toctree::
    :maxdepth: 1
 
-   xmlrpc.rst
+   settings.rst
    i18n.rst
    mail.rst
    deployment.rst
@@ -46,7 +46,8 @@ Uliweb 文档
    test.rst
    log.rst
    session.rst
-
+   xmlrpc.rst
+   
 Uliweb内置APP文档:
 
 .. toctree::

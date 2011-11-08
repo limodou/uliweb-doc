@@ -217,6 +217,16 @@ decorators
     def hello():
         #...
         
+json_dumps
+~~~~~~~~~~~~~~~~
+
+用于将Python的数据结构转为json格式的方法。
+
+    json_dumps(obj, unicode=False, encoding='utf-8')
+    
+unicode为False时，将会把obj中的unicode值转为encoding编码的串。否则转为unicode
+描述形式的串。
+        
 UliwebError
 ---------------
 
