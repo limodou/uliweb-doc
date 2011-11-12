@@ -402,6 +402,9 @@ OneToOne是用来定义一对一的关系。
     >>> b1.test
     <Test {'username':'limodou','year':0,'id':1}>
     
+在定义OneToOne时，可以传入一个collection_name的参数，这样，可以用这个名字来反向
+引用对象。如果没有给出collection_name，则将使用表名作为引用名。
+
 .. note::
     
     注意，OneToOne只是一个关系，它并不会自动根据主表记录自动创建关联表的记录。

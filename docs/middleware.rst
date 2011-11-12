@@ -87,7 +87,7 @@ middlware时会根据 ``ORDER`` 的值先对Middleware进行排序，然后再�
    不同。你需要强制返回response对象，因为它会传递到下一个处理方法中。
 
 配置
-==========
+--------------
 
 有两个地方可以配置：apps/settings.ini和某个应用下的settings.ini。
 
