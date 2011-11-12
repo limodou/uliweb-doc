@@ -91,37 +91,26 @@ middlware时会根据 ``ORDER`` 的值先对Middleware进行排序，然后再�
 
 有两个地方可以配置：apps/settings.ini和某个应用下的settings.ini。
 
-Uliweb缺省定义了一个::
+Uliweb缺省定义了一个空的section::
 
-    GLOBAL
-    MIDDLEWARE_CLASSES = []
+    [MIDDLEWARES]
 
-所以，不管你把MIDDLEWARE_CLASSES定义在哪里，都会由Uliweb自动将所有定义在不同的
-settings.ini文件中的MIDDLEWARE_CLASSES汇总到一起。这个功能是由Uliweb中的ini功能
-提供的。比如前面的AuthMiddle就是在uliweb/contrib/auth/settings.ini中有定义::
+它的定义形式为::
 
-    [GLOBAL]
-    MIDDLEWARE_CLASSES = [
-        'uliweb.contrib.auth.middle_auth.AuthMiddle',
-    ]
+    middleware_name = 'middleware_class_path'[, order]
+    
+前面的key是middleware的名字。后面的值可以有两种写法, 一种是只有middleware的类路径，
+另一种是在类路径的后面还有一个顺序号。如果没有给出，则uliweb会自动从middleware
+类的属性中获取ORDER的值，如果不存在，则缺省置为500。如果值为空，则当前的middleware
+将被删除。
 
-因此，你自已的应用如果要配置Middleware，可以自行考虑要放到哪级的settings.ini中。
+MIDDLEWARE的顺序如何确定？
 
-那么你可能要问，当所有的MIDDLEWARE_CLASSES汇总成一个list时，顺序如何确定？
+在前面伪代码中，有一个对Middleware进行排序的处理。它会根据Middleware中的ORDER的
+大小进行顺序。如果顺序号相同，则保持导入的顺序。
 
-在前面伪代码中，有一个对Middleware进行排序的处理。它会根据Middleware中的ORDER来
-排序，这是缺省的。如果你的settings.ini在定义时加上了顺序值，例如::
-
-    [GLOBAL]
-    MIDDLEWARE_CLASSES = [
-       (200,  'uliweb.contrib.auth.middle_auth.AuthMiddle'),
-    ]
-
-它就会按200的顺序值进行排序。
-
-Uliweb中的app有些已经提供了MIDDLEWARE_CLASSES，它们只要你在INSTALLED_APPS中包含
-app即可。因为在它们的settings.ini中已经写好了MIDDLEWARE_CLASSES的配置，因此不再
-需要重新定义，并且顺序也考虑好了。
+Uliweb中的app有些已经提供了settings.ini中的MIDDLEWARES的定义，它们只要你在
+INSTALLED_APPS中包含app即可使用。顺序一般也定义好了。
 
 因此当你自已写了Middleware或特殊情况下，才需要重新定义顺序。
 

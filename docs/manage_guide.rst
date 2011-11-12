@@ -29,6 +29,7 @@ uliweb
     Available subcommands:
       call
       develop
+      export
       exportstatic
       i18n
       makeapp
@@ -221,6 +222,40 @@ makepkg
 ::
 
     Usage: uliweb makepkg pkgname
+
+export
+~~~~~~~~~~~~~~~~~~
+
+将已安装的app目录下的文件导出到指定目录。它的作用是当部署到某些受限环境时，需要
+将用到的模块源码打包上传，通过这个命令可以导出uliweb项目中已经安装的模块的源码，
+未安装的app源码将不会导出。同时也可以导出指定模块的源码，如导出uliweb的源码。
+
+::
+
+    Usage: uliweb export [options] [module1 module2]
+    
+参数说明:
+    
+--with-static
+    是否在拷贝时同时拷贝 ``static`` 子目录。缺省情况下是不拷贝。因为一般你会使用
+    web server来处理静态文件，所以一般不需要拷贝。
+    
+-d OUTPUTDIR
+    将指定的模块源码导出到指定的目录下。
+    
+示例：
+
+::
+
+    uliweb export -d ../lib 
+    #将所有已安装的app导出到 ``../lib`` 目录下，不包含 static 目录。
+    
+    uliweb export -d ../lib uliweb
+    #uliweb包导出到 ``../lib`` 目录下。
+    
+.. attention::
+    
+    export命令需要在project目录下运行。
 
 exportstatic
 ~~~~~~~~~~~~~~~~~~

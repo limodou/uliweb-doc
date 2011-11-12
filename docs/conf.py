@@ -215,3 +215,5 @@ man_pages = [
     ('index', 'uliwebsimple_todotutorial', u'Uliweb Documentation',
      [u'limodou'], 1)
 ]
+
+locale_dirs = ['../locale']

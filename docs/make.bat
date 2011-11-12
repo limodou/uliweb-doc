@@ -17,6 +17,7 @@ if "%1" == "help" (
 	:help
 	echo.Please use `make ^<target^>` where ^<target^> is one of
 	echo.  html       to make standalone HTML files
+	echo.  gettext    to make i18n pot files
 	echo.  dirhtml    to make HTML files named index.html in directories
 	echo.  singlehtml to make a single large HTML file
 	echo.  pickle     to make pickle files
@@ -45,6 +46,14 @@ if "%1" == "html" (
 	if errorlevel 1 exit /b 1
 	echo.
 	echo.Build finished. The HTML pages are in %BUILDDIR%/html.
+	goto end
+)
+
+if "%1" == "gettext" (
+	%SPHINXBUILD% -b gettext -d ../locale/doctrees ./ ../locale/zh_CN
+	if errorlevel 1 exit /b 1
+	echo.
+	echo.Build finished. The POT pages are in ../locale/zh_CN.
 	goto end
 )
 
