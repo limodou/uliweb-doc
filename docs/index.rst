@@ -25,6 +25,7 @@ Uliweb 文档
    plugs_todo.rst
    hello_uliweb.rst
    guestbook.rst
+   sae.rst
 
 技术文档:
 
