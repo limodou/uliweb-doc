@@ -98,7 +98,7 @@ settings
 
     from uliweb import (redirect, json, POST, GET, 
         url_for, expose, get_app_dir, get_apps, function,
-        functions, decorators
+        functions, decorators, NotFound
         )
 
 redirect
@@ -226,8 +226,25 @@ json_dumps
     
 unicode为False时，将会把obj中的unicode值转为encoding编码的串。否则转为unicode
 描述形式的串。
+
+NotFound
+~~~~~~~~~~~~~~~~
+
+404对应的异常类。如果某个链接不存在，将引发这个异常。如果在你的处理中，发现有
+不存在的对象，建议使用error来返回。因为NotFound会把当前访问的URL显示出来，可能
+不是你想显示的内容。
+
+HTTPException
+~~~~~~~~~~~~~~~~~~~
+
+通用的HTTP错误异常类。
+
+Middleware
+~~~~~~~~~~~~~~~~~
+
+中间件基类，所有 Middleware 类可以从它派生。
         
 UliwebError
----------------
+~~~~~~~~~~~~~~~~~~~~
 
 Uliweb提供了一个通用的异常类 - UliwebError，你可以考虑使用它。
