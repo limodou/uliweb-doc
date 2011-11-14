@@ -12,7 +12,7 @@ Uliweb中的Middleware是类似于django的Middleware，它可以在交易处理
 
 先以contrib.auth.middle_auth的AuthMiddle为例::
 
-    from uliweb.middleware import Middleware
+    from uliweb import Middleware
 
     class AuthMiddle(Middleware):
         ORDER = 100

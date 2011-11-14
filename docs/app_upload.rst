@@ -32,6 +32,8 @@ upload缺省提供以下配置::
     [UPLOAD]
     TO_PATH = './uploads'
     BUFFER_SIZE = 4096
+    FILENAME_CONVERTER =
+    BACKEND =
     
     #X-Sendfile type: nginx, apache
     X_SENDFILE = None
@@ -52,6 +54,12 @@ TO_PATH
     项目目录。
 BUFFER_SIZE
     保存文件时的块大小。
+FILENAME_CONVERTER
+    文件名转換类，它用来处理当文件上传后，在保存文件时使用的文件名。没有给出此配置时缺省是使用UUID\
+    来生成文件名，以保证文件名不重复。同时upload还定义了其它的几种转換类，可以根据\
+    需要来使用。更详细的说明参见下面具体的说明。
+BACKEND
+    upload中文件上传和下载的类定义。如果没有给出，则缺省使用 ``FileServing`` 类来处理。
 
 目前upload还支持X-Sendfile的处理方式，这是目前apache, nginx中都有的一种方法，不\
 过细节上有所差异。关于X-Sendfile这里有一篇 `文章 <http://www.kuigg.com/xiazai-kongzhi>`_ \
@@ -226,16 +234,41 @@ FileServing的说明::
             'x_file_prefix': ('UPLOAD/X_FILE_PREFIX', '/files'),
             'to_path': ('UPLOAD/TO_PATH', './uploads'),
             'buffer_size': ('UPLOAD/BUFFER_SIZE', 4096),
+            '_filename_converter': ('UPLOAD/FILENAME_CONVERTER', None),
         }
         
         #每个FileServing类有相应的settings配置项。因此FileServing的所有方法
         #都是根据这些配置项计算来的
         
-        def get_filename(self, filename, filesystem=False)
+        def filename_convert(self, filename):
+            """
+            对文件名进行转換
+            """
+
+        def get_filename(self, filename, filesystem=False, convert=False)
             """
             用于获得一个文件的实际路径。它是根据to_path计算得到的。如果
             filesystem为True，则会将生成的文件名按settings中配置的文件
-            系统编码来进行转換。
+            系统编码来进行转換。convert参数用于处理是否要进行文件名的转換。
+            因此根据参数的不同，它有几种用法:
+            
+            1. 根据传入的filename得到对应的实际路径，但文件名不转換为文件系统
+               的编码:
+            
+               get_filename(filename)
+            
+            2. 根据传入的filename得到对应的实际路径，但是文件名转換为文件系统
+               的编码:
+            
+               get_filename(filename, filestystem=True)
+                
+            3. 得到filiename的实际路径，同时进行文件名转換，这样得到的文件名将
+               不是原来的文件名:
+            
+               get_filename(filename, convert=True)
+            
+            前两种主要是用在上传文件后的显示上，这时一般使用的是转換后的文件名。
+            第三种是用在上传后保存文件时，先对文件名进行转換。
             """
             
         def download(self, filename, action=None, x_filename='', real_filename='')
@@ -291,9 +324,21 @@ FileServing的说明::
             删除保存在to_path下的文件。
             """
             
-        def get_url(self, filename)
+        def get_href(self, filename)
             """
-            获取filename对应的URL。
+            获取filename对应的URL地址，不是真正的URL信息
+            """
+            
+        def get_url(self, filename, **url_args)
+            """
+            获取filename对应的URL。注意，这是一个真正的URL，如果只是想得到URL的
+            地址，要使用get_href(filename)
+            
+            如果url_args中传入了 title 和 text，则生成的URL形式为
+            
+            <a href='xxx' title='title'>text</a>
+            
+            如果没有传入，则使用filename代替title和text。
             """
             
 upload app提供方法说明
@@ -323,13 +368,49 @@ delete_filename(filename)
     删除上传目录下的某个文件。
     
 get_url(filename)
-    获得上传目录下某个文件的URL，以便可以让浏览器进行访问。具体的文件返回是由
-    file_serving来处理的。
+    获得上传目录下某个文件的URL，以便可以让浏览器进行访问。
+
+get_href(filename)
+    获取filename对应的URL地址，不是真正的URL信息
     
 .. note::
     如果上面的文件名使用的是相对路径，则会根据当前的FileServing对象来决定使用
     什么配置信息，比如文件保存的路径。但是如果使用绝对路径，则将使用绝对路径进
     行处理。
+    
+FilenameConverter类的说明
+-------------------------------
+
+upload提供了几个用于文件名上传后转换的类，并且可以在settings.ini进行配置，分别\
+说明如下:
+
+#. FilenameConverter::
+
+    class FilenameConverter(object):
+        @staticmethod
+        def convert(filename):
+            return filename
+
+   最基本的类，对文件名不作任何转換
+
+#. UUIDFilenameConverter
+
+   使用UUID方法生成文件名。文件名将保证唯一。
+
+#. MD5FilenameConverter
+
+   使用MD5算法生成文件名。具体算法::
+
+        f = md5(
+                    md5("%f%s%f%s" % (time.time(), id({}), random.random(),
+                                      getpid())).hexdigest(), 
+                ).hexdigest()
+
+BACKEND配置说明
+-------------------
+
+upload在启动时会缺省按照 ``UPLOAD/BACKEND`` 的定义来生成缺省的fileserving类。如果
+没给出，则使用FileServing。通过修改 ``BACKEND`` ，用户就可以定义自已缺省的文件上传处理类。
                 
 X-Sendfile Nginx配置说明
 -------------------------------
