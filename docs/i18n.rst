@@ -8,7 +8,7 @@ Uliweb支持标准的gettext的i18n的处理。在程序中和在模板中都可
 I18N的配置
 -----------
 
-为了使用i18n，需要在settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.i18n'，
+为了使用i18n，需要在settings.ini中的INSTALLED_APPS中添加 ``'uliweb.contrib.i18n'`` ，
 同时uliweb.contrib.i18n下的settings.ini还定义了一些配置项，如::
 
     [I18N]
@@ -17,41 +17,51 @@ I18N的配置
     LOCALE_DIRS = []
     SUPPORT_LANGUAGES = []
 
-* LANGUAGE_COOKIE_NAME 是用来将语言的选择存在cookie中使用的，一般不需要修改。
-* LANGUAGE_CODE 是表示缺省的语言，缺省为英文。
-* LOCALE_DIRS 可以用来设置语言文件所在的目录，可以是多个。同时在其中还可以定
-  义一些特殊的变量，如:${PROJECT}表示项目目录，${plugs}表示plugs模块所在的目录。
+* ``LANGUAGE_COOKIE_NAME`` 是用来将语言的选择存在cookie中使用的，一般不需要修改。
+* ``LANGUAGE_CODE`` 是表示缺省的语言，缺省为英文。
+* ``LOCALE_DIRS`` 可以用来设置语言文件所在的目录，可以是多个。同时在其中还可以定
+  义一些特殊的变量，如: ``${PROJECT}`` 表示项目目录， ``${plugs}`` 表示plugs模块所在的目录。
   所以通过这些变量可以引用一些与项目有关的相对路径。
-* SUPPORT_LANGUAGES 表示网站所支持的语言种类。除原本开发所使用的语言外，如果浏
-  览器自动希望某种语言，并且这种语言在SUPPORT_LANGUAGES所支持的范围之内时，才会
+* ``SUPPORT_LANGUAGES`` 表示网站所支持的语言种类。除原本开发所使用的语言外，如果浏
+  览器自动希望某种语言，并且这种语言在 ``SUPPORT_LANGUAGES`` 所支持的范围之内时，才会
   生效。
 
-一旦配置了I18N，则会自动应用 'uliweb.i18n.middle_i18n.I18nMiddle' 这个middleware，
+一旦配置了I18N，则会自动应用 ``'uliweb.i18n.middle_i18n.I18nMiddle'`` 这个middleware，
 这个可以在uliweb.contrib.i18n/settings.ini中看到。
 
 I18N语言的判定规则
 --------------------
 
 在Uliweb中，可以有许多种方式来决定使用哪种语言，比如：在session中，在cookie中，
-通过浏览器发送的HTTP头来自动判断，还有就是在settings中的LANGUAGE_CODE来决定。
+通过浏览器发送的HTTP头来自动判断，还有就是在settings中的 ``LANGUAGE_CODE`` 来决定。
 Uliweb在处理时按照以下的顺序来决定是否使用某种语言:
 
+#. 如果url的Query_String上有 ``lang=xxx`` 的信息，则这个值为要使用的语言。 (`0.0.1増加`)
+
+   .. note::
+
+      ``lang`` 的名字是可以在settings.ini中配置的，缺省为空，需要设置此功能才会启动。
+      配置选项如下::
+    
+        [I18N]
+        URL_LANG_KEY = 'lang'
+        
 #. 如果session中存在 uliweb_language 的定义，则这个值为要使用的语言；
-#. 如果cookie中存在与settings.ini中I18N/LANGUAGE_COOKIE_NAME对应的值时，则这个
+#. 如果cookie中存在与settings.ini中 ``I18N/LANGUAGE_COOKIE_NAME`` 对应的值时，则这个
    值为要使用的语言；
-#. 如果浏览器发送的HTTP头有HTTP_ACCEPT_LANGUAGE的信息，并且得到的语言在
-   SUPPORT_LANGUAGES中有定义，则使用HTTP头中定义的语言；
-#. 最后选择settings.ini中定义的LANGUAGE_CODE
+#. 如果浏览器发送的HTTP头有 ``HTTP_ACCEPT_LANGUAGE`` 的信息，并且得到的语言在
+   ``SUPPORT_LANGUAGES`` 中有定义，则使用HTTP头中定义的语言；
+#. 最后选择settings.ini中定义的 ``LANGUAGE_CODE``
 
 所以如果你的网站支持多种语言，可以按照上面的说明来选择不同的模式。简单情况下只
-要定义LANGUAGE_CODE='zh_CN'就可以支持中文了。如果想支持浏览器自动识别，可以定义
+要定义 ``LANGUAGE_CODE='zh_CN'`` 就可以支持中文了。如果想支持浏览器自动识别，可以定义
 settings.ini为::
 
     [I18N]
     LANGUAGE_CODE = 'en'
     SUPPORT_LANGUAGES = ['en', 'zh_CN']
 
-上面的定义说明当前网站支持两种语言，缺省为'en'。
+上面的定义说明当前网站支持两种语言，缺省为 ``'en'`` 。
     
 I18N字符串的定义
 ------------------
@@ -76,21 +86,21 @@ I18N字符串的定义
 在运行时会根据当时的上下文环境自动进行语言的切换。因此一般使用带有lazy的函数。
 
 .. note::
-    使用lazy的函数不能支持 `_('%s') % 'name'` 这种形式，所以建议使用非lazy的函数 
+    使用lazy的函数不能支持 ``_('%s') % 'name'`` 这种形式，所以建议使用非lazy的函数 
 
 模板
 ======
 
 因为uliweb的模板会编译为.py文件，所以除了不用导入gettext函数外，和在程序中无差别。
-一旦你配置了i18n的app，会自动向模板环境中添加_()函数。示例::
+一旦你配置了i18n的app，会自动向模板环境中添加 ``_()`` 函数。示例::
 
     <div>hi, {{=_('name')}}</div>
     
-所以要编辑的串，都要放在{{}}中，并且使用_()进行处理。
+所以要编辑的串，都要放在 ``{{}}`` 中，并且使用 ``_()`` 进行处理。
 
 .. attention::
 
-    在模板中_()中的字符串不要使用u''的形式，并且整个模板以utf-8来保存。
+    在模板中 ``_()`` 中的字符串不要使用 ``u''`` 的形式，并且整个模板以utf-8来保存。
 
 settings.ini
 ===============
@@ -103,32 +113,39 @@ settings.ini
 I18N字符串的提取
 ------------------
     
-uliweb.contrib.i18n App提供了一个i18n的命令，在命令行下输入::
+uliweb.contrib.i18n App提供了一个i18n的命令它提供以下参数:
 
-    uliweb help i18n
-    
-可以看到::
+--apps
 
-    Usage: uliweb i18n [options] <appname, appname, ...>
+    如果设置，将从存在于项目中的所有app中进行抽取，并将 .po 文件保存在每个app下的 ``locale`` 目录中。
     
-    Extract i18n message catalog form app or all apps. Please notice that you 
-    can not set -p, -d, --uliweb, --apps and <appname, ...> at the same time.
+-p
+
+    如果设置，将从项目目录抽取翻译信息。
     
-    Options:
-      --apps        If set, then extract translation messages from all apps
-                    located in project direcotry, and save .po file in each app
-                    direcotry.
-      -p            If set, then extract translation messages from project
-                    directory.
-      -d DIRECTORY  If set, then extract translation messages from directory.
-      --uliweb      If set, then extract translation messages from uliweb.
-      -l LOCALE     Target locale. Default is "en".
-      -t TEMPLATE, --template=TEMPLATE
-                    PO variables definition, such as: charset, translater, etc.
+-d DIRECTORY
+
+    如果设置，将从指定目录抽取翻译信息。
+    
+--uliweb
+
+    如果设置，将从uliweb包中抽取翻译信息。
+    
+-l LOCALE
+
+    目标语言，缺省是 ``en`` 。
+    
+--exact
+
+    如果设置，则在旧的.po中存在，但是在.pot中不存在的项目将被删除。 (`0.0.1新増`)
+    
+-t TEMPLATE, --template=TEMPLATE
+            
+    PO文件中一些静态信息的定义，如：charset, translater等模板的定义。
     
 因此i18n支持几种语言提取方式:
 
-#. ``--apps`` 这种方式会在每个app下都生成一个locale的目录
+#. ``--apps`` 这种方式会在每个app下都生成一个locale的目录。注意这种方式只处理存在于项目目录下的app，对于已经安装但是不存在于项目目录下的app将不做处理。
 #. ``-p`` 这种方式会将项目下创建一个locale目录，将整个项目所有的内容都放在一个文件中
 #. ``-d`` 按指定目录进行处理。比如plugs它只是一个app的集合，并不是一个完整的项目，所以
    上述参数无法使用，但是可以使用这个-d参数进行处理
@@ -152,8 +169,7 @@ uliweb.contrib.i18n App提供了一个i18n的命令，在命令行下输入::
 
     uliweb i18n -p -l zh_CN
     
-注意，-l 参数如果不提供则自动为'en'。因此，如果要翻译中文一定要加上``-l zh_CN``。
-
+注意， ``-l`` 参数如果不提供则自动为 ``'en'`` 。因此，如果要翻译中文一定要加上 ``-l zh_CN`` 。
 
 编码注意事项
 ----------------
