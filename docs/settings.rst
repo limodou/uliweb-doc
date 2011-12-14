@@ -107,6 +107,8 @@ GLOBAL
     TEMPLATE_TEMPLATE = ('%(view_class)s/%(function)s', '%(function)s')
                                 #不同view方法的模板路径形式，前者为类形式，
                                 #后者为函数形式
+    TEMPLATE_DIRS = []          #全局的模板路径，当所有app中都找不到模板时，将在
+                                #这个目录下进行查找
 
 其中 ``TEMPLATE_TEMPLATE`` 用于对应不同的view形式的模板路径方式。对于类，缺省是
 在templates下为 ``classname/function.html`` 的形式。而函数形式的view则直接对应

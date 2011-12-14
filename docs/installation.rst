@@ -29,6 +29,7 @@
     python setup.py develop
 
 使用develop安装只会在Python/site-packages下建一个链接，并不会真正安装，好处就是更新方便。
+不过，当Uliweb的版本升级了，还是要再执行一下安装过程的。
 
 当然你也可以直接通过 install 来安装。
 
