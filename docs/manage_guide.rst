@@ -31,8 +31,10 @@ uliweb
       develop
       export
       exportstatic
+      find
       i18n
       makeapp
+      makecmd
       makepkg
       makeproject
       runserver
@@ -55,11 +57,13 @@ project目录下运行uliweb命令时，它会根据当前project所安装的app
       dumptablefile
       export
       exportstatic
+      find
       i18n
       load
       loadtable
       loadtablefile
       makeapp
+      makecmd
       makepkg
       makeproject
       reset
@@ -179,50 +183,6 @@ develop
 .. note::
     使用这个命令，需要安装plugs。
 
-makeproject
-~~~~~~~~~~~~~~~~~~
-
-生成一个project框架，它将自动按给定的名字生成一个project目录，同时包含有初始子目录和文件。
-
-::
-
-    Usage: uliweb makeproject projectname
-  
-示例：
-
-::
-
-    uliweb makeproject project 
-    
-创建project项目目录。
-
-makeapp
-~~~~~~~~~~~~~~~~~~
-
-生成一个app框架，它将自动按给定的名字生成一个app目录，同时包含有初始子目录和文件。
-
-::
-
-    Usage: uliweb makeapp appname
-  
-示例：
-
-::
-
-    uliweb makeapp Hello 
-    
-创建Hello应用。如果当前目前下有apps目录，则将在apps目录下创建一个Hello的目录，
-并带有初始的文件和结构。如果当前目前下没有apps目录，则直接创建Hello的目录。
-
-makepkg
-~~~~~~~~~~~~~~~~~~
-
-生成一个Python包结构目录，即带有__init__.py文件。
-
-::
-
-    Usage: uliweb makepkg pkgname
-
 export
 ~~~~~~~~~~~~~~~~~~
 
@@ -297,6 +257,78 @@ settings.py中设定了INSTALLED_APPS参数，则所有设定的app将被处理�
     uliweb exportstatic static
     #将所有已安装的app下的static文件拷贝到static目录下。
         
+find
+~~~~~~~~~~~~
+
+查找对象，包括：模板、URL对应的view
+
+::
+
+    Usage: uliweb find -u url
+    or
+    Usage: uliweb find -t template
+    or
+    Usage: uliweb find -c static
+
+makeproject
+~~~~~~~~~~~~~~~~~~
+
+生成一个project框架，它将自动按给定的名字生成一个project目录，同时包含有初始子目录和文件。
+
+::
+
+    Usage: uliweb makeproject projectname
+  
+示例：
+
+::
+
+    uliweb makeproject project 
+    
+创建project项目目录。
+
+makeapp
+~~~~~~~~~~~~~~~~~~
+
+生成一个app框架，它将自动按给定的名字生成一个app目录，同时包含有初始子目录和文件。
+
+::
+
+    Usage: uliweb makeapp appname
+  
+示例：
+
+::
+
+    uliweb makeapp Hello 
+    
+创建Hello应用。如果当前目前下有apps目录，则将在apps目录下创建一个Hello的目录，
+并带有初始的文件和结构。如果当前目前下没有apps目录，则直接创建Hello的目录。
+
+makecmd
+~~~~~~~~~~~~~~~~~~
+
+向指定的app或当前目录下生成一个commands.py模板。
+
+::
+
+    Usage: uliweb makecmd [appname, ...]
+  
+示例：
+
+::
+
+    uliweb makecmd Hello 
+    
+makepkg
+~~~~~~~~~~~~~~~~~~
+
+生成一个Python包结构目录，即带有__init__.py文件。
+
+::
+
+    Usage: uliweb makepkg pkgname
+
 i18n
 ~~~~~~~~~~~~~~~~~~
 

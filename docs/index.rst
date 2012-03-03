@@ -48,6 +48,7 @@ Uliweb 文档
    log.rst
    session.rst
    xmlrpc.rst
+   command.rst
    
 Uliweb内置APP文档:
 
