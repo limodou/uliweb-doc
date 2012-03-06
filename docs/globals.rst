@@ -115,9 +115,18 @@ json
 
 ::
 
-    def json(data):
+    def json(data, **json_kwargs):
     
-将一个data处理成json格式，并返回一个Response对象。
+将一个data处理成json格式，并返回一个Response对象。json_kwargs目前可以允许用户传
+入 ``content_type`` 值。这样在特殊情况下可以将生成的json数据生成::
+
+    content_type = 'text/html; charset=utf-8'
+    
+.. attention::
+
+    发现在使用ajaxForm时，因为可能使用了iframe的方式，对于后台返回的json数据，如
+    果使用 ``application/json`` 返回时，在IE浏览器下可能会提示要下载，所以有可能
+    需要转为 ``text/html`` 标式。
 
 expose
 ~~~~~~~~~

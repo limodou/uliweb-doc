@@ -140,6 +140,20 @@ uliorm也允许你在创建表之时在一些初始化工作。只要写一个On
 
 上面的代码是用来创建复合索引。一般的单字段索引，可以在定义字段时直接指定Index=True。
 
+default_query 方法 
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+uliorm目前支持用户自定义缺省条件，即在查询时，会自动将缺省条件与输入的条件合并
+处理，它需要定义为一个类方法，如::
+
+    class Todo(model):
+        @classmethod
+        def default_query(cls, query):
+            return query.filter(xxx).order_by(yyy)
+            
+default_query 将传入一个query对象，你可以对它使用Result上的查询相关的处理，比如:
+``filter``, ``order_by``, ``limit``, ``offset`` 等可以返回结果集的方法。
+
 属性定义
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -888,6 +902,9 @@ values_one(\*fields): value
 get(condition): value
     相当于 ``Result.filter(condition).one()`` 。
     
+without(flag='default_query')
+    去掉default_query的条件处理。
+    
 ManyResult
 ~~~~~~~~~~~~~~
 
@@ -1093,9 +1110,9 @@ Uliweb项目
 如果我们要在非web程序中使用uliorm时，我们还是希望使用Uliweb的管理机制，使用Uliweb
 项目的配置信息，这时我们可以::
 
-    from uliweb.manage import make_application
+    from uliweb.manage import make_simple_application
     
-    app = make_application(start=False, debug_console=False, debug=False)
+    app = make_simple_application(project_dir='.')
     Begin()
     try:
         User = get_model('user')
@@ -1360,3 +1377,13 @@ RuntimeError: dictionary changed size during iteration
 
 在Uliweb下使用uliorm，要求将所有的Model都定义在settings.ini中，一旦出现某个Model
 没有在settings.ini中定义，就有可能出现上面的问题。
+
+反向获取ManyToMany关系时，找不到对应属性
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+在Uliweb中，如果两个表存在ManyToMany关系，则关系一般只会定义在其中一个Model类上
+被定义。例如有两个Model: A和B。在A上定义了一个到B的ManyToMany的关系。在导入A类
+时(或通过get_model来获取)会自动向B类绑定一个反向获取的对象，用于从B的对象获得A对
+象时使用。因此，有时候，你直接导入B类，但是因为B类中没有定义与A的任何关系，所以
+对A的反向获取对象将无法生成，因此可能不能直接使用B到A的反向获取。在这种情况下，你
+可以再使用get_model或导入A，这样就可以生成反向获取对象了。
