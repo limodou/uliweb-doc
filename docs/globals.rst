@@ -131,7 +131,7 @@ json
 expose
 ~~~~~~~~~
 
-详见 `URL映射 <url_mapping>`_
+详见 `URL映射 <url_mapping.html>`_
 
 POST
 ~~~~~

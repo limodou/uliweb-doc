@@ -995,9 +995,9 @@ do\_()进行了处理。do\_()可以保证执行的SQL语句在当前的合理�
     #插入
     do_(User.table.insert().values(username='limodou'))
     #更新
-    do_(User.table.update().where(User.c.username='limodou').values(flag=True))
+    do_(User.table.update().where(User.c.username=='limodou').values(flag=True))
     #删除
-    do_(User.table.delete().where(User.c.username='limodou'))
+    do_(User.table.delete().where(User.c.username=='limodou'))
     #查询
     do_(select(User.c, User.c.username=='limodou'))
     
@@ -1015,9 +1015,9 @@ Begin()在没有参数调用的情况下，会自动先判断有没有线程级�
     #插入
     User.table.insert().values(username='limodou').execute()
     #更新
-    User.table.update().where(User.c.username='limodou').values(flag=True).execute()
+    User.table.update().where(User.c.username=='limodou').values(flag=True).execute()
     #删除
-    User.table.delete().where(User.c.username='limodou').execute()
+    User.table.delete().where(User.c.username=='limodou').execute()
     #查询
     select(User.c, User.c.username=='limodou').execute()
 
