@@ -15,11 +15,11 @@ uliweb
       -v, --verbose         Output the result in verbose mode.
       -s SETTINGS, --settings=SETTINGS
                             Settings file name. Default is "settings.ini".
-      -L LOCAL_SETTINGS, --local_settings=LOCAL_SETTINGS
+      -L LOCAL_SETTINGS, --local_settings LOCAL_SETTINGS
                             Local settings file name. Default is
                             "local_settings.ini".
-      --project=PROJECT     Project "apps" directory.
-      --pythonpath=PYTHONPATH
+      --project PROJECT     Project "apps" directory.
+      --pythonpath PYTHONPATH
                             A directory to add to the Python path, e.g.
                             "/home/myproject".
       --version             show program's version number and exit
@@ -414,6 +414,14 @@ orm app
 
 orm app带有一系列针对数据库操作的命令，列举如下：
 
+init_alembic
+^^^^^^^^^^^^^^
+
+初始化 `alembic <http://readthedocs.org/docs/alembic/en/latest/index.html>`_ 环境。
+相当于执行了 ``alembic init`` 命令在当前的项目目录下。同时会根据当前项目的配置
+自动修改 ``alembic.ini`` (主要是修改数据库的连接串) 和 ``alembic/env.py`` (设置
+target_metadata)。具体alembic的使用方法请参考它的文档。
+
 syncdb
 ^^^^^^^^^^^^^^
 
@@ -479,6 +487,9 @@ dump
                       
 --encoding=ENCODING
     文本文件字符字段所使用的编码。缺省为'utf-8'。需要与-t连用。
+    
+-z zipfilename
+    将导出的文本写入zipfilename中。
 
 dumptable
 ^^^^^^^^^^^^^^^^^^
@@ -581,6 +592,25 @@ resettable
     Usage: uliweb resettable <tablename, tablename, ...>
     
 重置指定的表。
+
+sqlhtml
+^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb sqlhtml <appname, appname, ...> > output.html
+    
+对指定的app或整个数据库生成表结构的说明文档。
+
+validatedb
+^^^^^^^^^^^^^^
+
+::
+
+    Usage: uliweb validatedb [-t] <appname, appname, ...>
+    
+对指定的app或整个数据库进行结构校验，检查数据库中的字段与源码中的Model定义是否
+一致。
 
 auth app
 ~~~~~~~~~~~~~~
