@@ -25,6 +25,7 @@ select, update, join等。
     DEBUG_LOG = False
     AUTO_CREATE = True
     CONNECTION = 'sqlite:///database.db'
+    CONNECTION_TYPE = 'long'
     CONNECTION_ARGS = {}
 
 你可以在apps/settings.ini中覆盖它们。
@@ -81,6 +82,10 @@ uliweb reset命令。
     
     # firebird
     firebird_db = create_engine('firebird://scott:tiger@localhost/sometest.gdm')
+
+``CONNECTION_TYPE`` 用于指明连接模式： `'long'` 为长连接，会在启动时建立。
+`'short'` 为短连接，只会在每个请求时建立。使用它需要配置 `middle_transaction` 。
+缺省值为 `'logn'` 即长连接。
 
 ``CONNECTION_ARGS`` 用于除连接串之外的一些参数。SQLAlchemy中，创建引擎时要使用::
 

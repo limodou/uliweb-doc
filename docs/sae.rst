@@ -104,9 +104,12 @@ sqlalchemy，然后在版本目录中，导出sqlalchemy到lib下::
 
     [MIDDLEWARES]
     transaction = 'uliweb.orm.middle_transaction.TransactionMiddle'
-    db_connection = 'uliweb.contrib.sae.middle_sae_orm.DBConnectionMiddle'
 
-其中第一行是事务支持的Middleware你也可以选择使用。    
+`TransactionMiddle` 不仅是用来控件事务，同时也可以用来控制是否使用短连接。因为
+SAE不支持长连接，所以需要在 `settings.ini` 中启动短连接的配置项::
+
+    [ORM]
+    CONNECTION_TYPE = 'short'
     
 这样就配置好了。而相关的数据库表的创建维护因为sae不能使用命令行，所以要按sae的
 文档说明通过phpMyAdmin来导入。以后Uliweb会増加相应的维护页面来做这事。
