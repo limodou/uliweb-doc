@@ -70,6 +70,8 @@ Uliweb按照BSD进行发布。
 * ORM
 
   * 类Django和GAE的datastore，可以支持自动建表，同时提供命令行工具进行数据的备分，装入，建表等处理。
+  * 提供多数据库连接的支持
+  * 支持alembic的数据库迁移处理
 
 * i18n
 
@@ -101,6 +103,7 @@ Uliweb按照BSD进行发布。
   * 支持Apache下的mod_wsgi部署
   * 支持uwsgi部署
   * 支持dotcloud部署
+  * 支持sae部署
 
 * 开发
 

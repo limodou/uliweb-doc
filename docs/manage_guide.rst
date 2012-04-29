@@ -412,15 +412,61 @@ shell
 orm app
 ~~~~~~~~~~~~~~
 
-orm app带有一系列针对数据库操作的命令，列举如下：
+orm app带有一系列针对数据库操作的命令，从0.1版本开始，uliorm开始支持多数据连接的
+设置，具体的使用参见 ORM 的文档。同时在命令行工具上也支持对不同数据连接，它们共
+同使用 ``--engine`` 参数。缺省为 ``default`` 。其它的数据库连接要在 ``settings.ini``
+中进行设置。
 
-init_alembic
+可用命令列举如下：
+
+alembic
 ^^^^^^^^^^^^^^
 
-初始化 `alembic <http://readthedocs.org/docs/alembic/en/latest/index.html>`_ 环境。
-相当于执行了 ``alembic init`` 命令在当前的项目目录下。同时会根据当前项目的配置
-自动修改 ``alembic.ini`` (主要是修改数据库的连接串) 和 ``alembic/env.py`` (设置
-target_metadata)。具体alembic的使用方法请参考它的文档。
+`alembic <http://readthedocs.org/docs/alembic/en/latest/index.html>`_ 是用于
+sqlalchemy的数据库迁移工具。目前Uliweb已经集成了alembic的部分命令，分别为::
+
+    init                        初始化alembic环境
+    revision                    生成一个版本
+        -m --message Message    可选的消息
+        --autogenerate          自动生成版本
+    diff                        相当于使用revision时自动带autogenerate
+        -m --message Message    可选的消息
+    upgrade revision            升级指定的版本，当前版本为head
+        --sql                   不真正执行升级，而是生成sql
+        --tag TAG               指定一个tag（不是太明白作用）
+    help <subcommand>           查看某个子命令的帮助
+    
+全部选项：
+
+--engine Name
+
+    引擎名称
+
+和数据库的命令一样，alembic也支持加入 ``--engine`` 选项，用来选择数据库的连接。
+上面所有的alembic的子命令都支持 ``--engine`` 选项。如果没有设置，缺省为 ``default``.
+
+在使用时，一般先执行 ``init`` 进行初始化，如::
+
+    uliweb alembic init [--engine other]
+    
+如果是使用缺省数据库连接，则不用带其它的参数。如果要指定其它的数据库连接，则要
+使用 ``--engine`` 来指定。执行后，uliweb会在当前的目录下创建形为::
+
+    project/
+        alembic/
+            <engine>/
+                alembic.ini
+                versions/
+                env.py
+                script.py.mako
+                
+``alembic.ini`` 为alembic使用的配置文件。 ``env.py`` 为自动处理时要调用的脚本。
+uliweb主要是针对这两个文件进行了定制性的处理。上面的目录结构将会为每个数据库连接
+创建一个目录。这样不同的数据库的脚本将分别存放。
+
+在使用alembic命令前，首先要安装它，简单的命令为::
+
+    pip install alembic
 
 syncdb
 ^^^^^^^^^^^^^^
@@ -490,6 +536,12 @@ dump
     
 -z zipfilename
     将导出的文本写入zipfilename中。
+    
+.. note::
+
+    dump系列函数在0.1版本后有所变化。因为支持了多数据库，所以缺省情况下，dump
+    出来的文件将存放到 ``data/default`` 目录下。如果指定了 ``--engine other`` 参数，则
+    文件将存放到 ``data/other`` 目录下。同时load系列函数也会作相同的处理。
 
 dumptable
 ^^^^^^^^^^^^^^^^^^
