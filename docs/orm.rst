@@ -26,6 +26,7 @@ select, update, join等。
     [ORM]
     DEBUG_LOG = False
     AUTO_CREATE = True
+    AUTO_DOTRANSACTION = True
     CONNECTION = 'sqlite:///database.db'
     CONNECTION_TYPE = 'long'
     CONNECTION_ARGS = {}
@@ -51,6 +52,9 @@ uliweb reset命令。
     自动建表对于sqlite有一个问题。如果在你执行一个事务时，非查询和更新类的语句
     会引发事务的自动提交。而自动建表就是会先查找表是否存在，因此会破坏事务的处理。
     所以建议对于sqlite禁止自动建表，而是手工建表。其它的暂时还没有发现。
+
+``AUTO_DOTRANSACTION`` 用于指示是否在执行 ``do_`` 时自动根据环境来创建新的共享
+的线程连接并启动事务，详情参见下面关于多数据库连接的说明。
 
 ``CONNECTION`` 用于设置数据库连接串。它是遵循SQLAlchemy的要求的。（详情可以参考
  http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments）
@@ -175,7 +179,7 @@ Model 定义
 ~~~~~~~~~~~~~~~~
 
 uliweb支持多种数据库连接的设置，其中可以在Model中设置 ``__engine_name__`` 为指定
-的某个连接名，如：
+的某个连接名，如::
 
     class Todo(Model):
         __engine_name__ = 'test'
@@ -225,23 +229,27 @@ Field是一个函数，它的第一个参数可以是内置的Python type，也�
 类型。其它的参数是和对应的Property类一致的。它会根据你传入的Python type或特殊类
 型来自动查找匹配的字段类。
 
-Python type和字段类的对应关系为::
+Python type和字段类的对应关系为:
 
-    str                 :StringProperty,
-    CHAR                :CharProperty,
-    unicode             :UnicodeProperty,
-    TEXT                :TextProperty,
-    BLOB                :BlobProperty,
-    FILE                :FileProperty
-    int                 :IntegerProperty,
-    float               :FloatProperty,
-    bool                :BooleanProperty,
-    datetime.datetime   :DateTimeProperty,
-    datetime.date       :DateProperty,
-    datetime.time       :TimeProperty,
-    decimal.Decimal     :DecimalProperty,
-    DECIMAL             :DecimalProperty,
-    PICKLE              :PickleProperty,
+======================  =========================
+    引用简写类型        实际类型
+======================  =========================
+    str                 StringProperty,
+    CHAR                CharProperty,
+    unicode             UnicodeProperty,
+    TEXT                TextProperty,
+    BLOB                BlobProperty,
+    FILE                FileProperty
+    int                 IntegerProperty,
+    float               FloatProperty,
+    bool                BooleanProperty,
+    datetime.datetime   DateTimeProperty,
+    datetime.date       DateProperty,
+    datetime.time       TimeProperty,
+    decimal.Decimal     DecimalProperty,
+    DECIMAL             DecimalProperty,
+    PICKLE              PickleProperty,
+======================  =========================
    
 小写的，都是Python内置的类型或类。大写的都是uliorm为了方便记忆而创建的。而上面
 看到的关于Node的示例就是使用Field来定义字段的。
@@ -368,23 +376,27 @@ DateProperty DateTimeProperty TimeProperty
         
     format
         用来设置日期时间的格式串，uliorm会用它进行日期格式的转换。在缺省情况
-        下，当传入一个字符串格式的日期字段时，uliorm会进行以下尝试::
+        下，当传入一个字符串格式的日期字段时，uliorm会进行以下尝试:
         
-            '%Y-%m-%d %H:%M:%S',     # '2006-10-25 14:30:59'
-            '%Y-%m-%d %H:%M',        # '2006-10-25 14:30'
-            '%Y-%m-%d',              # '2006-10-25'
-            '%Y/%m/%d %H:%M:%S',     # '2006/10/25 14:30:59'
-            '%Y/%m/%d %H:%M',        # '2006/10/25 14:30'
-            '%Y/%m/%d ',             # '2006/10/25 '
-            '%m/%d/%Y %H:%M:%S',     # '10/25/2006 14:30:59'
-            '%m/%d/%Y %H:%M',        # '10/25/2006 14:30'
-            '%m/%d/%Y',              # '10/25/2006'
-            '%m/%d/%y %H:%M:%S',     # '10/25/06 14:30:59'
-            '%m/%d/%y %H:%M',        # '10/25/06 14:30'
-            '%m/%d/%y',              # '10/25/06'
-            '%H:%M:%S',              # '14:30:59'
-            '%H:%M',                 # '14:30'
-            
+            ===================      ========================
+            格式串                   样例
+            ===================      ========================
+            '%Y-%m-%d %H:%M:%S'       '2006-10-25 14:30:59'
+            '%Y-%m-%d %H:%M'          '2006-10-25 14:30'
+            '%Y-%m-%d'                '2006-10-25'
+            '%Y/%m/%d %H:%M:%S'       '2006/10/25 14:30:59'
+            '%Y/%m/%d %H:%M'          '2006/10/25 14:30'
+            '%Y/%m/%d '               '2006/10/25 '
+            '%m/%d/%Y %H:%M:%S'       '10/25/2006 14:30:59'
+            '%m/%d/%Y %H:%M'          '10/25/2006 14:30'
+            '%m/%d/%Y'                '10/25/2006'
+            '%m/%d/%y %H:%M:%S'       '10/25/06 14:30:59'
+            '%m/%d/%y %H:%M'          '10/25/06 14:30'
+            '%m/%d/%y'                '10/25/06'
+            '%H:%M:%S'                '14:30:59'
+            '%H:%M'                   '14:30'
+            ===================      ========================
+
 BooleanProperty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -808,7 +820,7 @@ get_engine_name()
     获得当前表所使用的数据库连接的名字。在多个地方都可以设置数据库连接，uliweb
     将按以下顺序来判断：
     
-        * 是否设置了 ``__engine__name__``
+        * 是否设置了 ``__engine_name__``
         * 是否在 ``settings.ini`` 中设置了对应的连接名
         * ``'default'``
         
@@ -921,7 +933,7 @@ filter(condition): Result
     
         User.filter(User.c.age > 30).filter(User.c.username.like('Lee' + '%%'))
 connect(engine_name): Result
-    切換到指定的连接名上
+    切換到指定的连接名上，engine_name可以是连接名，Engine对象或Connection对象。
     
 count(): int
     返回满足条件的记录条数。需要与前面的all(), filter()连用。
@@ -1044,36 +1056,45 @@ Web事务模式
 一般你要使用事务中间件，它的处理代码很简单，为::
 
     class TransactionMiddle(Middleware):
-        ORDER = 100
+        ORDER = 80
         
         def __init__(self, application, settings):
-            pass
+            self.db = None
+            self.settings = settings
             
         def process_request(self, request):
-            Begin(create=True)
+            Begin()
     
         def process_response(self, request, response):
             try:
                 return response
             finally:
-                Commit(close=True)
+                CommitAll(close=True)
+                if self.settings.ORM.CONNECTION_TYPE == 'short':
+                    db = get_connection()
+                    db.dispose()
                 
         def process_exception(self, request, exception):
-            Rollback(close=True)
-
-当请求进来时，执行 Begin(create=True) 以创建线程级别的连接对象。这样，如果在你的
+            RollbackAll(close=True)
+            if self.settings.ORM.CONNECTION_TYPE == 'short':
+                db = get_connection()
+                db.dispose()
+            
+当请求进来时，执行 Begin() 以创建线程级别的连接对象。这样，如果在你的
 View中要手工处理事务，执行Begin()会自动使用当前线程的连接对象。
 
-应答成功时，执行Commit(close=True)，完成提交并关闭连接。而在View中手动控制一般
-只要调用Commit()就可以了，关闭连接交由中间件完成。
+应答成功时，执行 ``CommitAll(close=True)`` ，完成提交并关闭连接。因为有可能存在
+多个连接，所以使用CommitAll. 而在View中手动控制一般只要调用 ``Commit()`` 就可以了，
+关闭连接交由中间件完成。
 
-如果中间处理抛出异常，则执行Rollback(close=True)，回滚当前事务，并关闭连接。而在
-View中手动控制，也只要简单调用Rollback()就可以了，关闭连接处理由中间件完成。
+如果中间处理抛出异常，则执行 ``RollbackAll(close=True)`` ，回滚当前事务，并关闭
+所有连接。而在View中手动控制，也只要简单调用 ``Rollback()`` 就可以了，关闭连接处理由
+中间件完成。
 
 在View中的处理，有几点要注意，Begin(), Commit(), Rollback() 都不带参数调用。
 在Uliorm中，SQL的执行分两种，一种是直接使用ORM的API处理，还有一种是使用SQLAlchemy
 的API进行处理(即非ORM的SQL)。为了保证正确使用线程的连接对象，ORM的API已经都使用
-do\_()进行了处理。do\_()可以保证执行的SQL语句在当前的合理的连接上执行。几种
+``do_()`` 进行了处理。 ``do_()`` 可以保证执行的SQL语句在当前的合理的连接上执行。几种
 常见的SQL的书写样板::
 
     #插入
@@ -1135,7 +1156,20 @@ uliorm在考虑Model的可替换性时，提供了一种注册机制。这种机
 
         为什么需要表名呢？因为orm提供的命令行工具中，syncdb会自动创建数据库中
         不存在的表，它就是使用的真正的表名。
+        
+   .. note::
 
+        在使用多数据库连接时，可以在上面的MODELS中的每张表的路径后面添加数据库
+        连接名，如::
+        
+            [MODELS]
+            user = 'uliweb.contrib.auth.models.User', 'test'
+            user = 'uliweb.contrib.auth.models.User', ['default', 'test']
+        
+        第一种是说只在 ``test`` 中使用User表。而第二种则表示可以在 ``default`` 
+        或 ``test`` 中使用User表，决定的顺序一是根据 Model 的 ``__engine_name`` 
+        的设置或执行时使用 ``connect(engine_name)`` 进行设定。否则将使用第一个。
+        
 #. 可以有条件的方便进行替换。
 
    在某些时候，你可能发现某个app的表结构要扩展几个字段，但是因为已经有许多Model
@@ -1237,7 +1271,7 @@ get_connection(connection='', default=True, debug=None, engine_name=None, connec
     connection需要按SQLAlchemy的要求来编写。
     get_connection既可以支持原来的单数据库连接模式，也可以支持多数据库连接模式，
     还可以支持缺省连接模式，既上次创建过，然后复用原来的连接。那么它按以下策略
-    来处理:
+    来处理::
     
         if connection 不为空:
             则缺建新的连接
@@ -1252,7 +1286,11 @@ get_model(model, engine_name=None)
     返回指定连接的 ``model`` 对应的Class。如果是字符串值，则需要根据Model配置的要求在settings.ini
     中定义Model的信息才有效果。也可以传入Model的类。
     
-    如果engine_name为空则缺省使用 ``default`` 。
+    如果engine_name不为None，则根据给定的engine_name来查找Model。如果不存在，则
+    抛出异常。
+    
+    如果engine_name为空时，将会智能搜索。如果某个Model只设置了一个数据库连接，
+    则自动使用这个连接，如果存在多个则会抛出异常。
 
 Begin(create=False, engine_name=None): transaction object
     开始一个事务。如果存在线程连接对象同时如果不存在当前线程内的连接对象，则自动从连接池中取一个连接
@@ -1274,6 +1312,200 @@ do\_(sql, engine_name=None)
         
         result = do_(select(User.c, User.c.username=='limodou'))
         
+多数据库连接
+---------------
+
+从 0.1 版本开始，uliorm 就开始支持多数据库连接了，多数据库连接在这里有两种涵义:
+
+* 同类数据库的不同连接
+* 不同类的数据库的不同连接
+
+所以这里没有简单地使用多数据库的说法，而是采用多数据库连接的说法。
+
+在uliorm中多数据库连接的支持分为以下几方面的内容:
+
+* 数据库连接的定义，涉及到settings.ini的配置
+* Model如何指定数据库连接，涉及到settings.ini的配置和Model的定义以及执行
+* 语句执行以及事务的多数据库连接的支持，包括中间件的支持，线程连接的处理等
+* 命令行多数据库的支持
+
+数据库连接的定义
+~~~~~~~~~~~~~~~~~~
+
+首先为了区分不同的数据库连接，并且方便地引用它们，每个连接都需要定义一个名字。
+在没有特殊定义的情况下，总是会有一个 ``default`` 的连接存在。它就是使用原来的
+数据库连接的定义。当需要定义其它的数据库连接时，可以在 ORM 下定义 CONNECTIONS
+如::
+
+    CONNECTIONS = {
+        'test': {
+            'CONNECTION':'mysql://root:limodou@localhost/test2?charset=utf8',
+            'CONNECTION_TYPE':'short',
+        }
+    }
+
+上面定义了一个名为 ``test`` 的连接。
+
+定义好连接，在启动 Uliweb 项目时，系统会自动根据配置创建相应的引擎对象。并且在
+``orm`` 中会自动创建一个管理对象，名为: ``engine_manager`` ，它可以象一个dict一样
+使用，是用来管理连接的。我们可以通过它得到每个连接的信息，包括配置信息和创建的
+相关对象的信息，主要包含::
+
+    options         连接参数：
+                        connection_string:  连接串
+                        connection_args:    连接参数
+                        debug_log:          是否调试
+                        connection_type:    连接类型， long or short
+    engine          引擎实例。对应实际的数据库引擎对象，比如通过
+                    sqlalchemy的 ``create_engine()`` 创建的对象
+    metadata        对应的MetaData对象，可以通过它获得对应的表信息
+    models          与之相关的所有的Model对象信息
+    
+比如想要获得 default 的连接对象::
+
+    engine = engine_manager['default'].engine
+    
+或者直接使用 ``get_connection`` ::
+
+    engine = get_connection(engine_name='default')
+
+如果只是访问缺省的连接，可以将 default 使用None来代替，如::
+
+    engine = engine_manager[None].engine
+    engine = get_connection()
+    
+因此我们可以了解，一旦项目启动，定义的数据库的引擎对象将直接被创建。但是此时真
+正用来与数据库通讯的连接对象还没有创建，它们将随着请求被自动创建和管理。
+
+Model的连接设置
+~~~~~~~~~~~~~~~~
+
+在设计uliorm的多数据库连接时我一直在想：多数据库连接在什么情况下会被使用呢？
+它们又是如何被使用呢？如果设计时考虑过多，会使得开发变得困难，因此我假设了以下
+使用的场景:
+
+* 数据库表本身直接与不同的数据库连接相对应，它们不会混用。这可能是最简单的一种
+  情况了。在这种情况下，我们只要能定义出表与将要使用的引擎之间的关系就可以了。
+* 数据库表本身可能在多个不同的数据库连接中使用。这样，我们不仅要定义一张表与
+  不同的数据库连接关系，还要在运行时指定当前使用哪个连接。
+
+根据以上的假设，uliorm提供了静态配置和动态切換两种方式。
+
+静态配置又分为：settings.ini配置和Model属性配置。
+
+在Uliweb中，每张表如果要使用首先要在settings.ini中进行配置，原来的写法是::
+
+    [MODELS]
+    user = 'uliweb.contrib.auth.models.User'
+    
+现在的写法是::
+
+    [MODELS]
+    user = 'uliweb.contrib.auth.models.User', 'test'
+    user = 'uliweb.contrib.auth.models.User', ['default', 'test']
+    
+比原来多了一项，就是数据库连接名。如果可以同时在多个连接中使用，后面的连接将是
+一个list值。原来的写法依然是有效的，如果不提供，则会认为使用Model属性的定义，如
+果Model属性定义也没有，则认为使用 default 连接。
+
+在Model属性中也可以配置，就是添加 ``__engine_name__`` 属性，比如::
+
+    class User(Model):
+        __engine_name__ = 'test'
+        
+如果存在多种定义，那么uliweb将按以下顺序来处理:
+
+#. 是否设置了 ``__engine_name__``
+#. 是否在 ``settings.ini`` 中设置了对应的连接名
+#. ``'default'``
+
+所以缺省情况下是使用 ``default`` 。
+
+当一个Model设置了多个连接名，要么在运行时动态指定，要么uliweb会抛出异常。
+所以为了动态指定，uliorm的许多函数和方法都添加了 ``engine_name`` 参数，比如::
+
+    Model.connect(engine_name)
+    Result.connect(engine_name)
+    
+其中Model类上可以直接调用 ``connect()`` 来切換连接，它会直接影响后面的结果处理，包括
+结果集的处理。这里 ``engine_name`` 还可以是 ``Engine`` 对象或 ``Connection`` 对象。
+同时，当返回一个结果集时，在没有获得数据之前，也可以使用结果集的 ``connect()`` 来切換连接。
+这种做法只会影响执行结果。
+
+.. note::
+
+    原来想实现隐式的连接切換功能，即不要显示地使用象 ``connect()`` 这样的方法。但是
+    发现很难做到。
+    
+多数据库下的语句执行与事务处理
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+在数据库处理中，所有的语句都需要在连接上被执行，事务也是在连接上被处理。不同的
+连接意味着不同的处理。考虑到web处理和批处理的方式不同，我们可以考虑以下的场景:
+
+* web处理一般是按请求来执行的，因此一个请求过来，创建一个连接，处理完毕后释放。
+  连接可以是长连接或短连接。长连接意味着将使用连接池，因此所谓的释放就是放回池
+  子里供下一次使用。而短连接就没有池子，释放就是真正的关闭，下次请求将再次创建。
+  而不管长连接还是短连接，处理模式都基本相同。
+  
+  为了简化处理，我们可以每次当请求进入时自动创建一个连接，然后启动事务，并且把
+  这个连接放到线程环境中，这样所有使用 ``do_`` 就可以直接利用这个共享的连接和事务
+  了。这样的处理只是为了简化。因为有可能一个请求并没有事务处理，甚至不涉及到数据
+  操作，这样做有些过头了，不过目前为了简化，uliweb就是这样设计的。
+
+  当支持多数据库连接时，情况有了一些变化。原来可以只自动建一个连接，但是现
+  在有可能是有多个连接。那么我们要为所有的连接创建实例，并启动事务吗？因此，
+  现在的策略就是只为缺省的连接创建连接实例，并启动事务。对于其它的连接，
+  Uliorm 増加了一个名为 ``AUTO_DOTRANSACTION`` 的配置项，缺省为 ``True``. 
+  它的作用就是当你执行 ``do_`` 时自动创建连接并启动事务。另一种做法就是使用
+  ``Begin(ec=engine_name)`` 来手工创建连接和事务。目前只要是基本的 SQL 语句
+  ，包括： select, update, insert, delete 都是封装到了 ``do_`` 中了。而象
+  ``create`` 之类的是直接绑定到某个 engine 上，无法直接使用 ``do_`` , 所以
+  自动创建连接和事务一般还是可行的。象建表目前不建议自动创建，所以都是在命
+  令行上来执行的，它们都有特殊的处理。
+
+  同时在处理完毕后，也不能只关闭和提交缺省的连接了，需要对所有创建的连接（包括
+  自动创建的连接）执行事务提交和关闭。
+
+  不过这些已经通过修改middle_transaction完成了。所以在简单情况下用户不用过份关心
+  这些细节。并且这种做法是兼容只有一个数据库连接的情况。
+
+* 命令行和批处理情况有简单的也有复杂的。简单的情况和web请求的处理类似，也可以在
+  开始创建相应的连接和事务，在处理完毕后关闭。复杂情况下也可以自已手工创建连接和
+  启动事务。目前在命令行处理时有几个关键点：连接获取，Model的获取。Uliorm是完全
+  支持脱离WEB环境来使用的。因此我们可以象test_orm.py中那样，自已去创建连接，
+  创建Model，然后创建表。在这种情况下，Uliweb启动时做的自动化处理全部无效了，比
+  如缺省的 ``AUTO_DOTRANSACTION`` 的设置, 缺置的 ``Begin`` 启动事务等。所以我们要自已去
+  启动事务。缺省情况下是自动提交的，所以每执行完一条SQL语句就会生效。
+
+  同时uliweb还支持通过调用 make_application 或 make_simple_application 来启动
+  应用的实例。后者是专门为命令行准备了，除了个别的参数不能设外，如：debug，其它的
+  都一样。一旦启动，你的开发就和WEB区别不大了。所以缺省情况下 ``AUTO_DOTRANSACTION``
+  是为 ``True`` 的。因此你执行 ``do_`` 时会自动启动事务。但是因为它没有 middleware_transaction
+  的封装，所以无法在处理完成后自动提交或回滚。这样如果你自已不处理，结果将无法
+  保存。对于这种情况，要么我们直接手工启动事务，以明确的事务方式来工作。要么执行
+  ``set_auto_dotransaction(False)`` 来关闭自动生成事务，从而进入 autocommit 状态。
+  所以这点要比较注意。建议在命令行处理时，都主动使用事务。
+
+前面说了，在使用 ``do_`` 和 ``Begin`` 时可以自动在创建线程共享的连接。在Uliorm
+中维护着一个Local的对象，它上面有 ``conn`` 和 ``trans`` 对象，它们各是一个dict
+分别保存着线程相关的连接和事务对象。在调用 ``do_`` 和 ``Begin`` 时会先检查是否
+存在相应的连接和事务对象，如果存在，则直接使用，如果不存在，则创建。这里，还可以
+分别传入 engine_name 参数，用来指明检查某个连接名相关的对象是否存在。线程相关的
+连接和事务对象存在的目的是为了编程方便。如果所有的SQL都使用 ``do_`` 会比较简单。
+但是因为 Model 把底层SQL的执行封装到了不同的方法中，所以要么它会自动使用 Model
+配置的连接名来获得线程连接对象，要么你通过 connect(engine_name) 切換到其它的连接
+名上，以便可以获得其它的线程连接对象，目前也可以传入一个真正的连接对象或Engine对象。
+
+命令行对多数据库的支持
+~~~~~~~~~~~~~~~~~~~~~~~
+
+为了支持多数据库，在所有数据库相关的命令上都増加了 ``--engine`` 参数，可以用来
+切換连接名。缺省是使用 ``default`` 。影响较大的是 ``dump*`` 和 ``load*`` 系列的函数.
+原来数据库的数据文件是缺省放在 ``./data`` 目录下的。现在为了支持多数据库，将会在
+它的下面按连接分别创建子目录， 如： ``default`` 等。所以一旦使用了多数据库支持的
+版本，原来的备份和数据装入的路径就发生了变化。
+
 信号处理
 ---------------
 
