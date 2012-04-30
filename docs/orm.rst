@@ -1487,6 +1487,11 @@ Model的连接设置
   ``set_auto_dotransaction(False)`` 来关闭自动生成事务，从而进入 autocommit 状态。
   所以这点要比较注意。建议在命令行处理时，都主动使用事务。
 
+  .. node::
+
+    现在在 ``make_simplae_application`` 中増加了启动时自动将 ``AUTO_DOTRANSACTION``
+    关闭的设置。所以使用它来启动应用环境直接就是 ``autocommit`` 的状态。
+
 前面说了，在使用 ``do_`` 和 ``Begin`` 时可以自动在创建线程共享的连接。在Uliorm
 中维护着一个Local的对象，它上面有 ``conn`` 和 ``trans`` 对象，它们各是一个dict
 分别保存着线程相关的连接和事务对象。在调用 ``do_`` 和 ``Begin`` 时会先检查是否
