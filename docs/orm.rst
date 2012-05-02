@@ -166,6 +166,16 @@ Model 定义
     
         __tableame__ = 't_note'
         
+表别名
+~~~~~~~~~~~~~
+
+在后面我们会了解 Model 在使用时都需要配置，每个Model会有一个名字，因此我们可以
+使用 ``get_model(name)`` 来获得一个Model对象。通常情况下Model的配置名和表名是
+相同的（即Model的类名小写），但有时可能也需要有所不同。所以在0.1版本以后就可以
+和表名不相同了。设置别名有两种方式， 一种是通过框架来使用Model，所以只要在settings
+中配置就可以了。另一种是不通过框架来使用Model，如直接import，那么可以在Model类上
+设置 ``__alias__`` 。
+        
 表参数
 ~~~~~~~~~~~~~~~~~
 
@@ -1132,11 +1142,11 @@ NotFound异常
 当你使用get_or_notfound()或在使用instance.refernce_field时，如果对象没找到则会
 抛出NotFound异常。
 
-Model注册和引用
+Model配置化
 ----------------------------
 
-uliorm在考虑Model的可替换性时，提供了一种注册机制。这种机制主要是由orm app来初
-始化的，它对Model的编写有一定的要求。使用注册机制的好处主要有两点：
+uliorm在考虑Model的可替换性时，提供了一种配置机制。这种机制主要是由orm app来初
+始化的，它对Model的编写有一定的要求。使用配置机制的好处主要有两点：
 
 #. 可以方便使用，不用关心要使用的Model是在哪里定义的。orm提供了 ``get_model()``
    方法，可以传入字符串的表名或真正的Model对象。因此在一般情况下，使用字符串
@@ -1149,8 +1159,8 @@ uliorm在考虑Model的可替换性时，提供了一种注册机制。这种机
         [MODELS]
         user = 'uliweb.contrib.auth.models.User'
 
-   其中key为表名，注意是数据库的表名。value为表所对应的Model类的路径。uliorm将
-   在需要时自动进行导入。
+   其中key为引用的别名。它可以是表名（一般为Model类名小写），也可以不是表名。
+   value为表所对应的Model类的路径。uliorm将在需要时自动进行导入。
 
    .. note::
 
