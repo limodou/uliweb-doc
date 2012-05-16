@@ -241,3 +241,20 @@ uliweb的log时，注意最好在Dispatch或make_application之后使用。对�
 
 建议在你的程序中，每次要用到logger对象时，使用logging.getLogger(name)来获得一个
 logger对象。
+
+问题与技巧
+------------
+
+如何设置sqlalchemy的日志，让它只显示一次
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+在处理中发现如果在创建引擎时显示日志信息时，在uliweb运行时会显示两条日志，比如
+设置 ``DEBUG_LOG=True`` 。你可以这样设置::
+
+    [LOG.Loggers]
+    sqlalchemy = {'propagate':0}
+    sqlalchemy.engine = {'propagate':0}
+    
+有关sqlalchemy的logger信息可以参考 `Configuring Logging <http://docs.sqlalchemy.org/en/latest/core/engines.html#configuring-logging>`_ 文档。
+    
+
