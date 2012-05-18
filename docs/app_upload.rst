@@ -271,7 +271,7 @@ FileServing的说明::
             第三种是用在上传后保存文件时，先对文件名进行转換。
             """
             
-        def download(self, filename, action=None, x_filename='', real_filename='')
+        def download(self, filename, action='download', x_filename='', real_filename='')
             """
             提供下载处理，支持X-Sendfile的处理。action取值为'download'或
             'inline'，它们分别对应不同的应答头:
@@ -304,17 +304,19 @@ FileServing的说明::
             使用不同的下载方式，则么这些参数最好都提供。
             """
 
-        def save_file(self, filename, fobj, replace=False)
+        def save_file(self, filename, fobj, replace=False, convert=True)
             """
             将文件保存在to_path路径下。
+            
+            使用convert可以设置要不要转換文件名。
             """
             
-        def save_file_field(self, field, replace=False, filename=None)
+        def save_file_field(self, field, replace=False, filename=None, convert=True)
             """
             根据文件字段来保存。路径处理同save_file
             """
             
-        def save_image_field(self, field, resize_to=None, replace=False, filename=None)
+        def save_image_field(self, field, resize_to=None, replace=False, filename=None, convert=True)
             """
             根据图片字段来保存。路径处理同save_file
             """
@@ -329,7 +331,7 @@ FileServing的说明::
             获取filename对应的URL地址，不是真正的URL信息
             """
             
-        def get_url(self, filename, **url_args)
+        def get_url(self, filename, query_para=None, **url_args)
             """
             获取filename对应的URL。注意，这是一个真正的URL，如果只是想得到URL的
             地址，要使用get_href(filename)
@@ -339,6 +341,15 @@ FileServing的说明::
             <a href='xxx' title='title'>text</a>
             
             如果没有传入，则使用filename代替title和text。
+            
+            如果传入了query_para，则它的值将写在href对应的链接后面。query_para
+            是一个dict值，如： ``query_para={'alt':'filename.txt'}``
+            
+            那么生成的URL可能为:
+            
+            <a href='xxx?alt=filename.txt' title='title'>text</a>
+            
+            它有什么用，在后面的download你会看到
             """
             
 upload app提供方法说明
@@ -346,31 +357,58 @@ upload app提供方法说明
 
 以下方法都是基于缺省的default_fileserving对象来处理的。
 
-get_filename(filename, filesystem=False)
+get_backend()
+    获得缺省的文件上传下载对象。
+    
+file_serving(filename)
+    缺省的文件下载函数。它是通过在 settings.ini 中配置了::
+    
+        [EXPOSES]
+        file_serving = '/uploads/<path:filename>', 'uliweb.contrib.upload.file_serving'
+    
+    这样所有以 ``/uploads`` 开头的 URL都会被 ``file_serving`` 处理，从而提供服务。
+    
+    .. note::
+        
+        在这里还有特殊的扩展处理。在缺省情况下，上传后的文件为了保证唯一性会自动
+        对文件名进行转換，具体用什么要看使用哪个文件名生成器处理的。详见下面
+        ``FilenameConverter`` 的有关说明。因此，当下载文件名还是使用转換后的文件
+        名会非常不方便。所以这里有一个扩展，就是在传入的URL上添加一个特殊的 query_string，如::
+        
+            xxxxxxxxx.txt?alt=中文.txt
+            
+        这样alt对应的就是想另存为的文件名。这样只要 ``<a>`` 标签加上 ``alt`` 信息就可以
+        以想要的文件名来保存。
+
+get_filename(filename, filesystem=False, convert=False)
     用于获得目标文件，即将TO_PATH与filename进行连接。同时，如果给出filesystem为
     True，则将文件名转为文件系统的编码。否则返回的将是unicode。
+    
+    convert=False 表示不对文件名进行转換
 
-save_file(filename, fobj, replace=False)
+save_file(filename, fobj, replace=False, convert=True)
     用于保存一个文件。需要传入文件名和文件对象，这些都可以从request或form字段中
     获得。如果replace设置为True，则表示当存在同名文件时自动覆盖，否则将自动添加
     (1), (2)等内容，以保证文件不重名。save_file会把文件保存到指定的目录下，并根
     据配置项进行相应的文件名编码的转換。
 
-save_file_field(field, replace=False, filename=None)
+save_file_field(field, replace=False, filename=None, convert=True)
     用于处理Form中的FileField字段。将自动从FileField中获得对应的文件名和文件对象。
     也可以将文件保存为filename参数指定的文件名。
 
-save_image_field(field, resize_to=None, replace=False, filename=None)
+save_image_field(field, resize_to=None, replace=False, filename=None, convert=True)
     和save_file_field类似，是用来处理ImageField(图像字段)的。不过，如果你设置了
     resize_to参数的话，它还可以自动对图像进行缩放处理。
 
 delete_filename(filename)
     删除上传目录下的某个文件。
     
-get_url(filename)
-    获得上传目录下某个文件的URL，以便可以让浏览器进行访问。
+get_url(filename, query_para=None, **url_args)
+    获得上传目录下某个文件的URL，以便可以让浏览器进行访问。 
+    
+    query_para 将传入到href属性后面成为query_string.
 
-get_href(filename)
+get_href(filename, **kwargs)
     获取filename对应的URL地址，不是真正的URL信息
     
 .. note::
