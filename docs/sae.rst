@@ -10,7 +10,7 @@ Sina Application Engine(简称sae)是新浪发布的类似于GAE的云环境，�
 uliweb的安装
 ------------------
 
-你需要安装uliweb 0.0.1a7以上版本或svn中的版本，简单的安装可以是::
+你需要安装uliweb 0.1以上版本或svn中的版本，简单的安装可以是::
 
     easy_install Uliweb
     

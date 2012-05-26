@@ -26,6 +26,7 @@ Uliweb 文档
    hello_uliweb.rst
    guestbook.rst
    sae.rst
+   bae.rst
 
 技术文档:
 
