@@ -27,6 +27,7 @@ Uliweb 文档
    guestbook.rst
    sae.rst
    bae.rst
+   heroku.rst
 
 技术文档:
 
