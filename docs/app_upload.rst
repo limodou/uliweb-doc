@@ -403,12 +403,12 @@ save_image_field(field, resize_to=None, replace=False, filename=None, convert=Tr
 delete_filename(filename)
     删除上传目录下的某个文件。
     
-get_url(filename, query_para=None, **url_args)
+get_url(filename, query_para=None, \*\*url_args)
     获得上传目录下某个文件的URL，以便可以让浏览器进行访问。 
     
     query_para 将传入到href属性后面成为query_string.
 
-get_href(filename, **kwargs)
+get_href(filename, \*\*kwargs)
     获取filename对应的URL地址，不是真正的URL信息
     
 .. note::

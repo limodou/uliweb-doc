@@ -1,0 +1,10 @@
+{{extend "BlogView/layout.html"}}
+
+{{block content}}
+<a href="/">返回首页</a>
+{{<< view}}
+<div>
+<a href="/edit/{{=object.id}}">编辑</a>
+<a href="/delete/{{=object.id}}">删除</a>
+</div>
+{{end}}

@@ -32,6 +32,9 @@ select, update, join等。
     CONNECTION_ARGS = {}
     STRATEGY = 'threadlocal'
     CONNECTIONS = {}
+    
+    [MIDDLEWARES]
+    transaction = 'uliweb.orm.middle_transaction.TransactionMiddle'
 
 你可以在apps/settings.ini中覆盖它们。
 
@@ -139,6 +142,9 @@ uliweb reset命令。
     CONNECTION_ARGS = {}
     STRATEGY = 'plain'
 
+MIDDLEWARES
+    安装 uliweb.contrib.orm app会自动添加 TransactionMiddle ，这样将自动启动事务。 **0.1.1修改**
+    
 Model 定义
 -------------------
 
@@ -1519,7 +1525,7 @@ Model的连接设置
   ``set_auto_dotransaction(False)`` 来关闭自动生成事务，从而进入 autocommit 状态。
   所以这点要比较注意。建议在命令行处理时，都主动使用事务。
 
-  .. node::
+  .. note::
 
     现在在 ``make_simplae_application`` 中増加了启动时自动将 ``AUTO_DOTRANSACTION``
     关闭的设置。所以使用它来启动应用环境直接就是 ``autocommit`` 的状态。
