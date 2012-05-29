@@ -303,7 +303,354 @@ manual
 AddView
 -------------------
 
-展示之后，我们一般要做的第一件事就
+参数说明
+~~~~~~~~~~~~~~
+
+::
+
+    class AddView(object):
+        success_msg = _('The information has been saved successfully!')
+        fail_msg = _('There are somethings wrong.')
+        builds_args_map = {}
+        
+        def __init__(self, model, ok_url=None, ok_template=None, form=None, 
+            success_msg=None, fail_msg=None, use_flash=True,
+            data=None, default_data=None, fields=None, form_cls=None, form_args=None,
+            static_fields=None, hidden_fields=None, pre_save=None, post_save=None,
+            post_created_form=None, layout=None, file_replace=True, template_data=None, 
+            success_data=None, meta='AddForm', get_form_field=None, post_fail=None,
+            types_convert_map=None, fields_convert_map=None, json_func=None,
+            file_convert=True):
+
+model
+    此AddView所要处理的Model类或名称
+ok_url
+    成功后转換的URL地址。注意，它可以是一个回调函数，形式为::
+    
+        def get_url(id):
+            return '<a href="/view/%d">查看</a>' % id
+    
+    为什么需要使用回调。因为它是基于这样的处理：在添加完记录后，需要跳转到view页
+    面。但是在调用AddView时，因为相应的对象还没有创建，所以没有对应的id，这样就
+    没有办法在调用时就传入还不存在的URL。因此采用回调的方式，会将保存后的id传入
+    回调函数，这样就可以动态创建新对象的URL地址了。如果不是跳转到view页面，则可
+    以考虑不采用回调。
+ok_template
+    如果用户没有定义ok_template，并且不是json的返回方式，则将使用这个参数定义的
+    模板来展示页面。
+form
+    对应的form对象。在缺省情况下，用户不需要传入Form相关的参数，AddView会自动根
+    据model、fields或meta参数来自动生成一个Form对象。但是在某些特殊的情况下，也
+    可以将一个生成好的form对象传给AddView，这样AddView就不会自动创建Form对象了。
+form_cls
+    form是对应Form的对象。而form_cls是对应的Form类本身。AddView会自动使用form_cls
+    来创建form对象。使用form_cls的主要作用是定义校验处理，详情见下面的[数据校验处理]。
+form_args
+    此参数将在生成Form实例时传入。它是一个dict，主要可以使用的参数如::
+    
+        {'action':提交对应的url,
+         'method':提交方法，缺省为POST,
+         'html_attrs':创建<form>时将使用的HTML的样式, 
+                #它也是一个dict，可以使用 {'id':Form的id值, 'class':类名} 等
+         'buttons':对应的按钮
+        }
+static_fields
+    标识哪些是静态字段。有时我们定义在fiells或AddForm中的字段并不都是需要编辑的，
+    而是只读的字段，通过这个参数可以指定哪些是只读字段。不过要注意的是，这些字段
+    在用户提交后不会在提交数据中存在。
+hidden_fields
+    隐藏字段。指定的字段将生成为 ``<input type="hidden" name="field_name" value="xxx"></input>``
+success_msg
+    成功后的提示信息。这里AddView会自动调用flash函数。在uliweb中缺省提供了一个
+    uliweb.contrib.flashmessage的app，你需要把它加入到settings.ini中的INSTALLED_APPS中去。
+    flash的工作原理是通过session来保存下一个页面要显示的内容。所以在返回结果或跳
+    转到新页面时，新的页面或模板需要对session中的flash的信息进行处理。如果你使用
+    plugs项目，它有一个 ui.jquery.pnofity 的app是flashmessage的jquery的版本，可以
+    通过js的方式显示一个弹出窗口来展示，效果要好于flashmessage。因为flashmessage
+    是静态信息。
+fail_msg
+    出错后的提示消息。
+use_flash
+    是否信息提示采用flash方式，缺省为True。如果为Flash，则不会使用flash函数来显示
+    提示信息。
+data
+    传入到Form对象中的数据，它将作为初始值传入。如果用户提交后出错，则只会显示
+    用户提交的数据。data只是在第一次显示时生效。它是一个dict，key就是对应的字段
+    名。value为对应的字段类型的值。
+default_data
+    在保存数据到Model中时，如果用户没有输入值，则使用default_data中的数据，它作
+    为相应字段的缺省值。与data的区别：data是作为Form的初始值，default_data作为
+    Model的初始值。
+fields
+    可添加字段的列表。一个Model中可能有很多字段，但不是所有字段都需要在添加时录
+    入数据，因此可以通过fields来传入可编辑的字段列表。它也支持添加不存在的字段。
+    如果存在，则还需要提供get_form_field回调函数，详情见[处理不存在字段]的说明。
+    fields的处理和ListView的类似，它是一种动态的处理方式。如果是相对静态，可以
+    直接在Model中定义一个 AddForm 的class，在其中定义 fields。如果不想用AddForm
+    的名字，那么可以通过传入meta参数来改变。
+get_form_field
+    如果在fields或AddForm中给出Model中不存在的字段时，AddView会自动调用这个回调
+    函数来获得想要的字段对象。具体描述参见下面的[处理不存在的字段]。
+pre_save
+    在保存前要执行的回调函数，它的定义为::
+    
+        def pre_save(data):
+            ...
+            
+    其中，data是一个dict，并且它将直接会传入到AddView所关联的Model中，所以你可以
+    在这里通过修改data的值或添加新的值，从而影响保存到Model的数据。因此可以在这里
+    来设置缺省值，或对数据进行进一步加工。
+post_save
+    在保存后要执行的回调函数，它的定义为::
+    
+        def post_save(obj, data):
+            """
+            obj 为保存后创建的对象
+            data 为保存时使用的data数据
+            """
+            
+    如果在保存完某个对象后，还要进行其它的Model的操作，那么在post_save中是合适的
+    位置。
+post_created_form
+    在创建完Form实例后将要调用的回调函数。它允许你对生成的Form作进一步的加工，比
+    如将原来非必输项的某个字段的required属性改为True，从而变成必输项。它的定义为::
+    
+        def post_created_form(fcls, model):
+            """
+            fcls 是对应的Form类
+            model 是对应的Model类
+            """
+layout
+    uliweb中的Form支持不同的布局处理。一个布局是用来处理Form展示的类，它可以决
+    定是使用table还是div来展示一个form。具体layout的用途和对应的layout_cls有关。
+    详情参见[Form的布局处理]
+file_replace
+    AddForm可以支持在上传Form数据时同时上传文件。这个参数用来控制，如果出现同名
+    文件时，是否要替換重名的文件。现在Uliweb在上传时，可以控制是不是要对文件名
+    进行特殊处理，比如使用UUID来生成文件名。这样其实是不会重名的。但是如果不进
+    行特殊处理是有可能重名。如果重名，并且不进行替換，那么文件名会自动在后面添
+    加 ``(n)`` 这样的信息。
+file_convert
+    是否对上传的文件名进行转換，如果不转換则将保留原来的文件名。同时结合上面的
+    ``file_replace`` 将会对重名文件进行特殊的处理。
+template_data
+    将同时传入模板中的其它的数据。
+success_data
+    此参数可以有几个值，它是与返回json数据有关。如果在执行run()时传入了 run(json_result=True)
+    则表示返回结果为一个json的数据。这时，如果成功则会根据success_data的值来决定
+    返回的json内容。
+    
+    True
+        表示使用缺省的结果返回，那么它会简单的调用创建对象的to_dict()方法生成一个
+        dict，然后返回。
+    function
+        如果要自已加工，则可以传入一个回调函数，形式为::
+        
+            def success_data(obj, data):
+                """
+                obj为新创建的对象
+                data为保存时使用的数据
+                """
+        
+        这个函数需要返回一个dict值。
+json_func
+    当返回结果为json是，一般情况下会使用uliweb的json函数。但是有些情况，如在ie中使用
+    了iframe处理方式来调用jquery的jquery.form插件时，会有问题，原因是json返回的content_type
+    不正确。这里不能简单地返回 ``application/json`` 的类型，而是要返回 ``text/html`` 
+    类型，示例代码如::
+    
+        json_func=partial(json, content_type='text/html;charset=utf-8')
+meta
+    静态字段集定义所对应的class名。
+post_fail
+    上传数据校验失败后的回调函数处理。
+types_convert_map
+    类型转換映射。
+fields_convert_map
+    字段转換映射。它与上面的types_convert_map都是用来对静态字段进行转換处理的。
+    关于字段转換，详情参见ListView中的[字段转換]说明。
+    
+简单代码示例
+~~~~~~~~~~~~~~~
+
+::
+
+    def add(self):
+        from uliweb.utils.generic import AddView
+        
+        def get_url(id):
+            return url_for(BlogView.view, id=id)
+        
+        view = AddView(self.model, ok_url=get_url)
+        return view.run()
+
+这是一段View的代码。它创建了一个AddView，而是定义了一个get_url函数用以响应保存
+成功后的URL跳转。
+
+对应的模板为::
+
+    {{extend "BlogView/layout.html"}}
+    
+    {{block content}}
+    <h2>添加</h2>
+    {{<< form}}
+    {{end}}
+
+View中会返回一个form对象，它就是用来接受用户输入的表格。可以直接在模板中通过 
+``{{<<form}}`` 来显示出来。    
+
+执行流程描述
+~~~~~~~~~~~~~~~
+
+在处理完列表展示之后，我们一般要做的第一件事就是添加记录。在添加记录前应该先有一
+个入口，我们一般会放在 List 的页面中。作为一个标准的 HTML 的页面编辑的处理，先
+考虑采用以下的处理流程::
+
+    from uliweb import request
+    
+    self.form = self.make_form(form)    #创建form
+    
+    if request.method == 'POST':        #如果是POST则表示用户进行了提交
+        flag = self.form.validate(request.values, request.files) #对数据进行校验
+        if flag:    #返回True，表示校验成功
+            d = self.default_data.copy()    #对缺省值进行拷贝
+            d.update(self.form.data)        #与提交的数据进行合并
+            if self.pre_save:               #处理pre_save回调
+                self.pre_save(d)
+                
+            r = self.process_files(d)       #处理文件
+            obj = self.model(**data)        #保存Model对象
+            obj.save()
+            
+            if self.post_save:              #处理post_save回调
+                self.post_save(obj, d)
+            if json_result:                 #如果需要json数据，则进行json化处理
+                return to_json_result(True, self.success_msg, 
+                    self.on_success_data(obj, d), json_func=self.json_func)
+            else:
+                flash = functions.flash     #如果是普通的HTML方式，则获得flash函数
+                flash(self.success_msg)     #显示成功信息
+                if self.ok_url:             #如果指定了ok_url则进行跳转
+                    return redirect(get_url(self.ok_url, id=obj.id))
+                else:                       #否则根据传入的模板进行处理
+                    response.template = self.ok_template
+                    return d
+        else:       #返回False，表示校验失败，进行出错处理
+            d = self.template_data.copy()   #拷贝模板数据
+            data = self.prepare_static_data(self.form.data) #准备静态数据
+            self.form.bind(data)            #将数据与Form进行绑定，作为初始值
+            d.update({'form':self.form})    #将form对象放入模板数据中
+            if self.post_fail:              #处理post_fail回调函数
+                self.post_fail(d)
+            if json_result:                 #如果需要json数据，则进行json化处理
+                return to_json_result(False, self.fail_msg, 
+                    self.form.errors, json_func=self.json_func)
+            else:
+                flash = functions.flash
+                flash(self.fail_msg, 'error')#显示出错信息
+                return d
+    else:                               #显示编辑页面
+        data = self.prepare_static_data(self.form.data) #对静态数据进行处理
+        self.form.bind(data)            #将数据与Form进行绑定，作为初始值
+        return self.display(json_result)#展示页面
+    
+从上面的流程我们大概可以了解整个AddView所做的处理。上面并不是真正的代码，不过已
+经和真正的代码非常接近。简单描述起来，一个添加或编辑处理大概分三个步骤:
+
+#. 如果是 GET 请求，则显示编辑界面
+#. 如果是 POST 请求，则对数据进行校验，如果成功则保存，返回结果
+#. 如果失败，则返回出错结果
+
+上面的代码之所以看上去复杂，是因为要支持用户的扩展，所以在许多地方都添加了回调
+和参数，允许用户对执行过程进行扩展。用户可以根据需要传入不同的回调来进行特殊的
+处理。除了采用回调方式外，用户也可以对AddView类进行继承。
+
+录入字段的配置
+~~~~~~~~~~~~~~~~~~~
+
+前面说到，AddView支持通过fields参数来设定哪些字段可以编辑，也可以支持在Model中
+定义一个AddForm的class，示例如下::
+
+    class Blog(Model):
+        __verbose_name__ = 'Blog'
+        
+        #author = Reference('user', verbose_name='作者', required=True)
+        create_date = Field(datetime.datetime, verbose_name='发表时间', auto_now_add=True)
+        title = Field(str, max_length=255, verbose_name='标题', required=True)
+        content = Field(TEXT, verbose_name='内容', required=True)
+        deleted = Field(bool, verbose_name='删除标志')
+
+        class AddForm:
+            fields = ['title', 'content']
+
+这样，在AddForm中我们只定义了两个可录入的字段，其它的字段，要么使用缺省值，要么
+可以自动生成，要么是在特殊情况下使用的。
+
+处理不存在的字段
+~~~~~~~~~~~~~~~~~
+
+如果在添加时希望有一些不在Model中的字段，可以先在fields或AddForm中定义这个字段名，
+然后在写一个get_form_field的回调，再将其传入AddView中即可，示例如下::
+
+    def get_form_field(name):
+        #其中name为对应的字段名
+        from uliweb.form import StringField
+        
+        if name == 'undefined': #这里只是以'undefined'为例，实际可能叫别的
+            return StringField('不存在的字段')
+            
+    fields = ['title', 'content', 'undefeined']
+    view = AddView('blog', ok_url=get_url, fields=fields, 
+        get_form_field=get_form_field)
+    return view.run()
+
+上面是通过动态传入fields参数来添加不存在的字段，也可以在Model中的AddForm中定义。
+
+数据校验处理
+~~~~~~~~~~~~~~~~
+
+从AddView的功能，我们大概可以了解到它会自动将Model转为一个Form，并且会有一些简单
+的校验。如果在Field定义时我们指定了required=True，则这个字段在Form中将成为必输
+项，如果用户不输入内容或输入为空的内容，则校验会失败。除了必输项，我们有可能需要
+对某个字段或某几个字段进行校验，该如何操作。这里其实就直接使用了Form类本身的校验
+功能。Form的校验分为两种，一种是单个字段的校验，一种是多个字段的联合校验。示例
+代码如下::
+
+    class RegisterForm(Form):
+        form_buttons = Submit(value=_('Register'), _class="button")
+        form_title = _('Register')
+        
+        username = StringField(label=_('Username'), required=True)
+        password = PasswordField(label=_('Password'), required=True)
+        password1 = PasswordField(label=_('Password again'), required=True)
+        next = HiddenField()
+        
+        def validate_username(self, data):
+            from uliweb.orm import get_model
+            
+            User = get_model('user')
+            user = User.get(User.c.username==data)
+            if user:
+                return _('User "%s" is already existed!') % data
+        
+        def form_validate(self, all_data):
+            if all_data.password != all_data.password1:
+                return {'password1' : _('Passwords are not match.')}
+    
+上面是一个用户注册的Form，它要对用户名进行校验，还要对两次输入的密码进行校验。
+对于用户名的校验采用了定义一个validate_fieldname的方式，其中fieldname是Form
+中的字段。另一种方法是定义form_validate，它可以传入所有数据all_data，这样可以
+同时检查多个字段。而validate_fieldname方法，只传入指定的字段值，所以无法同时检
+查其它字段的值。如果有错误，对于validate_fieldname则只要返回一行出错原因的文本
+即可。而form_validate则要返回一个出错的dict。其中key是出错的字段名。如果返回
+None，则认为无错。在简单的情况下，你可以只写一个form_validate即可，所有的校验
+都放在这里面处理。
+
+这里的Form只是一个示例，在一般使用AddView或EditView时，你并不需要在Form中定义
+任何Field。如果定义的话，它会和Model中的字段同时展示出来。
+
+Form的布局处理
+~~~~~~~~~~~~~~~~~~
 
 其它说明事项
 -------------------

@@ -196,10 +196,6 @@ export
     
 参数说明:
     
---with-static
-    是否在拷贝时同时拷贝 ``static`` 子目录。缺省情况下是不拷贝。因为一般你会使用
-    web server来处理静态文件，所以一般不需要拷贝。
-    
 -d OUTPUTDIR
     将指定的模块源码导出到指定的目录下。
     
@@ -228,7 +224,7 @@ settings.py中设定了INSTALLED_APPS参数，则所有设定的app将被处理�
 
 ::
 
-    Usage: uliweb exportstatic [options] outputdir
+    Usage: uliweb exportstatic [options] outputdir [app1, app2, ...]
     
 参数说明:
     
@@ -249,6 +245,8 @@ settings.py中设定了INSTALLED_APPS参数，则所有设定的app将被处理�
 -C CSS_COMPRESSOR
     CSS压缩程序(Jar包)路径。缺省使用Yahoo的Yui CSS Compressor(yuicompressor.jar)
     来进行处理。默认是从命令执行目录下查找yuicompressor.jar包。
+    
+可以在输出路径后面再指定若干个app的名字，这样只会导出指定app的静态文件。
         
 示例：
 
@@ -260,7 +258,7 @@ settings.py中设定了INSTALLED_APPS参数，则所有设定的app将被处理�
 find
 ~~~~~~~~~~~~
 
-查找对象，包括：模板、URL对应的view
+查找对象，包括：模板、URL对应的view、静态文件和Model定义的模块
 
 ::
 
@@ -269,6 +267,8 @@ find
     Usage: uliweb find -t template
     or
     Usage: uliweb find -c static
+    or
+    Usage: uliweb find -m model_name
 
 makeproject
 ~~~~~~~~~~~~~~~~~~

@@ -54,6 +54,9 @@ Uliweb内置了一个命令系统，其中在uliweb/manage.py中已经内置了�
 命令类
 --------------
 
+类属性
+~~~~~~~~~~~~~~
+
 每个命令都应该从Command类派生而来。这个类有几个属性可以覆盖，分别为：
 
 name
@@ -89,6 +92,17 @@ check_apps_dirs
 check_apps
     用来检查app是否存在。如果设置为 ``True`` ，则假定传入的参数应该是 app 。这里
     的参数是进行过命令行参数解析之后剩下的参数。
+    
+类方法
+~~~~~~~~~~~~~
+
+def get_apps(self, global_options, include_apps=None)
+    返回当前项目所有app的清单。类似于uliweb中的get_apps，不过它因为使用了global_options
+    所以使用会更为简单
+def get_application(self, global_options)
+    根据配置信息创建一个application的实例，它会调用 ``make_simple_application`` 。
+def handle(self, options, global_options, \*args)
+    用于子类继承的方法。用户自定义的命令应该覆盖这个方法。
     
 handler方法
 ----------------
