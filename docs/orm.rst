@@ -710,6 +710,9 @@ Model级
     user = User.get(5)
     user.delete()
     
+delete在删除对象时，会自动删除相关联的ManyToMany的关系数据。如果不想删除，则可以
+传入 ``manytomany=False`` 。
+    
 更新实例
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -730,6 +733,14 @@ Model级
     注意，象创建和更新时，在调用相关的方法时，你传入的是key=value的写法，这里
     key就是字段的名字。但是在写条件时，你要使用 Model.c.fieldname 这样的写法，
     并且不是赋值，而是python的各种运算符。不要搞错了。
+    
+Uliorm在保存时会根据对象的id值是否为None来判断是否是insert还是update。如果你直接
+设置了id值，但是又希望通过insert来插入数据，可以在调用save时传入 ``insert=True`` 。
+
+.. attention::
+
+    Model中更新数据库相关的方法，如: save, delete, get, get_or_notfound, count, remove
+    都可以传入connection参数，它可以是数据库连接名或真正的连接对象。
     
 其它的API
 ^^^^^^^^^^^^
@@ -1330,18 +1341,24 @@ local_connection(engine_name=None, auto_transaction=False): conn
 Connect(engine_name=None): None
     清除缓存的线程连接，保证下次再访问时可以重建连接。
 
-Begin(create=False, engine_name=None): transaction object
+Begin(ec=None): transaction object
     开始一个事务。如果存在线程连接对象同时如果不存在当前线程内的连接对象，则自动从连接池中取一个连接
-    并绑定到当前线程环境中。db为数据库引擎对象，如果没提供，则自动获取缺省的引擎
-    对象。
+    并绑定到当前线程环境中。ec为数据库引擎对象名，如果没提供，则缺省为 'default'.
+    ec也可以为连接对象。
     
-Commit(close=False, engine_name=None, trans=None)
+Commit(close=False, ec=None, trans=None)
     提交一个事务。使用当前线程的连接对象。
     
-Rollback(close=False, engine_name=None, trans=None)
+CommitAll(close=False)
+    提交所有线程事务。
+    
+Rollback(close=False, ec=None, trans=None)
     回滚一个事务。使用当前线程的连接对象。
     
-do\_(sql, engine_name=None)
+RollbackAll(close=False)
+    回滚所有线程事务。
+    
+do\_(sql, ec=None)
     执行一条SQL语句。使用当前的线程连接。只有当使用非ORM的API时才需要使用它
     来处理，比如直接使用SQLAlchemy提供的：select, update, delete, insert时，可
     以这样::
