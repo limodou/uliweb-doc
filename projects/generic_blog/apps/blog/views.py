@@ -14,7 +14,9 @@ class BlogView(object):
         def title(value, obj):
             return obj.get_url()
         
-        view = ListView(self.model, fields_convert_map={'title':title})
+        view = ListView(self.model, 
+            fields_convert_map={'title':title}, 
+            pagination=False)
         return view.run()
     
     def add(self):
@@ -37,13 +39,16 @@ class BlogView(object):
         from uliweb.utils.generic import EditView
         
         obj = self.model.get_or_notfound(int(id))
-        view = EditView(self.model, ok_url=url_for(BlogView.view, id=int(id)), obj=obj)
+        view = EditView(self.model, 
+            ok_url=url_for(BlogView.view, id=int(id)), 
+            obj=obj)
         return view.run()
     
     def delete(self, id):
         from uliweb.utils.generic import DeleteView
         
         obj = self.model.get_or_notfound(int(id))
-        view = DeleteView(self.model, obj=obj, ok_url=url_for(BlogView.view, id=int(id)),
+        view = DeleteView(self.model, obj=obj, 
+            ok_url=url_for(BlogView.view, id=int(id)),
             use_delete_field='deleted')
         return view.fun()
