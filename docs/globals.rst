@@ -40,7 +40,7 @@ template(filename, vars=None, env=None)
     
 render(filename, vars, env=None)
     它很象template，不过它是直接返回一个Response对象，而不是字符串。
-    
+
 Request
 ~~~~~~~~~~~~
 
@@ -109,6 +109,17 @@ redirect
     def redirect(location, code=302):
     
 返回一个Response对象，用于实现URL跳转.
+
+Redirect
+~~~~~~~~~~~
+
+::
+
+    class Redirect(Exception):
+        def __init__(self, location, code=302):
+        
+返回异常类，Uliweb捕获后将实现跳转。同时支持在跳转前session的保存。可以作为
+redirect的替換。
 
 json
 ~~~~~~~~
