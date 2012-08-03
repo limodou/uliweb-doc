@@ -8,7 +8,6 @@ def hello(a):
 
 @decorators.soap(returns={'a':str})
 def echo(request):
-    print request
     return request.value
 
 @decorators.soap(returns={'a':int}, args={'a':[int]})
@@ -30,7 +29,19 @@ def string(a):
 )
 def adder(p,c, dt=None):
     "Add several values"
-    print p, c, dt
     import datetime
     dt = dt + datetime.timedelta(365)
     return {'AddResult':{'ab': p['a']+p['b'], 'dd': c[0]['d']+c[1]['d'], 'dt': dt}}
+
+from uliweb.contrib.soap.views import SoapView
+
+class SoapView2(SoapView):
+    config = 'SOAP2'
+
+@decorators.soap('hello2', returns={}, args={'a':str}, target='SOAP2')
+def hello2(a):
+    """
+    This function is bound to SOAP2
+    """
+    return
+
