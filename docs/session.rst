@@ -78,6 +78,7 @@ type
         #. file 文件系统
         #. database 数据库
         #. redis redis数据库
+        
 remember_me_timeout
     只在设置了session.remember = True时生效。它是以秒为单位计算的值。一旦session.remember
     为True时，将同时将session.cookie的有效期设置为此值。

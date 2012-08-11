@@ -277,7 +277,13 @@ makeproject
 
 ::
 
-    Usage: uliweb makeproject projectname
+    Usage: uliweb makeproject [-f] projectname
+    
+参数说明:
+    
+-f
+    如果指定则当目录存在时不提示用户选择是否覆盖。
+
   
 示例：
 
@@ -294,8 +300,13 @@ makeapp
 
 ::
 
-    Usage: uliweb makeapp appname
+    Usage: uliweb makeapp [-f] appname
   
+参数说明:
+    
+-f
+    如果指定则当目录存在时不提示用户选择是否覆盖。
+
 示例：
 
 ::

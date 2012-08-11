@@ -49,6 +49,7 @@ Uliweb 文档
    test.rst
    log.rst
    session.rst
+   cache.rst
    xmlrpc.rst
    command.rst
    
