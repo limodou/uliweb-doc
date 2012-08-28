@@ -170,7 +170,7 @@ Model 定义
 
     class Note(Model):
     
-        __tableame__ = 't_note'
+        __tablename__ = 't_note'
         
 表别名
 ~~~~~~~~~~~~~

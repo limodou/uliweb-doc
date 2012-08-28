@@ -8,7 +8,7 @@ uliweb支持任何标准的wsgi方式的部署。缺省情况下，在创建一�
 并且uliweb目录还支持：gae, sae和dotcloud。因此，如果想要在这些环境上部署，一般
 需要执行::
 
-    uliweb support [gae|sae}dotcloud]
+    uliweb support [gae|sae|dotcloud]
     
 则会分别生成相应的环境包含部署用的处理程序。
 

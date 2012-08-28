@@ -76,6 +76,12 @@ expiretime
     connection_pool
         使用host, port方式连接。值为一个dict，例如: {'host':'localhost', 'port':6379} 
     
+#. memcache
+
+    connection
+        格式为 ['host:port']。格式为字符串的list，每个字符串为 'host:port' 的形式。
+        缺省为: ['localhost:11211'] 
+
 Cache使用说明
 ---------------
 

@@ -110,15 +110,14 @@ redirect
     
 返回一个Response对象，用于实现URL跳转.
 
-Redirect
-~~~~~~~~~~~
+Redirect(1.4)
+~~~~~~~~~~~~~~~
 
 ::
 
-    class Redirect(Exception):
-        def __init__(self, location, code=302):
+    Redirect(location)
         
-返回异常类，Uliweb捕获后将实现跳转。同时支持在跳转前session的保存。可以作为
+直接抛出异常，Uliweb捕获后将实现跳转。同时支持在跳转前session的保存。可以作为
 redirect的替換。
 
 json
