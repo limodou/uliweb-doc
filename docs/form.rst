@@ -54,4 +54,28 @@ BaseField
             name='', html_attrs=None, help_string='', build=None, datatype=None, 
             multiple=False, idtype=None, static=False, **kwargs):
 
-        
+
+
+
+get_form
+--------
+0.1.5 new
+
+可以方便替换contrib中对于Form的定义，也可以替换一些不同模块下的form，同时也可以增加一些复用。
+使用get_form，首先需要向apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.form'，
+安装完毕后，在配置文件的FUNCTIONS就引用了get_form这个函数
+
+因此如果想要使用get_form，可以采用下面的方式
+
+
+.. code-block:: python
+   :linenos:
+   :emphasize-lines: 3,5
+
+    from uliweb.core.SimpleFrame import functions
+
+    Form = functions.get_form('form_name')
+    ...
+
+
+
