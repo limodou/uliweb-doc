@@ -139,3 +139,11 @@ auth虽然是一个比较基础的功能，但是在实际使用中可能有非�
 
 #. uliweb提供的功能可以作为参考，用户可以基于原auth进行扩展，如：替換template，Forms, Views等
 #. auth提供的许多功能都是配置化的，因此用户可以考虑在自已的app中进行部分或全部替換
+#. (0.1.5)增加了一个FORMS配置选项，用来替换auth定义的form，以方便不同的Model对应不同的Form。配置项为::
+    
+    [FORMS]
+    auth.LoginForm = 'uliweb.contrib.auth.forms.LoginForm'
+    auth.RegisterForm = 'uliweb.contrib.auth.forms.RegisterForm'
+    auth.ChangePasswordForm = 'uliweb.contrib.auth.forms.ChangePasswordForm'
+
+也就是需要替换默认的LoginForm，则只需要替换auth.LoginForm这个名称对应的Form对象即可。
