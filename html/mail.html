@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mail 处理 &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="部署指南" href="deployment.html" />
+    <link rel="prev" title="I18N 使用说明" href="i18n.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="deployment.html" title="部署指南"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="i18n.html" title="I18N 使用说明"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mail">
+<h1>Mail 处理<a class="headerlink" href="#mail" title="永久链接至标题">¶</a></h1>
+<p>Uliweb中内置了邮件处理，目前支持普通的smtp和gmail的发送模式。如果有特殊要求也
+可以自定义邮件发送的后端处理。</p>
+<div class="section" id="id1">
+<h2>配置<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>在settings.ini添加 &#8216;uliweb.contrib.mail&#8217; app。</p>
+<p>同时有以下几项缺省设置:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">MAIL</span><span class="p">]</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="s">&#39;localhost&#39;</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">USER</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+<span class="n">PASSWORD</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+<span class="n">BACKEND</span> <span class="o">=</span> <span class="s">&#39;uliweb.mail.backends.smtp&#39;</span>
+</pre></div>
+</div>
+<p>前四项不用过多解释，最后一项是指示使用哪个发送后端。Uliweb已经内置了两个后端，
+缺省为smtp方式。</p>
+<p>根据使用要求，设置基本上分三种模式。</p>
+<div class="section" id="id2">
+<h3>无验证模式<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h3>
+<p>保持USER, PASSWORD为空，BACKEND为smtp，这种情况下将不进行验证。如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">MAIL</span><span class="p">]</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="s">&#39;localhost&#39;</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">25</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>用户验证模式<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>填写USER, PASSWORD内容，BACKEND为smtp，这种情况下将进行用户验证处理。如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">MAIL</span><span class="p">]</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="s">&#39;localhost&#39;</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">USER</span> <span class="o">=</span> <span class="s">&#39;user&#39;</span>
+<span class="n">PASSWORD</span> <span class="o">=</span> <span class="s">&#39;password&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gmail">
+<h3>Gmail模式<a class="headerlink" href="#gmail" title="永久链接至标题">¶</a></h3>
+<p>Gmail有自已特殊的方式，并且它的主机和端口都是特殊的，因此，保持HOST为&#8217;&#8216;，PORT为0，
+同时填写USER和PASSWORD，BACKEND改为&#8217;uliweb.mail.backends.gmail&#8217;。如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">MAIL</span><span class="p">]</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">USER</span> <span class="o">=</span> <span class="s">&#39;user&#39;</span>
+<span class="n">PASSWORD</span> <span class="o">=</span> <span class="s">&#39;password&#39;</span>
+<span class="n">BACKEND</span> <span class="o">=</span> <span class="s">&#39;uliweb.mail.backends.gmail&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>邮件发送<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>配置好之后就是邮件发送处理。举例如下:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">mail</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">uliweb.mail</span> <span class="kn">import</span> <span class="n">Mail</span>
+
+    <span class="n">Mail</span><span class="p">()</span><span class="o">.</span><span class="n">send_mail</span><span class="p">(</span><span class="s">&#39;limodou@gmail.com&#39;</span><span class="p">,</span> <span class="s">&#39;limodou@gmail.com&#39;</span><span class="p">,</span>
+        <span class="s">u&#39;中文标题&#39;</span><span class="p">,</span> <span class="s">u&#39;中文内容&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&#39;ok&#39;</span>
+</pre></div>
+</div>
+<p>首先是要创建Mail的实例，然后调用send_mail来发送邮件。</p>
+<p>其中，如果Mail()没有传入参数时，将自动使用settings中的配置信息。你也可以直接传
+入象:host, port, user, password, backend等参数。</p>
+<p>send_mail的原型为:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">send_mail</span><span class="p">(</span><span class="n">from_</span><span class="p">,</span> <span class="n">to_</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">html</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">attachments</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">from_</span></tt> 为发信人</li>
+<li><tt class="docutils literal"><span class="pre">to_</span></tt> 为收信人</li>
+<li><tt class="docutils literal"><span class="pre">subject</span></tt> 为主题</li>
+<li><tt class="docutils literal"><span class="pre">message</span></tt> 为内容</li>
+<li><tt class="docutils literal"><span class="pre">html</span></tt> 标识是否为HTML内容。如果为True，则message应为HTML片段</li>
+<li><tt class="docutils literal"><span class="pre">attachments</span></tt> 为附件，它是一个tuple或list。</li>
+</ul>
+<p>如果主题或内容有中文，建议使用unicode或utf-8编码。</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">如果同时有多个收信人时，to_可以为以&#8217;,&#8217;号分隔的邮件列表，也可以是一个list。如:
+<a class="reference external" href="mailto:'abc&#37;&#52;&#48;com">'abc<span>&#64;</span>com</a>,bcd&#64;com&#8217;或[<a class="reference external" href="mailto:'abc&#37;&#52;&#48;com">'abc<span>&#64;</span>com</a>&#8216;, <a class="reference external" href="mailto:'bcd&#37;&#52;&#48;com">'bcd<span>&#64;</span>com</a>&#8216;]。</p>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>本机测试<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>如果你没有环境怎么办，Python提供了这样的方法，在本机命令行执行:</p>
+<div class="highlight-python"><pre>python -m smtpd -n -c DebuggingServer localhost:1025</pre>
+</div>
+<p>这样就启动了一个测试用的smtp服务器，将settings.ini中的HOST和PORT修改成：
+localhost和1025就可以在命令行下看到发送的文本了。不过要看效果的话可能还是要真正
+给自已发个邮件才行。</p>
+<p>再有就是，如果你可以直接Internet，可以使用上面的gmail的配置来测试。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Mail 处理</a><ul>
+<li><a class="reference internal" href="#id1">配置</a><ul>
+<li><a class="reference internal" href="#id2">无验证模式</a></li>
+<li><a class="reference internal" href="#id3">用户验证模式</a></li>
+<li><a class="reference internal" href="#gmail">Gmail模式</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">邮件发送</a></li>
+<li><a class="reference internal" href="#id5">本机测试</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="i18n.html"
+                        title="上一章">I18N 使用说明</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="deployment.html"
+                        title="下一章">部署指南</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/mail.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="deployment.html" title="部署指南"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="i18n.html" title="I18N 使用说明"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

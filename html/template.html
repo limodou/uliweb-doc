@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>模板(Template) &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="URL映射" href="url_mapping.html" />
+    <link rel="prev" title="数据库和ORM" href="orm.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="url_mapping.html" title="URL映射"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="orm.html" title="数据库和ORM"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="template">
+<h1>模板(Template)<a class="headerlink" href="#template" title="永久链接至标题">¶</a></h1>
+<p>Uliweb目前内置的模板系统采用web2py的，所以语法与web2py的模板系统完全一样。在原基础上进
+行了必要的修改。</p>
+<div class="section" id="id1">
+<h2>特点<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<ul class="simple">
+<li>简单，易学</li>
+<li>可以嵌入Python代码</li>
+<li>不用过分关心Python代码的缩近，只要注意块结束时加pass，模板会自动对缩近进行重排</li>
+<li>Python代码与HTML可以交叉使用</li>
+<li>支持模板的继承</li>
+<li>支持类django的block的功能(此功能由Uliweb扩展)</li>
+<li>提供一些方便的内置方法</li>
+<li>支持环境的扩展(可以扩展可以直接在模板中使用的对象和方法)</li>
+<li>先编译成Python代码，然后再执行</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>基本语法<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>Uliweb的模板的语法很简单，只有四种类型的标记：</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">{{=</span> <span class="pre">result}}</span></tt> 这是用来输出的标记。其中result可以是变量也可以是一个函数调用，它会自动  对输出的内容进行转义</li>
+<li><tt class="docutils literal"><span class="pre">{{&lt;&lt;</span> <span class="pre">result}}</span></tt> 这是用来输出非转义的内容，与上面相反。</li>
+<li><tt class="docutils literal"><span class="pre">{{</span> <span class="pre">}}</span></tt> 只使用{{}}的话表示里面为Python代码，可以是任何的Python代码，如：import之类的。  如果是块语句，需要在块结束时使用pass。</li>
+<li><tt class="docutils literal"><span class="pre">{{extend</span> <span class="pre">template}}</span></tt> 其中template可以是字符串，如 <tt class="docutils literal"><span class="pre">&quot;layout.html&quot;</span></tt> 或变量。它表示从  父模板继承。</li>
+<li><tt class="docutils literal"><span class="pre">{{include</span> <span class="pre">template}}</span></tt> 包括其它的模板。如果template省略，表示是子模板插入的位置。一个  父模板只能定义一个插入点。</li>
+<li><tt class="docutils literal"><span class="pre">{{block</span> <span class="pre">blockname}}{{end}}</span></tt> 用于定义一个块。在子模板中，对于要覆盖的block需要进行定义，  则生成的结果将用子模板中的block定义替换父模板的。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>模板环境<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>Uliweb的模板在运行时也象view一样会运行在一个环境中，在这个环境中，有一些对象和方法是在内置环境中定义的，也有一些是在Uliweb的框架环境中定义的对象或方法。内置的环境你无法扩展，但是框架环境允许你扩展，方法很象view的扩展方式，如在任何一个有效的app的settings.py中可以定义:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb.core.dispatch</span> <span class="kn">import</span> <span class="n">bind</span>
+
+<span class="nd">@bind</span><span class="p">(</span><span class="s">&#39;prepare_view_env&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">prepare_template_env</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">uliweb.utils.textconvert</span> <span class="kn">import</span> <span class="n">text2html</span>
+    <span class="n">env</span><span class="p">[</span><span class="s">&#39;text2html&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">text2html</span>
+</pre></div>
+</div>
+<p>经过上面的处理，你就可以直接在模板中使用text2html这个方法了。</p>
+<p>目前已经有一些缺省的对象和方法可以直接用在模板中，它们目前与view是一样的，因此你可以参考 <a class="reference external" href="views.html">视图</a> 文档进行了解。</p>
+</div>
+<div class="section" id="id5">
+<h2>内置环境<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>Uliweb的模板本身已经定义了一些方法可以直接使用。</p>
+<ul class="simple">
+<li>out对象 它可以用来输出信息，详见下面的说明。</li>
+<li><tt class="docutils literal"><span class="pre">cycle(*args)</span></tt> 可以在给定的值中进行循环输出，每次返回一个。</li>
+</ul>
+</div>
+<div class="section" id="out">
+<h2>out 对象<a class="headerlink" href="#out" title="永久链接至标题">¶</a></h2>
+<p>out 对象是模板中内置的用来输出文本的对象。你可以在模板中直接使用它，但一般是不需要的。它有以下的方法：</p>
+<ul class="simple">
+<li>write(text, escape=True) 输出文本。escape表示是否要进行转义。</li>
+<li>noescape(text) 输出不转义的文本。</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>编码<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<p>模板缺省是使用utf-8编码进行处理。如果你传入unicode字符串，将自动转为utf-8编码。如果不
+是unicode，则不做处理。建议全部使用utf-8编码。</p>
+</div>
+<div class="section" id="id7">
+<h2>基本用法<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<ol class="arabic simple">
+<li>简单地变量输出</li>
+</ol>
+<div class="highlight-python"><pre>{{= "hello"}}
+{{= title}}</pre>
+</div>
+<p>如果使用了变量，则要么由view进行传入，要么在模板的其它地方进行定义，如：</p>
+<div class="highlight-python"><pre>{{title="hello"}}
+{{= title}}</pre>
+</div>
+<ol class="arabic simple" start="2">
+<li>HTML代码直接输出</li>
+</ol>
+<div class="highlight-python"><pre>{{&lt;&lt; html}}</pre>
+</div>
+<ol class="arabic simple" start="3">
+<li>Python代码示例</li>
+</ol>
+<div class="highlight-python"><pre>{{import os
+out.write("&lt;h1&gt;Hello&lt;/h1&gt;")
+}}</pre>
+</div>
+<ol class="arabic simple" start="4">
+<li>模板继承</li>
+</ol>
+<p>父模板 (layout.html)</p>
+<div class="highlight-python"><pre>&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+{{block main}}{{end}}
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>子模板 (index.html)</p>
+<div class="highlight-python"><pre>{{extend "layout.html"}}
+{{block main}}
+&lt;p&gt;This is child template.&lt;/p&gt;
+{{end}}</pre>
+</div>
+<p>同时 extend 支持后面的模板文件名是一个变量，如:</p>
+<div class="highlight-python"><pre>{{extend layout}}</pre>
+</div>
+<p>这样，你可以在渲染模板时，传入一个layout的变量。</p>
+<p>另外，在复杂的情况下，可以是多级的模板继承关系，如:</p>
+<div class="highlight-python"><pre>           / extend C1
+A extend B - extend C2
+           \ extend C3</pre>
+</div>
+<p>也就是说，C1, C2, C3作为父模板，可能有一些相同的block的定义可以扩展，如果它们可重定义的block一样，并且在你的应用中希望统一进行预处理，然后其它的模板再使用这个预处理后的模板。那么可以采用一个新的方法，首先B模板定义为:</p>
+<div class="highlight-python"><pre>{{extend layout}}</pre>
+</div>
+<p>即，它要继承的模板名是一个变量。然后在A中根据需要传入layout的值，如:</p>
+<div class="highlight-python"><pre>{{extend "B", layout="C1"}}</pre>
+</div>
+<p>这样，在扩展B模板时，动态传入了layout变量的值，因此B中的layout将使用C1模板。</p>
+<p><strong>下面的include也有类似的功能</strong> 。</p>
+<ol class="arabic simple" start="5">
+<li>包括其它的模板</li>
+</ol>
+<div class="highlight-python"><pre>&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+{{include "child.html"}}
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+</div>
+<div class="section" id="uliweb-contrib-template-app">
+<h2>uliweb.contrib.template App<a class="headerlink" href="#uliweb-contrib-template-app" title="永久链接至标题">¶</a></h2>
+<p>Uliweb为了方便使用，同时还提供了 uliweb.contrib.template 这个app，具体的功能描述见 <a class="reference external" href="app_template.html">uliweb.contrib.template</a> 。</p>
+</div>
+<div class="section" id="id8">
+<h2>问题描述<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id9">
+<h3>在模板中定义多行文本的限制<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h3>
+<p>目前模板中不特别支持定义多行的字符串，因为它是按行来处理，并且不作特殊的语法判断的。
+比如:</p>
+<div class="highlight-python"><pre>{{t = """
+&lt;html&gt;
+&lt;head&gt;
+&lt;script&gt;
+if tag == 'a':
+
+&lt;/script&gt;
+"""}}</pre>
+</div>
+<p>因为其中有 <tt class="docutils literal"><span class="pre">if</span></tt> 语句，所以会被模板识别为Python的 <tt class="docutils literal"><span class="pre">if</span></tt> 语句，会造成后面的代
+码缩近而产生问题。因此如果多行字符串存在特殊的 <tt class="docutils literal"><span class="pre">if</span></tt>, <tt class="docutils literal"><span class="pre">for</span></tt> 之类的会引发
+缩近的关键字时，可能会引发问题。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">模板(Template)</a><ul>
+<li><a class="reference internal" href="#id1">特点</a></li>
+<li><a class="reference internal" href="#id2">基本语法</a></li>
+<li><a class="reference internal" href="#id3">模板环境</a></li>
+<li><a class="reference internal" href="#id5">内置环境</a></li>
+<li><a class="reference internal" href="#out">out 对象</a></li>
+<li><a class="reference internal" href="#id6">编码</a></li>
+<li><a class="reference internal" href="#id7">基本用法</a></li>
+<li><a class="reference internal" href="#uliweb-contrib-template-app">uliweb.contrib.template App</a></li>
+<li><a class="reference internal" href="#id8">问题描述</a><ul>
+<li><a class="reference internal" href="#id9">在模板中定义多行文本的限制</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="orm.html"
+                        title="上一章">数据库和ORM</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="url_mapping.html"
+                        title="下一章">URL映射</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/template.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="url_mapping.html" title="URL映射"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="orm.html" title="数据库和ORM"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

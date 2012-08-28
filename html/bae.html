@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Baidu Application Engine部署及开发指南 &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="Heroku 部署说明" href="heroku.html" />
+    <link rel="prev" title="Sina Application Engine部署及开发指南" href="sae.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="heroku.html" title="Heroku 部署说明"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="sae.html" title="Sina Application Engine部署及开发指南"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="baidu-application-engine">
+<h1>Baidu Application Engine部署及开发指南<a class="headerlink" href="#baidu-application-engine" title="永久链接至标题">¶</a></h1>
+<p>Baidu Application Engine(简称bae)是百度发布的类似于GAE的云环境，目前提供了对
+python的支持。不过现在还要测试过程中，所以以下的部署说明有可能会发生变化。bae
+的环境有些和sae(Sina Application Engine)类似，不过还是有一些区别，后面会简单
+介绍。本文档假设你已经有了bae的帐号。</p>
+<div class="section" id="python">
+<h2>Python项目创建<a class="headerlink" href="#python" title="永久链接至标题">¶</a></h2>
+<p>为了使用Uliweb你的第一步是要先创建一个Python的项目，目前需要有邀请码并由管理人
+员开通。不要问我要邀请码，因为我只有一个，为了做测试已经用掉了。</p>
+<ol class="arabic simple">
+<li>进入 <a class="reference external" href="http://developer.baidu.com/service">http://developer.baidu.com/service</a></li>
+<li>点击百度应用引擎，点击 “立刻开始使用”</li>
+</ol>
+<img alt="_images/bae1.png" src="_images/bae1.png" />
+<ol class="arabic simple" start="3">
+<li>然后创建应用</li>
+<li>创建好后，大概是这样:</li>
+</ol>
+<img alt="_images/bae2.png" src="_images/bae2.png" />
+<ol class="arabic simple" start="5">
+<li>点击版本管理后，新建一个版本。这里bae的版本和sae差不多，都是用数字作为版本
+目录。它是从0开始。创建好后，在下面可以看到svn的地址。这样可以用Svn工具checkout
+代码了。用户名口令就是百度的用户名口令。</li>
+</ol>
+<img alt="_images/bae3.png" src="_images/bae3.png" />
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">要注意的是，我在使用chrome 21.x dev版本时报了一些js的错，所以后来切換到了
+ie上来执行。说是我的chrome版本太高了，不知道算不算bug。</p>
+</div>
+<ol class="arabic" start="6">
+<li><p class="first">缺省情况下，刚checkout出来的代码只有3个文件:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">app</span><span class="o">.</span><span class="n">conf</span>
+<span class="n">favicon</span><span class="o">.</span><span class="n">ico</span>
+<span class="n">index</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>其中index.py是启动文件，这个后面我们要修改它，app.conf就象是GAE的app.yaml的
+内容，可以设置 url 的配置信息等。在bae的文档上有更详细的说明。</p>
+</li>
+</ol>
+<p>其实到这里，应用应该已经可以跑起来了。bae已经生成了缺省的环境。点某个版本上的 <strong>预览</strong>
+就可以看到当前版本号执行的效果。</p>
+<p>下面就开始 Uliweb 的部署过程。</p>
+</div>
+<div class="section" id="uliweb">
+<h2>uliweb的部署<a class="headerlink" href="#uliweb" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id1">
+<h3>uliweb安装<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h3>
+<p>这里我不会演示一个 Hello, Uliweb 如何做，太简单了。我会使用 uliwebdoc 下的 SimpleTodo
+的例子来做。它的代码你可以从 <a class="reference external" href="https://github.com/limodou/uliweb-doc">uliweb-doc</a> 项目
+中的 projects中找到，不过这个版本还不能直接运行到 bae 上去，所以需要进行必要的修改。</p>
+<p>目前uliweb最新版本是0.1，在发布时还没有对bae作特殊的支持处理。所以你要从svn或github
+上下载最新的 <a class="reference external" href="https://github.com/limodou/uliweb">uliweb</a> 的源码。点击上面的zip图标
+就可以下载了。</p>
+<p>然后为了方便在uliweb的解压目录下执行:</p>
+<div class="highlight-python"><pre>python setup.py develop</pre>
+</div>
+<p>来安装uliweb。这步是为了在你的机器上创建uliweb环境。</p>
+</div>
+<div class="section" id="bae">
+<h3>执行bae的支持<a class="headerlink" href="#bae" title="永久链接至标题">¶</a></h3>
+<p>在git中的最新uliweb版本已经包含了对bae的支持。所以先进入你的项目的某个版本，比如
+我的版本目录是: <tt class="docutils literal"><span class="pre">bae/0</span></tt></p>
+<p>然后进入命令行，执行:</p>
+<div class="highlight-python"><pre>uliweb support bae</pre>
+</div>
+<p>它会在当前目录下创建 lib 目录。同时会使用uliweb提供的 <tt class="docutils literal"><span class="pre">index.py</span></tt> 覆盖原来的 <tt class="docutils literal"><span class="pre">index.py</span></tt>
+文件。同时会覆盖app.conf。让我们分别看一下:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#index.py</span>
+
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+<span class="n">project_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">project_path</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;lib&#39;</span><span class="p">))</span>
+
+<span class="kn">from</span> <span class="nn">uliweb.manage</span> <span class="kn">import</span> <span class="n">make_application</span>
+<span class="n">application</span> <span class="o">=</span> <span class="n">make_application</span><span class="p">(</span><span class="n">project_dir</span><span class="o">=</span><span class="n">project_path</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这是启动文件，没什么特殊的。不过上面要注意， <tt class="docutils literal"><span class="pre">index.py</span></tt> 默认是使用 <tt class="docutils literal"><span class="pre">project</span></tt> 作为项
+目目录，并且是位于版本目录下面。所以如果你的项目名和结构不同，要对上面 <tt class="docutils literal"><span class="pre">project_path</span></tt>
+作必要的修改。</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd><p class="first">#app.conf</p>
+<dl class="last docutils">
+<dt>handlers:</dt>
+<dd><ul class="first last simple">
+<li>url : /?(.*)
+script : index.py</li>
+<li>expire : .jpg modify 10 years</li>
+<li>expire : .swf modify 10 years</li>
+<li>expire : .png modify 10 years</li>
+<li>expire : .gif modify 10 years</li>
+<li>expire : .JPG modify 10 years</li>
+<li>expire : .ico modify 10 years</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>这是 <tt class="docutils literal"><span class="pre">app.conf</span></tt> 内容。原来 url 那行就是 &#8216;/&#8217; ，这里会替換为 <tt class="docutils literal"><span class="pre">/?(.*)</span></tt> 。上面的
+格式是yaml的，所以和GAE很象。这个文件也可以直接在界面上进行修改。同时所有的文件
+都可以在界面上直接修改。修改后会自动保存到svn中，你可以 update 与本地文件进行合并
+处理。这点还是很方便的。</p>
+<p>经过上面的处理，我们在 0 目录下已经有了:</p>
+<div class="highlight-python"><pre>lib/
+app.conf
+index.py
+favicon.ico</pre>
+</div>
+<p>然后我们要把 uliweb 的压缩包放到 <tt class="docutils literal"><span class="pre">lib</span></tt> 目录下。因为 lib 会自动加入到 sys.path
+中。所以我们要保留 uliweb 子目录，以便可以直接导入 uliweb 。这里这样的处理是因为
+bae中还没有预装 uliweb 所以我们要自已上传。</p>
+<p>然后我们创建 project 目录，把 uliweb-doc/projects/simple_todo 的代码拷贝过来。这样
+我们的目录结构基本上就是:</p>
+<img alt="_images/bae4.png" src="_images/bae4.png" />
+</div>
+</div>
+<div class="section" id="simple-to-do">
+<h2>Simple To Do 部署<a class="headerlink" href="#simple-to-do" title="永久链接至标题">¶</a></h2>
+<p>simple to do 是一个简单的todo展示。功能很简单，但是它使用到了数据库。所以使用
+这个例子是为了验证数据库的安装是否正确。但是没有使用到session，所以无法测试session
+是否可以正常使用。</p>
+<div class="section" id="id3">
+<h3>创建数据库实例<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>在bae 的面板上点击 &#8220;云数据库&#8221; -&gt; &#8220;我的数据库&#8221; ，然后创建数据库:</p>
+<img alt="_images/bae5.png" src="_images/bae5.png" />
+<p>这里名称我们一会要使用。</p>
+</div>
+<div class="section" id="simple-todo-settings-ini">
+<h3>simple_todo settings.ini修改<a class="headerlink" href="#simple-todo-settings-ini" title="永久链接至标题">¶</a></h3>
+<p>将simple to do的代码拷过来后，首先要修改 <tt class="docutils literal"><span class="pre">project/apps/settings.ini</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">GLOBAL</span><span class="p">]</span>
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">False</span>
+
+<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;uliweb.contrib.staticfiles&#39;</span><span class="p">,</span>
+    <span class="s">&#39;uliweb.contrib.orm&#39;</span><span class="p">,</span>
+    <span class="s">&#39;uliweb.contrib.bae&#39;</span><span class="p">,</span>
+    <span class="s">&#39;todo&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+<span class="p">[</span><span class="n">SITE</span><span class="p">]</span>
+<span class="n">SITE_NAME</span> <span class="o">=</span> <span class="s">&#39;任务跟踪&#39;</span>
+<span class="n">EMAIL</span> <span class="o">=</span> <span class="s">&#39;limodou@gmail.com&#39;</span>
+
+<span class="p">[</span><span class="n">ORM</span><span class="p">]</span>
+<span class="n">DATABASE</span> <span class="o">=</span> <span class="s">&#39;数据库名&#39;</span>
+</pre></div>
+</div>
+<p>这里在 <tt class="docutils literal"><span class="pre">uliweb.contrib.orm</span></tt> 后面添加了一行 <tt class="docutils literal"><span class="pre">'uliweb.contrib.bae'</span></tt> ，目的是
+可以从 <tt class="docutils literal"><span class="pre">bae.core.const</span></tt> 中获得mysql相关的信息。</p>
+<p>我是如何得知 bae.core.const 的呢？是在看到关于常量的描述时提到的，于是我通过:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">bae.core.const</span>
+<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="n">bae</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">ocnst</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>来显示，看到有关于 MySQL 的配置项，包括:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">MYSQL_HOST</span>
+<span class="n">MYSQL_PORT</span>
+<span class="n">MYSQL_USER</span>
+<span class="n">MYSQL_PASS</span>
+<span class="n">MYSQL_DB</span> <span class="c">#不可用</span>
+</pre></div>
+</div>
+<p>不过发现 <tt class="docutils literal"><span class="pre">MYSQL_DB</span></tt> 得到的值是 <tt class="docutils literal"><span class="pre">None</span></tt> ，所以不知道这是不是一个 BUG 。所以我只能在
+<tt class="docutils literal"><span class="pre">settings.ini</span></tt> 中増加了一个 <tt class="docutils literal"><span class="pre">DATABASE</span></tt> 的配置项，所以这就是上面 <tt class="docutils literal"><span class="pre">settings.ini</span></tt> 中
+<tt class="docutils literal"><span class="pre">DATABASE</span></tt> 的来源。</p>
+<p>这里， <tt class="docutils literal"><span class="pre">uliweb.contrib.bae</span></tt> 会自动依赖 <tt class="docutils literal"><span class="pre">uliweb.contrib.orm</span></tt> ，就是说你不配置 <tt class="docutils literal"><span class="pre">uliweb.contrib.orm</span></tt>
+也是可以的，它会自动配置上。 <tt class="docutils literal"><span class="pre">uliweb.contrib.bae</span></tt> 的作用是在执行 <tt class="docutils literal"><span class="pre">uliweb.contrib.orm</span></tt>
+之前得到正常的 <tt class="docutils literal"><span class="pre">CONNECTION</span></tt> 串，将放到 <tt class="docutils literal"><span class="pre">settings.ORM.CONNECTION</span></tt> 中，这样 <tt class="docutils literal"><span class="pre">uliweb.contrib.orm</span></tt>
+就可以正确处理了。</p>
+</div>
+<div class="section" id="todo">
+<h3>todo表创建<a class="headerlink" href="#todo" title="永久链接至标题">¶</a></h3>
+<p>因为 bae 无法使用ssh来 telnet ，所以 uliweb 提供的命令行就无用了。原本启动前的
+第一步就是执行 <tt class="docutils literal"><span class="pre">syncdb</span></tt> 来创建相关的表。但是执行不了，所以只能使用 phpadmin 来处理
+了。所以首先在命令行下执行:</p>
+<div class="highlight-python"><pre>uliweb sql</pre>
+</div>
+<p>它会打印出建表的SQL语句，拷贝下来到phpadmin中执行它吧。不过 uliweb sql 无法打印
+含有创建 Index 的语句。所以如果存在索引创建，要自已手工去使用 phpadmin 来建。</p>
+</div>
+<div class="section" id="id4">
+<h3>启动<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>将修改后的代码每次一提交，bae 会自动启动应用。使用预览的话可以看到每个版本的情况。
+如果执行正确，在应用面板中，对于相要生效的版本点击前面的 radio button。bae会提
+示你生效，一旦生效。你就可以通过域名来访问了。</p>
+<p>uliweb的演示版本为:  <a class="reference external" href="http://0.uliweb.duapp.com/">http://0.uliweb.duapp.com/</a> 有兴趣可以试试。下面为页面示例:</p>
+<img alt="_images/bae6.png" src="_images/bae6.png" />
+</div>
+</div>
+<div class="section" id="id5">
+<h2>BAE的受限环境说明<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>具体的受限说明详见下面的开发文档。特别要说明的是上面的 <tt class="docutils literal"><span class="pre">settings.ini</span></tt> 中的 <tt class="docutils literal"><span class="pre">DEBUG</span> <span class="pre">``为</span> <span class="pre">``False</span></tt> 。
+为什么，因为bae把 <tt class="docutils literal"><span class="pre">wsgi['stderr']</span></tt> 给禁掉了。而 uliweb 的 debug 功能是依赖于 werkzeug
+的 <tt class="docutils literal"><span class="pre">DebugApplication</span></tt> 类，它要使用 <tt class="docutils literal"><span class="pre">wsgi['stderr']</span></tt> 的。因为写不进去，所以就会报错。
+不知道这块为什么要禁掉，这样调试就会很麻烦。</p>
+<p>在bae的预装软件列表中，已经有了 uliweb 要使用的数据库相关的包，如：sqlalchemy， mysql-python。
+其中 Werkzeug 不是必须的，虽然它已经装了，不过 uliweb 自带一个并且是有所修改的版本。</p>
+</div>
+<div class="section" id="id6">
+<h2>BAE的开发文档<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://developer.baidu.com/wiki/index.php?title=%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3%E9%A6%96%E9%A1%B5/%E4%BA%91%E7%8E%AF%E5%A2%83/Python%E7%8E%AF%E5%A2%83%E8%AF%B4%E6%98%8E">Python环境说明</a></li>
+<li><a class="reference external" href="http://developer.baidu.com/wiki/index.php?title=%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3%E9%A6%96%E9%A1%B5/%E4%BA%91%E7%8E%AF%E5%A2%83/%E5%BA%94%E7%94%A8%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B">配置文件规范</a></li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>感受<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
+<p>BAE 和 SAE 为国内提供了云部署环境，支持 Python 很给力，不过限制比起我用过的
+dotCloud等国外的环境还是有些多了点，比如 dotCloud 提供了命令行工具，可以 ssh
+登录服务器，这样安装调试都很方便。并且没有太多环境的限制。希望以后在这些方便
+可以加强。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Baidu Application Engine部署及开发指南</a><ul>
+<li><a class="reference internal" href="#python">Python项目创建</a></li>
+<li><a class="reference internal" href="#uliweb">uliweb的部署</a><ul>
+<li><a class="reference internal" href="#id1">uliweb安装</a></li>
+<li><a class="reference internal" href="#bae">执行bae的支持</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#simple-to-do">Simple To Do 部署</a><ul>
+<li><a class="reference internal" href="#id3">创建数据库实例</a></li>
+<li><a class="reference internal" href="#simple-todo-settings-ini">simple_todo settings.ini修改</a></li>
+<li><a class="reference internal" href="#todo">todo表创建</a></li>
+<li><a class="reference internal" href="#id4">启动</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id5">BAE的受限环境说明</a></li>
+<li><a class="reference internal" href="#id6">BAE的开发文档</a></li>
+<li><a class="reference internal" href="#id9">感受</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="sae.html"
+                        title="上一章">Sina Application Engine部署及开发指南</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="heroku.html"
+                        title="下一章">Heroku 部署说明</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/bae.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="heroku.html" title="Heroku 部署说明"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="sae.html" title="Sina Application Engine部署及开发指南"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

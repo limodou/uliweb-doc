@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>XMLRPC 使用说明 &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="如何编写自已的命令" href="command.html" />
+    <link rel="prev" title="Cache使用说明" href="cache.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="command.html" title="如何编写自已的命令"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="cache.html" title="Cache使用说明"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="xmlrpc">
+<h1>XMLRPC 使用说明<a class="headerlink" href="#xmlrpc" title="永久链接至标题">¶</a></h1>
+<p>Uliweb通过uliweb.contrib.xmlrpc这个app来提供XMLRPC的访问需求。通过此文来讲解XMLRPC
+在Uliweb中如何使用。</p>
+<div class="section" id="id1">
+<h2>配置<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>向$project/apps/settings.ini中的INSTALLED_APPS中添加&#8217;uliweb.contrib.xmlrpc&#8217;。</p>
+<p>配置完毕后，你的应用就已经有一个/XMLRPC的url可以使用了。比如可以通过:</p>
+<div class="highlight-python"><pre>http://localhost:8000/XMLRPC</pre>
+</div>
+<p>来访问XMLRPC服务。如果你想要修改这个URL，可以在settings.ini中添加:</p>
+<div class="highlight-python"><pre>[EXPOSES]
+/XMLRPC = 'uliweb.contrib.xmlrpc.views.xmlrpc'</pre>
+</div>
+<p>在uliweb.contrib.xmlrpc的settings.ini中已经定义上述内容。</p>
+</div>
+<div class="section" id="id2">
+<h2>使用<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>下面我使用一个示例的方式来展示如何使用xmlrpc。</p>
+<p>先让我们创建一个xmlrpc_test的项目和一个Hello的app，操作如下:</p>
+<div class="highlight-python"><pre>uliweb makeproject xmlrpc_test
+cd xmlrpc_test
+uliweb makeapp Hello</pre>
+</div>
+<p>修改settings.ini添加uliweb.contrib.xmlrpc:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">GLOBAL</span><span class="p">]</span>
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+<span class="c">#    &#39;uliweb.contrib.staticfiles&#39;,</span>
+    <span class="s">&#39;uliweb.contrib.xmlrpc&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Hello&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+<p>然后修改Hello/views.py，修改的内容如下:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">uliweb</span> <span class="kn">import</span> <span class="n">function</span>
+<span class="n">xmlrpc</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="s">&#39;xmlrpc&#39;</span><span class="p">)</span>
+
+<span class="nd">@xmlrpc</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">&#39;hello&#39;</span>
+
+<span class="nd">@xmlrpc</span><span class="p">(</span><span class="s">&#39;func&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">new_func</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">&#39;new_func&#39;</span>
+
+<span class="nd">@xmlrpc</span>
+<span class="k">class</span> <span class="nc">Hello</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;user&#39;</span><span class="p">:</span><span class="n">name</span><span class="p">}</span>
+
+    <span class="nd">@xmlrpc</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">new_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;new_name&#39;</span>
+</pre></div>
+</div>
+<p>说明如下:</p>
+<ol class="arabic">
+<li><p class="first">xmlrpc提供了一个同名的decorator函数，可以用来修饰普通的函数和类，以便将其转
+为XMLRPC的服务。而这个decorator是定义在xmlrpc的settings.ini中的，例如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">FUNCTIONS</span><span class="p">]</span>
+<span class="n">xmlrpc</span> <span class="o">=</span> <span class="s">&#39;uliweb.contrib.xmlrpc.xmlrpc&#39;</span>
+</pre></div>
+</div>
+<p>为了获取真正的函数对象，uliweb提供了一个内部函数叫function。使用它就可以从
+settings.ini的FUNCTIONS中获取一个形如&#8217;module.function&#8217;的函数对象。</p>
+</li>
+<li><p class="first">xmlrpc可以支持函数和类。函数和类本身没有特别要求。对于类，一般不定义__init__
+方法，如果有，也需要可以支持不带参数的调用。因为在调用类方法时，xmlrpc会自
+动创建类。</p>
+</li>
+<li><p class="first">xmlrpc可以支持带参数或不带参数。不带参数则会直接使用函数名作为将来调用的函数
+名。如果是类，则形式为ClassName.MethodName的形式。如果带参数，则这个参数将作
+为被调用的函数名，而不是原来的函数名了。所以上面的&#64;xmlrpc(&#8216;func&#8217;)就是给所修
+饰的函数重新起了一个名字，客户端应该使用func来访问，而不是new_func。如果是一
+个类方法，这个名字会与类名进行合并。所以上面的&#64;xmlrpc(&#8216;name&#8217;)处理后，你就应
+该使用Hello.name来访问了。</p>
+</li>
+<li><p class="first">如果类函数是以&#8217;_&#8217;开头的，将不会被调用。</p>
+</li>
+<li><p class="first">在类方法上仍然可以使用xmlrpc，这样相当于创建了一个xmlrpc函数的别名。</p>
+</li>
+<li><p class="first">Uliweb提供的xmlrpc调用还支持与views相类似的__begin__和__end__的处理。同时可
+以在类上使用。有兴趣的可以自行测试。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id3">
+<h2>测试<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>下面创建一个测试程序，如test_xmlrpc.py:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">xmlrpclib</span> <span class="kn">import</span> <span class="n">ServerProxy</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">ServerProxy</span><span class="p">(</span><span class="s">&quot;http://localhost:8000/XMLRPC&quot;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">server</span><span class="o">.</span><span class="n">hello</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">server</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">server</span><span class="o">.</span><span class="n">Hello</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="s">&#39;limodou&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>可以看到，如果是类的方式，可以使用 <tt class="docutils literal"><span class="pre">server.Hello.test('limodou')</span></tt> 很方便。</p>
+<p>如果执行正确，运行结果为:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">hello</span>
+<span class="n">new_func</span>
+<span class="p">{</span><span class="s">&#39;user&#39;</span><span class="p">:</span> <span class="s">&#39;limodou&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">XMLRPC 使用说明</a><ul>
+<li><a class="reference internal" href="#id1">配置</a></li>
+<li><a class="reference internal" href="#id2">使用</a></li>
+<li><a class="reference internal" href="#id3">测试</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="cache.html"
+                        title="上一章">Cache使用说明</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="command.html"
+                        title="下一章">如何编写自已的命令</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/xmlrpc.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="command.html" title="如何编写自已的命令"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="cache.html" title="Cache使用说明"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

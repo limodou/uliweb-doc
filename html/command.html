@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>如何编写自已的命令 &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="staticfiles" href="app_staticfiles.html" />
+    <link rel="prev" title="XMLRPC 使用说明" href="xmlrpc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="app_staticfiles.html" title="staticfiles"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="xmlrpc.html" title="XMLRPC 使用说明"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>如何编写自已的命令<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>Uliweb内置了一个命令系统，其中在uliweb/manage.py中已经内置了一些常用命令。同时
+你也可以在某个app中，按照命令编写的要求来编写app相关的命令。这样一旦在settings.ini
+中的 <tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> 里引入了这个app，这些命令就可以被 Uliweb 使用。你可以
+输入 <tt class="docutils literal"><span class="pre">uliweb</span></tt> 来查看当前有哪些可用的命令。</p>
+<p>下面就来介绍一下如何编写自已的命令。</p>
+<div class="section" id="commands-py">
+<h2>创建commands.py文件<a class="headerlink" href="#commands-py" title="永久链接至标题">¶</a></h2>
+<p>在你的app下创建一个commands.py的文件，文件结构如下:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb.core.commands</span> <span class="kn">import</span> <span class="n">Command</span>
+<span class="kn">from</span> <span class="nn">optparse</span> <span class="kn">import</span> <span class="n">make_option</span>
+
+<span class="k">class</span> <span class="nc">DemoCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;demo&#39;</span>
+    <span class="n">option_list</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">make_option</span><span class="p">(</span><span class="s">&#39;-d&#39;</span><span class="p">,</span> <span class="s">&#39;--demo&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&#39;demo&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s">&#39;Demo command demo.&#39;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="n">check_apps_dirs</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">has_options</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">check_apps</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">global_options</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;This is a demo of DemoCommand, you can enter: &#39;</span>
+        <span class="k">print</span>
+        <span class="k">print</span> <span class="s">&#39;    uliweb help demo&#39;</span>
+        <span class="k">print</span>
+        <span class="k">print</span> <span class="s">&#39;to test this command&#39;</span>
+        <span class="k">print</span>
+        <span class="k">print</span> <span class="s">&#39;options=&#39;</span><span class="p">,</span> <span class="n">options</span>
+        <span class="k">print</span> <span class="s">&#39;global_options=&#39;</span><span class="p">,</span> <span class="n">global_options</span>
+        <span class="k">print</span> <span class="s">&#39;args=&#39;</span><span class="p">,</span> <span class="n">args</span>
+</pre></div>
+</div>
+<p>以上是一个命令的示例，仔细解释一下。</p>
+<div class="admonition attention">
+<p class="first admonition-title">注意</p>
+<p>除了手工创建上面的文件和内容，Uliweb还提供了一个命令可以方便生成代码的模板，
+使用方式为:</p>
+<div class="highlight-python"><pre>uliweb makecmd [appname]</pre>
+</div>
+<p class="last">如果没有给出 <tt class="docutils literal"><span class="pre">appname</span></tt> ，则会在当前目录下生成一个 <tt class="docutils literal"><span class="pre">commands.py</span></tt> 文件。
+如果给出 <tt class="docutils literal"><span class="pre">appname</span></tt> ，则会在指定的 <tt class="docutils literal"><span class="pre">appname</span></tt> 下创建 <tt class="docutils literal"><span class="pre">commands.py</span></tt> 文件。</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>命令类<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id3">
+<h3>类属性<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>每个命令都应该从Command类派生而来。这个类有几个属性可以覆盖，分别为：</p>
+<dl class="docutils">
+<dt>name</dt>
+<dd><p class="first">命令的名字。你将使用它来执行，执行方式如:</p>
+<div class="last highlight-python"><pre>uliweb demo</pre>
+</div>
+</dd>
+<dt>option_list</dt>
+<dd>它是参数列表。定义形式为 <tt class="docutils literal"><span class="pre">optparse</span></tt> 所要求的格式。每个参数都使用 <tt class="docutils literal"><span class="pre">make_option</span></tt>
+来定义。它支持短参数和长参数。其中短参数就是类似 <tt class="docutils literal"><span class="pre">-d</span></tt> ，长参数就是 <tt class="docutils literal"><span class="pre">--demo</span></tt> 。
+<tt class="docutils literal"><span class="pre">dest</span></tt> 表示解析后的参数将使用的变量名。 <tt class="docutils literal"><span class="pre">default</span></tt> 为缺省值。 <tt class="docutils literal"><span class="pre">action</span></tt>
+表示解析后的值如何存储，这里为 <tt class="docutils literal"><span class="pre">store_true</span></tt> ，表示一旦给出参数，则将保存为
+<tt class="docutils literal"><span class="pre">True</span></tt> 。所以，这种方式会将参数解析为 <tt class="docutils literal"><span class="pre">Boolean</span></tt> 值。那么如果要解析为字符
+串怎么做，只要去掉 <tt class="docutils literal"><span class="pre">action</span></tt> 即可，缺省就是字符串，这样可以在参数后面接收
+参数。 <tt class="docutils literal"><span class="pre">help</span></tt> 为此参数的帮助信息。</dd>
+<dt>help</dt>
+<dd>它会额外输出当前命令的帮助信息。用于对当前命令进行解释。</dd>
+<dt>args</dt>
+<dd><p class="first">将用在帮助信息的显示上。它与下面的 <tt class="docutils literal"><span class="pre">has_options</span></tt> 一起用在帮助信息的显示上。
+对命令的执行没有影响。如果定义 <tt class="docutils literal"><span class="pre">has_options</span></tt> 为 <tt class="docutils literal"><span class="pre">True</span></tt> ，则命令帮助显示
+为:</p>
+<div class="highlight-python"><pre>uliweb demo [options] &lt;args&gt;</pre>
+</div>
+<p>如果为 <tt class="docutils literal"><span class="pre">False</span></tt> ，则命令显示为:</p>
+<div class="last highlight-python"><pre>uliweb demo &lt;args&gt;</pre>
+</div>
+</dd>
+<dt>has_options</dt>
+<dd>用于帮助信息的显示。</dd>
+<dt>check_apps_dirs</dt>
+<dd>用来显示是否检查当前目录下存在 <tt class="docutils literal"><span class="pre">apps</span></tt> 子目录。缺省为 <tt class="docutils literal"><span class="pre">True</span></tt> 。</dd>
+<dt>check_apps</dt>
+<dd>用来检查app是否存在。如果设置为 <tt class="docutils literal"><span class="pre">True</span></tt> ，则假定传入的参数应该是 app 。这里
+的参数是进行过命令行参数解析之后剩下的参数。</dd>
+</dl>
+</div>
+<div class="section" id="id4">
+<h3>类方法<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<dl class="docutils">
+<dt>def get_apps(self, global_options, include_apps=None)</dt>
+<dd>返回当前项目所有app的清单。类似于uliweb中的get_apps，不过它因为使用了global_options
+所以使用会更为简单</dd>
+<dt>def get_application(self, global_options)</dt>
+<dd>根据配置信息创建一个application的实例，它会调用 <tt class="docutils literal"><span class="pre">make_simple_application</span></tt> 。</dd>
+<dt>def handle(self, options, global_options, *args)</dt>
+<dd>用于子类继承的方法。用户自定义的命令应该覆盖这个方法。</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="handler">
+<h2>handler方法<a class="headerlink" href="#handler" title="永久链接至标题">¶</a></h2>
+<p>handler方法是命令类的主体，它接三个参数:</p>
+<dl class="docutils">
+<dt>options</dt>
+<dd>为本命令专有的参数，它是与类中的 <tt class="docutils literal"><span class="pre">option_list</span></tt> 的定义相对应的。</dd>
+<dt>global_options</dt>
+<dd>为命令全局参数。Uliweb的命令系统提供了缺省的全局参数，如 <tt class="docutils literal"><span class="pre">-h</span></tt> , <tt class="docutils literal"><span class="pre">-v</span></tt> 等
+参数。因此用户在定义自已的命令参数时，注意不要与全局的参数重复。</dd>
+<dt>args</dt>
+<dd>它就是参数解析之后剩下的参数。</dd>
+</dl>
+</div>
+<div class="section" id="uliweb">
+<h2>常用在命令中的uliweb方法<a class="headerlink" href="#uliweb" title="永久链接至标题">¶</a></h2>
+<dl class="docutils">
+<dt>extract_dirs</dt>
+<dd><p class="first">从指定的模块的子目录下抽取相应的目录和文件到指定目录下。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb.utils.common</span> <span class="kn">import</span> <span class="n">extract_dirs</span>
+</pre></div>
+</div>
+<p>函数定义为:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">extract_dirs</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="last docutils">
+<dt>module</dt>
+<dd>模块名。</dd>
+<dt>path</dt>
+<dd>模块下的目录路径。</dd>
+<dt>dest_path</dt>
+<dd>目标目录。</dd>
+<dt>options</dt>
+<dd><p class="first">可使用参数。如:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">verbose</span><span class="o">=</span><span class="n">global_options</span><span class="o">.</span><span class="n">verbose</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt>get_apps</dt>
+<dd><p class="first">获得当前项目下所有的app名字</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb</span> <span class="kn">import</span> <span class="n">get_apps</span>
+</pre></div>
+</div>
+<p>函数定义为:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">get_apps</span><span class="p">(</span><span class="n">apps_dir</span><span class="p">,</span> <span class="n">settings_file</span><span class="p">,</span> <span class="n">local_settings_file</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="last docutils">
+<dt>apps_dir</dt>
+<dd><p class="first">当前项目下的apps目录。使用时如:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">global_options</span><span class="o">.</span><span class="n">apps_dir</span>
+</pre></div>
+</div>
+</dd>
+<dt>settings_file</dt>
+<dd><p class="first">settings.ini文件路径。使用时如:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">global_options</span><span class="o">.</span><span class="n">settings</span>
+</pre></div>
+</div>
+</dd>
+<dt>local_settings_file</dt>
+<dd><p class="first">local_settings.ini文件路径，使用时如:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">global_options</span><span class="o">.</span><span class="n">local_settings</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+</div>
+<div class="section" id="global-options">
+<h2>常用global_options属性<a class="headerlink" href="#global-options" title="永久链接至标题">¶</a></h2>
+<dl class="docutils">
+<dt>verbose</dt>
+<dd>对应于 <tt class="docutils literal"><span class="pre">-v</span></tt> 参数。表示是否要冗余输出。</dd>
+<dt>apps_dir</dt>
+<dd>项目下的 <tt class="docutils literal"><span class="pre">apps</span></tt> 子目录。</dd>
+<dt>project</dt>
+<dd>项目目录。</dd>
+<dt>settings</dt>
+<dd>当前项目的settings.ini文件。用户可以使用非settings.ini名字。</dd>
+<dt>local_settings</dt>
+<dd>当前项目下的local_settings.ini文件。用户可以使用非local_settings.ini名字。</dd>
+</dl>
+</div>
+<div class="section" id="command">
+<h2>Command类<a class="headerlink" href="#command" title="永久链接至标题">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">Command</span></tt> 类是所有命令的基类。大多数方法请参见 <tt class="docutils literal"><span class="pre">uliweb/core/commands.py</span></tt> 文件。
+其中有 <tt class="docutils literal"><span class="pre">get_apps</span></tt> 方法，功能和uliweb中的一样，不过需要传入的参数不同，如:</p>
+<dl class="docutils">
+<dt>get_apps</dt>
+<dd><div class="first highlight-python"><div class="highlight"><pre><span class="n">get_apps</span><span class="p">(</span><span class="n">global_options</span><span class="p">,</span> <span class="n">include_apps</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">使用起来比uliweb下的get_apps要简单一些。</p>
+</dd>
+<dt>get_application</dt>
+<dd><div class="first highlight-python"><div class="highlight"><pre><span class="n">get_application</span><span class="p">(</span><span class="n">global_options</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">获得当前应用的实例，它将完成整个应用的初始化工作</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">如何编写自已的命令</a><ul>
+<li><a class="reference internal" href="#commands-py">创建commands.py文件</a></li>
+<li><a class="reference internal" href="#id2">命令类</a><ul>
+<li><a class="reference internal" href="#id3">类属性</a></li>
+<li><a class="reference internal" href="#id4">类方法</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#handler">handler方法</a></li>
+<li><a class="reference internal" href="#uliweb">常用在命令中的uliweb方法</a></li>
+<li><a class="reference internal" href="#global-options">常用global_options属性</a></li>
+<li><a class="reference internal" href="#command">Command类</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="xmlrpc.html"
+                        title="上一章">XMLRPC 使用说明</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="app_staticfiles.html"
+                        title="下一章">staticfiles</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/command.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="app_staticfiles.html" title="staticfiles"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="xmlrpc.html" title="XMLRPC 使用说明"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

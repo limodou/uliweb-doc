@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>全局环境 &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="Simple Todo (Uliweb 版本) 之 基础篇" href="basic.html" />
+    <link rel="prev" title="体系结构和机制" href="architecture.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="basic.html" title="Simple Todo (Uliweb 版本) 之 基础篇"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="architecture.html" title="体系结构和机制"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>全局环境<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>Uliweb提供了必要的运行环境和运行对象，因此我称之为全局环境。</p>
+<div class="section" id="id2">
+<h2>对象<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>有一些全局性的对象可以方便地从 uliweb 中导入，如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb</span> <span class="kn">import</span> <span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span>
+    <span class="n">settings</span><span class="p">,</span> <span class="n">Request</span><span class="p">,</span> <span class="n">Response</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="application">
+<h3>application<a class="headerlink" href="#application" title="永久链接至标题">¶</a></h3>
+<p>它是用来记录整个Uliweb项目的运行实例，全局唯一。application是 <tt class="docutils literal"><span class="pre">uliweb.core.SimpleFrame.Dispatcher</span></tt>
+的实例，它有一些属性和方法可以让你使用，例如：</p>
+<dl class="docutils">
+<dt>apps</dt>
+<dd>将列举出当前application实例所有有效的App名称。它是一个list，比如： <tt class="docutils literal"><span class="pre">['Hello',</span> <span class="pre">'uliweb.contrib.staticfiles']</span></tt></dd>
+<dt>apps_dir</dt>
+<dd>当前application的apps的目录。</dd>
+<dt>template_dirs</dt>
+<dd>缺省为当前application所有有效的App的template搜索目录的集合。</dd>
+<dt>get_file(filename, dir=&#8217;static&#8217;)</dt>
+<dd>从所有App下的相应的目录，缺省是从static目录下查找一个文件。并且会先在当前请求对应
+的App下先进行查找，如果没找到，则去其它的App下的相应目录进行查找。</dd>
+<dt>template(filename, vars=None, env=None)</dt>
+<dd><p class="first">渲染一个模板，会先从当前请求对应的App下先进行查找模板文件。vars是一个dict对象。env
+不提供的话会使用缺省的环境。如果想向模板中注入其它的对象，但不是以vars方式提供，不用
+直接修改env，而是通过dispatch功能，绑定： <tt class="docutils literal"><span class="pre">prepare_view_env</span></tt> 主题就可以了。</p>
+<p class="last">它会返回渲染后的结果，是字符串。</p>
+</dd>
+<dt>render(filename, vars, env=None)</dt>
+<dd>它很象template，不过它是直接返回一个Response对象，而不是字符串。</dd>
+</dl>
+</div>
+<div class="section" id="request">
+<h3>Request<a class="headerlink" href="#request" title="永久链接至标题">¶</a></h3>
+<p>而这里的Request类是基于werkzeug的Request来派生的，区别在于：</p>
+<blockquote>
+<div>增加了一些兼容性的内容。原来的werkzeug的Request是没有象GET, POST, params, FILES这
+样的属性的，它们分别是：args, form, values, files，为了与其它的Request类兼容，我
+添加了GET, POST, params, FILES属性。</div></blockquote>
+</div>
+<div class="section" id="response">
+<h3>Response<a class="headerlink" href="#response" title="永久链接至标题">¶</a></h3>
+<p>它也对werkzeug提供的Response进行了派生，区别在于：</p>
+<blockquote>
+<div>添加了一个write方法。而原werkzeug的Response类有一个stream属性，它有write方法。经过
+扩展，可以直接使用write方法，会更方便一些。</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h3>request<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>request 是上面 Request 类的实例的一个代理对象，并不是一个真正的 Request 对象，
+response 也是。但是你可以把它当成真正的 Request 和 Response 一样来使用。那么为什
+么要这样，为了方便。真正的 Request 和 Response 对象会在收到一个请求时被创建
+，然后存放到 local 中，这样不同的线程将有不同实例。为了方便使用，采用代理方式，
+这样用户就不用直接调用 local.reuqest 和 local.response ，而是简单使用 request 和
+response 就可以根据不同的线程使用不同的对象了。</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">request和response是有生存周期的，就是在收到请求时创建，在返回后失效。因此在使用它们
+时，要确保你是在它们的生存周期中进行使用的。</p>
+</div>
+<p>在讲View的环境时提到过：写一个view方法时有一些对象可以认为是全局的，其中就包括request和
+response，但是这两个对象与其它的不同就是因为它是线程相关并且有生存周期的，其它的则是全局唯
+一，并且生存周期是整个运行实例的生存周期。这样，在非view函数中想要使用request和response
+对象，一种方式就是在view中传入，但是可能有些麻烦，另一种方式就是通过uliweb来导入，这样就
+很方便。</p>
+<p>request在行为上和Request一样。</p>
+</div>
+<div class="section" id="id4">
+<h3>response<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>和request一样是一个代理对象。</p>
+</div>
+<div class="section" id="settings">
+<h3>settings<a class="headerlink" href="#settings" title="永久链接至标题">¶</a></h3>
+<p>配置信息对象，这个没什么好说的。</p>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>方法<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb</span> <span class="kn">import</span> <span class="p">(</span><span class="n">redirect</span><span class="p">,</span> <span class="n">json</span><span class="p">,</span> <span class="n">POST</span><span class="p">,</span> <span class="n">GET</span><span class="p">,</span>
+    <span class="n">url_for</span><span class="p">,</span> <span class="n">expose</span><span class="p">,</span> <span class="n">get_app_dir</span><span class="p">,</span> <span class="n">get_apps</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+    <span class="n">functions</span><span class="p">,</span> <span class="n">decorators</span><span class="p">,</span> <span class="n">NotFound</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="redirect">
+<h3>redirect<a class="headerlink" href="#redirect" title="永久链接至标题">¶</a></h3>
+<div class="highlight-python"><pre>def redirect(location, code=302):</pre>
+</div>
+<p>返回一个Response对象，用于实现URL跳转.</p>
+</div>
+<div class="section" id="id6">
+<h3>Redirect<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h3>
+<div class="highlight-python"><pre>class Redirect(Exception):
+    def __init__(self, location, code=302):</pre>
+</div>
+<p>返回异常类，Uliweb捕获后将实现跳转。同时支持在跳转前session的保存。可以作为
+redirect的替換。</p>
+</div>
+<div class="section" id="json">
+<h3>json<a class="headerlink" href="#json" title="永久链接至标题">¶</a></h3>
+<div class="highlight-python"><pre>def json(data, **json_kwargs):</pre>
+</div>
+<p>将一个data处理成json格式，并返回一个Response对象。json_kwargs目前可以允许用户传
+入 <tt class="docutils literal"><span class="pre">content_type</span></tt> 值。这样在特殊情况下可以将生成的json数据生成:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">content_type</span> <span class="o">=</span> <span class="s">&#39;text/html; charset=utf-8&#39;</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="first admonition-title">注意</p>
+<p class="last">发现在使用ajaxForm时，因为可能使用了iframe的方式，对于后台返回的json数据，如
+果使用 <tt class="docutils literal"><span class="pre">application/json</span></tt> 返回时，在IE浏览器下可能会提示要下载，所以有可能
+需要转为 <tt class="docutils literal"><span class="pre">text/html</span></tt> 标式。</p>
+</div>
+</div>
+<div class="section" id="expose">
+<h3>expose<a class="headerlink" href="#expose" title="永久链接至标题">¶</a></h3>
+<p>详见 <a class="reference external" href="url_mapping.html">URL映射</a></p>
+</div>
+<div class="section" id="post">
+<h3>POST<a class="headerlink" href="#post" title="永久链接至标题">¶</a></h3>
+<p>和expose一样，不过限定访问方法为 POST。</p>
+</div>
+<div class="section" id="get">
+<h3>GET<a class="headerlink" href="#get" title="永久链接至标题">¶</a></h3>
+<p>和expose一样，不过限定访问方法为 GET。</p>
+</div>
+<div class="section" id="url-for">
+<h3>url_for<a class="headerlink" href="#url-for" title="永久链接至标题">¶</a></h3>
+<div class="highlight-python"><pre>def url_for(endpoint, **values):</pre>
+</div>
+<p>根据endpoint可以反向获得URL，endpoint可以是字符串格式，如: <tt class="docutils literal"><span class="pre">Hello.view.index</span></tt> ， 也可以
+是真正的函数对象。</p>
+</div>
+<div class="section" id="get-app-dir">
+<h3>get_app_dir<a class="headerlink" href="#get-app-dir" title="永久链接至标题">¶</a></h3>
+<div class="highlight-python"><pre>def get_app_dir(app):</pre>
+</div>
+<p>根据一个app名字取得它对应的目录。</p>
+</div>
+<div class="section" id="get-apps">
+<h3>get_apps<a class="headerlink" href="#get-apps" title="永久链接至标题">¶</a></h3>
+<div class="highlight-python"><pre>def get_apps(apps_dir, include_apps=None):</pre>
+</div>
+<p>根据一个apps目录，分析出所有可用的App的名字列表。</p>
+</div>
+<div class="section" id="function">
+<h3>function<a class="headerlink" href="#function" title="永久链接至标题">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">func</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="s">&#39;function_name&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用户可以在settings.ini中配置供外部使用的函数路径，通过function可以获得这个函数
+的对象。例如在settings.ini中如下配置:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">FUNCTIONS</span><span class="p">]</span>
+<span class="n">has_role</span> <span class="o">=</span> <span class="s">&#39;uliweb.contrib.rbac.has_role&#39;</span>
+<span class="n">has_permission</span> <span class="o">=</span> <span class="s">&#39;uliweb.contrib.rbac.has_permission&#39;</span>
+</pre></div>
+</div>
+<p>这是uliweb.contrib.rbac中的定义的两个方法，key为方法名，value为方法的路径。
+通过:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">has_role</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="s">&#39;has_role&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>就可以导入真正的函数来使用。</p>
+</div>
+<div class="section" id="functions">
+<h3>functions<a class="headerlink" href="#functions" title="永久链接至标题">¶</a></h3>
+<p>这是一个对象，它的作用类似于function，不过它是以属性引用的方式来从settings.ini
+中的FUNCTIONS中导入方法，如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb</span> <span class="kn">import</span> <span class="n">functions</span>
+
+<span class="n">func</span> <span class="o">=</span> <span class="n">functions</span><span class="o">.</span><span class="n">hello</span>
+</pre></div>
+</div>
+<p>相当于:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb</span> <span class="kn">import</span> <span class="n">function</span>
+
+<span class="n">func</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="s">&#39;hello&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="decorators">
+<h3>decorators<a class="headerlink" href="#decorators" title="永久链接至标题">¶</a></h3>
+<p>它同functions类似的使用方法，但是需要在settings.ini中定义DECORATORS内容，如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">DECORATORS</span><span class="p">]</span>
+<span class="n">check_role</span> <span class="o">=</span> <span class="s">&#39;uliweb.contrib.rbac.check_role&#39;</span>
+<span class="n">check_permission</span> <span class="o">=</span> <span class="s">&#39;uliweb.contrib.rbac.check_permission&#39;</span>
+</pre></div>
+</div>
+<p>使用方法:</p>
+<div class="highlight-python"><pre>from uliweb import decorators
+
+@decorators.check_role('superuser')
+@expose('/hello')
+def hello():
+    #...</pre>
+</div>
+</div>
+<div class="section" id="json-dumps">
+<h3>json_dumps<a class="headerlink" href="#json-dumps" title="永久链接至标题">¶</a></h3>
+<p>用于将Python的数据结构转为json格式的方法。</p>
+<blockquote>
+<div>json_dumps(obj, unicode=False, encoding=&#8217;utf-8&#8217;)</div></blockquote>
+<p>unicode为False时，将会把obj中的unicode值转为encoding编码的串。否则转为unicode
+描述形式的串。</p>
+</div>
+<div class="section" id="notfound">
+<h3>NotFound<a class="headerlink" href="#notfound" title="永久链接至标题">¶</a></h3>
+<p>404对应的异常类。如果某个链接不存在，将引发这个异常。如果在你的处理中，发现有
+不存在的对象，建议使用error来返回。因为NotFound会把当前访问的URL显示出来，可能
+不是你想显示的内容。</p>
+</div>
+<div class="section" id="httpexception">
+<h3>HTTPException<a class="headerlink" href="#httpexception" title="永久链接至标题">¶</a></h3>
+<p>通用的HTTP错误异常类。</p>
+</div>
+<div class="section" id="middleware">
+<h3>Middleware<a class="headerlink" href="#middleware" title="永久链接至标题">¶</a></h3>
+<p>中间件基类，所有 Middleware 类可以从它派生。</p>
+</div>
+<div class="section" id="uliweberror">
+<h3>UliwebError<a class="headerlink" href="#uliweberror" title="永久链接至标题">¶</a></h3>
+<p>Uliweb提供了一个通用的异常类 - UliwebError，你可以考虑使用它。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">全局环境</a><ul>
+<li><a class="reference internal" href="#id2">对象</a><ul>
+<li><a class="reference internal" href="#application">application</a></li>
+<li><a class="reference internal" href="#request">Request</a></li>
+<li><a class="reference internal" href="#response">Response</a></li>
+<li><a class="reference internal" href="#id3">request</a></li>
+<li><a class="reference internal" href="#id4">response</a></li>
+<li><a class="reference internal" href="#settings">settings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id5">方法</a><ul>
+<li><a class="reference internal" href="#redirect">redirect</a></li>
+<li><a class="reference internal" href="#id6">Redirect</a></li>
+<li><a class="reference internal" href="#json">json</a></li>
+<li><a class="reference internal" href="#expose">expose</a></li>
+<li><a class="reference internal" href="#post">POST</a></li>
+<li><a class="reference internal" href="#get">GET</a></li>
+<li><a class="reference internal" href="#url-for">url_for</a></li>
+<li><a class="reference internal" href="#get-app-dir">get_app_dir</a></li>
+<li><a class="reference internal" href="#get-apps">get_apps</a></li>
+<li><a class="reference internal" href="#function">function</a></li>
+<li><a class="reference internal" href="#functions">functions</a></li>
+<li><a class="reference internal" href="#decorators">decorators</a></li>
+<li><a class="reference internal" href="#json-dumps">json_dumps</a></li>
+<li><a class="reference internal" href="#notfound">NotFound</a></li>
+<li><a class="reference internal" href="#httpexception">HTTPException</a></li>
+<li><a class="reference internal" href="#middleware">Middleware</a></li>
+<li><a class="reference internal" href="#uliweberror">UliwebError</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="architecture.html"
+                        title="上一章">体系结构和机制</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="basic.html"
+                        title="下一章">Simple Todo (Uliweb 版本) 之 基础篇</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/globals.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="basic.html" title="Simple Todo (Uliweb 版本) 之 基础篇"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="architecture.html" title="体系结构和机制"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

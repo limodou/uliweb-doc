@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>upload(文件上传及显示处理) &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="prev" title="template" href="app_template.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="app_template.html" title="template"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="upload">
+<h1>upload(文件上传及显示处理)<a class="headerlink" href="#upload" title="永久链接至标题">¶</a></h1>
+<div class="section" id="werkzeug">
+<h2>使用werkzeug进行处理<a class="headerlink" href="#werkzeug" title="永久链接至标题">¶</a></h2>
+<p>在Uliweb中对上传有一定的封装处理，下面先介绍一下，不使用Uliweb提供的功能，如何使用底层的werkzeug来处理文件上传。</p>
+<p>当用户在前端通过&lt;input type=&#8221;file&#8221;&gt;来上传一个文件时，在request对象中的request.files中可以得到相应的上传文件。其中是一个类dict的对象，存放多个文件对象属性，例如，&lt;input type=&#8221;file&#8221; name=&#8221;docfile&#8221;&gt;定义了一个docfile字段，当上传后，可以通过:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">filename</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s">&#39;docfile&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">filename</span>
+<span class="n">file_obj</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s">&#39;docfile&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">stream</span>
+</pre></div>
+</div>
+<p>来分别处理上传的文件名和文件对象。后续你要保存到哪个目录，同时考虑到中文的问题，你可能需要将上传的unicode文件名转为与操作系统对应的本身编码。因此，为了解决这些问题，Uliweb提供了upload app来处理上传文件。同时upload app还提供上传后文件的访问处理，包括X-Sendfile的支持。</p>
+</div>
+<div class="section" id="id1">
+<h2>upload 的安装与配置<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>在apps/settings.ini中的INSTALLED_APPS中添加:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;uliweb.contrib.upload&#39;</span>
+</pre></div>
+</div>
+<p>upload缺省提供以下配置:</p>
+<div class="highlight-python"><pre>[UPLOAD]
+TO_PATH = './uploads'
+BUFFER_SIZE = 4096
+FILENAME_CONVERTER =
+BACKEND =
+
+#X-Sendfile type: nginx, apache
+X_SENDFILE = None
+
+#if not set, then will be set a default value that according to X_SENDFILE
+#nginx will be 'X-Accel-Redirect'
+#apache will be 'X-Sendfile'
+X_HEADER_NAME = ''
+X_FILE_PREFIX = '/files'
+
+[EXPOSES]
+file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_serving'</pre>
+</div>
+<p>其中：</p>
+<dl class="docutils">
+<dt>TO_PATH</dt>
+<dd>为文件要保存的目录。缺省为当前路径下的uploads子目录。一般，当前路径就是你的项目目录。</dd>
+<dt>BUFFER_SIZE</dt>
+<dd>保存文件时的块大小。</dd>
+<dt>FILENAME_CONVERTER</dt>
+<dd>文件名转換类，它用来处理当文件上传后，在保存文件时使用的文件名。没有给出此配置时缺省是使用UUID来生成文件名，以保证文件名不重复。同时upload还定义了其它的几种转換类，可以根据需要来使用。更详细的说明参见下面具体的说明。</dd>
+<dt>BACKEND</dt>
+<dd>upload中文件上传和下载的类定义。如果没有给出，则缺省使用 <tt class="docutils literal"><span class="pre">FileServing</span></tt> 类来处理。</dd>
+</dl>
+<p>目前upload还支持X-Sendfile的处理方式，这是目前apache, nginx中都有的一种方法，不过细节上有所差异。关于X-Sendfile这里有一篇 <a class="reference external" href="http://www.kuigg.com/xiazai-kongzhi">文章</a> 可以参考。简单地说就是在下载文件时可以对下载的过程进行控制，详情可参加下面的Nginx配置示例。</p>
+<dl class="docutils">
+<dt>X_SENDFILE</dt>
+<dd>X-Sendfile处理类型，目前只支持Nginx和Apache。根据需要可以输入&#8217;nginx&#8217;或&#8217;apache&#8217;。缺省为None，则表示不启动，则文件读取及下载是由Uliweb本身提供的。</dd>
+<dt>X_HEADER_NAME</dt>
+<dd>当X_SENDFILE生效时，此选项用于指明将返回web server的头。目前已经知道Nginx和Apache要使用的头标识，其它的web server可以在这里指定。当保持为空时，则根据X_SENDFILE的值自动使用相应的头标识，对于Nginx则为 X-Accel-Redirect ，对于Apache则为 X-Sendfile。</dd>
+<dt>X_FILE_PREFIX</dt>
+<dd>传给web server的头中新的URL的前缀。因为这个URL与原始的URL将不一样，所以利用这个前缀可以方便生成新的URL。这个前缀需要与web server中的内部URL相对应。不过对于Nginx和Apache的处理机制不完全相同，对于Nginx的方式，是通过返回一个新的URL，而对于Apache来说，则需要返回一个文件路径，不是一个URL。所以这个项的设置要根据所使用的web server而有所不同。对于Apache则可以认为是目录的前缀。对于Nginx则可以认为是新的URL的前缀。</dd>
+<dt>EXPOSES/file_serving</dt>
+<dd>用于定义一个缺省的View函数，以处理上传后的文件的下载。</dd>
+</dl>
+<p>其实这个配置中，真正与上传有关的就是前两项。后几项都是和下载有关的。在upload中，不仅处理了上传还为了方便处理了下载。只不过，它与静态文件的下载不同，它的下载是可以在非static目录下，并且可以有view的控制参与的。而静态文件是不需要进行控制处理的。</p>
+</div>
+<div class="section" id="id3">
+<h2>文件上传的处理<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>其实在Uliweb有不同级别的文件上传处理，比如最原始的就是手工处理、然后就是利用upload来处理、再有就是通过generic.py来处理。在处理时，有使用Form来处理的，也可以不使用Form来处理，而是使用request，它们之间有一些差异。generic.py会专门在generic.py的文档进行讲解，这里将根据几种情景进行说明。</p>
+<div class="section" id="form">
+<h3>上传Form的定义<a class="headerlink" href="#form" title="永久链接至标题">¶</a></h3>
+<p>其实使用手工HTML或利用Uliweb提供的Form类来生成Form代码都没有太大关系，基本上是一样的。
+简单的话，就是使用Form类了，例如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb.form</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+    <span class="nb">file</span> <span class="o">=</span> <span class="n">FileField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&#39;file&#39;</span><span class="p">)</span>
+
+<span class="nd">@expose</span><span class="p">(</span><span class="s">&#39;/show_upload&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">show_upload</span><span class="p">():</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s">&#39;/upload&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>上面定义了一个Form类，然后我们在show_upload()中将返回一个dict，用于模板的渲染。这个view方法只处理了显示，上传还没有处理。在F创建时，我们传入action的值用于指定上传文件后的处理URL。</p>
+</div>
+<div class="section" id="upload-app">
+<h3>不使用upload app进行上传处理<a class="headerlink" href="#upload-app" title="永久链接至标题">¶</a></h3>
+<p>当用户选择了文件，并提交上传后，信息将提交到/upload来。则对应的处理代码示例为:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="nd">@expose</span><span class="p">(</span><span class="s">&#39;/upload&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">upload</span><span class="p">():</span>
+
+    <span class="n">form</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s">&#39;/upload&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s">&#39;file&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">filename</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;./uploads&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s">&#39;file&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&#39;/ok&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c">#指定将要使用的模板文件名</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="s">&#39;show_upload.html&#39;</span>
+        <span class="c">#如果校验失败，则再次返回Form，将带有错误信息</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>先生成保存目标的文件名，然后手工将上传的内容进行保存。不过，这里如果文件名有中文有可能会报错。request中得到的文件名是unicode，你需要将其转为与操作系统相匹配的编码。在Uliweb的全局配置项中提供了一个:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">GLOBAL</span><span class="p">]</span>
+<span class="n">FILESYSTEM_ENCODING</span> <span class="o">=</span> <span class="bp">None</span>
+</pre></div>
+</div>
+<p>你可以考虑先对其进行配置，然后使用它来处理文件的编码。因此，你需要做的处理主要就是:</p>
+<ol class="arabic simple">
+<li>生成目标文件名（可能要处理文件名编码的问题）</li>
+<li>保存文件</li>
+</ol>
+<p>下面再看一看使用upload app的做法</p>
+</div>
+<div class="section" id="id4">
+<h3>使用upload app进行上传处理<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>首先安装upload app。</p>
+<p>然后设置配置项，比如TO_PATH的值，缺省是./uploads。</p>
+<p>将上面的代码修改一下:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="nd">@expose</span><span class="p">(</span><span class="s">&#39;/upload&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">upload</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">uliweb.contrib.upload</span> <span class="kn">import</span> <span class="n">save_file</span>
+
+    <span class="n">form</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s">&#39;/upload&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+        <span class="n">save_file</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&#39;/ok&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c">#指定将要使用的模板文件名</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="s">&#39;show_upload.html&#39;</span>
+        <span class="c">#如果校验失败，则再次返回Form，将带有错误信息</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>这里使用了upload中提供的save_file函数，它的原型为:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">save_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">fobj</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这里只提供了两个参数，一个是文件名，一个是文件对象。第三个没有提供，因此如果存在
+同名的文件，将不会覆盖，而是自动添加象(1), (2)这样的内容。在save_file中会自动根
+据相关的配置项：文件系统编码、保存目录信息来自动生成目标文件名并转換成合适的编码，
+然后保存。</p>
+<p>为了方便处理Form字段，upload app还提供了save_file_field函数，具体使用参见下面的
+函数说明。</p>
+</div>
+<div class="section" id="id5">
+<h3>放在一起的处理方式<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>我们可以考虑把显示和上传后的处理放在一起，也可以象这个例子一样，分开不同的URL。如果放在一起，逻辑可以是:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">upload</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">uliweb.contrib.upload</span> <span class="kn">import</span> <span class="n">save_file</span>
+
+    <span class="n">form</span> <span class="o">=</span> <span class="n">F</span><span class="p">()</span>
+    <span class="c">#GET是显示用，POST是提交用</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;GET&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c">#如果提交，则先进行校验，这里是使用Form的方式</span>
+        <span class="c">#form有一个validate方法，可以传入多个值，这里将request.files传入</span>
+        <span class="c">#以便形成完整的数据集，如果validate返回True，表示校验成功，并且</span>
+        <span class="c">#上传的数据将按照Form字段定义的类型已经做了转換</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+            <span class="n">save_file</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&#39;/ok&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c">#如果校验失败，则再次返回Form，将带有错误信息</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="fileserving">
+<h2>FileServing 类<a class="headerlink" href="#fileserving" title="永久链接至标题">¶</a></h2>
+<p>upload 把文件和下载的管理组织成了类的形式。这个类就是FileServing，你可以根据需要
+从这个类进行派生。在缺省情况下，upload app会自动创建一个default_fileserving，而
+前面所看到的UPLOAD的配置项就是这个缺省的文件服务类。同时，基于这个缺省的实例，提
+供了下面的一些方法。在简单的情况下，你可以只使用缺省的文件服务对象就够了。</p>
+<p>FileServing的说明:</p>
+<div class="highlight-python"><pre>class FileServing(object):
+    options = {
+        'x_sendfile' : ('UPLOAD/X_SENDFILE', None),
+        'x_header_name': ('UPLOAD/X_HEADER_NAME', ''),
+        'x_file_prefix': ('UPLOAD/X_FILE_PREFIX', '/files'),
+        'to_path': ('UPLOAD/TO_PATH', './uploads'),
+        'buffer_size': ('UPLOAD/BUFFER_SIZE', 4096),
+        '_filename_converter': ('UPLOAD/FILENAME_CONVERTER', None),
+    }
+
+    #每个FileServing类有相应的settings配置项。因此FileServing的所有方法
+    #都是根据这些配置项计算来的
+
+    def filename_convert(self, filename):
+        """
+        对文件名进行转換
+        """
+
+    def get_filename(self, filename, filesystem=False, convert=False)
+        """
+        用于获得一个文件的实际路径。它是根据to_path计算得到的。如果
+        filesystem为True，则会将生成的文件名按settings中配置的文件
+        系统编码来进行转換。convert参数用于处理是否要进行文件名的转換。
+        因此根据参数的不同，它有几种用法:
+
+        1. 根据传入的filename得到对应的实际路径，但文件名不转換为文件系统
+           的编码:
+
+           get_filename(filename)
+
+        2. 根据传入的filename得到对应的实际路径，但是文件名转換为文件系统
+           的编码:
+
+           get_filename(filename, filestystem=True)
+
+        3. 得到filiename的实际路径，同时进行文件名转換，这样得到的文件名将
+           不是原来的文件名:
+
+           get_filename(filename, convert=True)
+
+        前两种主要是用在上传文件后的显示上，这时一般使用的是转換后的文件名。
+        第三种是用在上传后保存文件时，先对文件名进行转換。
+        """
+
+    def download(self, filename, action='download', x_filename='', real_filename='')
+        """
+        提供下载处理，支持X-Sendfile的处理。action取值为'download'或
+        'inline'，它们分别对应不同的应答头:
+
+        download
+            Content-Disposition:attachment; filename=&lt;filename&gt;
+        inline
+            Content-Disposition:inline; filename=&lt;filename&gt;
+
+        如果action为None，则不显示上面的头信息。
+
+        在这里，我们看到有三个文件名，都有什么用？
+
+        filename一般是从数据库中取出来的文件名，比如我们将文件名保存到
+        FileProperty中，当取出来时是Unicode格式的，并且是相对于上传路径
+        的相对路径，所以我们要进行转換。
+
+        如果不考虑X-Sendfile的情况，一般我们只提供filename就足够了，因
+        为可以自动根据to_path来计算出实际文件路径。不过当文件名并不存在
+        于to_path所指定的目录下时，我们还可以提供real_filename参数来指
+        明文件实际的路径。
+
+        对于使用了X-Sendfile的情况，又复杂了一些。我们可能还需要指出
+        x_filename参数，比如在nginx下，它用来指明X-Accel-Redirect中的
+        文件名，而这个文件路径是一个URL，提供Nginx可以找到真正的文件。
+        所以x_sendfile其实是一个中间路径。
+
+        所以x_sendfile和real_filename其实不会同时使用。在更底层的filedown
+        函数中会进行确实的处理。对于用户来说，如果想实现根据配置不同，
+        使用不同的下载方式，则么这些参数最好都提供。
+        """
+
+    def save_file(self, filename, fobj, replace=False, convert=True)
+        """
+        将文件保存在to_path路径下。
+
+        使用convert可以设置要不要转換文件名。
+        """
+
+    def save_file_field(self, field, replace=False, filename=None, convert=True)
+        """
+        根据文件字段来保存。路径处理同save_file
+        """
+
+    def save_image_field(self, field, resize_to=None, replace=False, filename=None, convert=True)
+        """
+        根据图片字段来保存。路径处理同save_file
+        """
+
+    def delete_filename(self, filename)
+        """
+        删除保存在to_path下的文件。
+        """
+
+    def get_href(self, filename)
+        """
+        获取filename对应的URL地址，不是真正的URL信息
+        """
+
+    def get_url(self, filename, query_para=None, **url_args)
+        """
+        获取filename对应的URL。注意，这是一个真正的URL，如果只是想得到URL的
+        地址，要使用get_href(filename)
+
+        如果url_args中传入了 title 和 text，则生成的URL形式为
+
+        &lt;a href='xxx' title='title'&gt;text&lt;/a&gt;
+
+        如果没有传入，则使用filename代替title和text。
+
+        如果传入了query_para，则它的值将写在href对应的链接后面。query_para
+        是一个dict值，如： ``query_para={'alt':'filename.txt'}``
+
+        那么生成的URL可能为:
+
+        &lt;a href='xxx?alt=filename.txt' title='title'&gt;text&lt;/a&gt;
+
+        它有什么用，在后面的download你会看到
+        """</pre>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>upload app提供方法说明<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<p>以下方法都是基于缺省的default_fileserving对象来处理的。</p>
+<dl class="docutils">
+<dt>get_backend()</dt>
+<dd>获得缺省的文件上传下载对象。</dd>
+<dt>file_serving(filename)</dt>
+<dd><p class="first">缺省的文件下载函数。它是通过在 settings.ini 中配置了:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">EXPOSES</span><span class="p">]</span>
+<span class="n">file_serving</span> <span class="o">=</span> <span class="s">&#39;/uploads/&lt;path:filename&gt;&#39;</span><span class="p">,</span> <span class="s">&#39;uliweb.contrib.upload.file_serving&#39;</span>
+</pre></div>
+</div>
+<p>这样所有以 <tt class="docutils literal"><span class="pre">/uploads</span></tt> 开头的 URL都会被 <tt class="docutils literal"><span class="pre">file_serving</span></tt> 处理，从而提供服务。</p>
+<div class="last admonition note">
+<p class="first admonition-title">注解</p>
+<p>在这里还有特殊的扩展处理。在缺省情况下，上传后的文件为了保证唯一性会自动
+对文件名进行转換，具体用什么要看使用哪个文件名生成器处理的。详见下面
+<tt class="docutils literal"><span class="pre">FilenameConverter</span></tt> 的有关说明。因此，当下载文件名还是使用转換后的文件
+名会非常不方便。所以这里有一个扩展，就是在传入的URL上添加一个特殊的 query_string，如:</p>
+<div class="highlight-python"><pre>xxxxxxxxx.txt?alt=中文.txt</pre>
+</div>
+<p class="last">这样alt对应的就是想另存为的文件名。这样只要 <tt class="docutils literal"><span class="pre">&lt;a&gt;</span></tt> 标签加上 <tt class="docutils literal"><span class="pre">alt</span></tt> 信息就可以
+以想要的文件名来保存。</p>
+</div>
+</dd>
+<dt>get_filename(filename, filesystem=False, convert=False)</dt>
+<dd><p class="first">用于获得目标文件，即将TO_PATH与filename进行连接。同时，如果给出filesystem为
+True，则将文件名转为文件系统的编码。否则返回的将是unicode。</p>
+<p class="last">convert=False 表示不对文件名进行转換</p>
+</dd>
+<dt>save_file(filename, fobj, replace=False, convert=True)</dt>
+<dd>用于保存一个文件。需要传入文件名和文件对象，这些都可以从request或form字段中
+获得。如果replace设置为True，则表示当存在同名文件时自动覆盖，否则将自动添加
+(1), (2)等内容，以保证文件不重名。save_file会把文件保存到指定的目录下，并根
+据配置项进行相应的文件名编码的转換。</dd>
+<dt>save_file_field(field, replace=False, filename=None, convert=True)</dt>
+<dd>用于处理Form中的FileField字段。将自动从FileField中获得对应的文件名和文件对象。
+也可以将文件保存为filename参数指定的文件名。</dd>
+<dt>save_image_field(field, resize_to=None, replace=False, filename=None, convert=True)</dt>
+<dd>和save_file_field类似，是用来处理ImageField(图像字段)的。不过，如果你设置了
+resize_to参数的话，它还可以自动对图像进行缩放处理。</dd>
+<dt>delete_filename(filename)</dt>
+<dd>删除上传目录下的某个文件。</dd>
+<dt>get_url(filename, query_para=None, **url_args)</dt>
+<dd><p class="first">获得上传目录下某个文件的URL，以便可以让浏览器进行访问。</p>
+<p class="last">query_para 将传入到href属性后面成为query_string.</p>
+</dd>
+<dt>get_href(filename, **kwargs)</dt>
+<dd>获取filename对应的URL地址，不是真正的URL信息</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">如果上面的文件名使用的是相对路径，则会根据当前的FileServing对象来决定使用
+什么配置信息，比如文件保存的路径。但是如果使用绝对路径，则将使用绝对路径进
+行处理。</p>
+</div>
+</div>
+<div class="section" id="filenameconverter">
+<h2>FilenameConverter类的说明<a class="headerlink" href="#filenameconverter" title="永久链接至标题">¶</a></h2>
+<p>upload提供了几个用于文件名上传后转换的类，并且可以在settings.ini进行配置，分别说明如下:</p>
+<ol class="arabic">
+<li><p class="first">FilenameConverter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FilenameConverter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">filename</span>
+</pre></div>
+</div>
+<p>最基本的类，对文件名不作任何转換</p>
+</li>
+<li><p class="first">UUIDFilenameConverter</p>
+<p>使用UUID方法生成文件名。文件名将保证唯一。</p>
+</li>
+<li><p class="first">MD5FilenameConverter</p>
+<p>使用MD5算法生成文件名。具体算法:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">md5</span><span class="p">(</span>
+            <span class="n">md5</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%f%s%f%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="nb">id</span><span class="p">({}),</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(),</span>
+                              <span class="n">getpid</span><span class="p">()))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="backend">
+<h2>BACKEND配置说明<a class="headerlink" href="#backend" title="永久链接至标题">¶</a></h2>
+<p>upload在启动时会缺省按照 <tt class="docutils literal"><span class="pre">UPLOAD/BACKEND</span></tt> 的定义来生成缺省的fileserving类。如果
+没给出，则使用FileServing。通过修改 <tt class="docutils literal"><span class="pre">BACKEND</span></tt> ，用户就可以定义自已缺省的文件上传处理类。</p>
+</div>
+<div class="section" id="x-sendfile-nginx">
+<h2>X-Sendfile Nginx配置说明<a class="headerlink" href="#x-sendfile-nginx" title="永久链接至标题">¶</a></h2>
+<p>简单的处理流程可以表示为:</p>
+<img alt="_images/upload_01.png" src="_images/upload_01.png" />
+<p>以上的处理可以理解为：</p>
+<ol class="arabic simple">
+<li>用户请求的url在后台经过处理后，由后台处理添加一个内部的头信息，头信息带有一个新的URL，并且返回内容为空，因此真正的内容将由Nginx完成，所以只要添加相应的头信息即可。同时你也可能会返回其它的头信息，如: <cite>&#8216;Content-Disposition&#8217;</cite>, <cite>&#8216;Content-Type&#8217;</cite> 等。</li>
+<li>Nginx在发现 <cite>&#8216;X-Accel-Redirect&#8217;</cite> 头之后会自动删除，并且根据URL的信息去对应的目录下查找相应的文件，然后返回。</li>
+<li>因此用户看到的文件路径有可能和真正存放文件的路径不同。并且，允许后台处理根据需要来决定返回 <cite>&#8216;X-Accel-Redirect&#8217;</cite> 还是其它的信息，从而可以控制是否真正进行文件下载。一方面可以进行下载控制，另一方面可以对后台文件进行保护。</li>
+</ol>
+<p>Nginx的配置如下:</p>
+<div class="highlight-python"><pre>location /files {
+    internal;
+    alias /path/to/files;
+}</pre>
+</div>
+<p>在Nginx的conf文件中添加上面的内容，需要根据需要进行修改。其中:</p>
+<dl class="docutils">
+<dt>/files</dt>
+<dd>为你将在后台处理中要重新生成的URL的前缀。</dd>
+<dt>internal</dt>
+<dd>表示内部使用，用户将无法直接通过URL来访问这个路径。</dd>
+<dt>alias</dt>
+<dd><p class="first">指明/files后对应的文件信息存放的路径。这里还可以考虑使用root，它们的区别就是:</p>
+<blockquote class="last">
+<div>例如URL为 /files/filename，如果配置为 alias /download，则将要读取的文件应该是 /download/filename，而如果配置为 root /download，则将要读取的文件将是 /download/files/filename</div></blockquote>
+</dd>
+</dl>
+<p>启用Nginx进行文件下载处理的配置项应设置为:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">UPLOAD</span><span class="p">]</span>
+<span class="n">X_SENDFILE</span> <span class="o">=</span> <span class="s">&#39;nginx&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">upload(文件上传及显示处理)</a><ul>
+<li><a class="reference internal" href="#werkzeug">使用werkzeug进行处理</a></li>
+<li><a class="reference internal" href="#id1">upload 的安装与配置</a></li>
+<li><a class="reference internal" href="#id3">文件上传的处理</a><ul>
+<li><a class="reference internal" href="#form">上传Form的定义</a></li>
+<li><a class="reference internal" href="#upload-app">不使用upload app进行上传处理</a></li>
+<li><a class="reference internal" href="#id4">使用upload app进行上传处理</a></li>
+<li><a class="reference internal" href="#id5">放在一起的处理方式</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fileserving">FileServing 类</a></li>
+<li><a class="reference internal" href="#id6">upload app提供方法说明</a></li>
+<li><a class="reference internal" href="#filenameconverter">FilenameConverter类的说明</a></li>
+<li><a class="reference internal" href="#backend">BACKEND配置说明</a></li>
+<li><a class="reference internal" href="#x-sendfile-nginx">X-Sendfile Nginx配置说明</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="app_template.html"
+                        title="上一章">template</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/app_upload.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="app_template.html" title="template"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

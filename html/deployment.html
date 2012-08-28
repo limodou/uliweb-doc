@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>部署指南 &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="命令行工具使用指南" href="manage_guide.html" />
+    <link rel="prev" title="Mail 处理" href="mail.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="manage_guide.html" title="命令行工具使用指南"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="mail.html" title="Mail 处理"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>部署指南<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>uliweb支持任何标准的wsgi方式的部署。缺省情况下，在创建一个项目后，会在项目目录
+下生成: <tt class="docutils literal"><span class="pre">fast_handler.fcgi</span></tt> 和 <tt class="docutils literal"><span class="pre">wsgi_handler.py</span></tt>.</p>
+<p>并且uliweb目录还支持：gae, sae和dotcloud。因此，如果想要在这些环境上部署，一般
+需要执行:</p>
+<div class="highlight-python"><pre>uliweb support [gae|sae}dotcloud]</pre>
+</div>
+<p>则会分别生成相应的环境包含部署用的处理程序。</p>
+<p>并且uliewb还提供了静态文件的提取功能，它可以把所有安装的app下的static目录汇总到
+指定的目录下去，然后利用web server来提供静态文件的处理。如使用:</p>
+<div class="highlight-python"><pre>uliweb exportstatic /your/static/path</pre>
+</div>
+<div class="section" id="apache">
+<h2>Apache<a class="headerlink" href="#apache" title="永久链接至标题">¶</a></h2>
+<div class="section" id="mod-wsgi">
+<h3>mod_wsgi<a class="headerlink" href="#mod-wsgi" title="永久链接至标题">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">按 <a class="reference external" href="http://code.google.com/p/modwsgi/">mod_wsgi</a> 的说明安装mod_wsgi到apache下。</p>
+<ul class="simple">
+<li>拷贝mod_wsgi.so到apache的modules目录下</li>
+</ul>
+<p>Window环境可以看：</p>
+<blockquote>
+<div><p><a class="reference external" href="http://code.google.com/p/modwsgi/wiki/InstallationOnWindows">http://code.google.com/p/modwsgi/wiki/InstallationOnWindows</a></p>
+</div></blockquote>
+<p>Linux环境可以看：</p>
+<blockquote>
+<div><p><a class="reference external" href="http://code.google.com/p/modwsgi/wiki/InstallationOnLinux">http://code.google.com/p/modwsgi/wiki/InstallationOnLinux</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">配置 apache 的httpd.conf文件</p>
+<blockquote>
+<div><div class="highlight-python"><pre>LoadModule wsgi_module modules/mod_wsgi.so
+WSGIScriptAlias / /path/to/uliweb/wsgi_handler.py
+
+&lt;Directory /path/to/youruliwebproject&gt;
+Order deny,allow
+Allow from all
+&lt;/Directory&gt;</pre>
+</div>
+<p>上面是将起始的URL设为/，你可以根据需要换为其它的起始URL，如/myproj。</p>
+<p>如果在windows下，示例为：</p>
+<div class="highlight-python"><pre>WSGIScriptAlias / d:/project/svn/uliweb/wsgi_handler.py
+
+&lt;Directory d:/project/svn/uliweb&gt;
+Order deny,allow
+Allow from all
+&lt;/Directory&gt;</pre>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">重启apache</p>
+</li>
+<li><p class="first">测试。启动浏览器输入： <a class="reference external" href="http://localhost/YOURURL">http://localhost/YOURURL</a> 来检测你的网站可否可以正常访问。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id3">
+<h3>静态文件<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>当需要使用apache来配置静态文件时，可以在配置文件中配置为:</p>
+<div class="highlight-python"><pre>Alias /static/ /your/static/path/</pre>
+</div>
+</div>
+</div>
+<div class="section" id="lighttpd-scgi">
+<h2>Lighttpd + SCGI<a class="headerlink" href="#lighttpd-scgi" title="永久链接至标题">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">配置lighttpd.conf：</p>
+<div class="highlight-python"><pre>scgi.server=(
+   "/uliweb.scgi"=&gt; (
+                    "main" =&gt; (
+                           "socket" =&gt; "/tmp/uliweb.sock",
+                           "check-local" =&gt; "disable",
+                           ),
+                   ),
+   )
+   url.rewrite-once = (
+                    "^(/.*)$" =&gt; "/uliweb.scgi$1",
+   )</pre>
+</div>
+</li>
+<li><p class="first">运行：</p>
+<div class="highlight-python"><pre>python runcgi.py protocol=scgi socket=/tmp/uliweb.sck method=threaded daemonize=true</pre>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">runcgi.py需要使用flup,下地址：http://trac.saddi.com/flup</p>
+</div>
+</div>
+<div class="section" id="iis-scgi">
+<h2>IIS + SCGI<a class="headerlink" href="#iis-scgi" title="永久链接至标题">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">下载安装pyISAPI_SCGI 地址: <a class="reference external" href="http://code.google.com/p/pyisapi-scgi/">http://code.google.com/p/pyisapi-scgi/</a></p>
+</li>
+<li><p class="first">pyISAPI_SCGI配置方法 <a class="reference external" href="http://code.google.com/p/pyisapi-scgi/wiki/PyISAPI_SCGI_0_6_17">http://code.google.com/p/pyisapi-scgi/wiki/PyISAPI_SCGI_0_6_17</a></p>
+</li>
+<li><p class="first">编辑scgi.conf:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">port</span><span class="o">=</span><span class="mi">3033</span> <span class="c">#设置一个空闲的端口号</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">运行:</p>
+<div class="highlight-python"><pre>python runcgi.py protocol=scgi host=127.0.0.1 port=3033 method=threaded</pre>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">runcgi.py需要使用flup,下地址：http://trac.saddi.com/flup</p>
+</div>
+</div>
+<div class="section" id="dreamhost-bluehost-hostmonsger">
+<h2>虚拟主机(DreamHost,BlueHost,HostMonsger等)<a class="headerlink" href="#dreamhost-bluehost-hostmonsger" title="永久链接至标题">¶</a></h2>
+<div class="section" id="fastcgi">
+<h3>FastCGI<a class="headerlink" href="#fastcgi" title="永久链接至标题">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">安装python, 参考http://wiki.dreamhost.com/Python</p>
+</li>
+<li><p class="first">新建dispatch.fcgi,内容：</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/home/yourname/bin/python (你安装的python的路径)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">runcgi</span> <span class="kn">import</span> <span class="n">run</span>
+<span class="n">run</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&#39;threaded&#39;</span><span class="p">,</span><span class="n">protocol</span><span class="o">=</span><span class="s">&#39;fcgi&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">编辑.htaccess，内容：</p>
+<div class="highlight-python"><pre>Options +FollowSymLinks +ExecCGI
+RewriteEngine On
+RewriteBase /
+RewriteRule ^(dispatch\.fcgi/.*)$ - [L]
+RewriteRule ^(.*)$ dispatch.fcgi/$1 [L]
+AddHandler fastcgi-script .fcgi #或者是AddHandler fcgid-script .fcgi</pre>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="cgi">
+<h3>CGI<a class="headerlink" href="#cgi" title="永久链接至标题">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">安装python, 参考http://wiki.dreamhost.com/Python</p>
+</li>
+<li><p class="first">修改runcgi.py,将第一行内容修改为：</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/home/yourname/bin/python (你安装的python的路径)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">修改.htaccess,内容：</p>
+<div class="highlight-python"><pre>Options +FollowSymLinks +ExecCGI
+RewriteEngine On
+RewriteBase /
+RewriteRule ^(runcgi\.py/.*)$ - [L]
+RewriteRule ^(.*)$ runcgi.py/$! [L]
+AddHandler cgi-script .py</pre>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">以CGI方式运行，需flup 1.0以上版本。</p>
+</div>
+</div>
+</div>
+<div class="section" id="nginx-uwsgi">
+<h2>Nginx+uwsgi<a class="headerlink" href="#nginx-uwsgi" title="永久链接至标题">¶</a></h2>
+<div class="section" id="nginx">
+<h3>Nginx<a class="headerlink" href="#nginx" title="永久链接至标题">¶</a></h3>
+<p>使用Nginx运行Uliweb，可以考虑使用nginx+uwsgi的模式，其中nginx采用反向代理的方式
+来配置。uwsgi可以采用手工处理，也可以考虑使用supervisor来管理。</p>
+<p>在Nginx中配置比较简单，在nginx.conf中添加:</p>
+<div class="highlight-python"><pre>http {
+#...
+include /etc/nginx/conf.d/*.conf;
+#...
+}</pre>
+</div>
+<p>这里将其它不涉及的内容忽略掉了。上面的代码的作用是包含在conf.d目录下的所有.conf文件。
+因此，你可以把特别的配置写到conf.d目录下的某个文件，如: <tt class="docutils literal"><span class="pre">uliweb.conf</span></tt> 。内容
+可以是:</p>
+<div class="highlight-python"><pre>server {
+        listen 80;
+
+        location / {
+                include uwsgi_params;
+                #proxy_pass localhost:8000;
+                uwsgi_pass unix:///tmp/uwsgi.sock;
+        }
+}</pre>
+</div>
+<p>将uwsgi设置为反向代理有两种方式，一种是通过服务的方式，即上面注释掉的那一行，但
+是当请求过多，这种方式会报错。因此一般都采用socket文件的方法。</p>
+<p>上面就把Nginx设置好了。如果要使用Nignx提供静态文件服务，可以在上面的server中添加:</p>
+<div class="highlight-python"><pre>location ~ ^/static/ {
+    root /your/path/to/static;
+}</pre>
+</div>
+<p>这样就将/static作为静态文件的起如目录了。</p>
+</div>
+<div class="section" id="uwsgi">
+<h3>uwsgi<a class="headerlink" href="#uwsgi" title="永久链接至标题">¶</a></h3>
+<p>uwsgi可以支持命令行方式启动，也可以由supervisor来管理（个人以为supervisor要简单
+得多）。下面是一个命令行启动uwsgi的一个示例脚本(start.sh):</p>
+<div class="highlight-python"><pre>#!/bin/bash
+
+sockfile=/tmp/uwsgi.sock
+projectdir=/your/project/path
+logfile=/opt/web/logs/uwsgi.log
+
+
+if [ $1 = start ];then
+ psid=`ps aux|grep "uwsgi"|grep -v "grep"|wc -l`
+ if [ $psid -gt 2 ];then
+   echo "uwsgi is running!"
+   exit 0
+ else
+   uwsgi -s $sockfile --chdir $projectdir -w wsgi_handler -p 10 -M -t 120 -T -C -d $logfile
+ fi
+ echo "Start uwsgi service [OK]"
+elif [ $1 = stop ];then
+ killall -9 uwsgi
+ echo "Stop uwsgi service [OK]"
+elif [ $1 = restart ];then
+ killall -9 uwsgi
+ uwsgi -s $sockfile --chdir $projectdir -w wsgi_handler -p 10 -M -t 120 -T -C -d $logfile
+ echo "Restart uwsgi service [OK]"
+else
+ echo "Usages: sh start.sh [start|stop|restart]"
+fi</pre>
+</div>
+<p>开始的三个变量可以根据你的实际情况进行修改。这个命令提供了启动、停止、重启三个
+功能。并且相应的参数你可以根据情况进行设置。因为uwsgi有许多的参数可以使用，并
+且配置参数可以有三种提供方式，如：</p>
+<ol class="arabic simple">
+<li>命令行参数</li>
+<li>ini文件</li>
+<li>xml文件</li>
+</ol>
+<p>另外还可以使用supervisor来管理uwsgi程序，如下面是一个示例:</p>
+<div class="highlight-python"><pre>[program:uwsgi]
+command = uwsgi
+ --socket /tmp/uwsgi.sock
+ --harakiri 60
+ --reaper
+ --module wsgi_handler
+ --processes 2
+ --master
+ --home /python/env
+ --logto /tmp/uwsgi.log
+ --chmod-socket=666
+ --limit-as 256
+ --socket-timeout 5
+ --max-requests 2
+directory=/path/to/yourproject
+stopsignal=QUIT
+autostart=true
+autorestart=true
+stdout_logfile=/tmp/supervisord.log
+redirect_stderr=true
+exitcodes=0,1,2</pre>
+</div>
+<p>这里把其它的配置都忽略掉了，只显示uliweb相关的配置，上面的许多参数可以根据要求
+进行修改。</p>
+<p>其中 <tt class="docutils literal"><span class="pre">--home</span> <span class="pre">xxx</span></tt> 的作用是设置python环境，它主要是用于使用virtualenv来创建
+python环境的情况。</p>
+<p>然后使用supervisorctl就可以进行管理了。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">部署指南</a><ul>
+<li><a class="reference internal" href="#apache">Apache</a><ul>
+<li><a class="reference internal" href="#mod-wsgi">mod_wsgi</a></li>
+<li><a class="reference internal" href="#id3">静态文件</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#lighttpd-scgi">Lighttpd + SCGI</a></li>
+<li><a class="reference internal" href="#iis-scgi">IIS + SCGI</a></li>
+<li><a class="reference internal" href="#dreamhost-bluehost-hostmonsger">虚拟主机(DreamHost,BlueHost,HostMonsger等)</a><ul>
+<li><a class="reference internal" href="#fastcgi">FastCGI</a></li>
+<li><a class="reference internal" href="#cgi">CGI</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nginx-uwsgi">Nginx+uwsgi</a><ul>
+<li><a class="reference internal" href="#nginx">Nginx</a></li>
+<li><a class="reference internal" href="#uwsgi">uwsgi</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="mail.html"
+                        title="上一章">Mail 处理</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="manage_guide.html"
+                        title="下一章">命令行工具使用指南</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/deployment.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="manage_guide.html" title="命令行工具使用指南"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="mail.html" title="Mail 处理"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

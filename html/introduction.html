@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Uliweb 简介 &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="安装说明" href="installation.html" />
+    <link rel="prev" title="Uliweb 文档" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="installation.html" title="安装说明"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Uliweb 文档"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="uliweb">
+<h1>Uliweb 简介<a class="headerlink" href="#uliweb" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>它是什么<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>Uliweb是一个新的Python Web Framework，它之所以会产生是因为现有的框架多少有些令人
+不满意的地方，而且许多情况下这些不满意的地方或多或少对我开发Web有影响，因此在经过对
+不少框架的学习之后，我决定开发一个新的框架，希望可以综合我认为其它框架中尽可能多的
+优点，同时使这个新的框架尽可能的简单，易于上手和使用。</p>
+<p>这个项目是由Limodou &lt;<a class="reference external" href="mailto:limodou&#37;&#52;&#48;gmail&#46;com">limodou<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;发起并创建的。其中得到了许多人的帮助。</p>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="永久链接至标题">¶</a></h2>
+<p>Uliweb按照BSD进行发布。</p>
+</div>
+<div class="section" id="id2">
+<h2>基础组件<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>它并不完全是从头写的一个东西，我目前使用了一些库，如：</p>
+<ul class="simple">
+<li><a class="reference external" href="http://werkzeug.pocoo.org/">Werkzeug</a> 用它来进行框架的核心处理，比如：命令行，
+URL Mapping，Debug等。</li>
+<li><a class="reference external" href="http://www.sqlalchemy.org">SqlAlchemy</a> 基于它封装了Uliorm，可以使用ORM对
+数据库进行处理。</li>
+</ul>
+<p>还有一些比较小的引用，如：</p>
+<ul class="simple">
+<li>template 是从 <a class="reference external" href="http://mdp.cti.depaul.edu/">web2py</a> 改造来的</li>
+<li>部分处理代码从 <a class="reference external" href="http://www.djangoproject.com/">Django</a> 中借鉴</li>
+</ul>
+<p>另外还有一些是自已新造的，如：</p>
+<ul class="simple">
+<li>Form处理，可以用来生成HTML代码和对上传的数据进行校验</li>
+<li>i18n处理，包括对模板的处理</li>
+<li>Uliorm，是在SqlAlchemy基础之上进行的封装，同时参考了GAE中的datastore的代码</li>
+<li>框架的处理代码，这块不可能不自已造了</li>
+<li>插件机制，从Ulipad中移植并进行了改造</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>功能特点<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<ul>
+<li><p class="first">组织管理</p>
+<ul class="simple">
+<li>采用MVT模型开发。</li>
+<li>分散开发统一管理。采用App方式的项目组织。每个App有自已的配置文件，templates目录，
+static目录。使得Uliweb的App重用非常方便。同时在使用上却可以将所有App看成一个整体，
+可以相互引用静态文件和模板。缺省是所有App都是生效的，也可以指定哪些App是生效的。
+所有生效App的配置文件在启动时会统一进行处理，最终合成一个完整的配置视图。</li>
+</ul>
+</li>
+<li><p class="first">URL处理</p>
+<ul>
+<li><p class="first">灵活强大的URL映射。采用Werkzeug的Routing模块，可以非常方便地定义URL，并与View函数
+进行绑定。同时可以根据view函数反向生成URL。支持URL参数定义，支持缺省URL定义，如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">appname</span><span class="o">/</span><span class="n">view_module</span><span class="o">/</span><span class="n">function_name</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="first">View与Template</p>
+<ul class="simple">
+<li>View模板的自动套用。当view返回dict对象时，自动根据view函数的名字查找对应的模板。</li>
+<li>目前View方法支持一般函数和类的方式。</li>
+<li>环境方式运行。每个view函数在运行时会处于一个环境下，因此你不必写许多的import，许多
+对象可以直接使用，比如request, response等。可以大大减少代码量。</li>
+<li>模板中可以直接嵌入Python代码，不需要考虑缩近，只要在块结束时使用pass。支持模板的
+include和继承。</li>
+</ul>
+</li>
+<li><p class="first">ORM</p>
+<ul class="simple">
+<li>类Django和GAE的datastore，可以支持自动建表，同时提供命令行工具进行数据的备分，装入，建表等处理。</li>
+<li>提供多数据库连接的支持</li>
+<li>支持alembic的数据库迁移处理</li>
+</ul>
+</li>
+<li><p class="first">i18n</p>
+<ul class="simple">
+<li>支持代码和模板中的i18n处理</li>
+<li>支持浏览器语言和cookie的自动选择，动态切换语言</li>
+<li>提供命令行工具可以自动提取po文件，可以以App为单位或整个项目为单位。并在处理时自动将
+所有语言文件进行合并处理。当发生修改时，再次提取可以自动进行合并。</li>
+</ul>
+</li>
+<li><p class="first">扩展</p>
+<ul class="simple">
+<li>plugin扩展。这是一种插件处理机制。Uliweb已经预设了一些调用点，这些调用点会在特殊的地方
+被执行。你可以针对这些调用点编写相应的处理，并且将其放在settings.py中，当Uliweb在启动
+时会自动对其进行采集，当程序运行到调用点位置时，自动调用对应的插件函数。</li>
+<li>middleware扩展。它与Django的机制完全类似。你可以在配置文件中配置middleware类。每个
+middleware可以处理请求和响应对象。</li>
+<li>views模块的初始化处理。在views模块中，如果你写了一个名为__begin__的函数，它将在执行
+要处理的view函数之前被处理，它相当于一个入口。因此你可以在这里面做一些模块级别的处理，
+比如检查用户的权限。因此建议你根据功能将view函数分到不同的模块中。</li>
+</ul>
+</li>
+<li><p class="first">命令行工具</p>
+<ul class="simple">
+<li>可以自动创始初始工作环境，自动包含必要的目录结构，文件和代码</li>
+<li>静态文件导出，可以将所有生效的App下的static导出到一个统一的目录</li>
+<li>提供开发服务器</li>
+</ul>
+</li>
+<li><p class="first">部署</p>
+<ul class="simple">
+<li>支持GAE部署</li>
+<li>支持Apache下的mod_wsgi部署</li>
+<li>支持uwsgi部署</li>
+<li>支持dotcloud部署</li>
+<li>支持sae部署</li>
+</ul>
+</li>
+<li><p class="first">开发</p>
+<ul class="simple">
+<li>提供开发服务器，并当代码修改时自动装载修改的模块</li>
+<li>提供debug功能，可以查看出错的代码，包括模板中的错误</li>
+</ul>
+</li>
+<li><p class="first">其它</p>
+<ul class="simple">
+<li>对于静态文件的支持可以处理HTTP_IF_MODIFIED_SINCE和trunk方式的静态文件处理。</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>项目目标<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<ul class="simple">
+<li>开发一个简单易用的框架</li>
+<li>框架要足够灵活，并易于扩展</li>
+<li>包含足够的示例代码</li>
+<li>编写清晰易懂的文档</li>
+<li>能够在多种环境下使用</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>社区<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<ul class="simple">
+<li>邮件列表 <a class="reference external" href="http://groups.google.com/group/uliweb">http://groups.google.com/group/uliweb</a></li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>链接<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<ul class="simple">
+<li>Uliweb 项目主页 <a class="reference external" href="http://code.google.com/p/uliweb">http://code.google.com/p/uliweb</a></li>
+<li>Uliweb-doc 文档项目 <a class="reference external" href="http://github.com/limodou/uliweb-doc">http://github.com/limodou/uliweb-doc</a></li>
+<li>Uliweb-doc 在线文档查看链接 <a class="reference external" href="http://limodou.github.com/uliweb-doc/">http://limodou.github.com/uliweb-doc/</a></li>
+<li>plugs Uliweb apps收集项目 <a class="reference external" href="http://code.google.com/p/plugs">http://code.google.com/p/plugs</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Uliweb 简介</a><ul>
+<li><a class="reference internal" href="#id1">它是什么</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+<li><a class="reference internal" href="#id2">基础组件</a></li>
+<li><a class="reference internal" href="#id3">功能特点</a></li>
+<li><a class="reference internal" href="#id4">项目目标</a></li>
+<li><a class="reference internal" href="#id5">社区</a></li>
+<li><a class="reference internal" href="#id6">链接</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="index.html"
+                        title="上一章">Uliweb 文档</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="installation.html"
+                        title="下一章">安装说明</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/introduction.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="installation.html" title="安装说明"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Uliweb 文档"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

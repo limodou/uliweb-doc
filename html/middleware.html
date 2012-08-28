@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Middleware 开发 &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="Generic 说明" href="generic.html" />
+    <link rel="prev" title="Form使用" href="form.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="generic.html" title="Generic 说明"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="form.html" title="Form使用"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="middleware">
+<h1>Middleware 开发<a class="headerlink" href="#middleware" title="永久链接至标题">¶</a></h1>
+<p>Uliweb中的Middleware是类似于django的Middleware，它可以在交易处理前和处理后，以
+及出错时执行Middleware中的方法，起到一种通用的中间件的作用。Middleware是基于请
+求的，它和平时的wsgi middleware不同，wsgi middleware是基于应用级的，当然也可以
+处理请求，但是比Middleware还要底层，本文就不讨论了。</p>
+<div class="section" id="id1">
+<h2>介绍<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>先以contrib.auth.middle_auth的AuthMiddle为例:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb</span> <span class="kn">import</span> <span class="n">Middleware</span>
+
+<span class="k">class</span> <span class="nc">AuthMiddle</span><span class="p">(</span><span class="n">Middleware</span><span class="p">):</span>
+    <span class="n">ORDER</span> <span class="o">=</span> <span class="mi">100</span>
+
+    <span class="k">def</span> <span class="nf">process_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">uliweb.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>一个Middleware要从 <tt class="docutils literal"><span class="pre">Middleware</span></tt> 类派生。一般只需要定义三个方法:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">process_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<span class="n">process_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+<span class="n">process_exception</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>不同的Middleware可以根据需要分别定义不同的方法。</p>
+<p>Middleware基类有一个缺省的 <tt class="docutils literal"><span class="pre">__init__</span></tt> 方法，如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">application</span> <span class="o">=</span> <span class="n">application</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">settings</span>
+</pre></div>
+</div>
+<p>你也可以自已定义一个，以便进行初始化的处理。</p>
+</div>
+<div class="section" id="id2">
+<h2>执行顺序<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>从上面的示例中，可以看到AuthMiddle中定义了一个 <tt class="docutils literal"><span class="pre">ORDER</span></tt> 的属性。Uliweb在调用
+middlware时会根据 <tt class="docutils literal"><span class="pre">ORDER</span></tt> 的值先对Middleware进行排序，然后再根据顺序进行依次
+调用。这里的顺序只是缺省的顺序，在用户进行配置时还可以进行修改。详见下面的配
+置说明。</p>
+</div>
+<div class="section" id="id3">
+<h2>调用逻辑<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>下面列出执行的伪代码进行说明:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#排序</span>
+<span class="n">middlewares</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+<span class="c">#执行Middleware，执行process_request</span>
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">middlewares</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s">&#39;process_request&#39;</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">process_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span>
+
+<span class="c">#调用view方法</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">call_view</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">middlewares</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s">&#39;process_exception&#39;</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">process_exception</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="c">#继续抛出异常</span>
+    <span class="k">raise</span>
+
+<span class="c">#执行Middleware, 执行process_response</span>
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">middlewares</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s">&#39;process_response&#39;</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">process_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>先是对Middleware进行排序。</li>
+<li>对所有的Middleware中的process_request进行处理。如果有返回值不是None，则跳出
+循环。这里会对Middleware中是否有process_reqeust方法进行判断。后面类似。</li>
+<li>然后是执行view方法，获得response。在执行中，如果出错，则按倒序对Middleware
+进行处理。如果某个process_exception有返回值，则跳出循环。最后通过raise再次抛
+出异常，让整个应用捕获。</li>
+<li>如果没有异常，则按倒序执行Middleware中的process_response方法。这里和process_request
+不同。你需要强制返回response对象，因为它会传递到下一个处理方法中。</li>
+</ol>
+</div>
+<div class="section" id="id4">
+<h2>配置<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>有两个地方可以配置：apps/settings.ini和某个应用下的settings.ini。</p>
+<p>Uliweb缺省定义了一个空的section:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">MIDDLEWARES</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>它的定义形式为:</p>
+<div class="highlight-python"><pre>middleware_name = 'middleware_class_path'[, order]</pre>
+</div>
+<p>前面的key是middleware的名字。后面的值可以有两种写法, 一种是只有middleware的类路径，
+另一种是在类路径的后面还有一个顺序号。如果没有给出，则uliweb会自动从middleware
+类的属性中获取ORDER的值，如果不存在，则缺省置为500。如果值为空，则当前的middleware
+将被删除。</p>
+<p>MIDDLEWARE的顺序如何确定？</p>
+<p>在前面伪代码中，有一个对Middleware进行排序的处理。它会根据Middleware中的ORDER的
+大小进行顺序。如果顺序号相同，则保持导入的顺序。</p>
+<p>Uliweb中的app有些已经提供了settings.ini中的MIDDLEWARES的定义，它们只要你在
+INSTALLED_APPS中包含app即可使用。顺序一般也定义好了。</p>
+<p>因此当你自已写了Middleware或特殊情况下，才需要重新定义顺序。</p>
+</div>
+<div class="section" id="contribmidddleware">
+<h2>在Contrib中定义的Midddleware<a class="headerlink" href="#contribmidddleware" title="永久链接至标题">¶</a></h2>
+<p>下面列出在contrib中定义的一些Middleware供参考:</p>
+<ul class="simple">
+<li>&#8216;uliweb.contrib.auth.middle_auth.AuthMiddle&#8217; ORDER=100 app=&#8217;auth&#8217;
+用于在请求进来时，向request添加一个user的对象。这样用户就可以直接通过request.user
+来判断用户是否已经登录和得到登录用户对象。</li>
+<li>&#8216;uliweb.i18n.middle_i18n.I18nMiddle&#8217; ORDER=500 app=&#8217;i18n&#8217;
+用于i18n的处理，设置语言类型</li>
+<li>&#8216;uliweb.contrib.session.middle_session.SessionMiddle&#8217; ORDER=50 app=&#8217;session&#8217;
+请求进来时自动读取session。请求结束时自动保存cookie。</li>
+<li>&#8216;uliweb.orm.middle_transaction.TransactionMiddle&#8217; ORDER=80 app=&#8217;orm&#8217;
+提供事务的支持。当view出错时，自动回滚，成功时自动提交。</li>
+</ul>
+<p>所以，当你使用了上面几个app时，它会自动按:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;uliweb.contrib.session.middle_session.SessionMiddle&#39;</span>
+<span class="s">&#39;uliweb.contrib.auth.middle_auth.AuthMiddle&#39;</span>
+<span class="s">&#39;uliweb.orm.middle_transaction.TransactionMiddle&#39;</span>
+<span class="s">&#39;uliweb.i18n.middle_i18n.I18nMiddle&#39;</span>
+</pre></div>
+</div>
+<p>的顺序来执行。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Middleware 开发</a><ul>
+<li><a class="reference internal" href="#id1">介绍</a></li>
+<li><a class="reference internal" href="#id2">执行顺序</a></li>
+<li><a class="reference internal" href="#id3">调用逻辑</a></li>
+<li><a class="reference internal" href="#id4">配置</a></li>
+<li><a class="reference internal" href="#contribmidddleware">在Contrib中定义的Midddleware</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="form.html"
+                        title="上一章">Form使用</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="generic.html"
+                        title="下一章">Generic 说明</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/middleware.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="generic.html" title="Generic 说明"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="form.html" title="Form使用"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

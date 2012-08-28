@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>视图(View) &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="Form使用" href="form.html" />
+    <link rel="prev" title="URL映射" href="url_mapping.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="form.html" title="Form使用"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="url_mapping.html" title="URL映射"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="view">
+<h1>视图(View)<a class="headerlink" href="#view" title="永久链接至标题">¶</a></h1>
+<p>在Uliweb中，视图(view)相当于MVC框架中的Controller。</p>
+<div class="section" id="id1">
+<h2>view模块的定义<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>在Uliweb中，在一个app的目录下，所有以views开头的文件都将被视为视图模块。当你不使用集中的
+URL管理的时候，Uliweb会自动将所有有效的app的视图文件在启动时进行导入，其目的就是为了搜集
+所有的URL的定义。因此，只要你按规则进行定义文件名，在其中定义的URL就可以被自动发现。因此像：
+views.py, views_about.py都是合法的view模块。</p>
+</div>
+<div class="section" id="id2">
+<h2>基于函数的View方法<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id3">
+<h3>view函数的定义<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>在Uliweb中，一个view函数可以简单地定义为:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>def index():</dt>
+<dd>pass</dd>
+</dl>
+</div></blockquote>
+<p>可以看到，它就是一个普通的函数。目前对于view函数，你只能使用普通的函数，而不能使用类。
+每个view函数都应与一个或多个URL定义相匹配，一个完整的view定义如下:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@expose</span><span class="p">(</span><span class="s">&#39;/index&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>如果一个view函数没有使用expose来修饰的话，它将不会被用户所访问。</p>
+<p>expose后面是可以没有参数的，如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@expose</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>那么这个时候，一个view函数的URL将被定义为:</p>
+<div class="highlight-python"><pre>/Appname/view_module_name/view_function_name</pre>
+</div>
+<p>它是由app的名字，view模块名和view函数名组成的。这就是缺省的URL映射，已经很象是MVC的缺
+省映射了。</p>
+</div>
+<div class="section" id="id4">
+<h3>view函数的参数<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>view函数是可以有参数的，但首先你需要先在它的URL中定义参数，如果URL中有参数，则view中就
+要定义参数，如果没有则view中一般也没有。带参数的例子:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@expose</span><span class="p">(</span><span class="s">&#39;/documents/&lt;lang&gt;/&lt;path:filename&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">show_document</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">lang</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_show</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>关于URL的参数定义，参见 <a class="reference external" href="url_mapping.html">URL映射</a> 的文档。这里可以看出，定义了两个参数：
+lang和filename，所以在下面的view函数中也定义了两个参数。</p>
+<p>但如果你的URL中没有那么多的参数怎么办？这个可以在URL的定义中解决，如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@expose</span><span class="p">(</span><span class="s">&#39;/documents/&lt;path:filename&gt;&#39;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;lang&#39;</span><span class="p">:</span><span class="s">&#39;&#39;</span><span class="p">})</span>
+<span class="nd">@expose</span><span class="p">(</span><span class="s">&#39;/documents/&lt;lang&gt;/&lt;path:filename&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">show_document</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">lang</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_show</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>则在第一个URL的定义中，只有一个filename参数，因此可以使用defaults来定义缺省参数。</p>
+</div>
+<div class="section" id="id5">
+<h3>view的环境<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>在Uliweb中，一个view函数是运行在某种环境中的，当需要调用view函数时，在调用前，我会向
+函数的func_globals属性中注入一些对象，这些对象就可以直接在函数中使用了，你不再需要导入。
+目前可用的对象有：</p>
+<ul class="simple">
+<li>application 这是Uliweb的实例，你可以用它来访问应用的各种属性，如：application.debug
+表示是否处于调用状态，还可以通过它来调用一些方法，如：application.template()来处理模
+板。当然直接导入template也是可以的。不过application.template()已经预设了环境进去。</li>
+<li>request 请求对象。</li>
+<li>response 应答对象。这个对象在传入时是一个空对象，你可以使用它，也可以自行构造一个Response
+的对象进行返回。</li>
+<li>url_for 它是与expose是相反的，它用来生根据view函数生成反向的URL。详情见 <a class="reference external" href="url_mapping.html">URL映射</a> 的文档。</li>
+<li>redirect 用于重定义处理，后面为一个URL信息。</li>
+<li>error 用于输出错误信息，它将自动查找出错页面。你只要在任何app下的templates中增加
+error.html，然后出错信息可以自已来定制。它也不需要前面加return，也将抛出一个异常。</li>
+<li>settings 是定义在所有有效的app settings.py文件中的配置项。注意，一个配置项的名称必须是
+大写的。</li>
+<li>json 用于将dict对象包装成json格式并返回。</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">要注意，以上的环境只能用在view函数中，当view调用其它的方法时，还是需要传入相应的参数。
+有些全局性的对象将放在 uliweb/__init__.py 中，因此可以直接导入。详情见 <a class="reference external" href="globals.html">全局环境</a>
+的文档。</p>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>view环境的扩展<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h3>
+<p>如果你认为上面的环境还不够，那么你可以直接向env中增加新的对象，然后在view方法中可以通过
+env.object的方式来使用它。你需要在某个app的settings.py文件中增加相应的插件处理。如:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uliweb.core.dispatch</span> <span class="kn">import</span> <span class="n">bind</span>
+<span class="nd">@bind</span><span class="p">(</span><span class="s">&#39;prepare_default_env&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">prepare_default_env</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">uliweb.utils.textconvert</span> <span class="kn">import</span> <span class="n">text2html</span>
+    <span class="n">env</span><span class="p">[</span><span class="s">&#39;text2html&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">text2html</span>
+</pre></div>
+</div>
+<p>Uliweb中已经定义了 <tt class="docutils literal"><span class="pre">prepare_default_env</span></tt> 这个plugin的插入点，你可以直接使用它。它的
+作用就是向env中增加新的对象，如上面是增加了一个新的函数可以用来将文本转为HTML代码。</p>
+</div>
+<div class="section" id="id9">
+<h3>view的返回<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h3>
+<p>在Uliweb中，view函数可以返回多种类型的结果。可能为：</p>
+<ul class="simple">
+<li>dict 变量。如果返回一个dict的变量，说明你希望由Uliweb自动套用一个模板，这个模板需要在
+templates目录下，并且模板的文件名需要与view函数名相同，后缀为.html。如果你希望使用指
+定的模板文件，则需要利用response对象，将指定的模板名赋给response.template属性就行了。</li>
+<li>response 对象。记得上面说过的吗？你可以直接使用response对象，比如调用它的response.write()
+方法来写入返回的内容。</li>
+<li>字符串。你可以直接返回一个字符串，这样将被封装为一个普通的文本返回。</li>
+<li>json 对象，使用前面讲的json函数对dict对象进行包装。</li>
+<li>Reseponse实例。你可以主动创建一个Response的实例并返回。</li>
+</ul>
+<p>在某些情况下，你可以调用象redirect, error来中止view的运行。</p>
+</div>
+<div class="section" id="id10">
+<h3>view模块的入口处理<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h3>
+<p>我建议将不同的view函数按照功能和处理分为不同的文件来存放。</p>
+<p>Uliweb支持一种view模块的入口和出口的处理。即你可以在view模块中定义名为 <tt class="docutils literal"><span class="pre">__begin__</span></tt> 和
+<tt class="docutils literal"><span class="pre">__end__</span></tt> 的特殊的方法，它没有参数，但是就象普通的view函数一样，也是在view环境中运行的。
+一旦view模块中存在这个特殊的方法，在执行每个view函数之前都会先调用这个函数。因此你可以
+把它理解为初始化处理，比如给一些对象赋值。举例如下:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__begin__</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">uliweb.contrib.auth.views</span> <span class="kn">import</span> <span class="n">login</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="n">login</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;?next=</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">url_for</span><span class="p">(</span><span class="n">doto_index</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id11">
+<h2>基于类的View方法<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
+<p>目前Uliweb也支持类的方式来定义view，这样可以有更好的封装性。举个例子:</p>
+<div class="highlight-python"><pre>@expose('/user')
+class UserView(object):
+    def __begin__(self):
+        if not request.user:
+            return redirect('/login?next=%s' % request.path)
+
+    @expose('/login')
+    def login(self):
+        #login process
+        #URL = /login
+
+    def register(self, name):
+        #register process
+        #URL = /user/register/&lt;name&gt;
+
+    @expose('add')
+    def add_user(self):
+        #add process
+        #URL = /user/add
+
+    @expose('')
+    def list(self):
+        #URL = /user here '' will just user UserView class URL prefix '/user'
+
+    def _common(self):
+        #this function will not be exposed</pre>
+</div>
+<p>以上只是一个示例。使用基于类的view除了是以类的方式进行组织外，与一般的view方法
+没有本质的区别，但同时又有一些其它的特性。</p>
+<ul class="simple">
+<li>建议使用New Style Class，即从object派生。不需要从特殊的基类派生。</li>
+<li>Class-View也支持类似模块级别的__begin__的处理，但它是一个方法。Uliweb在处理
+Class-View会自动调用。</li>
+<li>不要使用staticmethod对类方法进行处理。因此类方法可以是一般的方法或classmethod。</li>
+<li>如果方法名开始为&#8217;_&#8217;，则这个方法将不会被自动exposed，客户端将不能进行访问。这种
+方式比较适合定义内部的函数。</li>
+<li>如果使用Class-View并且要在Class上使用expose，你需要安装Python 2.6。</li>
+<li>在简单情况下，你在类上使用expose(&#8216;/url&#8217;)，而类的方法上不使用expose，则会自动对有效的
+方法生成形如：/url/method_name 的链接形式，如果还带参数，则自动生成字符串形式
+的参数。例如上面的register函数。在注释中可以看到。</li>
+<li>在上面的例子中已经演示了大部分的情况：<ul>
+<li>类上使用expose</li>
+<li>覆盖自动URL的生成，如login()方法。因为这里使用了&#8217;/login&#8217;，相当于绝对路径。</li>
+<li>定义相对URL，如add()方法。</li>
+<li>使用缺省expose方式，同时定义了参数，如register()方法。</li>
+<li>expose(&#8216;&#8217;)将直接使用类上的URL。</li>
+<li>内部函数，不会被客户端访问到，如_common()方法。</li>
+<li>定义了__begin__()方法，可以在执行类方法前先被处理。</li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">注意，一般不要定义__init__()。因为Uliweb在调用Class-View时，会自动创建类的
+实例，如果定义__init__()则不要带参数或全部使用缺省值。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">注意，如果在方法上还想使用decorator来进行修饰，如果方法无参数，则顺序不影响
+最终的URL生成。如果方法有参数，建议不要使用缺省URL的生成方式，而是主动定义
+expose，并且将expose放在所有其它的decorator之上。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">视图(View)</a><ul>
+<li><a class="reference internal" href="#id1">view模块的定义</a></li>
+<li><a class="reference internal" href="#id2">基于函数的View方法</a><ul>
+<li><a class="reference internal" href="#id3">view函数的定义</a></li>
+<li><a class="reference internal" href="#id4">view函数的参数</a></li>
+<li><a class="reference internal" href="#id5">view的环境</a></li>
+<li><a class="reference internal" href="#id8">view环境的扩展</a></li>
+<li><a class="reference internal" href="#id9">view的返回</a></li>
+<li><a class="reference internal" href="#id10">view模块的入口处理</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id11">基于类的View方法</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="url_mapping.html"
+                        title="上一章">URL映射</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="form.html"
+                        title="下一章">Form使用</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/views.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="form.html" title="Form使用"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="url_mapping.html" title="URL映射"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

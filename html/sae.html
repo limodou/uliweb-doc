@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Sina Application Engine部署及开发指南 &mdash; Uliweb Documentation 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Uliweb Documentation 0.1.4 documentation" href="index.html" />
+    <link rel="next" title="Baidu Application Engine部署及开发指南" href="bae.html" />
+    <link rel="prev" title="迷你留言板" href="guestbook.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="bae.html" title="Baidu Application Engine部署及开发指南"
+             accesskey="N">下一页</a> |</li>
+        <li class="right" >
+          <a href="guestbook.html" title="迷你留言板"
+             accesskey="P">上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="sina-application-engine">
+<h1>Sina Application Engine部署及开发指南<a class="headerlink" href="#sina-application-engine" title="永久链接至标题">¶</a></h1>
+<p>Sina Application Engine(简称sae)是新浪发布的类似于GAE的云环境，目前已经支持PHP
+和Python。因为sae是一个受限环境，因此uliweb在它上面的部署和开发有一些特殊的地方，
+甚至有一些app是专门为sae开发的。下面让我由浅入深地向你介绍sae环境的部署和使用。
+因为sae的python环境也在不断完善中，所以本文档也会不断完善。</p>
+<div class="section" id="uliweb">
+<h2>uliweb的安装<a class="headerlink" href="#uliweb" title="永久链接至标题">¶</a></h2>
+<p>你需要安装uliweb 0.1以上版本或svn中的版本，简单的安装可以是:</p>
+<div class="highlight-python"><pre>easy_install Uliweb</pre>
+</div>
+<p>安装后在Python环境下就可以使用uliweb命令行工具了。</p>
+<p>目前Uliweb支持Python 2.6和2.7版本。3.X还不支持。</p>
+</div>
+<div class="section" id="hello-uliweb">
+<h2>Hello, Uliweb<a class="headerlink" href="#hello-uliweb" title="永久链接至标题">¶</a></h2>
+<p>让我们从最简单的Hello, Uliweb的开发开始。首先假设你已经有了sae的帐号.</p>
+<ol class="arabic">
+<li><p class="first">创建一个新的应用，并且选择Python环境。</p>
+</li>
+<li><p class="first">从svn环境中checkout一个本地目录</p>
+</li>
+<li><p class="first">进入命令行，切換到svn目录下</p>
+</li>
+<li><p class="first">创建Uliweb项目:</p>
+<div class="highlight-python"><pre>uliweb makeproject project</pre>
+</div>
+<p>会在当前目录下创建一个 <tt class="docutils literal"><span class="pre">project</span></tt> 的目录。这个目录可以是其它名字，不过它是和后面要使用的 <tt class="docutils literal"><span class="pre">index.wsgi</span></tt> 对应的，所以建议不要修改。</p>
+</li>
+<li><p class="first">创建 <tt class="docutils literal"><span class="pre">index.wsgi</span></tt> 文件，Uliweb提供了一个命令来做这事:</p>
+<div class="highlight-python"><pre>uliweb support sae</pre>
+</div>
+<p>这样会在当前目录下创建一个 <tt class="docutils literal"><span class="pre">index.wsgi</span></tt> 的文件和 <tt class="docutils literal"><span class="pre">lib</span></tt> 目录。注意执行时是在svn的目录，即project的父目录中。</p>
+<p><tt class="docutils literal"><span class="pre">index.wsgi</span></tt> 的内容是:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sae</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+<span class="n">project_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">project_path</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;lib&#39;</span><span class="p">))</span>
+
+<span class="kn">from</span> <span class="nn">uliweb.manage</span> <span class="kn">import</span> <span class="n">make_application</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">make_application</span><span class="p">(</span><span class="n">project_dir</span><span class="o">=</span><span class="n">project_path</span><span class="p">)</span>
+
+<span class="n">application</span> <span class="o">=</span> <span class="n">sae</span><span class="o">.</span><span class="n">create_wsgi_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>其中 <tt class="docutils literal"><span class="pre">project</span></tt> 和 <tt class="docutils literal"><span class="pre">lib</span></tt> 都已经加入到 <tt class="docutils literal"><span class="pre">sys.path</span></tt> 中了。所以建议使用上面
+的路径，不然就要手工修改这个文件了。</p>
+</li>
+<li><p class="first">然后就可以按正常的开发app的流程来创建app并写代码了，如:</p>
+<div class="highlight-python"><pre>cd project
+uliweb makeapp simple_todo
+
+这时一个最简单的Hello, Uliweb已经开发完毕了。</pre>
+</div>
+</li>
+<li><p class="first">如果有静态文件，则需要放在版本目录下，Uliweb提供了命令可以提取安装的app的静态文件:</p>
+<div class="highlight-python"><pre>cd project
+uliweb exportstatic ../static</pre>
+</div>
+</li>
+<li><p class="first">如果有第三方源码包同时要上传到sae中怎么办，Uliweb提供了export命令可以导出已经
+安装的app或指定的模块的源码到指定目录下:</p>
+<div class="highlight-python"><pre>cd project
+uliweb export -d ../lib #这样是导出全部安装的app
+uliweb export -d ../lib module1 module2 #这样是导出指定的模块</pre>
+</div>
+<p>为什么还需要导出安装的app，因为有些app不是放在uliweb.contrib中的，比如第三方
+的，所以需要导出后上传。但是因为export有可能导出已经内置于uliweb中的app，所以
+通常你可能还需要在 <tt class="docutils literal"><span class="pre">lib</span></tt> 目录下手工删除一些不需要的模块。</p>
+</li>
+<li><p class="first">提交代码</p>
+<p>访问 <tt class="docutils literal"><span class="pre">http://&lt;你的应用名称&gt;.sinaapp.com</span></tt> ，就可看到项目的页面了。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id1">
+<h2>数据库配置<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>Uliweb中内置了一个对sae支持的app，还在不断完善中，目前可以方便使用sae提供的MySql
+数据库。它是需要同时安装sqlalchemy才可以运行的。因此我们第一步先在本地安装好
+sqlalchemy，然后在版本目录中，导出sqlalchemy到lib下:</p>
+<div class="highlight-python"><pre>uliweb export -d ../lib sqlalchemy</pre>
+</div>
+<p>然后修改 <tt class="docutils literal"><span class="pre">project/apps/settings.ini</span></tt> 在 <tt class="docutils literal"><span class="pre">GLOBAL/INSTALLED_APPS</span></tt> 最后添加:</p>
+<div class="highlight-python"><pre>[GLOBAL]
+INSTALLED_APPS = [
+...
+'uliweb.contrib.sae'
+]</pre>
+</div>
+<p>然后为了支持每个请求建立数据库连接的方式，还需要添加一个Middleware在settings.ini中:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">MIDDLEWARES</span><span class="p">]</span>
+<span class="n">transaction</span> <span class="o">=</span> <span class="s">&#39;uliweb.orm.middle_transaction.TransactionMiddle&#39;</span>
+</pre></div>
+</div>
+<p><cite>TransactionMiddle</cite> 不仅是用来控件事务，同时也可以用来控制是否使用短连接。因为
+SAE不支持长连接，所以需要在 <cite>settings.ini</cite> 中启动短连接的配置项:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">ORM</span><span class="p">]</span>
+<span class="n">CONNECTION_TYPE</span> <span class="o">=</span> <span class="s">&#39;short&#39;</span>
+</pre></div>
+</div>
+<p>这样就配置好了。而相关的数据库表的创建维护因为sae不能使用命令行，所以要按sae的
+文档说明通过phpMyAdmin来导入。以后Uliweb会増加相应的维护页面来做这事。</p>
+</div>
+<div class="section" id="sae">
+<h2>SAE的受限环境说明<a class="headerlink" href="#sae" title="永久链接至标题">¶</a></h2>
+<p>具体内容请参见下面的开发文档，因为它是一个受限环境，所以一些常用的使用方式可能有变化，下面列出我写的一些补充:</p>
+<ol class="arabic simple">
+<li>数据库连接不能是长连接，超时时间目录为30s，所以才需要安装db_connection middleware，它就是用来保证每个请求创建数据库连接和关闭数据库连接。</li>
+<li>PIL模块目前还没有预装。PHP环境下的GD还不能用。</li>
+<li>虽然有临时目录可以写文件，但是os模块不能执行mkdirs，因此无法创建目录。</li>
+<li>文件上传目录只能使用数据库，sae提供的storage目录还无法使用。</li>
+</ol>
+</div>
+<div class="section" id="id2">
+<h2>SAE的开发文档<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p><a class="reference external" href="http://readthedocs.org/docs/sae-python/en/latest/index.html">http://readthedocs.org/docs/sae-python/en/latest/index.html</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Sina Application Engine部署及开发指南</a><ul>
+<li><a class="reference internal" href="#uliweb">uliweb的安装</a></li>
+<li><a class="reference internal" href="#hello-uliweb">Hello, Uliweb</a></li>
+<li><a class="reference internal" href="#id1">数据库配置</a></li>
+<li><a class="reference internal" href="#sae">SAE的受限环境说明</a></li>
+<li><a class="reference internal" href="#id2">SAE的开发文档</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>上一个主题</h4>
+  <p class="topless"><a href="guestbook.html"
+                        title="上一章">迷你留言板</a></p>
+  <h4>下一个主题</h4>
+  <p class="topless"><a href="bae.html"
+                        title="下一章">Baidu Application Engine部署及开发指南</a></p>
+  <h3>本页</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/sae.txt"
+           rel="nofollow">显示源代码</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="搜索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    输入相关的模块，术语，类或者函数名称进行搜索
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>导航</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="总目录"
+             >索引</a></li>
+        <li class="right" >
+          <a href="bae.html" title="Baidu Application Engine部署及开发指南"
+             >下一页</a> |</li>
+        <li class="right" >
+          <a href="guestbook.html" title="迷你留言板"
+             >上一页</a> |</li>
+        <li><a href="index.html">Uliweb Documentation 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; 版权所有 2012, limodou.
+      使用 <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
