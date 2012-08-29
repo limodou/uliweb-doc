@@ -15,6 +15,7 @@ Uliweb 文档
    installation.rst
    architecture.rst
    globals.rst
+   update.rst
 
 教程:
 
