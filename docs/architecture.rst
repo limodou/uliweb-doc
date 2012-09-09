@@ -5,12 +5,11 @@
 组织结构
 ----------
 
-如果你从 svn 中下载 Uliweb 源码，它不仅包括了 Uliweb 的核心组件，同时还包括了
-uliwebproject 网站的全部源码和一些示例程序。 Uliweb 采用与 web2py 类似的管理方
-式，即核心代码与应用放在一起，到时会减少部署的一些麻烦。但是对于项目的组织是采
-用 Django 的管理方式，而不是 web2py 的方式。一个完整的项目将由一个或若干个 App
-组织，它们都统一放在 apps 目录下。但 Uliweb 的 app 的组织更为完整，每个 app 有
-自已独立的：
+Uliweb 认为一个项目是由不同的模块组成，而采用了类似于Django App的方式来进行
+项目的组织，它们都统一放在 apps 目录下。同时 Uliweb 的App可以是任何符合Uliweb
+要求的Python包（使用uliweb makeapp appname创建即可），并且可以是独立的Python
+模块放在非apps的地方，只要可以导入就可以了。Uliweb 的 app 的组织重点考虑了功能
+及开发的独立性、复用性和配置化，每个 app 可以有自已独立的：
 
 * settings.ini 它是配置文件
 * templates目录用于存放模板
@@ -19,29 +18,15 @@ uliwebproject 网站的全部源码和一些示例程序。 Uliweb 采用与 web
 
 这种组织方式使得Uliweb的App重用更为方便。
 
-在uliweb的下载目录下，基本结构为::
-
-    contrib/        #内置的app模块
-    core/           #核心模块
-    form/           #form处理模块
-    i18n/           #国际化处理模块
-    lib/            #内置的一些库文件，如: werkzeug
-    locale/         #i18n翻译文件
-    mail/           #邮件处理
-    middleware/     #middleware汇总
-    orm/            #缺省ORM库
-    template_files/ #用在makeproject, makeapp, support命令上的模板文件
-    utils/          #输助模块
-    wsgi/           #wsgi相关的一些模块
-    manage.py       #Uliweb的命令行管理程序
-    
 apps的结构为：
 
 ::
 
     apps/
+        .gitignore
         __init__.py
         settings.ini
+        local_settings.ini
         app1/
             __init__.py
             settings.ini
@@ -55,14 +40,17 @@ apps的结构为：
         fcgi_handler.fcgi
         wsgi_handler.py
         
-    
+通过运行 ``uliweb makeproject projectname`` 就可以创造一个空的项目。同时在 0.1.6
+中会自动添加 ``.gitignore`` 和 ``local_settings.ini`` 文件。其中 ``.gitignore``
+已经自动添加了 ``local_settings.ini`` 文件。因为 ``local_settings.ini`` 主要是
+解决不同环境的不同配置问题，所以不应该放入版本中。
+
 App管理
 -----------
 
-一个项目可以由一个App或多个App组成，而且每个App的结构不一定要求完整，但至少要求
-是一个Python的包的结构，即目录下需要一个__init__.py文件。因此一个App可以：
+一个项目可以由一个App或多个App组成，而且每个App的结构不一定要求完整，因此一个App可以：
 
-* 只有一个settings.int 这样可以做一些初始化配置的工作，比如：数据库配置，i18n的
+* 只有一个settings.ini 这样可以做一些初始化配置的工作，比如：数据库配置，i18n的
   配置等
 * 只有templates，可以提供一些公共的模板
 * 只有static，可以提供一些公共的静态文件
@@ -70,24 +58,45 @@ App管理
 
 Uliweb在启动时对于apps下的App有两种处理策略：
 
-#. 认为全部App都是生效的(这种情况比较少见)
-#. 根据apps/settings.ini中的配置项INSTALLED_APPS来决定哪些App要生效
+#. 认为全部App都是有效的(这种情况比较少见)
+#. 根据 ``apps/settings.ini`` 和 ``apps/local_settings.ini`` 中的配置项 ``INSTALLED_APPS`` 来决
+   定哪些App是有效的
 
-Uliweb在启动时会根据生效的App来导入它们的settings.ini文件，并将其中配置项进行合
+Uliweb在启动时会根据有效的App来导入它们自已的settings.ini文件，并将其中配置项进行合
 并最终形成一个完整的 ``settings`` 变量供App来使用。同时在处理生效的App的同时，
-会自动查找所有``views``开头的文件和``views``子目录并进行导入，这块工作主要是为
+会自动查找所有 ``views`` 开头的文件和 ``views`` 子目录并进行导入，这块工作主要是为
 了收集所有定义在views文件中的URL。
 
 这样当Uliweb启动完毕，所有App下的settings.ini和views文件将被导入。因此，你可以
-在settings.ini文件中做一些初始化的工作。
+在App下的 ``__init__.py`` 文件中做一些初始化的工作。不过对于大部分的配置工作，建
+议采用在 ``settings.ini`` 中定义，然后再绑定对应的事件主题的方式，其目的是实现配置化。
 
-在实际的项目中，apps目录下的settings.ini文件是最后被导入的配置文件，你可以在其
-中存放最后生效的配置项，用来替换某些缺省配置。
+App依赖
+-------------
 
-对于templates和static，Uliweb会首先在当前App下进行搜索，如果没有找到，则去其它
-生效的App相应的目录下进行查找。因此，你可以把所有生效的App的templates和static
-看成一个整体。所以你完全可以编写只包含templates或static的App，主要是提供一些公
-共信息。
+不同的App之间由于功能上的相互关系可能会产生依赖，因此Uliweb允许在定义App时定义所依赖
+的其它的App，这样在配置有效App时，可以减少配置的工作量，在启动时，会自动处理依赖的
+App。
+
+Settings处理
+--------------
+
+Uliweb会按以下顺序来处理 ``settings.ini`` 文件:
+
+#. ``uliweb/core/default_settings.ini`` 它是最初始的settings信息
+#. 按定义的顺序导入每个App下的 ``settings.ini`` 信息
+#. 导入 ``apps/settings.ini`` 信息
+#. 导入 ``apps/local_settings.ini`` 信息
+
+如果出现同名配置项，则对于不可变数据类型，后定义的项将覆盖前面定义的值。如果是可
+变数据类型，则将进行数据合并。
+
+分散开发，集中使用
+-------------------
+
+Uliweb采用分模块开发，集中使用的原则。即开发时，代码和资源分散在不同的App中，但是
+在使用时，将把它看成一个整体进行处理。比如查找某个模板，将在所有的App的templates
+中进行查找，按照定义时的倒序进行处理。
 
 URL处理
 ------------

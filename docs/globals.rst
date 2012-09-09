@@ -110,7 +110,7 @@ redirect
     
 返回一个Response对象，用于实现URL跳转.
 
-Redirect(1.4)
+Redirect(0.1.4)
 ~~~~~~~~~~~~~~~
 
 ::
@@ -267,3 +267,15 @@ UliwebError
 ~~~~~~~~~~~~~~~~~~~~
 
 Uliweb提供了一个通用的异常类 - UliwebError，你可以考虑使用它。
+
+全局对象配置
+--------------
+
+我们已经可以从 ``from uliweb import *`` 中获得许多的对象和方法，如果我们也想将
+其它的对象可以通过 ``from uliweb import xxx`` 的形式来导入，要如何做呢？可以
+在 ``settings.ini`` 中添加以下内容::
+
+    [GLOBAL_OBJECTS]
+    your_object_name = 'your.object.path'
+    
+其中，每项中的 key 是对象的名字，值是对象的路径。

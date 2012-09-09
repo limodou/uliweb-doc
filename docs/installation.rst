@@ -12,7 +12,6 @@
 ------------------
 
 * SQLAlchemy 0.6+ (如果使用Uliweb ORM需要安装它)
-* pytz (用在uliweb.utils.date和ORM中进行时区的处理，缺省不需要)
 
 最简单的方法是使用easy_install，如:
 
@@ -20,11 +19,17 @@
 
     easy_install Uliweb
     
-另外如果你想跟踪最新的代码，可以使用svn来下载代码，
+另外如果你想跟踪最新的代码，可以使用svn或git来下载代码，
 
 ::
 
     svn checkout http://uliweb.googlecode.com/svn/trunk/ uliweb
+    cd uliweb
+    python setup.py develop
+    
+或::
+
+    git clone git://github.com/limodou/uliweb.git
     cd uliweb
     python setup.py develop
 

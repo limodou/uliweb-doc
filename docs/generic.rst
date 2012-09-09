@@ -371,7 +371,7 @@ success_msg
 fail_msg
     出错后的提示消息。
 use_flash
-    是否信息提示采用flash方式，缺省为True。如果为Flash，则不会使用flash函数来显示
+    是否信息提示采用flash方式，缺省为True。如果为False，则不会使用flash函数来显示
     提示信息。
 data
     传入到Form对象中的数据，它将作为初始值传入。如果用户提交后出错，则只会显示

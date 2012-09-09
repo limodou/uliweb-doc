@@ -14,7 +14,7 @@ class BlogView(object):
         def title(value, obj):
             return obj.get_url()
         
-        view = ListView(self.model, 
+        view = ListView(self.model, condition=(self.model.c.deleted==False),
             fields_convert_map={'title':title}, 
             pagination=False)
         return view.run()
@@ -50,5 +50,5 @@ class BlogView(object):
         obj = self.model.get_or_notfound(int(id))
         view = DeleteView(self.model, obj=obj, 
             ok_url=url_for(BlogView.view, id=int(id)),
-            use_delete_field='deleted')
-        return view.fun()
+            use_delete_fieldname='deleted')
+        return view.run()
