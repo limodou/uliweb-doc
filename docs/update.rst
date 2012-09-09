@@ -1,5 +1,5 @@
 =================
-更新日志
+Uliweb 更新日志
 =================
 
 0.1.5
@@ -16,14 +16,12 @@
     * 修正RedirectException显示bug。
     * 添加TablenameConvert到uliweb.orm中，通过orm.set_tablename_converter(converter)传递函数，或者在settings.ini中定义，如：
     
-    .. code-block:: python
-           :linenos:
-           :emphasize-lines: 3,5
+        ::
 
             [ORM]
             TABLENAME_CONVERTER = 'uliweb.utils.common.camel_to_'
     
-当Model名字是CamelCase时，将转化为camel_case
+      当Model名字是CamelCase时，将转化为camel_case
     
     * 添加Reference，OneToOne，ManyToMany关系到Model层级
     * 如果collection_name为None，并且tablename_set已存在，将自动创建新的collection_name,因此collection_name将会被会复制，如果传递了collection_name，并且tablename_set已经存在，将抛出异常，请注意其中的差别。
@@ -49,13 +47,10 @@
     * 増强模板extend和include的处理，当某个模板在调用extend和include时，如果被调用的模板和当前模板文件为同一文件时，则会使用更前一个同名但不同目录的文件。可以把同名文件理解为一个栈，但是它们的目录不同。在这种情况下，是使用当前文件位置的前一个文件。这样就可以实现同名模板的继承机制，以前只是取栈底的文件，没有继承的机制。
     * 添加APP_LAYOUTS的支持。如果在某个app的模板中使用了{{use template_layout}}，则此处template_layout为一个变量，并且，如果在settings.ini中定应义了对应的值时，如：
 
-    .. code-block:: python
-       :linenos:
-       :emphasize-lines: 3,5
+        ::
 
-        [APP_LAYOUTS]
-        appname = 'layout.html'
-    
+            [APP_LAYOUTS]
+            appname = 'layout.html'
 
     * 如果当前app的名字在APP_LAYOUTS中有定义，则使用配置的模板名。它的功能是可以将app级的layout模板进行配置化，不必hardcode。如果没定义，则缺省使用layout.html模板。
     * 向common.py中添加QueryString(类)和query_string(函数)的支持，用来方便处理query_string
