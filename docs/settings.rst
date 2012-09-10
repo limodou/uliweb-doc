@@ -96,6 +96,8 @@ GLOBAL
 ::
 
     [GLOBAL]
+    DEBUG = False               #是否当有异常时，输出调试页面
+    DEBUG_CONSOLE = False       #是否在调试页面上显示console窗，用来输入代码
     TEMPLATE_SUFFIX = '.html'   #模板文件后缀
     ERROR_PAGE = 'error' + TEMPLATE_SUFFIX #错误页面文件名
     WSGI_MIDDLEWARES = []       #WSGI中间件

@@ -80,11 +80,23 @@ response，但是这两个对象与其它的不同就是因为它是线程相关
 很方便。
 
 request在行为上和Request一样。
+
+request在处理过程中还有其它的一些属性可以使用，分别为：
+
+* ``request.appname`` 表示当前请求对应的view方法的appname名称
+* ``request.rule`` 表示解析出来的Rule对象。它是Rule的实例。其中 request.rule.endpoint 为对应的view方法路径。
+* ``request.function`` 表示view函数名
+* ``request.session`` 如果安装了session App，则会自动将session对象绑定到request上。
+* ``request.user`` 如果安装了auth App，则会自动将用户对象绑定到request上。
     
 response
 ~~~~~~~~~~~~
 
 和request一样是一个代理对象。
+
+特殊属性说明(非Werkzeug的属性)：
+
+* ``request.template`` 用于重新指派渲染使用的模板
     
 settings
 ~~~~~~~~~~~
