@@ -181,7 +181,7 @@ Uliorm在定义Model时支持两种定义方式：
     
     @expose('/')
     def index():
-        notes = notes = Note.all().order_by(Note.c.datetime.desc())
+        notes = Note.all().order_by(Note.c.datetime.desc())
         return {'notes':notes}
 
 在开始的地方，我们导入了Node类。后面我们会用到。
@@ -400,6 +400,11 @@ FileField, IntField, PasswordField, RadioSelectField等字段类型。
 
 删除很简单，首先通过 ``Note.get(int(id))`` 来得到对象，然后再调用对象的delete()
 方法来删除。
+
+.. attention::
+    
+    ``redirect()`` 会返回一个Response对象。因此必须使用return来返回。你也可以使用
+    ``Redirect()`` 它会引发一个异常，因此不需要使用return。
 
 URL参数定义
 ~~~~~~~~~~~~
