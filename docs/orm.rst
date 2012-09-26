@@ -191,6 +191,12 @@ Model 定义
     class Todo(Model):
         __table_args__ = dict(mysql_charset='utf8')
         
+.. note::
+
+    如在MySQL中修改某张表的存储引擎，可以::
+    
+        __table_args__ = {'mysql_engine':'MyISAM'} #'InnoDB'
+        
 连接引擎设置
 ~~~~~~~~~~~~~~~~
 

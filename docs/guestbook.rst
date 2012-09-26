@@ -90,7 +90,7 @@ ORM.CONNECTION 是ORM的连联字符串，它和SQLAlchemy包使用的一样。�
     from uliweb.core.dispatch import bind
     
     @bind('prepare_view_env')
-    def prepare_view_env(sender, env, request):
+    def prepare_view_env(sender, env):
         from uliweb.utils.textconvert import text2html
         env['text2html'] = text2html
 
