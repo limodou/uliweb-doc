@@ -99,6 +99,41 @@ name为模块名，它需要定义在某个app的 `template_plugins` 目录下�
 .. note::
     depends用于定义所依赖的模块在本模块之前被定义。而depends_after用于定义所依赖的模块在当前模块之后被定义，例如:less.js的处理就要在.less文件之后被定义。
     
+use 配置化(0.1.6新増)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+在0.1.6之前，我们都需要在template_plugins 下写一个py文件。复杂情况下没有问题，不过
+有时处理是很简单的，只是添加一些文件而已，所以在0.1.6中添加了将信息配置到settings.ini
+中的能力。配置示例如下::
+
+    [TEMPLATE_USE]
+    name = {
+       'toplinks':[
+           'myapp/jquery.myapp.{version}.min.js',
+       ], 
+       'depends':[xxxx], 
+       'config':{'version':'UI_CONFIG/test'},
+       'default':{'version':'1.2.0'},
+    }
+
+其中:
+
+name
+    类似于以前的py文件名
+toplinks, bottomlinks, depends
+    和在py文件中的写法是一样的。但是对于toplinks和bottomlinks，其中可以带有 ``{xxx}``
+    这样的参数。那么它们将按这样的规则被处理:
+    
+    * config 为参数的配置项，它将从settings.ini中读取
+    * default 为参数的缺省值，如果没有对应的settings.ini的值，将使用它。如果它也
+      没有，则值为 ``''`` 。
+    * 如果用户在使用 use 时传入了 key-words 参数，则以用户传入的为准。
+    
+所以上面的配置是可以支持定义一些变量的，并且变量可以有缺省值，可以配置，并且可以
+由用户在使用时传入。
+
+这种用法适合于简单的情况，如果带有判断，还是要写为py文件的形式。
+
 link 标签
 -----------------
 
