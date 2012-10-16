@@ -53,6 +53,7 @@ Uliweb 文档
    cache.rst
    xmlrpc.rst
    command.rst
+   uliweb_apps.rst
    
 Uliweb内置APP文档:
 
