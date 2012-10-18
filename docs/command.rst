@@ -201,3 +201,40 @@ get_application
         get_application(global_options)
         
     获得当前应用的实例，它将完成整个应用的初始化工作
+    
+模块方法
+---------------
+
+get_answer(message, answers='Yn', default='Y', quit='n')
+    从命令行获得一个应答。
+    
+    message
+        提示信息
+    answers
+        为待提受的可选字符集合
+    default
+        为输入回车时的缺省值
+    quit
+        为退出输入字符
+        
+    示例::
+    
+        ans = get_answer(message, answers='Yn', quit='q')
+        
+get_input(prompt, default=None, choices=None, option_value=None)
+    判断命令行参数值是否存在，如果不存在则在命令行提示用户输入
+    
+    prompt
+        提示信息
+    default
+        按回车时的缺省值
+    choices
+        可选输入值的范围
+    option_value
+        命令输入的可选项，如果不为None，则会直接返回
+        
+    示例::
+    
+        get_input(prompt, default=url_prefix, option_value=options.url)
+        get_input("Creation Theme([a]ngularjs):", default="a", choices=['a'], 
+            option_value=options.theme)
