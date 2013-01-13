@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="asset/html5.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css"/>
+<!-- <link href="static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+ -->
+<link rel="stylesheet" href="static/docs.css"/>
+<link href="static/asset/prettify.css" rel="stylesheet">
+<link href="static/toc/toc.css" rel="stylesheet">
+<link href="static/bootheme.css" rel="stylesheet">
+<link rel="stylesheet" href="static/custom.css"/>
+<link rel="stylesheet" href="static/asset/sons-of-obsidian.css"/>
+    
+<title>Sina Application Engine部署及开发指南 - Parm</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="./index.html">Parm</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          
+          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="topic">
+      <div id="toc" class="content"></div>
+    </div>
+    <div class="span9" id="article">
+      <div class="outter">
+    
+          <div class="expander">
+            <div>&laquo;</div>
+          </div>
+          
+          <div class="outter-inner" id="markdown-content">
+            <div class="chapter-prev chapter-top">
+    <a prev-chapter href="guestbook.html"><i class="icon-arrow-left"></i> 迷你留言板</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="bae.html">Baidu Application Engine部署及开发指南 <i class="icon-arrow-right"></i></a>
+</div>
+
+            <h1 id="title_1">Sina Application Engine部署及开发指南</h1>
+<p>Sina Application Engine(简称sae)是新浪发布的类似于GAE的云环境，目前已经支持PHP 和Python。因为sae是一个受限环境，因此uliweb在它上面的部署和开发有一些特殊的地方， 甚至有一些app是专门为sae开发的。下面让我由浅入深地向你介绍sae环境的部署和使用。 因为sae的python环境也在不断完善中，所以本文档也会不断完善。</p>
+<h2 id="title_1.1">uliweb的安装</h2>
+<p>你需要安装uliweb 0.1以上版本或svn中的版本，简单的安装可以是:</p>
+<pre class="prettyprint linenums"><code>easy_install Uliweb</code></pre>
+<p>安装后在Python环境下就可以使用uliweb命令行工具了。</p>
+<p>目前Uliweb支持Python 2.6和2.7版本。3.X还不支持。</p>
+<h2 id="title_1.2">Hello, Uliweb</h2>
+<p>让我们从最简单的Hello, Uliweb的开发开始。首先假设你已经有了sae的帐号.</p>
+<ol>
+<li>创建一个新的应用，并且选择Python环境。</li>
+<li>从svn环境中checkout一个本地目录</li>
+<li>进入命令行，切換到svn目录下</li>
+<li><p>创建Uliweb项目:</p><pre class="prettyprint linenums"><code>uliweb makeproject project</code></pre></li>
+</ol>
+<p>会在当前目录下创建一个 <code>project</code> 的目录。这个目录可以是其它名字，不过它是和后面要使用的 <code>index.wsgi</code> 对应的，所以建议不要修改。</p>
+<ol>
+<li><p>创建 <code>index.wsgi</code> 文件，Uliweb提供了一个命令来做这事:</p><pre class="prettyprint linenums"><code>uliweb support sae</code></pre></li>
+</ol>
+<p>这样会在当前目录下创建一个 <code>index.wsgi</code> 的文件和 <code>lib</code> 目录。注意执行时是在svn的目录，即project的父目录中。 <code>index.wsgi</code> 的内容是:</p>
+<pre class="prettyprint linenums"><code>```
+import sae
+import sys, os
+    
+path = os.path.dirname(os.path.abspath(__file__))
+project_path = os.path.join(path, 'project')
+sys.path.insert(0, project_path)
+sys.path.insert(0, os.path.join(path, 'lib'))
+    
+from uliweb.manage import make_application
+app = make_application(project_dir=project_path)
+    
+application = sae.create_wsgi_app(app)
+```</code></pre>
+<p>其中 <code>project</code> 和 <code>lib</code> 都已经加入到 <code>sys.path</code> 中了。所以建议使用上面     的路径，不然就要手工修改这个文件了。</p>
+<ol>
+<li><p>然后就可以按正常的开发app的流程来创建app并写代码了，如:</p><pre class="prettyprint linenums"><code>cd project
+uliweb makeapp simple_todo
+    
+这时一个最简单的Hello, Uliweb已经开发完毕了。</code></pre></li>
+<li><p>如果有静态文件，则需要放在版本目录下，Uliweb提供了命令可以提取安装的app的静态文件:</p><pre class="prettyprint linenums"><code>cd project
+uliweb exportstatic ../static</code></pre></li>
+<li><p>如果有第三方源码包同时要上传到sae中怎么办，Uliweb提供了export命令可以导出已经     安装的app或指定的模块的源码到指定目录下:</p><pre class="prettyprint linenums"><code>cd project
+uliweb export -d ../lib #这样是导出全部安装的app
+uliweb export -d ../lib module1 module2 #这样是导出指定的模块</code></pre></li>
+</ol>
+<p>为什么还需要导出安装的app，因为有些app不是放在uliweb.contrib中的，比如第三方     的，所以需要导出后上传。但是因为export有可能导出已经内置于uliweb中的app，所以     通常你可能还需要在 <code>lib</code> 目录下手工删除一些不需要的模块。</p>
+<ol>
+<li>提交代码 访问 <code>http://&lt;你的应用名称&gt;.sinaapp.com</code> ，就可看到项目的页面了。</li>
+</ol>
+<h2 id="title_1.3">数据库配置</h2>
+<p>Uliweb中内置了一个对sae支持的app，还在不断完善中，目前可以方便使用sae提供的MySql 数据库。它是需要同时安装sqlalchemy才可以运行的。因此我们第一步先在本地安装好 sqlalchemy，然后在版本目录中，导出sqlalchemy到lib下:</p>
+<pre class="prettyprint linenums"><code>uliweb export -d ../lib sqlalchemy</code></pre>
+<p>然后修改 <code>project/apps/settings.ini</code> 在 <code>GLOBAL/INSTALLED_APPS</code> 最后添加:</p>
+<pre class="prettyprint linenums"><code>[GLOBAL]
+INSTALLED_APPS = [
+...
+'uliweb.contrib.sae'
+]</code></pre>
+<p>然后为了支持每个请求建立数据库连接的方式，还需要添加一个Middleware在settings.ini中:</p>
+<pre class="prettyprint linenums"><code>[MIDDLEWARES]
+transaction = 'uliweb.orm.middle_transaction.TransactionMiddle'</code></pre>
+<p> 不仅是用来控件事务，同时也可以用来控制是否使用短连接。因为 SAE不支持长连接，所以需要在  中启动短连接的配置项:</p>
+<pre class="prettyprint linenums"><code>[ORM]
+CONNECTION_TYPE = 'short'</code></pre>
+<p>这样就配置好了。而相关的数据库表的创建维护因为sae不能使用命令行，所以要按sae的 文档说明通过phpMyAdmin来导入。以后Uliweb会増加相应的维护页面来做这事。</p>
+<h2 id="title_1.4">SAE的受限环境说明</h2>
+<p>具体内容请参见下面的开发文档，因为它是一个受限环境，所以一些常用的使用方式可能有变化，下面列出我写的一些补充:</p>
+<ol>
+<li>数据库连接不能是长连接，超时时间目录为30s，所以才需要安装db_connection middleware，它就是用来保证每个请求创建数据库连接和关闭数据库连接。</li>
+<li>PIL模块目前还没有预装。PHP环境下的GD还不能用。</li>
+<li>虽然有临时目录可以写文件，但是os模块不能执行mkdirs，因此无法创建目录。</li>
+<li>文件上传目录只能使用数据库，sae提供的storage目录还无法使用。</li>
+</ol>
+<h2 id="title_1.5">SAE的开发文档</h2>
+<p><a href="http://readthedocs.org/docs/sae-python/en/latest/index.html">http://readthedocs.org/docs/sae-python/en/latest/index.html</a></p>
+
+            
+            <div class="chapter-prev chapter-down">
+    <a prev-chapter href="guestbook.html"><i class="icon-arrow-left"></i> 迷你留言板</a>
+</div>
+<div class="chapter-next chapter-down">
+    <a next-chapter href="bae.html">Baidu Application Engine部署及开发指南 <i class="icon-arrow-right"></i></a>
+</div>
+            
+            <div class="source">
+                <i class="icon-download"></i><a href="source/sae.md">View Source</a>
+            </div>
+          </div>
+          
+          
+        
+          <footer class="footer">
+  <div>
+    <p>Designed by Limodou, Copyright 2013, Limodou</p>
+    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+  </div>
+</footer>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/asset/prettify.js"></script>
+<script src="static/toc/toc.js"></script>
+<script src="static/docs.js"></script>
+<script src="static/comment.js"></script>
+<script src="static/jquery.hotkeys.js"></script>
+
+</body>
+</html>

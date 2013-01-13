@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="asset/html5.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css"/>
+<!-- <link href="static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+ -->
+<link rel="stylesheet" href="static/docs.css"/>
+<link href="static/asset/prettify.css" rel="stylesheet">
+<link href="static/toc/toc.css" rel="stylesheet">
+<link href="static/bootheme.css" rel="stylesheet">
+<link rel="stylesheet" href="static/custom.css"/>
+<link rel="stylesheet" href="static/asset/sons-of-obsidian.css"/>
+    
+<title>部署指南 - Parm</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="./index.html">Parm</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          
+          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="topic">
+      <div id="toc" class="content"></div>
+    </div>
+    <div class="span9" id="article">
+      <div class="outter">
+    
+          <div class="expander">
+            <div>&laquo;</div>
+          </div>
+          
+          <div class="outter-inner" id="markdown-content">
+            <div class="chapter-prev chapter-top">
+    <a prev-chapter href="mail.html"><i class="icon-arrow-left"></i> Mail 处理</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="manage_guide.html">命令行工具使用指南 <i class="icon-arrow-right"></i></a>
+</div>
+
+            <h1 id="title_1">部署指南</h1>
+<p>uliweb支持任何标准的wsgi方式的部署。缺省情况下，在创建一个项目后，会在项目目录 下生成: <code>fast_handler.fcgi</code> 和 <code>wsgi_handler.py</code>.</p>
+<p>并且uliweb目录还支持：gae, sae和dotcloud。因此，如果想要在这些环境上部署，一般 需要执行:</p>
+<pre class="prettyprint linenums"><code>uliweb support [gae|sae|dotcloud]</code></pre>
+<p>则会分别生成相应的环境包含部署用的处理程序。</p>
+<p>并且uliewb还提供了静态文件的提取功能，它可以把所有安装的app下的static目录汇总到 指定的目录下去，然后利用web server来提供静态文件的处理。如使用:</p>
+<pre class="prettyprint linenums"><code>uliweb exportstatic /your/static/path</code></pre>
+<h2 id="title_1.1">Apache</h2>
+<h3 id="title_1.1.1">mod_wsgi</h3>
+<ol>
+<li><p>按 <a href="http://code.google.com/p/modwsgi/">mod_wsgi</a> 的说明安装mod_wsgi到apache下。</p><ul>
+<li>拷贝mod_wsgi.so到apache的modules目录下</li>
+</ul>
+<p>Window环境可以看：</p>
+<blockquote><p><a href="http://code.google.com/p/modwsgi/wiki/InstallationOnWindows">http://code.google.com/p/modwsgi/wiki/InstallationOnWindows</a></p>
+</blockquote>
+<p>Linux环境可以看：</p>
+<blockquote><p><a href="http://code.google.com/p/modwsgi/wiki/InstallationOnLinux">http://code.google.com/p/modwsgi/wiki/InstallationOnLinux</a></p>
+</blockquote></li>
+<li><p>配置 apache 的httpd.conf文件</p><blockquote><p>LoadModule wsgi_module modules/mod_wsgi.so WSGIScriptAlias / /path/to/uliweb/wsgi_handler.py</p>
+<p><Directory /path/to/youruliwebproject> Order deny,allow Allow from all </Directory></p>
+<p>上面是将起始的URL设为/，你可以根据需要换为其它的起始URL，如/myproj。</p>
+<p>如果在windows下，示例为：</p>
+<p>WSGIScriptAlias / d:/project/svn/uliweb/wsgi_handler.py</p>
+<p><Directory d:/project/svn/uliweb> Order deny,allow Allow from all </Directory></p>
+</blockquote></li>
+<li>重启apache</li>
+<li>测试。启动浏览器输入： <a href="http://localhost/YOURURL">http://localhost/YOURURL</a> 来检测你的网站可否可以正常访问。</li>
+</ol>
+<h3 id="title_1.1.2">静态文件</h3>
+<p>当需要使用apache来配置静态文件时，可以在配置文件中配置为:</p>
+<pre class="prettyprint linenums"><code>Alias /static/ /your/static/path/</code></pre>
+<h2 id="title_1.2">Lighttpd + SCGI</h2>
+<ol>
+<li><p>配置lighttpd.conf：</p><pre class="prettyprint linenums"><code>scgi.server=(
+   "/uliweb.scgi"=&gt; (
+                    "main" =&gt; (
+                           "socket" =&gt; "/tmp/uliweb.sock",
+                           "check-local" =&gt; "disable",
+                           ),
+                   ),
+   )
+   url.rewrite-once = (
+                    "^(/.*)$" =&gt; "/uliweb.scgi$1",
+   )</code></pre></li>
+<li><p>运行：</p><pre class="prettyprint linenums"><code>python runcgi.py protocol=scgi socket=/tmp/uliweb.sck method=threaded daemonize=true</code></pre></li>
+</ol>
+<div class="alert alert-info">
+<p>runcgi.py需要使用flup,下地址：[http://trac.saddi.com/flup](http://trac.saddi.com/flup)</p>
+
+</div>
+<h2 id="title_1.3">IIS + SCGI</h2>
+<ol>
+<li>下载安装pyISAPI_SCGI 地址: <a href="http://code.google.com/p/pyisapi-scgi/">http://code.google.com/p/pyisapi-scgi/</a></li>
+<li>pyISAPI_SCGI配置方法 <a href="http://code.google.com/p/pyisapi-scgi/wiki/PyISAPI_SCGI_0_6_17">http://code.google.com/p/pyisapi-scgi/wiki/PyISAPI_SCGI_0_6_17</a></li>
+<li><p>编辑scgi.conf:</p><pre class="prettyprint linenums"><code>port=3033 #设置一个空闲的端口号</code></pre></li>
+<li><p>运行:</p><pre class="prettyprint linenums"><code>python runcgi.py protocol=scgi host=127.0.0.1 port=3033 method=threaded</code></pre></li>
+</ol>
+<div class="alert alert-info">
+<p>runcgi.py需要使用flup,下地址：[http://trac.saddi.com/flup](http://trac.saddi.com/flup)</p>
+
+</div>
+<h2 id="title_1.4">虚拟主机(DreamHost,BlueHost,HostMonsger等)</h2>
+<h3 id="title_1.4.3">FastCGI</h3>
+<ol>
+<li>安装python, 参考http://wiki.dreamhost.com/Python</li>
+<li><p>新建dispatch.fcgi,内容：</p><pre class="prettyprint linenums"><code>#!/home/yourname/bin/python (你安装的python的路径)
+import sys
+from runcgi import run
+run(method='threaded',protocol='fcgi')</code></pre></li>
+<li><p>编辑.htaccess，内容：</p><pre class="prettyprint linenums"><code>Options +FollowSymLinks +ExecCGI
+RewriteEngine On
+RewriteBase /
+RewriteRule ^(dispatch\.fcgi/.*)$ - [L]
+RewriteRule ^(.*)$ dispatch.fcgi/$1 [L]
+AddHandler fastcgi-script .fcgi #或者是AddHandler fcgid-script .fcgi</code></pre></li>
+</ol>
+<h3 id="title_1.4.4">CGI</h3>
+<ol>
+<li>安装python, 参考http://wiki.dreamhost.com/Python</li>
+<li><p>修改runcgi.py,将第一行内容修改为：</p><pre class="prettyprint linenums"><code>#!/home/yourname/bin/python (你安装的python的路径)</code></pre></li>
+<li><p>修改.htaccess,内容：</p><pre class="prettyprint linenums"><code>Options +FollowSymLinks +ExecCGI
+RewriteEngine On
+RewriteBase /
+RewriteRule ^(runcgi\.py/.*)$ - [L]
+RewriteRule ^(.*)$ runcgi.py/$! [L]
+AddHandler cgi-script .py</code></pre></li>
+</ol>
+<div class="alert alert-info">
+<p>以CGI方式运行，需flup 1.0以上版本。</p>
+
+</div>
+<h2 id="title_1.5">Nginx+uwsgi</h2>
+<h3 id="title_1.5.5">Nginx</h3>
+<p>使用Nginx运行Uliweb，可以考虑使用nginx+uwsgi的模式，其中nginx采用反向代理的方式 来配置。uwsgi可以采用手工处理，也可以考虑使用supervisor来管理。</p>
+<p>在Nginx中配置比较简单，在nginx.conf中添加:</p>
+<pre class="prettyprint linenums"><code>http {
+#...
+include /etc/nginx/conf.d/*.conf;
+#...
+}</code></pre>
+<p>这里将其它不涉及的内容忽略掉了。上面的代码的作用是包含在conf.d目录下的所有.conf文件。 因此，你可以把特别的配置写到conf.d目录下的某个文件，如: <code>uliweb.conf</code> 。内容 可以是:</p>
+<pre class="prettyprint linenums"><code>server {
+        listen 80;
+
+        location / {
+                include uwsgi_params;
+                #proxy_pass localhost:8000;
+                uwsgi_pass unix:///tmp/uwsgi.sock;
+        }
+}</code></pre>
+<p>将uwsgi设置为反向代理有两种方式，一种是通过服务的方式，即上面注释掉的那一行，但 是当请求过多，这种方式会报错。因此一般都采用socket文件的方法。</p>
+<p>上面就把Nginx设置好了。如果要使用Nignx提供静态文件服务，可以在上面的server中添加:</p>
+<pre class="prettyprint linenums"><code>location ~ ^/static/ {
+    root /your/path/to/static;
+}</code></pre>
+<p>这样就将/static作为静态文件的起如目录了。</p>
+<h3 id="title_1.5.6">uwsgi</h3>
+<p>uwsgi可以支持命令行方式启动，也可以由supervisor来管理（个人以为supervisor要简单 得多）。下面是一个命令行启动uwsgi的一个示例脚本(start.sh):</p>
+<pre class="prettyprint linenums"><code>#!/bin/bash
+
+sockfile=/tmp/uwsgi.sock
+projectdir=/your/project/path
+logfile=/opt/web/logs/uwsgi.log
+
+
+if [ $1 = start ];then
+ psid=`ps aux|grep "uwsgi"|grep -v "grep"|wc -l`
+ if [ $psid -gt 2 ];then
+   echo "uwsgi is running!"
+   exit 0
+ else
+   uwsgi -s $sockfile --chdir $projectdir -w wsgi_handler -p 10 -M -t 120 -T -C -d $logfile
+ fi
+ echo "Start uwsgi service [OK]"
+elif [ $1 = stop ];then
+ killall -9 uwsgi
+ echo "Stop uwsgi service [OK]"
+elif [ $1 = restart ];then
+ killall -9 uwsgi
+ uwsgi -s $sockfile --chdir $projectdir -w wsgi_handler -p 10 -M -t 120 -T -C -d $logfile
+ echo "Restart uwsgi service [OK]"
+else
+ echo "Usages: sh start.sh [start|stop|restart]"
+fi</code></pre>
+<p>开始的三个变量可以根据你的实际情况进行修改。这个命令提供了启动、停止、重启三个 功能。并且相应的参数你可以根据情况进行设置。因为uwsgi有许多的参数可以使用，并 且配置参数可以有三种提供方式，如：</p>
+<ol>
+<li>命令行参数</li>
+<li>ini文件</li>
+<li>xml文件</li>
+</ol>
+<p>另外还可以使用supervisor来管理uwsgi程序，如下面是一个示例:</p>
+<pre class="prettyprint linenums"><code>[program:uwsgi]
+command = uwsgi
+ --socket /tmp/uwsgi.sock
+ --harakiri 60
+ --reaper
+ --module wsgi_handler
+ --processes 2
+ --master
+ --home /python/env
+ --logto /tmp/uwsgi.log
+ --chmod-socket=666
+ --limit-as 256
+ --socket-timeout 5
+ --max-requests 2
+directory=/path/to/yourproject
+stopsignal=QUIT
+autostart=true
+autorestart=true
+stdout_logfile=/tmp/supervisord.log
+redirect_stderr=true
+exitcodes=0,1,2</code></pre>
+<p>这里把其它的配置都忽略掉了，只显示uliweb相关的配置，上面的许多参数可以根据要求 进行修改。</p>
+<p>其中 <code>--home xxx</code> 的作用是设置python环境，它主要是用于使用virtualenv来创建 python环境的情况。</p>
+<p>然后使用supervisorctl就可以进行管理了。</p>
+
+            
+            <div class="chapter-prev chapter-down">
+    <a prev-chapter href="mail.html"><i class="icon-arrow-left"></i> Mail 处理</a>
+</div>
+<div class="chapter-next chapter-down">
+    <a next-chapter href="manage_guide.html">命令行工具使用指南 <i class="icon-arrow-right"></i></a>
+</div>
+            
+            <div class="source">
+                <i class="icon-download"></i><a href="source/deployment.md">View Source</a>
+            </div>
+          </div>
+          
+          
+        
+          <footer class="footer">
+  <div>
+    <p>Designed by Limodou, Copyright 2013, Limodou</p>
+    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+  </div>
+</footer>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/asset/prettify.js"></script>
+<script src="static/toc/toc.js"></script>
+<script src="static/docs.js"></script>
+<script src="static/comment.js"></script>
+<script src="static/jquery.hotkeys.js"></script>
+
+</body>
+</html>

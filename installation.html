@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="asset/html5.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css"/>
+<!-- <link href="static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+ -->
+<link rel="stylesheet" href="static/docs.css"/>
+<link href="static/asset/prettify.css" rel="stylesheet">
+<link href="static/toc/toc.css" rel="stylesheet">
+<link href="static/bootheme.css" rel="stylesheet">
+<link rel="stylesheet" href="static/custom.css"/>
+<link rel="stylesheet" href="static/asset/sons-of-obsidian.css"/>
+    
+<title>安装说明 - Parm</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="./index.html">Parm</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          
+          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="topic">
+      <div id="toc" class="content"></div>
+    </div>
+    <div class="span9" id="article">
+      <div class="outter">
+    
+          <div class="expander">
+            <div>&laquo;</div>
+          </div>
+          
+          <div class="outter-inner" id="markdown-content">
+            <div class="chapter-prev chapter-top">
+    <a prev-chapter href="introduction.html"><i class="icon-arrow-left"></i> Uliweb 简介</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="architecture.html">体系结构和机制 <i class="icon-arrow-right"></i></a>
+</div>
+
+            <h1 id="title_1">安装说明</h1>
+<h2 id="title_1.1">要求</h2>
+<ul>
+<li>Python 2.6+ 目前不支持3.X</li>
+<li>setuptools 0.6c11</li>
+</ul>
+<h2 id="title_1.2">额外要求</h2>
+<ul>
+<li>SQLAlchemy 0.6+ (如果使用Uliweb ORM需要安装它)</li>
+</ul>
+<p>最简单的方法是使用easy_install，如:</p>
+<pre class="prettyprint linenums"><code>easy_install Uliweb</code></pre>
+<p>另外如果你想跟踪最新的代码，可以使用svn或git来下载代码，</p>
+<pre class="prettyprint linenums"><code>svn checkout http://uliweb.googlecode.com/svn/trunk/ uliweb
+cd uliweb
+python setup.py develop</code></pre>
+<p>或:</p>
+<pre class="prettyprint linenums"><code>git clone git://github.com/limodou/uliweb.git
+cd uliweb
+python setup.py develop</code></pre>
+<p>使用develop安装只会在Python/site-packages下建一个链接，并不会真正安装，好处就是更新方便。 不过，当Uliweb的版本升级了，还是要再执行一下安装过程的。</p>
+<p>当然你也可以直接通过 install 来安装。</p>
+<pre class="prettyprint linenums"><code>python setup.py install</code></pre>
+
+            
+            <div class="chapter-prev chapter-down">
+    <a prev-chapter href="introduction.html"><i class="icon-arrow-left"></i> Uliweb 简介</a>
+</div>
+<div class="chapter-next chapter-down">
+    <a next-chapter href="architecture.html">体系结构和机制 <i class="icon-arrow-right"></i></a>
+</div>
+            
+            <div class="source">
+                <i class="icon-download"></i><a href="source/installation.md">View Source</a>
+            </div>
+          </div>
+          
+          
+        
+          <footer class="footer">
+  <div>
+    <p>Designed by Limodou, Copyright 2013, Limodou</p>
+    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+  </div>
+</footer>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/asset/prettify.js"></script>
+<script src="static/toc/toc.js"></script>
+<script src="static/docs.js"></script>
+<script src="static/comment.js"></script>
+<script src="static/jquery.hotkeys.js"></script>
+
+</body>
+</html>

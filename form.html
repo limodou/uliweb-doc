@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="asset/html5.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css"/>
+<!-- <link href="static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+ -->
+<link rel="stylesheet" href="static/docs.css"/>
+<link href="static/asset/prettify.css" rel="stylesheet">
+<link href="static/toc/toc.css" rel="stylesheet">
+<link href="static/bootheme.css" rel="stylesheet">
+<link rel="stylesheet" href="static/custom.css"/>
+<link rel="stylesheet" href="static/asset/sons-of-obsidian.css"/>
+    
+<title>Form使用 - Parm</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="./index.html">Parm</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          
+          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="topic">
+      <div id="toc" class="content"></div>
+    </div>
+    <div class="span9" id="article">
+      <div class="outter">
+    
+          <div class="expander">
+            <div>&laquo;</div>
+          </div>
+          
+          <div class="outter-inner" id="markdown-content">
+            <div class="chapter-prev chapter-top">
+    <a prev-chapter href="views.html"><i class="icon-arrow-left"></i> 视图(View)</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="middleware.html">Middleware 开发 <i class="icon-arrow-right"></i></a>
+</div>
+
+            <h1 id="title_1">Form使用</h1>
+<p>在编写Web应用中，经常要使用到的就是和用户的交互，在传统的HTML开发中，一般是使用 Form来进行的，它通过一组Form相关的界面元素，提供各种信息的录入。在ajax的处理过 程中，Form元素也经常被使用。除了前端的展示外，真正的交互是需要后台参与的，它包 括上传数据的解析和处理，然后可能会与数据库进行交互，并返回相应的结果。在Uliweb 中，提供了Form类来进行相关的处理，它的主要功能有:</p>
+<ol>
+<li>自动生成前端的展示代码，允许支持自定义布局</li>
+<li>对上传后的数据进行校验，如果正确则返回转換后的数据，如果出错，返回出错信息</li>
+</ol>
+<h2 id="title_1.1">Form的定义</h2>
+<p>在使用Form时，我们做的第一件事就是定义一个Form类，定义之后，我们会创建它的实例， 然后使用这个实例来展示或进行数据的校验处理。一个简单的Form类定义代码如下:</p>
+<pre class="prettyprint linenums"><code>from uliweb.form import *
+
+class F(Form):
+    title = StringField(label='中文:', required=True, help_string='Title help string')
+    content = TextField(label='Content:')
+    password = PasswordField(label='Password:')
+    age = IntField(label='Age:')
+    birthday = DateField(label='Birthday')
+    id = HiddenField()
+    tag = ListField(label='Tag:')
+    public = BooleanField(label='Public:')
+    format = SelectField(label='Format:', choices=[('rst', 'reStructureText'), ('text', 'Plain Text')], default='rst')
+    radio = RadioSelectField(label='Radio:', choices=[('rst', 'reStructureText'), ('text', 'Plain Text')], default='rst')
+    file = FileField(label='file')</code></pre>
+<p>上面的代码定义了一个Form类，里面有很多的字段，类似于Model的定义。在uliewb/form/uliform.py 中定义了许多Form字段类，分别代表不同类型的字段。所有的字段都继承自 <code>BaseField</code> 类，对 于BaseField类的详细说明见下面。</p>
+<h2 id="title_1.2">BaseField</h2>
+<pre class="prettyprint linenums"><code>class BaseField(object):
+    default_build = Text
+    field_css_class = 'field'
+    default_validators = []
+    default_datatype = None
+    creation_counter = 0
+
+    def __init__(self, label='', default=None, required=False, validators=None,
+        name='', html_attrs=None, help_string='', build=None, datatype=None,
+        multiple=False, idtype=None, static=False, **kwargs):</code></pre>
+<h2 id="title_1.3">get_form</h2>
+<p>0.1.5 new</p>
+<p>可以方便替换contrib中对于Form的定义，也可以替换一些不同模块下的form，同时也可以增加一些复用。 使用get_form，首先需要向apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.form'， 安装完毕后，在配置文件的FUNCTIONS就引用了get_form这个函数</p>
+<p>因此如果想要使用get_form，可以采用下面的方式</p>
+<pre class="prettyprint linenums"><code>from uliweb.core.SimpleFrame import functions
+
+Form = functions.get_form('form_name')
+...</code></pre>
+
+            
+            <div class="chapter-prev chapter-down">
+    <a prev-chapter href="views.html"><i class="icon-arrow-left"></i> 视图(View)</a>
+</div>
+<div class="chapter-next chapter-down">
+    <a next-chapter href="middleware.html">Middleware 开发 <i class="icon-arrow-right"></i></a>
+</div>
+            
+            <div class="source">
+                <i class="icon-download"></i><a href="source/form.md">View Source</a>
+            </div>
+          </div>
+          
+          
+        
+          <footer class="footer">
+  <div>
+    <p>Designed by Limodou, Copyright 2013, Limodou</p>
+    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+  </div>
+</footer>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/asset/prettify.js"></script>
+<script src="static/toc/toc.js"></script>
+<script src="static/docs.js"></script>
+<script src="static/comment.js"></script>
+<script src="static/jquery.hotkeys.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="asset/html5.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css"/>
+<!-- <link href="static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+ -->
+<link rel="stylesheet" href="static/docs.css"/>
+<link href="static/asset/prettify.css" rel="stylesheet">
+<link href="static/toc/toc.css" rel="stylesheet">
+<link href="static/bootheme.css" rel="stylesheet">
+<link rel="stylesheet" href="static/custom.css"/>
+<link rel="stylesheet" href="static/asset/sons-of-obsidian.css"/>
+    
+<title>auth(用户认证处理) - Parm</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="./index.html">Parm</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          
+          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="topic">
+      <div id="toc" class="content"></div>
+    </div>
+    <div class="span9" id="article">
+      <div class="outter">
+    
+          <div class="expander">
+            <div>&laquo;</div>
+          </div>
+          
+          <div class="outter-inner" id="markdown-content">
+            <div class="chapter-prev chapter-top">
+    <a prev-chapter href="app_soap.html"><i class="icon-arrow-left"></i> soap</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="app_rbac.html">rbac(权限控制) <i class="icon-arrow-right"></i></a>
+</div>
+
+            <h1 id="title_1">auth(用户认证处理)</h1>
+<p>在Uliweb中提供了一个auth的app，它是专门用来进行用户认证的。一般来说，用户认证功能可以理解为:登录、注册、注销、用户识别。</p>
+<dl>
+<dt>登录</dt>
+<dd><p>指用户由未登录状态，通过输入用户名、口令进入登录状态。</p>
+</dd>
+<dt>注册</dt>
+<dd><p>指在系统中创建新用户的过程。</p>
+</dd>
+<dt>注销</dt>
+<dd><p>用户取消注册状态的过程。</p>
+</dd>
+<dt>用户识别</dt>
+<dd><p>用户在登录后，在访问页面时，识别用户信息的过程。</p>
+</dd>
+</dl><p>上面只是一般的用户认证相关的内容，更复杂一些的内容，例如：</p>
+<dl>
+<dt>记住我</dt>
+<dd><p>可以保留用户登录状态一段时间，比如一个月或一年等。</p>
+</dd>
+<dt>其它认证方式</dt>
+<dd><p>如采用open_id认证方式，使用其它网站的认证api等。</p>
+</dd>
+</dl><h2 id="title_1.1">用户认证的原理说明</h2>
+<p>我们知道HTTP是无状态的处理，所以为了在不同的请求中维护用户会话(session)的状态人们想出了多种办法，比如常见的session的处理。常见的session的处理基本上有两种方式：</p>
+<ol>
+<li>基于cookie的session处理方式     这种方式也是uliweb目前采用的方式。它首先在后台生成一个session对象，每个session对象有唯一的session_id。通过session_id可以找到对应的session对象。然后将用户的id保存到session对象中。而session_id则保存到cookie中。这样，利用session本身的机制，在用户访问页面时，首先识别出session信息，如果有，则再查找有没有用户id信息，然后取出用户对象并绑定到request.user属性上，供后续的处理来使用。如果session对象没找到或没有用户id的信息，则认为用户没有登录过，并绑定request.user为None。所以，这种方式，在前端只保留session_id的信息，利用session对象来处理用户登录的状态。而且用户登录的有效期是与session一致的。</li>
+<li>基于页面间传递session_id的值的方式     这种也有人用，但uliweb没有采用这种方式。它的原理是不使用cookie，而是在页面中保持一个session_id，页面间传递时都带着这个值，比如通过URL则放到QueryString中，通过POST则放到post数据中。这种不依赖cookie，但是使用起来相对麻烦。</li>
+</ol>
+<p>整个认证及会话处理过程是这样的：</p>
+<ul>
+<li>用户输入登录信息</li>
+<li>Uliweb在后台检查用户和口令，如果通过，则在session中保存用户id，如果不通过，则报错</li>
+<li>在访问非登录页面时，根据session中的用户id信息获取用户对象，并绑定到request.user上</li>
+<li>其它页面可以根据request.user为None或非None的值来知道当前访问的是登录用户还是匿名用户</li>
+</ul>
+<p>用户注销的过程比较简单，只要将session中的用户id删除即可。</p>
+<h2 id="title_1.2">auth app的使用</h2>
+<p>Uliweb中提供了auth app来进行用户识别、登录、注销甚至注册的功能。它提供了以下功能:</p>
+<ul>
+<li><p>一张用户表(User)，其中还提供了：</p><ul>
+<li>set_password 设置口令</li>
+<li>check_password 检查口令</li>
+<li>get_default_image_url 获得用户缺省的头像URL方法</li>
+<li>get_image_url 获得用户头像URL方法</li>
+</ul></li>
+<li>check_password方法 检查两个口令是否一样的方法</li>
+<li><p>提供了几个Form类：</p><ul>
+<li>RegisterForm 注册Form</li>
+<li>LoginForm 登录Form</li>
+<li>ChangePasswordForm 修改口令Form</li>
+</ul></li>
+<li>一个Middleware 用于用户识别</li>
+<li><p>若干方法：</p><ul>
+<li>get_user 根据request对象来获得用户对象</li>
+<li>create_user 创建用户</li>
+<li>authenticate 用户认证</li>
+<li>login 用户登录</li>
+<li>logout 用户注销</li>
+<li>require_login decorator，用于检查用户是否登录，如果没登录则跳转到相应的URL上，缺省为 <code>'/login'</code> 。而且require_login既是一个decorator也是一个普通函数，主要看第一个参数是否为function对象。</li>
+<li>has_login 和require_login类似，但不是decorator</li>
+</ul></li>
+<li><p>缺省view方法：</p><ul>
+<li>login 用来处理用户登录，会显示登录界面和进行用户输入登录信息后的处理</li>
+<li>register 用来处理用户注册，会显示用户注册界面和进行用户输入注册信息后的处理</li>
+<li>logout 用户注销处理</li>
+</ul></li>
+<li><p>缺省的templates</p><ul>
+<li>login.html 用来显示登录界面</li>
+<li>register.html 用来显示注册界面</li>
+</ul></li>
+<li><p>settings.ini配置内容：</p><ul>
+<li><p>提供以下内容:</p><pre class="prettyprint linenums"><code>[EXPOSES]
+login = '/login', 'uliweb.contrib.auth.views.login'
+logout = '/logout', 'uliweb.contrib.auth.views.logout'
+    
+[FUNCTIONS]
+require_login = 'uliweb.contrib.auth.require_login'
+    
+[DECORATORS]
+require_login = 'uliweb.contrib.auth.require_login'</code></pre></li>
+</ul></li>
+</ul>
+<h3 id="title_1.2.1">安装auth</h3>
+<p>向apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.auth'。</p>
+<p>当安装完毕后，你已经可以使用/login, /logout。但是你需要在首页或某个地方将相应的链接添加进去。同时auth的中间件已经生效，它依赖于session app，用户本身还需要orm的支持。不过这两个app都已经在config.ini中写好了，会自动依赖。</p>
+<h3 id="title_1.2.2">用户创建</h3>
+<p>有了相应的链接，你需要先创建几个用户。auth本身提供了一个命令，通过:</p>
+<pre class="prettyprint linenums"><code>uliweb createsuperuser</code></pre>
+<p>可以创建超级用户。</p>
+<p>非超级用户，要么通过添加register相关的功能（如添加/register到页面和在views.py或settings.ini中添加相应的链接）让用户自行创建用户。要么开发相应的用户管理app来管理用户。在plugs中有类似的例子，但是已经超出auth本身的功能了。auth不提供复杂的用户管理的功能，它只是完成基本的用户认证、注销、识别等功能。</p>
+<h3 id="title_1.2.3">判断用户是否登录的方法</h3>
+<p>auth向settings.ini中注册了require_login的方法和decorator。因此，用户可以通过:</p>
+<pre class="prettyprint linenums"><code>from uliweb import function
+require_login = function('require_login')
+
+if require_login():
+    #do something
+
+#或
+
+from uliweb import functions
+require_login = functions.require_login
+
+if require_login():
+    #do something
+
+#或
+
+from uliweb import decorators
+
+@decorators.require_login
+@expose('/user/admin')
+def user_admin():
+    #do something</code></pre>
+<p>来使用require_login，用于判断用户是否已经登录，如果没有登录，在缺省情况下，它会自动使用名为 <code>login</code> 的 URL进行跳转，成功后再跳转到原来的URL上。用户可以在settings.ini中覆盖 <code>login</code> 的URL定义，也可以直接在require_login上传入 <code>next=url</code> 的参数。</p>
+<h3 id="title_1.2.4">auth功能扩展</h3>
+<p>auth虽然是一个比较基础的功能，但是在实际使用中可能有非常多的变化形式，比如使用邮箱注册，使用其它的网站进行用户认证等。这些目前还不包含在uliweb中，需要用户自行扩展。但是这里给出扩展的建议：</p>
+<ol>
+<li>uliweb提供的功能可以作为参考，用户可以基于原auth进行扩展，如：替換template，Forms, Views等</li>
+<li>auth提供的许多功能都是配置化的，因此用户可以考虑在自已的app中进行部分或全部替換</li>
+<li><p>(0.1.5)增加了一个FORMS配置选项，用来替换auth定义的form，以方便不同的Model对应不同的Form。配置项为:</p><pre class="prettyprint linenums"><code>[FORMS]
+auth.LoginForm = 'uliweb.contrib.auth.forms.LoginForm'
+auth.RegisterForm = 'uliweb.contrib.auth.forms.RegisterForm'
+auth.ChangePasswordForm = 'uliweb.contrib.auth.forms.ChangePasswordForm'</code></pre></li>
+</ol>
+<p>也就是需要替换默认的LoginForm，则只需要替换auth.LoginForm这个名称对应的Form对象即可。</p>
+
+            
+            <div class="chapter-prev chapter-down">
+    <a prev-chapter href="app_soap.html"><i class="icon-arrow-left"></i> soap</a>
+</div>
+<div class="chapter-next chapter-down">
+    <a next-chapter href="app_rbac.html">rbac(权限控制) <i class="icon-arrow-right"></i></a>
+</div>
+            
+            <div class="source">
+                <i class="icon-download"></i><a href="source/app_auth.md">View Source</a>
+            </div>
+          </div>
+          
+          
+        
+          <footer class="footer">
+  <div>
+    <p>Designed by Limodou, Copyright 2013, Limodou</p>
+    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+  </div>
+</footer>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/asset/prettify.js"></script>
+<script src="static/toc/toc.js"></script>
+<script src="static/docs.js"></script>
+<script src="static/comment.js"></script>
+<script src="static/jquery.hotkeys.js"></script>
+
+</body>
+</html>

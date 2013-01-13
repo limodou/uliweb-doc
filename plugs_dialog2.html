@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="asset/html5.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css"/>
+<!-- <link href="static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+ -->
+<link rel="stylesheet" href="static/docs.css"/>
+<link href="static/asset/prettify.css" rel="stylesheet">
+<link href="static/toc/toc.css" rel="stylesheet">
+<link href="static/bootheme.css" rel="stylesheet">
+<link rel="stylesheet" href="static/custom.css"/>
+<link rel="stylesheet" href="static/asset/sons-of-obsidian.css"/>
+    
+<title>如何使用dialog2打开编辑窗口 - Parm</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="./index.html">Parm</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          
+          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="topic">
+      <div id="toc" class="content"></div>
+    </div>
+    <div class="span9" id="article">
+      <div class="outter">
+    
+          <div class="expander">
+            <div>&laquo;</div>
+          </div>
+          
+          <div class="outter-inner" id="markdown-content">
+            
+
+
+            <h1 id="title_1">如何使用dialog2打开编辑窗口</h1>
+<p>使用dialog2打开窗口主要有两种方式：</p>
+<ul>
+<li>窗口内容已经在前端写好，只要打开即可</li>
+<li>窗口内容将从后台动态生成，后台需要有相应的view来生成窗口</li>
+</ul>
+<h2 id="title_1.1">窗口内容从后台生成</h2>
+<h3 id="title_1.1.1">引用组件</h3>
+<pre class="prettyprint linenums"><code>{{use "jqutils", ajaxForm=True}}
+{{include "inc_jquery_dialog2.html"}}</code></pre>
+<p>如果你要使用ajax方式来提交dialog2中的Form，应在use jqutils时加入 <code>ajaxForm=True</code> 的 参数，以便自动导入 <code>jquery.form.js</code> 进行ajax提交的处理。</p>
+<h3 id="title_1.1.2">处理事件点击</h3>
+<pre class="prettyprint linenums"><code>var dialog = $('&lt;div id="edit_plan"&gt;&lt;/div&gt;').dialog2(
+    {
+        autoFocus:false,
+        url:url,
+        ajaxFormOptions: {
+            onSuccess: common_ajaxForm_success(function(data){
+                //success process
+            }),
+            dataType: 'json'
+        }
+    });
+dialog.closest('.modal').addClass('wide-modal');
+dialog.bind('dialog2.content-update', function(e){
+    //add what you want to do after the content update from server
+    dialog.find('input.rselect').each(function(){
+        $(this).rselect();
+    });
+});</code></pre>
+<p>其中，建议给每个 <code>&lt;div&gt;</code> 都设置一个 <code>id</code> 属性。</p>
+<p>dialog2在创建时时使用的参数参考它的文档 <a href="http://nikku.github.com/jquery-bootstrap-scripting/">http://nikku.github.com/jquery-bootstrap-scripting/</a>. 其中，ajaxFormOptions 中的onSuccess对应成功后的处理。这里 <code>common_ajaxForm_success</code> 是在 <code>inc_jquery_dialog2.html</code> 中定义的。它用来处理当ajax方式与后台交互时，出错 信息的处理。</p>
+<p>缺省的bootstrap的宽度是一定的。如果太窄，可以象上面使用:</p>
+<pre class="prettyprint linenums"><code>dialog.closest('.modal').addClass('wide-modal');</code></pre>
+<p>如果有些js代码需要在显示弹出窗口之后再执行，可以在:</p>
+<pre class="prettyprint linenums"><code>dialog.bind('dialog2.content-update', function(e){})</code></pre>
+<p>中进行处理。</p>
+<h3 id="title_1.1.3">更多common_ajaxForm_success的细节</h3>
+<p><code>common_ajaxForm_success</code> 可以接收参数对象或函数对象。上例为直接传入了函数对象。 你还可以传入一个参数对象，详细定义为:</p>
+<pre class="prettyprint linenums"><code>::</code></pre>
+<blockquote><p>{ success:null, message: show_message, done:null, error:null, field_prefix:'div_field_', message_type:'bootstrap' }</p>
+</blockquote>
+<p>其中:</p>
+<ul>
+<li>success, done, error 为成功，完成及出错时的处理函数。缺省不提供。</li>
+<li><p>message 为应答信息使用的函数。应答信息是整个调用的结果，一般成功时也会返回。而出错     信息是按字段分别对应的信息。缺省使用poshytip中定义的 <code>show_message</code> 。(poshytip     已经在 <code>inc_jquery_dialog2.html</code> 被引用。</p></li>
+<li><p>field_prefix 用来处理当出错时来查找出错字段对应的容器元素。缺省是 <code>div_field_</code>。     这种格式是使用uliweb的Generic View自动生成时创建的。所以 <code>common_ajaxForm_success</code>     的处理是与Generic View配套的。其它不使用Generic View的情况下，你可能需要仿照 <code>common_ajaxForm_success</code>     来进行相应的成功或出错处理。</p></li>
+<li>message_type 用来指明出错时提示的风格。缺省使用 <code>bootstrap</code> 。还支持 <code>tip</code>     风格。它将使用 poshytip 控件来显示出错信息。</li>
+</ul>
+<h2 id="title_1.2">Docutils System Messages</h2>
+<p>"System Message: ERROR/3 (plugs_dialog2.rst:, line 72)" Unknown target name: "div_field".</p>
+
+            
+            
+
+            
+            <div class="source">
+                <i class="icon-download"></i><a href="source/plugs_dialog2.md">View Source</a>
+            </div>
+          </div>
+          
+          
+        
+          <footer class="footer">
+  <div>
+    <p>Designed by Limodou, Copyright 2013, Limodou</p>
+    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+  </div>
+</footer>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/asset/prettify.js"></script>
+<script src="static/toc/toc.js"></script>
+<script src="static/docs.js"></script>
+<script src="static/comment.js"></script>
+<script src="static/jquery.hotkeys.js"></script>
+
+</body>
+</html>

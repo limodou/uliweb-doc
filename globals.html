@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="asset/html5.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css"/>
+<!-- <link href="static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+ -->
+<link rel="stylesheet" href="static/docs.css"/>
+<link href="static/asset/prettify.css" rel="stylesheet">
+<link href="static/toc/toc.css" rel="stylesheet">
+<link href="static/bootheme.css" rel="stylesheet">
+<link rel="stylesheet" href="static/custom.css"/>
+<link rel="stylesheet" href="static/asset/sons-of-obsidian.css"/>
+    
+<title>全局环境 - Parm</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="./index.html">Parm</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          
+          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="topic">
+      <div id="toc" class="content"></div>
+    </div>
+    <div class="span9" id="article">
+      <div class="outter">
+    
+          <div class="expander">
+            <div>&laquo;</div>
+          </div>
+          
+          <div class="outter-inner" id="markdown-content">
+            <div class="chapter-prev chapter-top">
+    <a prev-chapter href="architecture.html"><i class="icon-arrow-left"></i> 体系结构和机制</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="update.html">Uliweb 更新日志 <i class="icon-arrow-right"></i></a>
+</div>
+
+            <h1 id="title_1">全局环境</h1>
+<p>Uliweb提供了必要的运行环境和运行对象，因此我称之为全局环境。</p>
+<h2 id="title_1.1">对象</h2>
+<p>有一些全局性的对象可以方便地从 uliweb 中导入，如:</p>
+<pre class="prettyprint linenums"><code>from uliweb import (application, request, response,
+    settings, Request, Response)</code></pre>
+<h3 id="title_1.1.1">application</h3>
+<p>它是用来记录整个Uliweb项目的运行实例，全局唯一。application是 <code>uliweb.core.SimpleFrame.Dispatcher</code> 的实例，它有一些属性和方法可以让你使用，例如：</p>
+<dl>
+<dt>apps</dt>
+<dd><p>将列举出当前application实例所有有效的App名称。它是一个list，比如： <code>['Hello', 'uliweb.contrib.staticfiles']</code></p>
+</dd>
+<dt>apps_dir</dt>
+<dd><p>当前application的apps的目录。</p>
+</dd>
+<dt>template_dirs</dt>
+<dd><p>缺省为当前application所有有效的App的template搜索目录的集合。</p>
+</dd>
+<dt>get_file(filename, dir='static')</dt>
+<dd><p>从所有App下的相应的目录，缺省是从static目录下查找一个文件。并且会先在当前请求对应 的App下先进行查找，如果没找到，则去其它的App下的相应目录进行查找。</p>
+</dd>
+<dt>template(filename, vars=None, env=None)</dt>
+<dd><p>渲染一个模板，会先从当前请求对应的App下先进行查找模板文件。vars是一个dict对象。env 不提供的话会使用缺省的环境。如果想向模板中注入其它的对象，但不是以vars方式提供，不用 直接修改env，而是通过dispatch功能，绑定： <code>prepare_view_env</code> 主题就可以了。 它会返回渲染后的结果，是字符串。</p>
+</dd>
+<dt>render(filename, vars, env=None)</dt>
+<dd><p>它很象template，不过它是直接返回一个Response对象，而不是字符串。</p>
+</dd>
+</dl><h3 id="title_1.1.2">Request</h3>
+<p>而这里的Request类是基于werkzeug的Request来派生的，区别在于：</p>
+<blockquote><p>增加了一些兼容性的内容。原来的werkzeug的Request是没有象GET, POST, params, FILES这 样的属性的，它们分别是：args, form, values, files，为了与其它的Request类兼容，我 添加了GET, POST, params, FILES属性。</p>
+</blockquote>
+<h3 id="title_1.1.3">Response</h3>
+<p>它也对werkzeug提供的Response进行了派生，区别在于：</p>
+<blockquote><p>添加了一个write方法。而原werkzeug的Response类有一个stream属性，它有write方法。经过 扩展，可以直接使用write方法，会更方便一些。</p>
+</blockquote>
+<h3 id="title_1.1.4">request</h3>
+<p>request 是上面 Request 类的实例的一个代理对象，并不是一个真正的 Request 对象， response 也是。但是你可以把它当成真正的 Request 和 Response 一样来使用。那么为什 么要这样，为了方便。真正的 Request 和 Response 对象会在收到一个请求时被创建 ，然后存放到 local 中，这样不同的线程将有不同实例。为了方便使用，采用代理方式， 这样用户就不用直接调用 local.reuqest 和 local.response ，而是简单使用 request 和 response 就可以根据不同的线程使用不同的对象了。</p>
+<div class="alert alert-info">
+<p>request和response是有生存周期的，就是在收到请求时创建，在返回后失效。因此在使用它们 时，要确保你是在它们的生存周期中进行使用的。</p>
+
+</div><p>在讲View的环境时提到过：写一个view方法时有一些对象可以认为是全局的，其中就包括request和 response，但是这两个对象与其它的不同就是因为它是线程相关并且有生存周期的，其它的则是全局唯 一，并且生存周期是整个运行实例的生存周期。这样，在非view函数中想要使用request和response 对象，一种方式就是在view中传入，但是可能有些麻烦，另一种方式就是通过uliweb来导入，这样就 很方便。</p>
+<p>request在行为上和Request一样。</p>
+<p>request在处理过程中还有其它的一些属性可以使用，分别为：</p>
+<ul>
+<li><code>request.appname</code> 表示当前请求对应的view方法的appname名称</li>
+<li><code>request.rule</code> 表示解析出来的Rule对象。它是Rule的实例。其中 request.rule.endpoint 为对应的view方法路径。</li>
+<li><code>request.function</code> 表示view函数名</li>
+<li><code>request.session</code> 如果安装了session App，则会自动将session对象绑定到request上。</li>
+<li><code>request.user</code> 如果安装了auth App，则会自动将用户对象绑定到request上。</li>
+</ul>
+<h3 id="title_1.1.5">response</h3>
+<p>和request一样是一个代理对象。</p>
+<p>特殊属性说明(非Werkzeug的属性)：</p>
+<ul>
+<li><code>request.template</code> 用于重新指派渲染使用的模板</li>
+</ul>
+<h3 id="title_1.1.6">settings</h3>
+<p>配置信息对象，这个没什么好说的。</p>
+<h2 id="title_1.2">方法</h2>
+<p>如:</p>
+<pre class="prettyprint linenums"><code>from uliweb import (redirect, json, POST, GET,
+    url_for, expose, get_app_dir, get_apps, function,
+    functions, decorators, NotFound
+    )</code></pre>
+<h3 id="title_1.2.7">redirect</h3>
+<pre class="prettyprint linenums"><code>def redirect(location, code=302):</code></pre>
+<p>返回一个Response对象，用于实现URL跳转.</p>
+<h3 id="title_1.2.8">Redirect(0.1.4)</h3>
+<pre class="prettyprint linenums"><code>Redirect(location)</code></pre>
+<p>直接抛出异常，Uliweb捕获后将实现跳转。同时支持在跳转前session的保存。可以作为 redirect的替換。</p>
+<h3 id="title_1.2.9">json</h3>
+<pre class="prettyprint linenums"><code>def json(data, **json_kwargs):</code></pre>
+<p>将一个data处理成json格式，并返回一个Response对象。json_kwargs目前可以允许用户传 入 <code>content_type</code> 值。这样在特殊情况下可以将生成的json数据生成:</p>
+<pre class="prettyprint linenums"><code>content_type = 'text/html; charset=utf-8'</code></pre>
+<h3 id="title_1.2.10">expose</h3>
+<p>详见 <a href="url_mapping.html">URL映射</a></p>
+<h3 id="title_1.2.11">POST</h3>
+<p>和expose一样，不过限定访问方法为 POST。</p>
+<h3 id="title_1.2.12">GET</h3>
+<p>和expose一样，不过限定访问方法为 GET。</p>
+<h3 id="title_1.2.13">url_for</h3>
+<pre class="prettyprint linenums"><code>def url_for(endpoint, **values):</code></pre>
+<p>根据endpoint可以反向获得URL，endpoint可以是字符串格式，如: <code>Hello.view.index</code> ， 也可以 是真正的函数对象。</p>
+<h3 id="title_1.2.14">get_app_dir</h3>
+<pre class="prettyprint linenums"><code>def get_app_dir(app):</code></pre>
+<p>根据一个app名字取得它对应的目录。</p>
+<h3 id="title_1.2.15">get_apps</h3>
+<pre class="prettyprint linenums"><code>def get_apps(apps_dir, include_apps=None):</code></pre>
+<p>根据一个apps目录，分析出所有可用的App的名字列表。</p>
+<h3 id="title_1.2.16">function</h3>
+<pre class="prettyprint linenums"><code>func = function('function_name')</code></pre>
+<p>用户可以在settings.ini中配置供外部使用的函数路径，通过function可以获得这个函数 的对象。例如在settings.ini中如下配置:</p>
+<pre class="prettyprint linenums"><code>[FUNCTIONS]
+has_role = 'uliweb.contrib.rbac.has_role'
+has_permission = 'uliweb.contrib.rbac.has_permission'</code></pre>
+<p>这是uliweb.contrib.rbac中的定义的两个方法，key为方法名，value为方法的路径。 通过:</p>
+<pre class="prettyprint linenums"><code>has_role = function('has_role')</code></pre>
+<p>就可以导入真正的函数来使用。</p>
+<h3 id="title_1.2.17">functions</h3>
+<p>这是一个对象，它的作用类似于function，不过它是以属性引用的方式来从settings.ini 中的FUNCTIONS中导入方法，如:</p>
+<pre class="prettyprint linenums"><code>from uliweb import functions
+
+func = functions.hello</code></pre>
+<p>相当于:</p>
+<pre class="prettyprint linenums"><code>from uliweb import function
+
+func = function('hello')</code></pre>
+<h3 id="title_1.2.18">decorators</h3>
+<p>它同functions类似的使用方法，但是需要在settings.ini中定义DECORATORS内容，如:</p>
+<pre class="prettyprint linenums"><code>[DECORATORS]
+check_role = 'uliweb.contrib.rbac.check_role'
+check_permission = 'uliweb.contrib.rbac.check_permission'</code></pre>
+<p>使用方法:</p>
+<pre class="prettyprint linenums"><code>from uliweb import decorators
+
+@decorators.check_role('superuser')
+@expose('/hello')
+def hello():
+    #...</code></pre>
+<h3 id="title_1.2.19">json_dumps</h3>
+<p>用于将Python的数据结构转为json格式的方法。</p>
+<blockquote><p>json_dumps(obj, unicode=False, encoding='utf-8')</p>
+</blockquote>
+<p>unicode为False时，将会把obj中的unicode值转为encoding编码的串。否则转为unicode 描述形式的串。</p>
+<h3 id="title_1.2.20">NotFound</h3>
+<p>404对应的异常类。如果某个链接不存在，将引发这个异常。如果在你的处理中，发现有 不存在的对象，建议使用error来返回。因为NotFound会把当前访问的URL显示出来，可能 不是你想显示的内容。</p>
+<h3 id="title_1.2.21">HTTPException</h3>
+<p>通用的HTTP错误异常类。</p>
+<h3 id="title_1.2.22">Middleware</h3>
+<p>中间件基类，所有 Middleware 类可以从它派生。</p>
+<h3 id="title_1.2.23">UliwebError</h3>
+<p>Uliweb提供了一个通用的异常类 - UliwebError，你可以考虑使用它。</p>
+<h2 id="title_1.3">全局对象配置</h2>
+<p>我们已经可以从 <code>from uliweb import *</code> 中获得许多的对象和方法，如果我们也想将 其它的对象可以通过 <code>from uliweb import xxx</code> 的形式来导入，要如何做呢？可以 在 <code>settings.ini</code> 中添加以下内容:</p>
+<pre class="prettyprint linenums"><code>[GLOBAL_OBJECTS]
+your_object_name = 'your.object.path'</code></pre>
+<p>其中，每项中的 key 是对象的名字，值是对象的路径。</p>
+
+            
+            <div class="chapter-prev chapter-down">
+    <a prev-chapter href="architecture.html"><i class="icon-arrow-left"></i> 体系结构和机制</a>
+</div>
+<div class="chapter-next chapter-down">
+    <a next-chapter href="update.html">Uliweb 更新日志 <i class="icon-arrow-right"></i></a>
+</div>
+            
+            <div class="source">
+                <i class="icon-download"></i><a href="source/globals.md">View Source</a>
+            </div>
+          </div>
+          
+          
+        
+          <footer class="footer">
+  <div>
+    <p>Designed by Limodou, Copyright 2013, Limodou</p>
+    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+  </div>
+</footer>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/asset/prettify.js"></script>
+<script src="static/toc/toc.js"></script>
+<script src="static/docs.js"></script>
+<script src="static/comment.js"></script>
+<script src="static/jquery.hotkeys.js"></script>
+
+</body>
+</html>
