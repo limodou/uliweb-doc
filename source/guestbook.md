@@ -50,7 +50,7 @@ uliweb makeapp GuestBook
 
 Uliweb中的数据库不是缺省生效的，因此你需要配置一下才可以使用。Uliweb虽然提供了自已的
 ORM，但是你可以不使用它。Uliweb提供了插件机制，可以让你容易地在适当的时候执行初始化的工作。
-打开 `apps/GuestBook/settings.ini` 文件，修改 `INSTALLED_APPS` 的内容为:
+打开 `GuestBook/apps/settings.ini` 文件，修改 `INSTALLED_APPS` 的内容为:
 
 
 ```

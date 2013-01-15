@@ -88,7 +88,7 @@ uliweb runserver</code></pre>
 uliweb makeapp GuestBook</code></pre>
 <p>这样就自动会在项目的apps目录下创建一个 <code>GuestBook</code> 的App。</p>
 <h2 id="title_1.4">配置数据库</h2>
-<p>Uliweb中的数据库不是缺省生效的，因此你需要配置一下才可以使用。Uliweb虽然提供了自已的 ORM，但是你可以不使用它。Uliweb提供了插件机制，可以让你容易地在适当的时候执行初始化的工作。 打开 <code>apps/GuestBook/settings.ini</code> 文件，修改 <code>INSTALLED_APPS</code> 的内容为:</p>
+<p>Uliweb中的数据库不是缺省生效的，因此你需要配置一下才可以使用。Uliweb虽然提供了自已的 ORM，但是你可以不使用它。Uliweb提供了插件机制，可以让你容易地在适当的时候执行初始化的工作。 打开 <code>GuestBook/apps/settings.ini</code> 文件，修改 <code>INSTALLED_APPS</code> 的内容为:</p>
 <pre class="prettyprint linenums"><code>INSTALLED_APPS = [
     'GuestBook',
     'uliweb.contrib.orm',
@@ -347,6 +347,24 @@ def del_comment(id):
             <div class="source">
                 <i class="icon-download"></i><a href="source/guestbook.md">View Source</a>
             </div>
+            
+            <!-- disqus -->
+            <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+            
           </div>
           
           
@@ -372,6 +390,19 @@ def del_comment(id):
 <script src="static/docs.js"></script>
 <script src="static/comment.js"></script>
 <script src="static/jquery.hotkeys.js"></script>
+
+<script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
 
 </body>
 </html>
