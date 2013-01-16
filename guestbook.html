@@ -87,7 +87,11 @@ uliweb runserver</code></pre>
 <pre class="prettyprint linenums"><code>cd guestbook
 uliweb makeapp GuestBook</code></pre>
 <p>这样就自动会在项目的apps目录下创建一个 <code>GuestBook</code> 的App。</p>
-<h2 id="title_1.4">配置数据库</h2>
+<h2 id="title_1.4">目录结构</h2>
+<pre class="prettyprint linenums"><code>GuestBook/ 工程目录
+    apps/
+        GuestBook/ App</code></pre>
+<h2 id="title_1.5">配置数据库</h2>
 <p>Uliweb中的数据库不是缺省生效的，因此你需要配置一下才可以使用。Uliweb虽然提供了自已的 ORM，但是你可以不使用它。Uliweb提供了插件机制，可以让你容易地在适当的时候执行初始化的工作。 打开 <code>GuestBook/apps/settings.ini</code> 文件，修改 <code>INSTALLED_APPS</code> 的内容为:</p>
 <pre class="prettyprint linenums"><code>INSTALLED_APPS = [
     'GuestBook',
@@ -116,7 +120,7 @@ sqlite_db = create_engine('sqlite:///relative/path/to/database.txt')
 sqlite_db = create_engine('sqlite://')  # in-memory database
 sqlite_db = create_engine('sqlite://:memory:')  # the same</code></pre>
 <p>这里我们使用相对路径格式，所以 <code>guestbook.db</code> 将会在guestbook目录下被创建。</p>
-<h2 id="title_1.5">模板环境的扩展</h2>
+<h2 id="title_1.6">模板环境的扩展</h2>
 <p>向 <code>GuestBook/__init__.py</code> 中添加:</p>
 <pre class="prettyprint linenums"><code>from uliweb.core.dispatch import bind
 
@@ -125,7 +129,7 @@ def prepare_view_env(sender, env):
     from uliweb.utils.textconvert import text2html
     env['text2html'] = text2html</code></pre>
 <p>这也是一个dispatch的使用示例，它将向模板的环境中注入一个新的函数 <code>text2html</code>, 这样你就可以在模板中直接使用text2html这个函数了。</p>
-<h2 id="title_1.6">准备Model</h2>
+<h2 id="title_1.7">准备Model</h2>
 <p>在GuestBook目录下创建一个名为models.py的文件，内容为:</p>
 <pre class="prettyprint linenums"><code>from uliweb.orm import *
 
@@ -155,13 +159,21 @@ class Note(Model):
 <li>max_length 最大值</li>
 <li>verbose_name 提示信息</li>
 </ul>
-<p>象CharProperty和StringProperty，需要有一个max_length属性，如果没有给出，缺省是30。</p>
+<p>象CharProperty和StringProperty，需要有一个max_length属性，如果没有给出，缺省是255。</p>
 <p>其它详细的说明可以在数据文档中查看。</p>
 <div class="alert alert-info">
 <p>在定义Model时，Uliorm会自动为你添加 <code>id</code> 字段的定义，它将是一个主键，这一 点与Django一样。</p>
 
 </div>
-<h2 id="title_1.7">静态文件处理</h2>
+<h2 id="title_1.8">配置及创建表结构</h2>
+<p>在Model创建之后，需要先对Model进行配置，先要在apps/GuestBook下创建settings.ini( 如果不存在的话)，在其中添加以下内容:</p>
+<pre class="prettyprint linenums"><code>[MODELS]
+note = 'GuestBook.models.Node'</code></pre>
+<p>上面 <code>note</code> 是Model的名字，一般和表名一样，并且是小写。后面是这个表名对主应的 类的路径。</p>
+<p>上面信息配置好之后，在项目目录下，进行数据库表的创建:</p>
+<pre class="prettyprint linenums"><code>uliweb syncdb</code></pre>
+<p>这个命令可以将数据库中不存在的表创建出来。</p>
+<h2 id="title_1.9">静态文件处理</h2>
 <p>我们将在后面显示静态文件，现在只需要把 <code>uliweb.contrib.staticfiles</code> 添加到 <code>INSTALLED_APPS</code> 中就可以了。使用这个App，所有有效的app的static目录将被处理为静态目录，并且URL链接将添加 <code>/static/</code> 。现在 <code>settings.ini</code> 看上去象:</p>
 <pre class="prettyprint linenums"><code>[GLOBAL]
 DEBUG = True
@@ -174,8 +186,8 @@ INSTALLED_APPS = [
 
 [ORM]
 CONNECTION = 'sqlite:///guestbook.db'</code></pre>
-<h2 id="title_1.8">显示留言</h2>
-<h3 id="title_1.8.1">增加guestbook()的View方法</h3>
+<h2 id="title_1.10">显示留言</h2>
+<h3 id="title_1.10.1">增加guestbook()的View方法</h3>
 <p>打开GuestBook下的views.py文件，加入显示留言的处理代码:</p>
 <pre class="prettyprint linenums"><code>from uliweb import expose
 from models import Note
@@ -199,7 +211,7 @@ note = Note.get(Note.c.username=='limodou') #获取username为limodou的记录</
 <p>的形式。它将是一个字符串。然后同时Uliweb还提供了一个反向函数url_for，它将用来根据 View方法的字符串形式和对应的参数来反向生成URL，可以用来生成链接，在后面的模板中我 们将看到。</p>
 
 </div>
-<h3 id="title_1.8.2">定义index.html模板</h3>
+<h3 id="title_1.10.2">定义index.html模板</h3>
 <p>在GuestBook/templates目录下创建与View方法同名的模板，后缀为.html。在index.html中 添加如下内容:</p>
 <pre class="prettyprint linenums"><code>{{extend "base.html"}}
 {{block content}}
@@ -224,8 +236,8 @@ note = Note.get(Note.c.username=='limodou') #获取username为limodou的记录</
 <p>因为在base.html中和guestbook.html用到了一些css和图形文件，因此你可以从Uliweb的 GuestBook/static目录下将全部文件拷贝到你的目录下。</p>
 
 </div>
-<h2 id="title_1.9">增加留言</h2>
-<h3 id="title_1.9.3">增加new_comment()的View方法</h3>
+<h2 id="title_1.11">增加留言</h2>
+<h3 id="title_1.11.3">增加new_comment()的View方法</h3>
 <p>在前面的模板中我们定义了增加留言的链接:</p>
 <pre class="prettyprint linenums"><code>&lt;a href="{{=url_for('%s.views.new_comment' % request.appname)}}"&gt;New Comment&lt;/a&gt;</code></pre>
 <p>可以看出，我们使用了url_for来生成反向的链接。关于url_for在前面已经讲了，这里要注意的就是 函数名为new_comment，因此我们需要在views.py中生成这样的一个方法。</p>
@@ -256,7 +268,7 @@ def new_comment():
 <p>当flag为True时，进行成功处理。一会我们可以看到在表单中并没有datetime字段，因为我们 手工添加一个值，表示留言提交的时间。然后通过 <code>n = Note(**form.data)</code> 来生成Note记录，但这里并没有提 交到数据库中，因此再执行一个 <code>n.save()</code> 来保存记录到数据库中。</p>
 <p>然后执行完毕后，调用 <code>return redirect</code> 进行页面的跳转，跳回留言板的首页。这里又使用了url_for来反 向生成链接。</p>
 <p>当flag为False时，进行出错处理。</p>
-<h3 id="title_1.9.4">定义录入表单</h3>
+<h3 id="title_1.11.4">定义录入表单</h3>
 <p>为了与后台进行交互，让用户可以通过浏览器进行数据录入，需要使用HTML的form系列元素来定义 录入元素。对于有经验的Web开发者可以直接手写HTML代码，但是对于初学者很麻烦。并且你还要考虑 出错处理，数据格式转换的处理。因此许多框架都提供了生成表单的工具，Uliweb也不例外。Form模 块就是干这个用的。</p>
 <p>在GuestBook目录下创建forms.py文件，然后添加以下代码:</p>
 <pre class="prettyprint linenums"><code>from uliweb.form import *
@@ -276,7 +288,7 @@ class NoteForm(Form):
 <li>validators 校验器</li>
 </ul>
 <p>很象Model的定义，但有所不同。</p>
-<h3 id="title_1.9.5">编写new_comment.html模板文件</h3>
+<h3 id="title_1.11.5">编写new_comment.html模板文件</h3>
 <p>在GuestBook/templates下创建new_comment.html，然后添加以下内容:</p>
 <pre class="prettyprint linenums"><code>{{extend "base.html"}}
 {{block content}}
@@ -292,7 +304,7 @@ class NoteForm(Form):
 <p>然后是一个 if 判断是否有message信息，如果有则显示。这里要注意if后面的':'号。</p>
 <p>然后显示form元素，这里使用了 <code>{{&lt;&lt; form}}</code> 。form是从View中传入的，而{{<<}} 可以对要输出的内容中的HTML标签 不进行转义处理。而 {{=variable}} 将对variable 变量的HTML标签进行转换。因此，如果你想输出原始的HTML文本，要使用{{<<}}来输出。</p>
 <p>现在可以在浏览器中试一下了。</p>
-<h2 id="title_1.10">删除留言</h2>
+<h2 id="title_1.12">删除留言</h2>
 <p>在前面guestbook.html中，我们在每条留言前定义了一个删除的图形链接，形式为:</p>
 <pre class="prettyprint linenums"><code>&lt;a href="{{= url_for('GuestBook.views.del_comment', id=n.id) }}"&gt;</code></pre>
 <p>那么下面就让我们实现它。</p>
@@ -306,10 +318,10 @@ def del_comment(id):
     else:
         error("No such record [%s] existed" % id)</code></pre>
 <p>删除很简单，首先通过 <code>Note.get(int(id))</code> 来得到对象，然后再调用对象的delete() 方法来删除。</p>
-<h3 id="title_1.10.6">URL参数定义</h3>
+<h3 id="title_1.12.6">URL参数定义</h3>
 <p>请注意，这里expose使用了一个参数，即 <code>&lt;id&gt;</code> 形式。一旦在expose中的url定义 中有 <code>&lt;type:para&gt;</code> 的形式，就表示定义了一个参数。其中type:可以省略，它可以是int等类型。而 int将自动转化为 <code>\d+</code> 这种形式的正则式。Uliweb内置了象: int, float, path, any, string等类型，你可以在 <a href="url_mapping">URL Mapping</a> 文档中了解更多的细节。如果你只定义了 <code>&lt;name&gt;</code> 这种形式，它表示匹配 <code>//</code> 间的内容。一旦在URL中定义了参数，则需要 在View函数中也需要定义相应的参数，因此del_comment函数就写为了： <code>del_comment(id)</code> 。 这里的id与URL中的id是一样的。</p>
 <p>好了，现在你可以试一试删除功能是否可用了。</p>
-<h3 id="title_1.10.7">出错页面</h3>
+<h3 id="title_1.12.7">出错页面</h3>
 <p>当程序出错时，你可能需要向用户提示一个错误信息，因此可以使用error()方法来返回一个出错 的页面。它的前面不需要return。只需要一个出错信息就可以了。</p>
 <p>那么出错信息的模板怎么定义呢？在你的templates目录下定义一个名为error.html的文件，并加 入一些内容即可。</p>
 <p>创建error.html，然后，输入如下代码:</p>
@@ -320,11 +332,11 @@ def del_comment(id):
 &lt;p&gt;{{=message}}&lt;/p&gt;
 {{end}}</code></pre>
 <p>这个页面很简单，就是覆盖了一些block的定义。如title, header, content。</p>
-<h2 id="title_1.11">运行</h2>
+<h2 id="title_1.13">运行</h2>
 <p>在前面的开发过程中你可以启动一个开发服务器进行调试。启动开发服务器的命令为:</p>
 <pre class="prettyprint linenums"><code>uliweb runserver</code></pre>
 <p>当启动后，在浏览器输入： <code>http://localhost:8000/</code></p>
-<h2 id="title_1.12">结论</h2>
+<h2 id="title_1.14">结论</h2>
 <p>经过学习，我们了解了许多内容：</p>
 <ol>
 <li>ORM的使用，包括：ORM的初始化配置，Model的定义，简单的增加，删除，查询</li>
