@@ -45,6 +45,13 @@ uliweb makeapp GuestBook
 
 这样就自动会在项目的apps目录下创建一个 `GuestBook` 的App。
 
+## 目录结构
+
+```
+GuestBook/ 工程目录
+    apps/
+        GuestBook/ App
+```
 
 ## 配置数据库
 
@@ -173,7 +180,7 @@ class Note(Model):
 * max_length 最大值
 * verbose_name 提示信息
 
-象CharProperty和StringProperty，需要有一个max_length属性，如果没有给出，缺省是30。
+象CharProperty和StringProperty，需要有一个max_length属性，如果没有给出，缺省是255。
 
 其它详细的说明可以在数据文档中查看。
 
@@ -183,6 +190,27 @@ class Note(Model):
 点与Django一样。
 
 {% endalert %}
+
+## 配置及创建表结构
+
+在Model创建之后，需要先对Model进行配置，先要在apps/GuestBook下创建settings.ini(
+如果不存在的话)，在其中添加以下内容:
+
+```
+[MODELS]
+note = 'GuestBook.models.Node'
+```
+
+上面 `note` 是Model的名字，一般和表名一样，并且是小写。后面是这个表名对主应的
+类的路径。
+
+上面信息配置好之后，在项目目录下，进行数据库表的创建:
+
+```
+uliweb syncdb
+```
+
+这个命令可以将数据库中不存在的表创建出来。
 
 ## 静态文件处理
 
