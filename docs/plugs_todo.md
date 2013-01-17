@@ -193,6 +193,7 @@ uliweb syncdb
 #coding=utf-8
 from uliweb import expose
 from plugs.generic.views import View
+from uliweb.i18n import ugettext as _
 
 @expose('/')
 class Todo(View):
@@ -217,6 +218,8 @@ View类中已经预定义了象list, view, edit, delete, add等方法。基本�
 体要使用的布局文件，这里是base.html。key_field是表示在显示列表时，哪个字段将展
 示为相应的查看链接。其它的给注释了，它们显示的都是相应的缺省值。可以看到它还包含
 了相应的分页的处理。
+
+上面 `_('New')` 是i18n(国际化)处理的例子。 `_` 是在 `from uliweb.i18n import ugettext as _` 中定义的。
 
 改完以后，再运行，结果是这个样子。
 
