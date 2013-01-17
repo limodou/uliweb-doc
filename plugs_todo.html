@@ -87,6 +87,7 @@ uliweb makeapp todo</code></pre>
 DEBUG = True
 
 INSTALLED_APPS = [
+    'plugs.generic',
     'plugs.layout',
     'uliweb.contrib.orm',
     'todo',
@@ -101,7 +102,7 @@ LOCALE_DIRS = ['${plugs}']
 SUPPORT_LANGUAGES = ['en', 'zh_CN']</code></pre>
 <p>ORM段中我使用了sqlite数据库，同时关闭自动创建表的选项。在 <code>INSTALLED_APPS</code> 中加入 了'plugs.layout'和'todo'这两个app。由于使用了plugs，它是支持i18n的处理，因此上面 I18N一段就是相关的配置。在这个小网站，我们可以使用英文和中文。</p>
 <h2 id="title_1.3">基本布局</h2>
-<p>前面我们看到了，已经加入了 <code>plugs.layout</code> 这个app，它提供了基本的布局，因此我 们可以直接使用它。在layout中的settings.ini中有几个参数可以设置，缺省值为:</p>
+<p>前面我们看到了，已经加入了 <code>plugs.generic</code> 和 <code>plugs.layout</code> 这两个app，其中 <code>plugs.generic</code> 提供了通用的Model的CRUD(Create Read Update Delete)的处理展示。在非常简单的情况下 可以直接使用它来生成相应的界面。而 <code>plugs.layout</code> 提供了基本的布局。在layout中 的settings.ini中有几个参数可以设置，缺省值为:</p>
 <pre class="prettyprint linenums"><code>[LAYOUT]
 COPYRIGHT = _('All rights reversed!')
 TITLE = _('Uliweb Plugs Demo')

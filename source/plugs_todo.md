@@ -47,6 +47,7 @@ uliweb makeapp todo
 DEBUG = True
 
 INSTALLED_APPS = [
+    'plugs.generic',
     'plugs.layout',
     'uliweb.contrib.orm',
     'todo',
@@ -68,8 +69,10 @@ I18N一段就是相关的配置。在这个小网站，我们可以使用英文�
 
 ## 基本布局
 
-前面我们看到了，已经加入了 `plugs.layout` 这个app，它提供了基本的布局，因此我
-们可以直接使用它。在layout中的settings.ini中有几个参数可以设置，缺省值为:
+前面我们看到了，已经加入了 `plugs.generic` 和 `plugs.layout` 这两个app，其中 `plugs.generic`
+提供了通用的Model的CRUD(Create Read Update Delete)的处理展示。在非常简单的情况下
+可以直接使用它来生成相应的界面。而 `plugs.layout` 提供了基本的布局。在layout中
+的settings.ini中有几个参数可以设置，缺省值为:
 
 
 ```
