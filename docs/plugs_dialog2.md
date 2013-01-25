@@ -75,20 +75,16 @@ dialog.bind('dialog2.content-update', function(e){})
 `common_ajaxForm_success` 可以接收参数对象或函数对象。上例为直接传入了函数对象。
 你还可以传入一个参数对象，详细定义为:
 
-
 ```
-::
-```
+{
+success:null,
+message: show_message,
+done:null,
+error:null,
+field_prefix:'div_field_',
+message_type:'bootstrap'
+}
 
-
-> {
-> success:null,
-> message: show_message,
-> done:null,
-> error:null,
-> field_prefix:'div_field_',
-> message_type:'bootstrap'
-> }
 其中:
 
 
@@ -103,9 +99,4 @@ dialog.bind('dialog2.content-update', function(e){})
 * message_type 用来指明出错时提示的风格。缺省使用 `bootstrap` 。还支持 `tip`
     风格。它将使用 poshytip 控件来显示出错信息。
 
-
-## Docutils System Messages
-
-"System Message: ERROR/3 (plugs_dialog2.rst:, line 72)"
-Unknown target name: "div_field".
 

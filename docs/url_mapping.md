@@ -34,13 +34,13 @@ Uliweb目前提供两种View函数的写法，一种是简单的函数方式，�
         return {}
     ```
 
-当expose()不带任何参数(也可以不带括号)时，将进行缺省的映射。即URL将为:
+    当expose()不带任何参数(也可以不带括号)时，将进行缺省的映射。即URL将为:
 
     ```
     /appname/view_function_name/<arg1>/<arg2>
     ```
 
-如果view函数没有参数，则为：
+    如果view函数没有参数，则为：
 
     ```
     /appname/view_function_name
@@ -48,50 +48,58 @@ Uliweb目前提供两种View函数的写法，一种是简单的函数方式，�
 
 1. 固定映射
 
-    > @expose('/index')
-    > def index():
-    >     return {}
+    ```
+    @expose('/index')
+    def index():
+        return {}
+    ```
+    
 1. 参数处理
-当URL只有可变内容，可以配置为参数。一个参数的基本形式为：
+
+    当URL只有可变内容，可以配置为参数。一个参数的基本形式为：
 
     ```
     <convertor(arguments):name>
     ```
 
-其中convertor和arguments是可以缺省的。convertor类型目前可以设置为：int, float,
+    其中convertor和arguments是可以缺省的。convertor类型目前可以设置为：int, float,
     any, string, unicode, path等。不同的convertor需要不同的参数。详情请参见
-    下面的converter说明。最简单的形式就是<name>了，它将匹配/到/间的内容。
-name为匹配后参数的名字，它需要与绑定的view方法中的参数名相匹配。
+    下面的converter说明。最简单的形式就是 `<name>` 了，它将匹配/到/间的内容。
+    name为匹配后参数的名字，它需要与绑定的view方法中的参数名相匹配。
+    
 1. 其它参数
-expose函数允许在义时除了给出URL字符串以外再提供其它的参数，比如：
-defaults
 
-    > 它用来定义针对view函数中的参数的缺省值，例如你可以定义:
-    > 
-    > @expose('/all', defaults={'page': 1})
-    > @expose('/all/page/<int:page>')
-    > def show(page):
-    >     return {}
-    > 
-    > 这样两个URL都指向相同的view函数，但由于show方法需要一个page参数，所以对于第一
-    > 个/all来说，需要定义一个缺省值。
-    > 
-    > build_only
-    > 
-    > 如果设置为True，将只用来生成URL，不用于匹配。目前Uliweb提供了静态文件的处理，
-    > 但一旦你想通过象Apache这样的web server来提供服务的话，就不再需要Uliweb的静态
-    > 文件服务了。但是有些文件的链接却是依赖于这个定义来反向生成的，因此为了不进行匹配，
-    > 可以加上这个参数，这样在访问时不会进行匹配，但是在反向生成URL时还可以使用。
-    > 
-    > methods
-    > 
-    > HTTP请求可以分为GET, POST等方法，使用methods可以用来指定要匹配的方法。比
-    > 如:
-    > 
-    > @expose('/all', methods=['GET'])
-    > 
-    > 关于参数更多的说明请参见werkzeug下的routing.py程序。
-
+    expose函数允许在义时除了给出URL字符串以外再提供其它的参数，比如：
+    
+    defaults --
+        它用来定义针对view函数中的参数的缺省值，例如你可以定义:
+    
+        ```
+        @expose('/all', defaults={'page': 1})
+        @expose('/all/<int:page>')
+        def show(page):
+            return {}
+        ```
+    
+        这样两个URL都指向相同的view函数，但由于show方法需要一个page参数，所以对于第一
+        个/all来说，需要定义一个缺省值。
+    
+    build_only --
+        如果设置为True，将只用来生成URL，不用于匹配。目前Uliweb提供了静态文件的处理，
+        但一旦你想通过象Apache这样的web server来提供服务的话，就不再需要Uliweb的静态
+        文件服务了。但是有些文件的链接却是依赖于这个定义来反向生成的，因此为了不进行匹配，
+        可以加上这个参数，这样在访问时不会进行匹配，但是在反向生成URL时还可以使用。
+    
+    methods --
+        HTTP请求可以分为GET, POST等方法，使用methods可以用来指定要匹配的方法。比
+        如:
+    
+        ```
+        @expose('/all', methods=['GET'])
+        ```
+    
+    关于参数更多的说明请参见werkzeug下的routing.py程序。
+    
 
 ### 类View函数的处理
 
@@ -235,63 +243,63 @@ url_for('%s.views.index' % request.appname)
 ## convertor说明
 
 
-* int
-基本形式为：
+int --
+    基本形式为：
 
     ```
     <int:name>                      #简单形式
     <int(fixed_digits=4):name>      #带参数形式
     ```
 
-支持参数有：
+    支持参数有：
 
     * fixed_digits 固定长度
     * min 最小值
     * max 最大值
 
-* float
-基本形式为：
+float --
+    基本形式为：
 
     ```
     <float:name>                    #简单形式
     <float(min=0.01):name>          #带参数形式
     ```
 
-支持参数有：
+    支持参数有：
 
     * min 最小值
     * max 最大值
 
-* string 和 unicode
-这两个其实是一样的。
-基本形式为：
+string 和 unicode --
+    这两个其实是一样的。
+    基本形式为：
 
     ```
     <string:name>
     <unicode(length=2):name>
     ```
 
-支持的参数有：
+    支持的参数有：
 
     * minlength 最小长度
     * maxlength 最大长度
     * length 定长
 
-* path
-与string和unicode类型，但是没有任何参数。就是匹配从第一个不是 `/` 的字符到跟着的字
+path --
+    与string和unicode类型，但是没有任何参数。就是匹配从第一个不是 `/` 的字符到跟着的字
     符串或末尾之间的内容。基本形式为：
 
     ```
     <path:name>
     ```
 
-举例：
+    举例：
 
     ```
     '/static/<path:filename>'
     ```
 
-可以匹配：
+    可以匹配：
 
     ```
     '/static/a.css'         -> filename='a.css'
@@ -299,12 +307,12 @@ url_for('%s.views.index' % request.appname)
     '/static/image/a.gif'   -> filename='image/a.gif'
     ```
 
-* any
-基本形式为：
+any --
+    基本形式为：
 
     ```
     <any(about, help, imprint, u"class"):name>
     ```
 
-将匹配任何一个字符串。
+    将匹配任何一个字符串。
 
