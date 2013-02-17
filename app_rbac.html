@@ -247,7 +247,10 @@ def manager(user, id):
 </dd>
 <dt>has_permission(user, *permission_names, **kwargs)</dt>
 <dd><p>用户要传入 user 对象和权限的名字，权限名可以是多个。同时如果有动态角色，还要传入动态角色判断方法所需要的其它的参数。</p>
-class=info</dd>
+<div class="alert alert-info">
+<p>为什么判断权限有可能还需要传入动态角色所需要的参数呢？因为，在has_permission 中是根据遍历权限所对应的所有角色，检查用户是否拥有其中某个角色来处理的。</p>
+
+</div></dd>
 </dl><p>以上两个方法可以在view或模块中进行使用。简单的方法通过:</p>
 <pre class="prettyprint linenums"><code>from uliweb import functions
 

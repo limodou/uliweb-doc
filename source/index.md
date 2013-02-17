@@ -66,6 +66,7 @@ Plugs使用:
 
 
 {% toc max_depth=1 %}
+plugs_apps.md
 plugs_dialog2.md
 {% endtoc %}
 

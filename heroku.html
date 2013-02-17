@@ -104,7 +104,10 @@ requirements.txt</code></pre>
 </dd>
 <dt>Procfile</dt>
 <dd><p>Heroku 会采用 foreman 来启动应用，你可以在本地用它来启动 uliweb 项目。访问 地址可以是 <code>http://localhost:5000</code></p>
-class=info</dd>
+<div class="alert alert-info">
+<p>因为我更熟悉nginx+uwsgi的模式，因此使用foreman的话不知道有没有性能问题。 并且没有看到如何配置静态文件？所以在我的试验中能用开发服务器来提供服务和 静态文件的支持。</p>
+
+</div></dd>
 <dt>requirements.txt</dt>
 <dd><p>pip 安装需求文件，缺省要安装:</p>
 <pre class="prettyprint linenums"><code>Uliweb==0.1.1

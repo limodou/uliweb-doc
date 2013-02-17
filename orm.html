@@ -573,7 +573,10 @@ a.to_dict(['name', 'age'])    #this will only dump 'name' and 'age' fields</code
 </dd>
 <dt>get_datastore_value(field_name)</dt>
 <dd><p>返回指定字段的数据库的值。特别是对于 <code>Reference</code> 字段，如果直接使用inst.reference 则得到的会是引用的对象，而不是数据库保存的值。而使用 <code>get_datastore_value()</code> 可以得到数据库的值。</p>
-class=info</dd>
+<div class="alert alert-info">
+<p>uliorm会将 <code>Reference</code> 字段保存到 <code>_field_name_</code> 的属性中，因此可以 直接使用它来得到 <code>Reference</code> 的值。比如 <code>User.c.system</code> 可能是指向 <code>System</code> 表的引用，直接使用 <code>user.system</code> 会得到对象的 <code>System</code> 的对象。而使用 <code>user._system_</code> 则得到对应的数据库的值。</p>
+
+</div></dd>
 </dl><h3 id="title_1.5.17">Model级</h3>
 <p>uliorm在Model级上的操作主要有两类，一类是直接通过Model.func来调用的，另一类是通 过Model.func或Model.relationship的方式返回结果集，再在结果集上进行操作。对于与 查询相关的函数，是可以连在一起使用的，比如:</p>
 <pre class="prettyprint linenums"><code>User.filter(...).filter(...).count()</code></pre>
@@ -683,7 +686,10 @@ for row in query:</code></pre>
 </dd>
 <dt>count(): int</dt>
 <dd><p>返回满足条件的记录条数。需要与前面的all(), filter()连用。</p>
-class=info
+<div class="alert alert-info">
+<p>在Model中也有一个count()方法，但是它是可以带条件的，比如: <code>User.count(User.c.age &gt; 30)</code> 。 它可以等同于 <code>User.filter(User.c.age &gt; 30).count()</code></p>
+
+</div>
 <p>示例:</p>
 <pre class="prettyprint linenums"><code>User.all().count()
 User.filter(User.c.username == 'a').count()</code></pre>
@@ -817,8 +823,18 @@ select(User.c, User.c.username=='limodou').execute()</code></pre>
 <pre class="prettyprint linenums"><code>[MODELS]
 user = 'uliweb.contrib.auth.models.User'</code></pre>
 <p>其中key为引用的别名。它可以是表名（一般为Model类名小写），也可以不是表名。 value为表所对应的Model类的路径。uliorm将在需要时自动进行导入。</p>
-class=info
-class=info</li>
+<div class="alert alert-info">
+<p>为什么需要表名呢？因为orm提供的命令行工具中，syncdb会自动创建数据库中 不存在的表，它就是使用的真正的表名。</p>
+
+</div>
+<div class="alert alert-info">
+<p>在使用多数据库连接时，可以在上面的MODELS中的每张表的路径后面添加数据库 连接名，如:</p>
+<pre class="prettyprint linenums"><code>[MODELS]
+user = 'uliweb.contrib.auth.models.User', 'test'
+user = 'uliweb.contrib.auth.models.User', ['default', 'test']</code></pre>
+<p>第一种是说只在 <code>test</code> 中使用User表。而第二种则表示可以在 <code>default</code> 或 <code>test</code> 中使用User表，决定的顺序一是根据 Model 的 <code>__engine_name</code> 的设置或执行时使用 <code>connect(engine_name)</code> 进行设定。否则将使用第一个。</p>
+
+</div></li>
 <li><p>可以有条件的方便进行替换。     在某些时候，你可能发现某个app的表结构要扩展几个字段，但是因为已经有许多Model     和这个表实现了关联，而且这个app提供了其它与些Model相关的一些方法。因此，如果     简单地替换这个app，有可能会要同时修改其它的app的代码，比如导入处理等。如是你     在定义关系时使用的是get_model(name)的形式，并且name是字符串，这样你实际上已经     实现了Model的配置化。因此你就可以定义新的Model类，并且配置到settings.ini中来     替换原来的Model。如果不是把配置信息写到同一个settings.ini中，那么，你可以把     新的App定义到原来的App之后(这里指INSTALLED_APPS)，这样后面定义的内容会覆盖前     面定义的内容。这种做比较适合扩展字段的情况，或表结构的修改不影响其它的功能调     用的情况。</p></li>
 </ol>
 <p>在定义关系时，象OneToOne, Reference和ManyToMany时既可以接受字符串的Model名，也 可以直接传入Model的类，都可以。</p>
@@ -867,7 +883,10 @@ except:
 <dl>
 <dt>set_auto_create(flag)</dt>
 <dd><p>设置是否自动建表。flag取值为True或False。缺省为False。这一功能在开发时比较 有用，因为可以不使用uliweb syncdb来建表，但是在生产环境中建议关闭，手动来 处理。</p>
-class=info</dd>
+<div class="alert alert-info">
+<p>在使用sqlite时，发现有问题。当处于一个事务中，如果出现非select, update 之类的语句，sqlite会自动提交事务，造成事务处理不是按你的预期，所以也需 要关闭这个功能。</p>
+
+</div></dd>
 <dt>set_debug_query(flag)</dt>
 <dd><p>设置调试模式。如果flag为True，则生成的SQL语句将输出到日志中。如果你是通过 <code>get_connection()</code> 得到的一个数据库连接对象，可以简单地设置 <code>db.echo = True</code> 来激活调试模式。</p>
 </dd>
@@ -994,7 +1013,10 @@ Result.connect(engine_name)</code></pre>
 <p>在数据库处理中，所有的语句都需要在连接上被执行，事务也是在连接上被处理。不同的 连接意味着不同的处理。考虑到web处理和批处理的方式不同，我们可以考虑以下的场景:</p>
 <ul>
 <li><p>web处理一般是按请求来执行的，因此一个请求过来，创建一个连接，处理完毕后释放。     连接可以是长连接或短连接。长连接意味着将使用连接池，因此所谓的释放就是放回池     子里供下一次使用。而短连接就没有池子，释放就是真正的关闭，下次请求将再次创建。     而不管长连接还是短连接，处理模式都基本相同。     为了简化处理，我们可以每次当请求进入时自动创建一个连接，然后启动事务，并且把     这个连接放到线程环境中，这样所有使用 <code>do_</code> 就可以直接利用这个共享的连接和事务     了。这样的处理只是为了简化。因为有可能一个请求并没有事务处理，甚至不涉及到数据     操作，这样做有些过头了，不过目前为了简化，uliweb就是这样设计的。     当支持多数据库连接时，情况有了一些变化。原来可以只自动建一个连接，但是现     在有可能是有多个连接。那么我们要为所有的连接创建实例，并启动事务吗？因此，     现在的策略就是只为缺省的连接创建连接实例，并启动事务。对于其它的连接，     Uliorm 増加了一个名为 <code>AUTO_DOTRANSACTION</code> 的配置项，缺省为 <code>True</code>.     它的作用就是当你执行 <code>do_</code> 时自动创建连接并启动事务。另一种做法就是使用     <code>Begin(ec=engine_name)</code> 来手工创建连接和事务。目前只要是基本的 SQL 语句     ，包括： select, update, insert, delete 都是封装到了 <code>do_</code> 中了。而象     <code>create</code> 之类的是直接绑定到某个 engine 上，无法直接使用 <code>do_</code> , 所以     自动创建连接和事务一般还是可行的。象建表目前不建议自动创建，所以都是在命     令行上来执行的，它们都有特殊的处理。     同时在处理完毕后，也不能只关闭和提交缺省的连接了，需要对所有创建的连接（包括     自动创建的连接）执行事务提交和关闭。     不过这些已经通过修改middle_transaction完成了。所以在简单情况下用户不用过份关心     这些细节。并且这种做法是兼容只有一个数据库连接的情况。</p></li>
-<li><p>命令行和批处理情况有简单的也有复杂的。简单的情况和web请求的处理类似，也可以在     开始创建相应的连接和事务，在处理完毕后关闭。复杂情况下也可以自已手工创建连接和     启动事务。目前在命令行处理时有几个关键点：连接获取，Model的获取。Uliorm是完全     支持脱离WEB环境来使用的。因此我们可以象test_orm.py中那样，自已去创建连接，     创建Model，然后创建表。在这种情况下，Uliweb启动时做的自动化处理全部无效了，比     如缺省的 <code>AUTO_DOTRANSACTION</code> 的设置, 缺置的 <code>Begin</code> 启动事务等。所以我们要自已去     启动事务。缺省情况下是自动提交的，所以每执行完一条SQL语句就会生效。     同时uliweb还支持通过调用 make_application 或 make_simple_application 来启动     应用的实例。后者是专门为命令行准备了，除了个别的参数不能设外，如：debug，其它的     都一样。一旦启动，你的开发就和WEB区别不大了。所以缺省情况下 <code>AUTO_DOTRANSACTION</code>     是为 <code>True</code> 的。因此你执行 <code>do_</code> 时会自动启动事务。但是因为它没有 middleware_transaction     的封装，所以无法在处理完成后自动提交或回滚。这样如果你自已不处理，结果将无法     保存。对于这种情况，要么我们直接手工启动事务，以明确的事务方式来工作。要么执行     <code>set_auto_dotransaction(False)</code> 来关闭自动生成事务，从而进入 autocommit 状态。     所以这点要比较注意。建议在命令行处理时，都主动使用事务。</p>class=info</li>
+<li><p>命令行和批处理情况有简单的也有复杂的。简单的情况和web请求的处理类似，也可以在     开始创建相应的连接和事务，在处理完毕后关闭。复杂情况下也可以自已手工创建连接和     启动事务。目前在命令行处理时有几个关键点：连接获取，Model的获取。Uliorm是完全     支持脱离WEB环境来使用的。因此我们可以象test_orm.py中那样，自已去创建连接，     创建Model，然后创建表。在这种情况下，Uliweb启动时做的自动化处理全部无效了，比     如缺省的 <code>AUTO_DOTRANSACTION</code> 的设置, 缺置的 <code>Begin</code> 启动事务等。所以我们要自已去     启动事务。缺省情况下是自动提交的，所以每执行完一条SQL语句就会生效。     同时uliweb还支持通过调用 make_application 或 make_simple_application 来启动     应用的实例。后者是专门为命令行准备了，除了个别的参数不能设外，如：debug，其它的     都一样。一旦启动，你的开发就和WEB区别不大了。所以缺省情况下 <code>AUTO_DOTRANSACTION</code>     是为 <code>True</code> 的。因此你执行 <code>do_</code> 时会自动启动事务。但是因为它没有 middleware_transaction     的封装，所以无法在处理完成后自动提交或回滚。这样如果你自已不处理，结果将无法     保存。对于这种情况，要么我们直接手工启动事务，以明确的事务方式来工作。要么执行     <code>set_auto_dotransaction(False)</code> 来关闭自动生成事务，从而进入 autocommit 状态。     所以这点要比较注意。建议在命令行处理时，都主动使用事务。</p><div class="alert alert-info">
+<p>现在在 <code>make_simplae_application</code> 中増加了启动时自动将 <code>AUTO_DOTRANSACTION</code> 关闭的设置。所以使用它来启动应用环境直接就是 <code>autocommit</code> 的状态。</p>
+
+</div></li>
 </ul>
 <p>前面说了，在使用 <code>do_</code> 和 <code>Begin</code> 时可以自动在创建线程共享的连接。在Uliorm 中维护着一个Local的对象，它上面有 <code>conn</code> 和 <code>trans</code> 对象，它们各是一个dict 分别保存着线程相关的连接和事务对象。在调用 <code>do_</code> 和 <code>Begin</code> 时会先检查是否 存在相应的连接和事务对象，如果存在，则直接使用，如果不存在，则创建。这里，还可以 分别传入 engine_name 参数，用来指明检查某个连接名相关的对象是否存在。线程相关的 连接和事务对象存在的目的是为了编程方便。如果所有的SQL都使用 <code>do_</code> 会比较简单。 但是因为 Model 把底层SQL的执行封装到了不同的方法中，所以要么它会自动使用 Model 配置的连接名来获得线程连接对象，要么你通过 connect(engine_name) 切換到其它的连接 名上，以便可以获得其它的线程连接对象，目前也可以传入一个真正的连接对象或Engine对象。</p>
 <h3 id="title_1.11.29">命令行对多数据库的支持</h3>

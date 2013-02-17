@@ -350,7 +350,12 @@ def upload():
 <pre class="prettyprint linenums"><code>[EXPOSES]
 file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_serving'</code></pre>
 <p>这样所有以 <code>/uploads</code> 开头的 URL都会被 <code>file_serving</code> 处理，从而提供服务。</p>
-class=info</dd>
+<div class="alert alert-info">
+<p>在这里还有特殊的扩展处理。在缺省情况下，上传后的文件为了保证唯一性会自动 对文件名进行转換，具体用什么要看使用哪个文件名生成器处理的。详见下面 <code>FilenameConverter</code> 的有关说明。因此，当下载文件名还是使用转換后的文件 名会非常不方便。所以这里有一个扩展，就是在传入的URL上添加一个特殊的 query_string，如:</p>
+<pre class="prettyprint linenums"><code>xxxxxxxxx.txt?alt=中文.txt</code></pre>
+<p>这样alt对应的就是想另存为的文件名。这样只要 <code>&lt;a&gt;</code> 标签加上 <code>alt</code> 信息就可以 以想要的文件名来保存。</p>
+
+</div></dd>
 <dt>get_filename(filename, filesystem=False, convert=False)</dt>
 <dd><p>用于获得目标文件，即将TO_PATH与filename进行连接。同时，如果给出filesystem为 True，则将文件名转为文件系统的编码。否则返回的将是unicode。 convert=False 表示不对文件名进行转換</p>
 </dd>
