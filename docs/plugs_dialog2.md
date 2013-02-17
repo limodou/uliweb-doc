@@ -18,7 +18,7 @@
 {{include "inc_jquery_dialog2.html"}}
 ```
 
-如果你要使用ajax方式来提交dialog2中的Form，应在use jqutils时加入 `ajaxForm=True` 的
+如果你要使用ajax方式来提交dialog2中的Form，应在 `{{use "jqutils"}}` 时加入 `ajaxForm=True` 的
 参数，以便自动导入 `jquery.form.js` 进行ajax提交的处理。
 
 
@@ -84,6 +84,7 @@ error:null,
 field_prefix:'div_field_',
 message_type:'bootstrap'
 }
+```
 
 其中:
 
@@ -99,4 +100,57 @@ message_type:'bootstrap'
 * message_type 用来指明出错时提示的风格。缺省使用 `bootstrap` 。还支持 `tip`
     风格。它将使用 poshytip 控件来显示出错信息。
 
+### Form的处理
 
+因为使用了dialog2插件，如果在提交时，你想使用ajaxForm来处理，则需求按它的要求
+在 `<form>` 中添加 `class=ajax` 属性。如果 Form 本身是手写代码很容易添加属性，
+那么在自动生成 Form 内容的情况下，就需要一些技巧了。有以下方法可以在生成 Form
+时添加class属性：
+
+1. 在view中传入form参数
+
+    一般我们会使用generic.py中的 AddView，EditView等来自动生成Form。因此我们可以
+    向它们传入form_args参数，如:
+    
+    ```
+    form_args={'action':request.path, 
+    'html_attrs':{'class':'ajax form-horizontal'},
+    }                    
+    ```
+
+2. 在模板中进行处理
+
+    我们可以利用Form类提供的build属性将Form的生成分成几部分，如：
+    
+    begin --
+        ```
+        <form class=xxxx>
+        ```
+    body --
+        Form的内容
+    buttons_line --
+        Form的按钮行
+    end --
+        ```
+        </form>
+        ```
+        
+    其中，每一部分都可以单独运行。这样我们就可以保留需要的内容，将其它的内容进
+    行替換。举例如下：
+    
+    ```
+    <form class="ajax {{=defined('form_class') or 'form-horizontal'}}" 
+        method="POST" action="{{=defined('action') or functions.request_url()}}">
+    {{build = form.build}}
+    {{<< build.body}}
+    {{<< build.buttons_line}}
+    </form>
+    ```
+    
+    这个例子自定义了 begin 和 end 。在 `<form>` 上添加了 `ajax` 的 class。
+    
+{% alert class=info %}
+原来是使用 `request.url` 来表示请求的URL，但是在群集部署情况下， `request.url`
+将是处理请求机器的IP，不是接入机的IP。所以会不正确。而 `functions.request_url()`
+会只使用相对路径，避免了这一问题。
+{% endalert %}
