@@ -1,4 +1,4 @@
-# Baidu Application Engine部署及开发指南
+# BAE 部署及开发指南
 
 Baidu Application Engine(简称bae)是百度发布的类似于GAE的云环境，目前提供了对
 python的支持。不过现在还要测试过程中，所以以下的部署说明有可能会发生变化。bae
