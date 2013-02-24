@@ -100,7 +100,7 @@ Uliweb按照BSD进行发布。
 
     * 可以自动创始初始工作环境，自动包含必要的目录结构，文件和代码
     * 静态文件导出，可以将所有生效的App下的static导出到一个统一的目录
-    * 提供开发服务器
+    * 除了有项目组命令工具外，还提供APP专属命令工具，如ORM
 
 * 部署
 
@@ -134,14 +134,15 @@ Uliweb按照BSD进行发布。
 ## 社区
 
 
-* 邮件列表 [http://groups.google.com/group/uliweb](http://groups.google.com/group/uliweb)
+* 邮件列表 http://groups.google.com/group/uliweb
+* QQ讨论组 162487035
 
 
 ## 链接
 
 
-* Uliweb 项目主页 [http://code.google.com/p/uliweb](http://code.google.com/p/uliweb)
+* Uliweb 项目主页 https://github.com/limodou/uliweb
 * Uliweb-doc 文档项目 [http://github.com/limodou/uliweb-doc](http://github.com/limodou/uliweb-doc)
 * Uliweb-doc 在线文档查看链接 [http://limodou.github.com/uliweb-doc/](http://limodou.github.com/uliweb-doc/)
-* plugs Uliweb apps收集项目 [http://code.google.com/p/plugs](http://code.google.com/p/plugs)
+* plugs Uliweb apps收集项目 https://github.com/limodou/plugs
 

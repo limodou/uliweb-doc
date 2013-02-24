@@ -18,10 +18,10 @@
 <link href="static/asset/prettify.css" rel="stylesheet">
 <link href="static/toc/toc.css" rel="stylesheet">
 <link href="static/bootheme.css" rel="stylesheet">
-<link rel="stylesheet" href="static/custom.css"/>
+<link rel="stylesheet" href="static/parm.css"/>
 <link rel="stylesheet" href="static/asset/sons-of-obsidian.css"/>
-    
-<title>Sina Application Engine部署及开发指南 - Parm</title>
+
+<title>SAE 部署及开发指南 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -37,7 +37,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="brand" href="./index.html">Parm</a>
+      <a class="brand" href="./index.html">Uliweb-Doc</a>
       <div class="nav-collapse collapse">
         <ul class="nav">
           
@@ -63,14 +63,12 @@
           </div>
           
           <div class="outter-inner" id="markdown-content">
-            <div class="chapter-prev chapter-top">
-    <a prev-chapter href="guestbook.html"><i class="icon-arrow-left"></i> 迷你留言板</a>
-</div>
+            
 <div class="chapter-next chapter-top">
-    <a next-chapter href="bae.html">Baidu Application Engine部署及开发指南 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="bae.html">BAE 部署及开发指南 <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">Sina Application Engine部署及开发指南</h1>
+            <h1 id="title_1">SAE 部署及开发指南</h1>
 <p>Sina Application Engine(简称sae)是新浪发布的类似于GAE的云环境，目前已经支持PHP 和Python。因为sae是一个受限环境，因此uliweb在它上面的部署和开发有一些特殊的地方， 甚至有一些app是专门为sae开发的。下面让我由浅入深地向你介绍sae环境的部署和使用。 因为sae的python环境也在不断完善中，所以本文档也会不断完善。</p>
 <h2 id="title_1.1">uliweb的安装</h2>
 <p>你需要安装uliweb 0.1以上版本或svn中的版本，简单的安装可以是:</p>
@@ -148,34 +146,14 @@ CONNECTION_TYPE = 'short'</code></pre>
 <p><a href="http://readthedocs.org/docs/sae-python/en/latest/index.html">http://readthedocs.org/docs/sae-python/en/latest/index.html</a></p>
 
             
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="guestbook.html"><i class="icon-arrow-left"></i> 迷你留言板</a>
-</div>
+            
 <div class="chapter-next chapter-down">
-    <a next-chapter href="bae.html">Baidu Application Engine部署及开发指南 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="bae.html">BAE 部署及开发指南 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
                 <i class="icon-download"></i><a href="source/sae.md">View Source</a>
             </div>
-            
-            <!-- disqus -->
-            <div id="disqus_thread" style="margin:20px;"></div>
- <script type="text/javascript">
-     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-     /* * * DON'T EDIT BELOW THIS LINE * * */
-     (function() {
-         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-     })();
- </script>
- <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
- <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-            
           </div>
           
           
@@ -201,19 +179,6 @@ CONNECTION_TYPE = 'short'</code></pre>
 <script src="static/docs.js"></script>
 <script src="static/comment.js"></script>
 <script src="static/jquery.hotkeys.js"></script>
-
-<script type="text/javascript">
-   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-   /* * * DON'T EDIT BELOW THIS LINE * * */
-   (function () {
-       var s = document.createElement('script'); s.async = true;
-       s.type = 'text/javascript';
-       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-   }());
-   </script>
 
 </body>
 </html>

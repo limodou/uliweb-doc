@@ -18,10 +18,10 @@
 <link href="static/asset/prettify.css" rel="stylesheet">
 <link href="static/toc/toc.css" rel="stylesheet">
 <link href="static/bootheme.css" rel="stylesheet">
-<link rel="stylesheet" href="static/custom.css"/>
+<link rel="stylesheet" href="static/parm.css"/>
 <link rel="stylesheet" href="static/asset/sons-of-obsidian.css"/>
-    
-<title>Uliweb 简介 - Parm</title>
+
+<title>Uliweb 简介 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -37,7 +37,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="brand" href="./index.html">Parm</a>
+      <a class="brand" href="./index.html">Uliweb-Doc</a>
       <div class="nav-collapse collapse">
         <ul class="nav">
           
@@ -71,7 +71,7 @@
             <h1 id="title_1">Uliweb 简介</h1>
 <h2 id="title_1.1">它是什么</h2>
 <p>Uliweb是一个新的Python Web Framework，它之所以会产生是因为现有的框架多少有些令人 不满意的地方，而且许多情况下这些不满意的地方或多或少对我开发Web有影响，因此在经过对 不少框架的学习之后，我决定开发一个新的框架，希望可以综合我认为其它框架中尽可能多的 优点，同时使这个新的框架尽可能的简单，易于上手和使用。</p>
-<p>这个项目是由Limodou <a href="&#x6D;a&#x69;&#x6C;&#x74;&#x6F;&#x3A;lim&#x6F;&#x64;ou&#x40;g&#x6D;ail.co&#x6D;">l&#x69;mod&#x6F;&#x75;&#x40;&#x67;m&#x61;il.com</a>发起并创建的。其中得到了许多人的帮助。</p>
+<p>这个项目是由Limodou <a href="&#x6D;a&#x69;l&#x74;&#x6F;:&#x6C;&#x69;mod&#x6F;&#x75;&#x40;&#x67;ma&#x69;l.&#x63;&#x6F;&#x6D;">&#x6C;&#x69;&#x6D;od&#x6F;&#x75;&#x40;&#x67;m&#x61;i&#x6C;.&#x63;om</a>发起并创建的。其中得到了许多人的帮助。</p>
 <h2 id="title_1.2">License</h2>
 <p>Uliweb按照BSD进行发布。</p>
 <h2 id="title_1.3">基础组件</h2>
@@ -126,7 +126,7 @@
 <li><p>命令行工具</p><ul>
 <li>可以自动创始初始工作环境，自动包含必要的目录结构，文件和代码</li>
 <li>静态文件导出，可以将所有生效的App下的static导出到一个统一的目录</li>
-<li>提供开发服务器</li>
+<li>除了有项目组命令工具外，还提供APP专属命令工具，如ORM</li>
 </ul></li>
 <li><p>部署</p><ul>
 <li>支持GAE部署</li>
@@ -154,13 +154,14 @@
 <h2 id="title_1.6">社区</h2>
 <ul>
 <li>邮件列表 <a href="http://groups.google.com/group/uliweb">http://groups.google.com/group/uliweb</a></li>
+<li>QQ讨论组 162487035</li>
 </ul>
 <h2 id="title_1.7">链接</h2>
 <ul>
-<li>Uliweb 项目主页 <a href="http://code.google.com/p/uliweb">http://code.google.com/p/uliweb</a></li>
+<li>Uliweb 项目主页 <a href="https://github.com/limodou/uliweb">https://github.com/limodou/uliweb</a></li>
 <li>Uliweb-doc 文档项目 <a href="http://github.com/limodou/uliweb-doc">http://github.com/limodou/uliweb-doc</a></li>
 <li>Uliweb-doc 在线文档查看链接 <a href="http://limodou.github.com/uliweb-doc/">http://limodou.github.com/uliweb-doc/</a></li>
-<li>plugs Uliweb apps收集项目 <a href="http://code.google.com/p/plugs">http://code.google.com/p/plugs</a></li>
+<li>plugs Uliweb apps收集项目 <a href="https://github.com/limodou/plugs">https://github.com/limodou/plugs</a></li>
 </ul>
 
             
@@ -172,24 +173,6 @@
             <div class="source">
                 <i class="icon-download"></i><a href="source/introduction.md">View Source</a>
             </div>
-            
-            <!-- disqus -->
-            <div id="disqus_thread" style="margin:20px;"></div>
- <script type="text/javascript">
-     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-     /* * * DON'T EDIT BELOW THIS LINE * * */
-     (function() {
-         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-     })();
- </script>
- <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
- <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-            
           </div>
           
           
@@ -215,19 +198,6 @@
 <script src="static/docs.js"></script>
 <script src="static/comment.js"></script>
 <script src="static/jquery.hotkeys.js"></script>
-
-<script type="text/javascript">
-   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-   /* * * DON'T EDIT BELOW THIS LINE * * */
-   (function () {
-       var s = document.createElement('script'); s.async = true;
-       s.type = 'text/javascript';
-       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-   }());
-   </script>
 
 </body>
 </html>

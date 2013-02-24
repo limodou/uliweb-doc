@@ -1,4 +1,4 @@
-# Sina Application Engine部署及开发指南
+# SAE 部署及开发指南
 
 Sina Application Engine(简称sae)是新浪发布的类似于GAE的云环境，目前已经支持PHP
 和Python。因为sae是一个受限环境，因此uliweb在它上面的部署和开发有一些特殊的地方，
