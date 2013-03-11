@@ -209,6 +209,11 @@ bind_name = topic, function, {kwargs} #给出信号，函数路径和参数(字�
 其中function中是函数路径，比如 `appname.model.function_name` ，例用这种形式，uliweb
 可以根据 `appname.model` 来导入函数。
 
+上面的 `bind_name` 没有特别的作用，只是要求唯一，一方面利用它可以实现：一个函数
+可以同时处理多个 topic 的情况，只要定义不同的 `bind_name` 即可。另一方面，可以
+起到替換的作用，如果某个绑定不想再继续使用或替换为其它的配置，可以写一个同名的
+`bind_name` 让后面的替換前面的。
+
 
 ### EXPOSES
 
