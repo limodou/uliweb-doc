@@ -198,7 +198,7 @@ class Note(Model):
 
 ```
 [MODELS]
-note = 'GuestBook.models.Node'
+note = 'GuestBook.models.Note'
 ```
 
 上面 `note` 是Model的名字，一般和表名一样，并且是小写。后面是这个表名对主应的
@@ -252,11 +252,11 @@ def index():
     return {'notes':notes}
 ```
 
-在开始的地方，我们导入了Node类。后面我们会用到。
+在开始的地方，我们导入了Note类。后面我们会用到。
 
 然后使用expose()来定义URL为 `/` 。
 
-然后是index()函数的定义。我们通过调用Node类的方法all()获得所有
+然后是index()函数的定义。我们通过调用Note类的方法all()获得所有
 记录。为了按时间倒序显示，使用order_by()方法，传入要按顺的字段。其中
 `Note.c.datetime.desc()` 是Sqlalchemy的用法，表示倒序。
 

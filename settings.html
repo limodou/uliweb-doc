@@ -177,6 +177,7 @@ audit.post_save = 'post_save'</code></pre>
 bind_name = topic, function #给出信号和函数路径
 bind_name = topic, function, {kwargs} #给出信号，函数路径和参数(字典形式)</code></pre>
 <p>其中function中是函数路径，比如 <code>appname.model.function_name</code> ，例用这种形式，uliweb 可以根据 <code>appname.model</code> 来导入函数。</p>
+<p>上面的 <code>bind_name</code> 没有特别的作用，只是要求唯一，一方面利用它可以实现：一个函数 可以同时处理多个 topic 的情况，只要定义不同的 <code>bind_name</code> 即可。另一方面，可以 起到替換的作用，如果某个绑定不想再继续使用或替换为其它的配置，可以写一个同名的 <code>bind_name</code> 让后面的替換前面的。</p>
 <h3 id="title_1.5.6">EXPOSES</h3>
 <p>用于配置URL，在一般情况下，你只要在views.py中定义 <code>@expose(url)</code> 即可，但是在复杂情况 下，特别是可以允许URL被替换的情况下，考虑把URL定义在settings.ini中，如:</p>
 <pre class="prettyprint linenums"><code>[EXPOSES]

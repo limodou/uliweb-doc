@@ -168,7 +168,7 @@ class Note(Model):
 <h2 id="title_1.8">配置及创建表结构</h2>
 <p>在Model创建之后，需要先对Model进行配置，先要在apps/GuestBook下创建settings.ini( 如果不存在的话)，在其中添加以下内容:</p>
 <pre class="prettyprint linenums"><code>[MODELS]
-note = 'GuestBook.models.Node'</code></pre>
+note = 'GuestBook.models.Note'</code></pre>
 <p>上面 <code>note</code> 是Model的名字，一般和表名一样，并且是小写。后面是这个表名对主应的 类的路径。</p>
 <p>上面信息配置好之后，在项目目录下，进行数据库表的创建:</p>
 <pre class="prettyprint linenums"><code>uliweb syncdb</code></pre>
@@ -196,9 +196,9 @@ from models import Note
 def index():
     notes = Note.all().order_by(Note.c.datetime.desc())
     return {'notes':notes}</code></pre>
-<p>在开始的地方，我们导入了Node类。后面我们会用到。</p>
+<p>在开始的地方，我们导入了Note类。后面我们会用到。</p>
 <p>然后使用expose()来定义URL为 <code>/</code> 。</p>
-<p>然后是index()函数的定义。我们通过调用Node类的方法all()获得所有 记录。为了按时间倒序显示，使用order_by()方法，传入要按顺的字段。其中 <code>Note.c.datetime.desc()</code> 是Sqlalchemy的用法，表示倒序。</p>
+<p>然后是index()函数的定义。我们通过调用Note类的方法all()获得所有 记录。为了按时间倒序显示，使用order_by()方法，传入要按顺的字段。其中 <code>Note.c.datetime.desc()</code> 是Sqlalchemy的用法，表示倒序。</p>
 <p>以下是一些简单的用法:</p>
 <pre class="prettyprint linenums"><code>notes = Note.all()                  #全部记录，不带条件
 note = Note.get(3)                  #获取id值为3的记录
