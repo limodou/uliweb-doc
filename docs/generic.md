@@ -257,6 +257,12 @@ view = ListView(model, fields_convert_map=fields_convert_map)
 
 这样就可以在显示 title 字段时调用 title() 函数返回一个链接。
 
+如果返回值是 `None` 时，则表示将使用缺省的转換处理。它有着特殊的用途，主要是
+在下载处理时。 `ListView` 在下载时，也可以指定 `fields_convert_map` ，但同时
+展示时，你也可以也指定 `fields_convert_map` ，这样就存在两个转換映射。 generic
+在处理时，会将这两个 `fields_convert_map` 进行合并。但是如果某个convert函数不想
+要怎么办，一种方法是删除相应的 key，另一种方法是定义新的convert，简单地让它返回
+ `None` 就可以了。
 
 ### 不存在字段支持
 
@@ -325,6 +331,70 @@ if 需要分页:
     结果集 = 结果集.offset((页号-1)*每页条数).limit(每页条数)
 ```
 
+### 下载处理
+
+ListView 提供下载功能，包括 .csv 和 .xls 下载功能。对于 xls 格式的下载，还需要
+安装 xlrd, xlutils, xlwt 这几个 Exccel 读取和写入的模块。
+
+简单的示例：
+
+```
+elif 'download' in request.GET:
+    def plan_type(value, obj):
+        return
+    def planedit_status(value, obj):
+        return
+    
+    fields_convert_map = {
+        'plan.type':plan_type,
+        'planexecute.status':planedit_status,
+    }
+    return view.download('tasks_planlist.xls', action='download', timeout=0,
+        fields_convert_map=fields_convert_map)
+```
+
+view为ListView的实例。先根据 URL 来判断是否需要下载，则调用 view 的 `download` 
+方法来下载。
+
+download 函数的原型为：
+
+```
+def download(self, filename, timeout=3600, action=None, 
+    query=None, fields_convert_map=None, type=None, domain=None):
+```
+
+参数的说明分别为：
+
+filename --
+    下载的文件名。如果后缀为 `.csv` 则自动转为 csv 格式。如果后缀是 `.xls` 则自动
+    转为Excel格式。
+
+timeout --
+    下载后的文件可以实现缓存。缺省是3600秒钟。在上面的示例中被设置为 0，表示不缓存
+    ，这样每次都将重新生成。
+    
+action --
+    可以选择 `'download'`, `'inline'` ，如果是 `'download'` 则浏览器将下载。如果
+    是 `'inline'` 则浏览器将直接打开（有些浏览器可能无法支持，主要是针对IE）。
+
+query --
+    有时下载的查询语句可能和显示不同，所以这里还可以指定新的查询语句。如果没有指
+    定，则使用缺省的查询结果（和显示结果条件相同）。
+  
+fields_convert_map --
+    字段数据转換映射。当希望将某些列的值转为易于理解的方式是，通过定义转換函数来
+    实现数据的转換。它将与查询中已经存在的 fields_convert_map 进行合并，而不是简单
+    地替換。所以查询时使用的转換函数，在下载时依然可以使用，你只需要定义有变化的
+    转換函数即可。
+    
+type --
+    用来指明生成的下载文件的格式，可选值为 `csv` 和 `xls` 。如果没有指定，则根据文件
+    名后缀来自动判断。目前仅支持这两种格式。
+    
+domain --
+    当数据中存在 `<a href="xxxx">yyyy</a>` 数据时，并且下载的格式为 xls ，则会自动
+    转为Excel中的链接。在转換链接时，domain 将会和链接的地址进行合并处理，这样
+    可以把形式为相对路径的链接转为绝对路径。从而在点击时是正确的。
 
 ## SimpleListView
 
@@ -334,6 +404,8 @@ if 需要分页:
 某个Model的对象，而有可能是一个dict或SQLAlchemy的ResultProxy对象。同时SimpleListView
 也支持简单的select语句，但是在这种情况下表头还是要定义的。
 
+SimpleListView 是 ListView 的父类，除了不能直接使用 Model 外，基本功能与 ListView 是
+一致的。
 
 ### 参数说明
 
@@ -358,7 +430,52 @@ manual --
     它一般是采用循环的方式，这样每次显示都要从头到尾遍历一遍，效率会很低。所以
     可以在外部先统计好再传入，从而提高效率。
 
+## SelectListview(0.1.7新増)
 
+从上面我们可以看到已经有两类的列表展示类： `ListView` 和 `SimpleListView` 。一种
+主要是针对一张表的情况，另一种主要是针对自定义结果的情况。还有一种情况就是：我们
+希望把一条 `select` 语句作为列表的方式显示出来，这样有可能涉及的表就不只一张，采用
+上面的方式就无法满足。因此我们可以考虑 `SelectListView` 。它的主要特点就是：
+
+* 通过定义fields来列举将要在select中显示的字段
+* 通过condition来定义条件
+
+这样， `SelectListView` 会自动生成 `select` 语句。
+
+`SelectListView` 是从 `ListView` 继承来的。所以使用上基本上与 `ListView` 是一致的。
+
+### fields定义
+
+定义方式和fields的类似。 `SelectListView` 的第一个参数仍然是 Model 类。每个 fields
+项可以是一个字典或是一个字符串。如：
+
+```
+fields = [
+    'username',
+    {'name':'group.id', 'hidden':True},
+    {'name':'group.name', 'verbose_name':'小组名称', 'width':150}
+]
+```
+
+上面即有字符串的形式，也有字典的形式。这里对 `name` 有特殊的要求。如果name中存在
+`.` 则 `SelectListView` 会认为是 `model.fieldname` 的形式，因此它会尝试导入 `model`
+然后去查看是否存在 `fieldname` 的字段。如果没找到，则视为未定义的字段，将在后续按
+`fields_convert_map` 来处理。所以，通过这种方式就可以实现定义不同的表中的字段。
+
+上面的示例中， `hidden` 可以用来控制展示时是否隐藏。
+
+### 数据转換
+
+在显示时，有些值我们想进行必要的数据加工，比如文字改变显示的样式，添加一个链接等，
+我们可以定义一个convert函数，如：
+
+```
+def _group(value, obj):
+    return '<a href="/group/%d">%s</a>' % (obj['group.id'], obj['group.name'])
+```
+
+`obj` 在 `SelectListView` 中将是一个 **dict** ，所以你可以直接通过 `obj` 来引用每条记录
+中的其它值。所以上述的代码就是根据 `group.id` 和 `group.name` 来生成一个链接。
 
 ## AddView
 
