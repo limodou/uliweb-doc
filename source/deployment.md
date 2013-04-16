@@ -284,7 +284,7 @@ fi
 
 
 ```
-[program:uwsgi]
+[program:yourproject]
 command = uwsgi
  --socket /tmp/uwsgi.sock
  --harakiri 60
@@ -293,7 +293,6 @@ command = uwsgi
  --processes 2
  --master
  --home /python/env
- --logto /tmp/uwsgi.log
  --chmod-socket=666
  --limit-as 256
  --socket-timeout 5
@@ -302,13 +301,17 @@ directory=/path/to/yourproject
 stopsignal=QUIT
 autostart=true
 autorestart=true
-stdout_logfile=/tmp/supervisord.log
+stdout_logfile=/tmp/yourproject.log
 redirect_stderr=true
 exitcodes=0,1,2
 ```
 
 这里把其它的配置都忽略掉了，只显示uliweb相关的配置，上面的许多参数可以根据要求
 进行修改。
+
+* `yourproject` 应改为实际的项目名称
+* `directory` 改为项目目录
+* `stdout_logfile` 的值改为实际的日志文件名
 
 其中 `--home xxx` 的作用是设置python环境，它主要是用于使用virtualenv来创建
 python环境的情况。

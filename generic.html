@@ -315,7 +315,7 @@ if 需要分页:
 <dt>manual</dt>
 <dd><p>是否手动传入记录总数。如果不是手动，则表示SimpleListView会自动对结果进行计数， 它一般是采用循环的方式，这样每次显示都要从头到尾遍历一遍，效率会很低。所以 可以在外部先统计好再传入，从而提高效率。</p>
 </dd>
-</dl><h2 id="title_1.4">SelectListview(0.1.7新増)</h2>
+</dl><h2 id="title_1.4">SelectListView(0.1.7新増)</h2>
 <p>从上面我们可以看到已经有两类的列表展示类： <code>ListView</code> 和 <code>SimpleListView</code> 。一种 主要是针对一张表的情况，另一种主要是针对自定义结果的情况。还有一种情况就是：我们 希望把一条 <code>select</code> 语句作为列表的方式显示出来，这样有可能涉及的表就不只一张，采用 上面的方式就无法满足。因此我们可以考虑 <code>SelectListView</code> 。它的主要特点就是：</p>
 <ul>
 <li>通过定义fields来列举将要在select中显示的字段</li>

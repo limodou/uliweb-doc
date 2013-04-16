@@ -534,7 +534,7 @@ def new(self):
 1. url_for可以反向获取一个URL，这里传入的是一个函数对应，所以url_for(Todo.index)
     其实就是'/'。这种做法主要是因为：代码结构可能不容易变化，而URL却容易变化，通过
     反向获取，会减少URL变化带来的修改。当然，你可以不用，直接写'/'。
-1. 在uliweb中，instance=Model(**kwargs)可以用来创建一条记录，当然要注意使用instnace.save()
+1. 在uliweb中，instance=Model(**kwargs)可以用来创建一条记录，当然要注意使用instance.save()
     来保存。上面我们没有传入post_date，但是由于在Model定义时，我们加入了auto_now_add，
     所以在创建新记录时，它会自动使用服务器的时间。
 1. Uliweb的Request, Response目前是使用werkzeug（和Flask基础是一样的）库。

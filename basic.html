@@ -338,7 +338,7 @@ class Todo(object):
 <li><p>在uliweb，有些方法和变量是全局的，比如上面的：request, error, redirect，都是     可以直接使用的。如果你想显示地使用它们，可以通过:</p><pre class="prettyprint linenums"><code>from uliweb import request, error, redirect</code></pre></li>
 <li>error目前会引发一个异常，所以并不需要return</li>
 <li><p>url_for可以反向获取一个URL，这里传入的是一个函数对应，所以url_for(Todo.index)     其实就是'/'。这种做法主要是因为：代码结构可能不容易变化，而URL却容易变化，通过     反向获取，会减少URL变化带来的修改。当然，你可以不用，直接写'/'。</p></li>
-<li><p>在uliweb中，instance=Model(**kwargs)可以用来创建一条记录，当然要注意使用instnace.save()     来保存。上面我们没有传入post_date，但是由于在Model定义时，我们加入了auto_now_add，     所以在创建新记录时，它会自动使用服务器的时间。</p></li>
+<li><p>在uliweb中，instance=Model(**kwargs)可以用来创建一条记录，当然要注意使用instance.save()     来保存。上面我们没有传入post_date，但是由于在Model定义时，我们加入了auto_now_add，     所以在创建新记录时，它会自动使用服务器的时间。</p></li>
 <li>Uliweb的Request, Response目前是使用werkzeug（和Flask基础是一样的）库。</li>
 </ol>
 <p>上面的代码将判断是否有title，如果没有则报错。如果有，则保存。让我们运行一下。</p>
