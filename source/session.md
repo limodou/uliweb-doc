@@ -1,5 +1,9 @@
 # Session使用说明
 
+## 修改说明
+
+* (0.1.7)添加session的某个key可以单独设置超时时间的机制
+* (0.1.7)当session[key]找不到时会抛出异常，以前会返回None。
 
 ## session简介
 
@@ -225,3 +229,24 @@ session的保存是由session middleware来完成的，用户一般不用考虑�
 通过request.session.cookie可以访问每个session对应的cookie对象，你可以修改它的值
 以便保存到浏览器中。
 
+{% alert class=success %}
+当使用 `session[key]` 时，如果 key 不存在，则会抛出异常。如果不想抛出异常，可以
+使用get方法并指定缺省值。如：
+
+```
+session.get(key, default)
+```
+
+{% end %}
+
+## session的key超时处理
+
+简单情况下，一个session的超时是整体来设置的。但是有时我们也需要针对session中的个
+别key来设置超时，这里可以通过 `set()` 来设置：
+
+
+```
+session.set(key, value, timeout)
+```
+    
+注意，如果timeout超过了session本身的超时时间将无较。
