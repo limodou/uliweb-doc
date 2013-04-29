@@ -238,7 +238,7 @@ location ~ ^/static/ {
 
 {% alert class=warn %}
 在 `/your/path/to` 下应有 `static` 子目录。
-{% end %}
+{% endalert %}
 
 
 ### uwsgi
@@ -291,7 +291,7 @@ fi
 ```
 [program:yourproject]
 command = uwsgi
- --socket /tmp/uwsgi.sock
+ --socket /tmp/yourproject.sock
  --harakiri 60
  --reaper
  --module wsgi_handler
