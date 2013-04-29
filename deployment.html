@@ -186,9 +186,13 @@ include /etc/nginx/conf.d/*.conf;
 <p>将uwsgi设置为反向代理有两种方式，一种是通过服务的方式，即上面注释掉的那一行，但 是当请求过多，这种方式会报错。因此一般都采用socket文件的方法。</p>
 <p>上面就把Nginx设置好了。如果要使用Nignx提供静态文件服务，可以在上面的server中添加:</p>
 <pre class="prettyprint linenums"><code>location ~ ^/static/ {
-    root /your/path/to/static;
+    root /your/path/to;
 }</code></pre>
-<p>这样就将/static作为静态文件的起如目录了。</p>
+<p>这样就将URL以 <code>/static/</code> 开头的资源文件作为静态文件来处理了，同时会在 <code>/your/path/to</code> 下来查找文件。</p>
+<div class="alert alert-warn">
+<p>在 <code>/your/path/to</code> 下应有 <code>static</code> 子目录。</p>
+
+</div>
 <h3 id="title_1.5.6">uwsgi</h3>
 <p>uwsgi可以支持命令行方式启动，也可以由supervisor来管理（个人以为supervisor要简单 得多）。下面是一个命令行启动uwsgi的一个示例脚本(start.sh):</p>
 <pre class="prettyprint linenums"><code>#!/bin/bash
@@ -226,7 +230,7 @@ fi</code></pre>
 <p>另外还可以使用supervisor来管理uwsgi程序，如下面是一个示例:</p>
 <pre class="prettyprint linenums"><code>[program:yourproject]
 command = uwsgi
- --socket /tmp/uwsgi.sock
+ --socket /tmp/yourproject.sock
  --harakiri 60
  --reaper
  --module wsgi_handler

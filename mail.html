@@ -82,9 +82,10 @@ HOST = 'localhost'
 PORT = 25
 USER = ''
 PASSWORD = ''
-BACKEND = 'uliweb.mail.backends.smtp'</code></pre>
-<p>前四项不用过多解释，最后一项是指示使用哪个发送后端。Uliweb已经内置了两个后端， 缺省为smtp方式。</p>
-<p>根据使用要求，设置基本上分三种模式。</p>
+BACKEND = 'uliweb.mail.backends.smtp'
+SENDMAIL_LOCATION = '/usr/sbin/sendmail'</code></pre>
+<p>前四项不用过多解释，最后一项是指示使用哪个发送后端。Uliweb已经内置了三个后端，分 别为： smtp, gmail, sendfile。缺省为smtp方式。</p>
+<p>使用不同的后端，需要修改 <code>BACKEND</code> 为不同的类名，分别为： <code>uliweb.mail.backends.smtp</code>, <code>uliweb.mail.backends.gmail</code>, <code>uliweb.mail.backends.sendfile</code> 。这种方式允许你 编写自已的后端。</p>
 <h3 id="title_1.1.1">无验证模式</h3>
 <p>保持USER, PASSWORD为空，BACKEND为smtp，这种情况下将不进行验证。如:</p>
 <pre class="prettyprint linenums"><code>[MAIL]
@@ -105,6 +106,8 @@ PORT = 0
 USER = 'user'
 PASSWORD = 'password'
 BACKEND = 'uliweb.mail.backends.gmail'</code></pre>
+<h3 id="title_1.1.4">Sendmail模式</h3>
+<p>sendmail模式将使用机器上自动的sendmail程序来发送。这是通过命令行来执行的。所以 要保证你的机器上安装有 sendmail 服务. 缺省sendmail的路径是 <code>/usr/sbin/sendmail</code>。 使用sendmail来发送邮件，将不需要用户名和口令。不过这种方式很有可能会被收信人判 断为垃圾邮件。</p>
 <h2 id="title_1.2">邮件发送</h2>
 <p>配置好之后就是邮件发送处理。举例如下:</p>
 <pre class="prettyprint linenums"><code>def mail():
