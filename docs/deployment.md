@@ -229,11 +229,16 @@ server {
 
 ```
 location ~ ^/static/ {
-    root /your/path/to/static;
+    root /your/path/to;
 }
 ```
 
-这样就将/static作为静态文件的起如目录了。
+这样就将URL以 `/static/` 开头的资源文件作为静态文件来处理了，同时会在 `/your/path/to`
+下来查找文件。
+
+{% alert class=warn %}
+在 `/your/path/to` 下应有 `static` 子目录。
+{% end %}
 
 
 ### uwsgi

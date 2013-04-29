@@ -18,13 +18,15 @@ PORT = 25
 USER = ''
 PASSWORD = ''
 BACKEND = 'uliweb.mail.backends.smtp'
+SENDMAIL_LOCATION = '/usr/sbin/sendmail'
 ```
 
-前四项不用过多解释，最后一项是指示使用哪个发送后端。Uliweb已经内置了两个后端，
-缺省为smtp方式。
+前四项不用过多解释，最后一项是指示使用哪个发送后端。Uliweb已经内置了三个后端，分
+别为： smtp, gmail, sendfile。缺省为smtp方式。
 
-根据使用要求，设置基本上分三种模式。
-
+使用不同的后端，需要修改 `BACKEND` 为不同的类名，分别为： `uliweb.mail.backends.smtp`,
+`uliweb.mail.backends.gmail`, `uliweb.mail.backends.sendfile` 。这种方式允许你
+编写自已的后端。
 
 ### 无验证模式
 
@@ -67,6 +69,12 @@ PASSWORD = 'password'
 BACKEND = 'uliweb.mail.backends.gmail'
 ```
 
+### Sendmail模式
+
+sendmail模式将使用机器上自动的sendmail程序来发送。这是通过命令行来执行的。所以
+要保证你的机器上安装有 sendmail 服务. 缺省sendmail的路径是 `/usr/sbin/sendmail`。
+使用sendmail来发送邮件，将不需要用户名和口令。不过这种方式很有可能会被收信人判
+断为垃圾邮件。
 
 ## 邮件发送
 
