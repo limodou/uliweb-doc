@@ -133,8 +133,8 @@ mssql_db = create_engine('mssql://scott:tiger@mydsn')
 firebird_db = create_engine('firebird://scott:tiger@localhost/sometest.gdm')</code></pre>
 <p><code>CONNECTION_TYPE</code> 用于指明连接模式： <code>'long'</code> 为长连接，会在启动时建立。 <code>'short'</code> 为短连接，只会在每个请求时建立。使用短连接需要配置 <code>middle_transaction</code> 。 使用长连接并不需要配置这个middleware。缺省值为 <code>'long'</code> 即长连接。</p>
 <p><code>CONNECTION_ARGS</code> 用于除连接串之外的一些参数。SQLAlchemy中，创建引擎时要使用:</p>
-<pre class="prettyprint linenums"><code>create_engine(connection, **args)</code></pre>
-<p>而CONNECTION_ARGS将传入到args中。在某些connection中其实还可以带一些类QUREY_STRING 的东西，如在对mysql的连接中，可以在连接串后面添加 <code>'?charset=utf8</code>` 。而这个参 数是会直接传给更底层的mysql的驱动。而CONNECTION_ARGS是传给create_engine的，所以 还是有所不同。</p>
+<pre class="prettyprint linenums"><code>create_engine(connection, **kwargs)</code></pre>
+<p>而CONNECTION_ARGS将传入到kwargs中。在某些connection中其实还可以带一些类QUREY_STRING 的东西，如在对mysql的连接中，可以在连接串后面添加 <code>'?charset=utf8</code>` 。而这个参 数是会直接传给更底层的mysql的驱动。而CONNECTION_ARGS是传给create_engine的，所以 还是有所不同。</p>
 <p><code>STRATEGY</code> 连接策略。此为sqlalchemy的连接参数，可以选择的值为 <code>plain</code> 和 <code>threadlocal</code>. 其中 <code>threadlocal</code> 是为了实现无连接的执行。在sqlalchemy中，一般我们在执行sql命令 时或者使用engine或connection来执行。这样有时会感觉比较麻烦。于是如果在创建连接 时使用 <code>strategy='threadlocal'</code> 来创建，那么会在线程范围内创建一个共享的连接， 这样在执行sql时只要如:</p>
 <pre class="prettyprint linenums"><code>select().execute()</code></pre>
 <p>就可以了。这就是无连接的执行方式。不过这样的方式在我的使用过程中感觉也有一点问题. 主要就是连接池的问题。uliweb在缺省情况下会采用长连接的策略。于是在执行完一个请求 时会close掉连接，这样可以把连接释放回去。但是发现 threadlocal 方式释放有问题，因为 它是共享的，其实无法真正的释放。所以uliweb在每个请求进来时会主动创建连接，然后在 返回时进行释放。它使用的并不是共享方式的连接。那么共享方式的连接主要是在命令行 或批处理执行时使用比较方便。在View处理中，建议都使用 <code>do_</code> 来进行包装。</p>
@@ -1103,7 +1103,12 @@ CONNECTION_ARGS = {'pool_recycle':7200, 'echo_pool':True}</code></pre>
 <pre class="prettyprint linenums"><code>[ORM]
 CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'</code></pre>
 <p>当服务器的缺省编码不是utf8时， <code>charset=utf8</code> 是必须的，其它情况下可以不设置。</p>
-<h3 id="title_1.14.34">如何实现update table set field = field + 1类似的更新</h3>
+<h3 id="title_1.14.34">如果使用sock文件来连接MySQL</h3>
+<p>可以在settings中如下配置：</p>
+<pre class="prettyprint linenums"><code>[ORM]
+CONNECTION_ARGS = {'connect_args':{'unix_socket':'/tmp/mysql.sock'}}</code></pre>
+<p>其中 <code>/tmp/mysql.sock</code> 只是一个示例，你可以改为你需要的sock文件路径。</p>
+<h3 id="title_1.14.35">如何实现update table set field = field + 1类似的更新</h3>
 <p>举例如下:</p>
 <pre class="prettyprint linenums"><code>User.filter(User.c.id==1).update(score=User.c.score+1)
 
@@ -1112,7 +1117,7 @@ CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'</code></pre>
 User.filter(User.c.id==1).update(User.c.score=User.c.score+1)</code></pre>
 <p>或者使用底层的SQLAlchemy的写法:</p>
 <pre class="prettyprint linenums"><code>do_(User.table.update().where(User.c.id==1).values(score=User.c.score+1))</code></pre>
-<h3 id="title_1.14.35">如何实现MySql中区分大小写字段定义和查询</h3>
+<h3 id="title_1.14.36">如何实现MySql中区分大小写字段定义和查询</h3>
 <p>MySql在定义字段和查询字段时，缺省是使用非大小写敏感方式进行处理的。有时我们需要 进行大小写敏感方式的查询，因此这里涉及两种处理，一种是查询时的大小写区分，如:</p>
 <pre class="prettyprint linenums"><code>from sqlalchemy.sql import func
 
@@ -1137,9 +1142,9 @@ Column('username', VARCHAR(40, binary=True))</code></pre>
 <pre class="prettyprint linenums"><code>use &lt;database&gt;;
 ALTER TABLE human MODIFY COLUMN `login_name` VARCHAR(40)
     BINARY CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL;</code></pre>
-<h3 id="title_1.14.36">RuntimeError: dictionary changed size during iteration</h3>
+<h3 id="title_1.14.37">RuntimeError: dictionary changed size during iteration</h3>
 <p>在Uliweb下使用uliorm，要求将所有的Model都定义在settings.ini中，一旦出现某个Model 没有在settings.ini中定义，就有可能出现上面的问题。</p>
-<h3 id="title_1.14.37">反向获取ManyToMany关系时，找不到对应属性</h3>
+<h3 id="title_1.14.38">反向获取ManyToMany关系时，找不到对应属性</h3>
 <p>在Uliweb中，如果两个表存在ManyToMany关系，则关系一般只会定义在其中一个Model类上 被定义。例如有两个Model: A和B。在A上定义了一个到B的ManyToMany的关系。在导入A类 时(或通过get_model来获取)会自动向B类绑定一个反向获取的对象，用于从B的对象获得A对 象时使用。因此，有时候，你直接导入B类，但是因为B类中没有定义与A的任何关系，所以 对A的反向获取对象将无法生成，因此可能不能直接使用B到A的反向获取。在这种情况下，你 可以再使用get_model或导入A，这样就可以生成反向获取对象了。</p>
 
             

@@ -147,7 +147,21 @@ abase.</code></pre>
 <p>除了命令，uliweb还提供了全局可用的参数，它与单个命令自已的参数不同，它是对 所有命令都可以使用的参数。</p>
 <h3 id="title_1.1.2">runserver</h3>
 <p>启动开发服务器:</p>
-<pre class="prettyprint linenums"><code>Usage: uliweb runserver [options]</code></pre>
+<pre class="prettyprint linenums"><code>Usage: uliweb runserver [options]
+
+Start a new development server.
+
+Options:
+  -h HOSTNAME           绑定IP，缺省为localhost，如果希望让别人访问，可以绑定 0.0.0.0
+  -p PORT               绑定的端口号，缺省为8000
+  --no-reload           禁止服务器自动重启。缺省是自动重启
+  --no-debug            禁止服务器进入调试模式。缺省是进入
+  --thread              如果设置，则进入多线程工作模式。缺省是单线程
+  --processes=PROCESSES
+                        进程方式启动的个数。缺省是1个。在windows下无法使用
+  --ssl                 以https方式启动服务。此方式将自动使用pyOpenSSH来创建证书
+  --ssl-key=SSL_KEY     如果不想自动创建证书，则可以指定ssl-key和ssl-cert来使用已经
+  --ssl-cert=SSL_CERT   生成好的证书。ssl-key和ssl-cert可以同时使用。ssl为单独使用。</code></pre>
 <p>参数说明:</p>
 <div class="alert alert-info">
 <p>在werkzeug的文档中有如何生成key和cert文件的方法，示例如下:</p>
@@ -155,7 +169,8 @@ abase.</code></pre>
 $ openssl req -new -x509 -nodes -sha1 -days 365 -key ssl.key &gt; ssl.cert</code></pre>
 <p>其中在生成cert文件时，会提许多的问题，按要求回答一下就好了。在windows下我是装了git环境，它带了一个openssl的工具，用起来很方便。</p>
 
-</div><p>示例：</p>
+</div>
+<p>示例：</p>
 <pre class="prettyprint linenums"><code>uliweb runserver #启动缺省服务器</code></pre>
 <h3 id="title_1.1.3">develop</h3>
 <p>功能同runserver，但是会自动包含develop这个App。</p>
@@ -175,12 +190,21 @@ uliweb export -d ../lib uliweb
 #uliweb包导出到 ``../lib`` 目录下。</code></pre>
 <h3 id="title_1.1.5">exportstatic</h3>
 <p>将所有已安装的app下的static文件和子目录复制到一个统一的目录下。注意，如果你在apps的 settings.py中设定了INSTALLED_APPS参数，则所有设定的app将被处理，如果没有设置，则 按缺省方式，将apps目录下的所有app都进行处理。对于存在同名的文件，此命令缺省将进行检 查，如果发现文件名相同，但内容不同的文件将会给出指示，并且放弃对此文件的拷贝。可以 在命令行使用-no-check来关闭检查。</p>
-<pre class="prettyprint linenums"><code>Usage: uliweb exportstatic [options] outputdir [app1, app2, ...]</code></pre>
+<pre class="prettyprint linenums"><code>Usage: uliweb exportstatic [options] output_directory [app1, app2, ...]
+
+Export all installed apps static directory to output directory.
+
+Options:
+  -c, --check  检查输出文件或目录是否有冲突，即同名但是内容不同的文件,或相同的子目录名
+  --js         允许javascript压缩处理（缺省使用rminjs）
+  --css        允许css压缩处理（缺省使用rmincss）
+  --auto       允许js和css同时压缩处理</code></pre>
 <p>参数说明:</p>
 <p>可以在输出路径后面再指定若干个app的名字，这样只会导出指定app的静态文件。</p>
 <p>示例：</p>
 <pre class="prettyprint linenums"><code>uliweb exportstatic static
 #将所有已安装的app下的static文件拷贝到static目录下。</code></pre>
+<p>目前exportstatic支持将css和js进行打包，合并，压缩的功能，具体描述详见 <a href="css_js_combine.html">CSS, JS合并与压缩</a></p>
 <h3 id="title_1.1.6">find</h3>
 <p>查找对象，包括：模板、URL对应的view、静态文件和Model定义的模块</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb find -u url
@@ -237,6 +261,7 @@ uliweb i18n -p                #整个项目，使用en</code></pre>
 </dd>
 </dl><h3 id="title_1.1.14">shell</h3>
 <p>在当前项目目录下，进入shell环境。可以直接使用如application, settings.ini等全局 变量。</p>
+<p>可以带一个文件名参数，这样在进入shell交互环境之前可以先运行指定的文件。</p>
 <h2 id="title_1.2">其它App包含的命令</h2>
 <h3 id="title_1.2.15">orm app</h3>
 <p>orm app带有一系列针对数据库操作的命令，从0.1版本开始，uliorm开始支持多数据连接的 设置，具体的使用参见 ORM 的文档。同时在命令行工具上也支持对不同数据连接，它们共 同使用 <code>--engine</code> 参数。缺省为 <code>default</code> 。其它的数据库连接要在 <code>settings.ini</code> 中进行设置。</p>

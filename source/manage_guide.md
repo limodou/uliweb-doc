@@ -106,6 +106,20 @@ abase.
 
 ```
 Usage: uliweb runserver [options]
+
+Start a new development server.
+
+Options:
+  -h HOSTNAME           绑定IP，缺省为localhost，如果希望让别人访问，可以绑定 0.0.0.0
+  -p PORT               绑定的端口号，缺省为8000
+  --no-reload           禁止服务器自动重启。缺省是自动重启
+  --no-debug            禁止服务器进入调试模式。缺省是进入
+  --thread              如果设置，则进入多线程工作模式。缺省是单线程
+  --processes=PROCESSES
+                        进程方式启动的个数。缺省是1个。在windows下无法使用
+  --ssl                 以https方式启动服务。此方式将自动使用pyOpenSSH来创建证书
+  --ssl-key=SSL_KEY     如果不想自动创建证书，则可以指定ssl-key和ssl-cert来使用已经
+  --ssl-cert=SSL_CERT   生成好的证书。ssl-key和ssl-cert可以同时使用。ssl为单独使用。
 ```
 
 参数说明:
@@ -114,15 +128,14 @@ Usage: uliweb runserver [options]
 {% alert class=info %}
 在werkzeug的文档中有如何生成key和cert文件的方法，示例如下:
 
-
 ```
 $ openssl genrsa 1024 > ssl.key
 $ openssl req -new -x509 -nodes -sha1 -days 365 -key ssl.key > ssl.cert
 ```
 
 其中在生成cert文件时，会提许多的问题，按要求回答一下就好了。在windows下我是装了git环境，它带了一个openssl的工具，用起来很方便。
-
 {% endalert %}
+
 示例：
 
 
@@ -174,9 +187,16 @@ settings.py中设定了INSTALLED_APPS参数，则所有设定的app将被处理�
 查，如果发现文件名相同，但内容不同的文件将会给出指示，并且放弃对此文件的拷贝。可以
 在命令行使用-no-check来关闭检查。
 
-
 ```
-Usage: uliweb exportstatic [options] outputdir [app1, app2, ...]
+Usage: uliweb exportstatic [options] output_directory [app1, app2, ...]
+
+Export all installed apps static directory to output directory.
+
+Options:
+  -c, --check  检查输出文件或目录是否有冲突，即同名但是内容不同的文件,或相同的子目录名
+  --js         允许javascript压缩处理（缺省使用rminjs）
+  --css        允许css压缩处理（缺省使用rmincss）
+  --auto       允许js和css同时压缩处理
 ```
 
 参数说明:
@@ -185,12 +205,12 @@ Usage: uliweb exportstatic [options] outputdir [app1, app2, ...]
 
 示例：
 
-
 ```
 uliweb exportstatic static
 #将所有已安装的app下的static文件拷贝到static目录下。
 ```
 
+目前exportstatic支持将css和js进行打包，合并，压缩的功能，具体描述详见 [CSS, JS合并与压缩](css_js_combine.html)
 
 ### find
 
@@ -338,6 +358,8 @@ dotcloud平台 --
 
 在当前项目目录下，进入shell环境。可以直接使用如application, settings.ini等全局
 变量。
+
+可以带一个文件名参数，这样在进入shell交互环境之前可以先运行指定的文件。
 
 
 ## 其它App包含的命令
