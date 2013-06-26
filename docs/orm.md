@@ -114,10 +114,10 @@ firebird_db = create_engine('firebird://scott:tiger@localhost/sometest.gdm')
 
 
 ```
-create_engine(connection, **args)
+create_engine(connection, **kwargs)
 ```
 
-而CONNECTION_ARGS将传入到args中。在某些connection中其实还可以带一些类QUREY_STRING
+而CONNECTION_ARGS将传入到kwargs中。在某些connection中其实还可以带一些类QUREY_STRING
 的东西，如在对mysql的连接中，可以在连接串后面添加 `'?charset=utf8`` 。而这个参
 数是会直接传给更底层的mysql的驱动。而CONNECTION_ARGS是传给create_engine的，所以
 还是有所不同。
@@ -1953,6 +1953,16 @@ CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'
 
 当服务器的缺省编码不是utf8时， `charset=utf8` 是必须的，其它情况下可以不设置。
 
+### 如果使用sock文件来连接MySQL
+
+可以在settings中如下配置：
+
+```
+[ORM]
+CONNECTION_ARGS = {'connect_args':{'unix_socket':'/tmp/mysql.sock'}}
+```
+
+其中 `/tmp/mysql.sock` 只是一个示例，你可以改为你需要的sock文件路径。
 
 ### 如何实现update table set field = field + 1类似的更新
 

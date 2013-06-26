@@ -78,7 +78,7 @@ static = {'domain':'', 'display':False}
 
 ```
 [DOMAINS]
-static = {'domain':'http://static.com', 'diaplay':True}
+static = {'domain':'http://static.com', 'display':True}
 ```
 
 这样，当使用url_for_static时，静态URL将自动添加静态域名。如果display为False，则
