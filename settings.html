@@ -70,8 +70,8 @@
     <a next-chapter href="i18n.html">I18N 使用说明 <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">Settings说明</h1>
-<h2 id="title_1.1">调用说明</h2>
+            <h1 id="title_1">Settings说明<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">调用说明<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在Uliweb中，配置信息一般是放在settings.ini文件中的，目前有以下几个级别的settings.ini 信息:</p>
 <pre class="prettyprint linenums"><code>default_settings.ini
 apps/
@@ -85,7 +85,7 @@ apps/
 <li><p>如果写法为:</p><pre class="prettyprint linenums"><code>name &lt;= value</code></pre></li>
 </ol>
 <p>则不管value是什么都将进行替換。</p>
-<h2 id="title_1.2">settings.ini格式</h2>
+<h2 id="title_1-2">settings.ini格式<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>settings.ini的写法是类ini格式，但是和标准的ini有所区别:</p>
 <ol>
 <li><p>基本写法是:</p><pre class="prettyprint linenums"><code>[section]
@@ -106,7 +106,7 @@ value --
 <li>可以使用 <code>[include:/project/local.ini]</code> 这样的声明，用来在当前位置引入外部的 ini 文件。</li>
 </ol>
 <p>settings的处理是由Uliweb在启动时按照以上的顺序自动解析并且合并的。对于app下的settings.ini文件，它会按照app的定义顺序来处理。</p>
-<h2 id="title_1.3">pyini模块</h2>
+<h2 id="title_1-3">pyini模块<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>整个settings的处理都是由pyini模块来处理的。它存在于uliweb/utils目录下，在程序中 的使用如:</p>
 <pre class="prettyprint linenums"><code>from uliweb.utils import pyini
 
@@ -115,7 +115,7 @@ x = pyini.Ini('inifile')</code></pre>
 <pre class="prettyprint linenums"><code>x.read('another.ini')</code></pre>
 <p>settings.ini文件可以保存，如:</p>
 <pre class="prettyprint linenums"><code>x.save()</code></pre>
-<h2 id="title_1.4">settings的使用</h2>
+<h2 id="title_1-4">settings的使用<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>settings在读取后会生成一个对象，它有几种使用方式:</p>
 <ol>
 <li><code>settings[section][key]</code> 以字典的形式来处理</li>
@@ -125,9 +125,9 @@ x = pyini.Ini('inifile')</code></pre>
 </ol>
 <p>在views方法中，可以直接使用settings对象。在非view方法中，可以先导入再使用:</p>
 <pre class="prettyprint linenums"><code>from uliweb import settings</code></pre>
-<h2 id="title_1.5">重要配置参数说明</h2>
+<h2 id="title_1-5">重要配置参数说明<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>以下按不同的节(section)来区分</p>
-<h3 id="title_1.5.1">GLOBAL</h3>
+<h3 id="title_1-5-1">GLOBAL<a class="anchor" href="#title_1-5-1">&para;</a></h3>
 <pre class="prettyprint linenums"><code>[GLOBAL]
 DEBUG = False               #是否当有异常时，输出调试页面
 DEBUG_CONSOLE = False       #是否在调试页面上显示console窗，用来输入代码
@@ -145,9 +145,9 @@ TEMPLATE_TEMPLATE = ('%(view_class)s/%(function)s', '%(function)s')
 TEMPLATE_DIRS = []          #全局的模板路径，当所有app中都找不到模板时，将在
                             #这个目录下进行查找</code></pre>
 <p>其中 <code>TEMPLATE_TEMPLATE</code> 用于对应不同的view形式的模板路径方式。对于类，缺省是 在templates下为 <code>classname/function.html</code> 的形式。而函数形式的view则直接对应 templates下的 <code>function.html</code> 。</p>
-<h3 id="title_1.5.2">LOG</h3>
-<p>详情参见 <a href="log.html">日志处理说明</a> 。</p>
-<h3 id="title_1.5.3">FUNCTIONS</h3>
+<h3 id="title_1-5-2">LOG<a class="anchor" href="#title_1-5-2">&para;</a></h3>
+<p>详情参见 <a href="log.html" class="inner">日志处理说明</a> 。</p>
+<h3 id="title_1-5-3">FUNCTIONS<a class="anchor" href="#title_1-5-3">&para;</a></h3>
 <p>用于定义公共的一些函数，例如:</p>
 <pre class="prettyprint linenums"><code>[FUNCTIONS]
 flash = 'uliweb.contrib.flashmessage.flash'</code></pre>
@@ -160,14 +160,14 @@ flash(message)
 
 from uliweb import functions
 functions.flash(message)</code></pre>
-<h3 id="title_1.5.4">DECORATORS</h3>
+<h3 id="title_1-5-4">DECORATORS<a class="anchor" href="#title_1-5-4">&para;</a></h3>
 <p>用于定义公共的一些decorator函数，类似于FUNCTIONS的使用方式，但是区分为全部是decorator。</p>
 <p>使用形式为:</p>
 <pre class="prettyprint linenums"><code>from uliweb import decorators
 @decorators.check_role('superuser')
 def index():
     pass</code></pre>
-<h3 id="title_1.5.5">BINDS</h3>
+<h3 id="title_1-5-5">BINDS<a class="anchor" href="#title_1-5-5">&para;</a></h3>
 <p>用于绑定某个信号的配置，例如:</p>
 <pre class="prettyprint linenums"><code>[BINDS]
 audit.post_save = 'post_save'</code></pre>
@@ -178,7 +178,7 @@ bind_name = topic, function #给出信号和函数路径
 bind_name = topic, function, {kwargs} #给出信号，函数路径和参数(字典形式)</code></pre>
 <p>其中function中是函数路径，比如 <code>appname.model.function_name</code> ，例用这种形式，uliweb 可以根据 <code>appname.model</code> 来导入函数。</p>
 <p>上面的 <code>bind_name</code> 没有特别的作用，只是要求唯一，一方面利用它可以实现：一个函数 可以同时处理多个 topic 的情况，只要定义不同的 <code>bind_name</code> 即可。另一方面，可以 起到替換的作用，如果某个绑定不想再继续使用或替换为其它的配置，可以写一个同名的 <code>bind_name</code> 让后面的替換前面的。</p>
-<h3 id="title_1.5.6">EXPOSES</h3>
+<h3 id="title_1-5-6">EXPOSES<a class="anchor" href="#title_1-5-6">&para;</a></h3>
 <p>用于配置URL，在一般情况下，你只要在views.py中定义 <code>@expose(url)</code> 即可，但是在复杂情况 下，特别是可以允许URL被替换的情况下，考虑把URL定义在settings.ini中，如:</p>
 <pre class="prettyprint linenums"><code>[EXPOSES]
 login = '/login', 'uliweb.contrib.auth.views.login'

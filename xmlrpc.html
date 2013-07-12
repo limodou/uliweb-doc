@@ -72,9 +72,9 @@
     <a next-chapter href="command.html">如何编写自已的命令 <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">XMLRPC 使用说明</h1>
+            <h1 id="title_1">XMLRPC 使用说明<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb通过uliweb.contrib.xmlrpc这个app来提供XMLRPC的访问需求。通过此文来讲解XMLRPC 在Uliweb中如何使用。</p>
-<h2 id="title_1.1">配置</h2>
+<h2 id="title_1-1">配置<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>向$project/apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.xmlrpc'。</p>
 <p>配置完毕后，你的应用就已经有一个/XMLRPC的url可以使用了。比如可以通过:</p>
 <pre class="prettyprint linenums"><code>http://localhost:8000/XMLRPC</code></pre>
@@ -82,7 +82,7 @@
 <pre class="prettyprint linenums"><code>[EXPOSES]
 /XMLRPC = 'uliweb.contrib.xmlrpc.views.xmlrpc'</code></pre>
 <p>在uliweb.contrib.xmlrpc的settings.ini中已经定义上述内容。</p>
-<h2 id="title_1.2">使用</h2>
+<h2 id="title_1-2">使用<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>下面我使用一个示例的方式来展示如何使用xmlrpc。</p>
 <p>先让我们创建一个xmlrpc_test的项目和一个Hello的app，操作如下:</p>
 <pre class="prettyprint linenums"><code>uliweb makeproject xmlrpc_test
@@ -131,7 +131,7 @@ xmlrpc = 'uliweb.contrib.xmlrpc.xmlrpc'</code></pre></li>
 <li>在类方法上仍然可以使用xmlrpc，这样相当于创建了一个xmlrpc函数的别名。</li>
 <li>Uliweb提供的xmlrpc调用还支持与views相类似的__begin__和__end__的处理。同时可     以在类上使用。有兴趣的可以自行测试。</li>
 </ol>
-<h2 id="title_1.3">测试</h2>
+<h2 id="title_1-3">测试<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>下面创建一个测试程序，如test_xmlrpc.py:</p>
 <pre class="prettyprint linenums"><code>#coding=utf-8
 from xmlrpclib import ServerProxy

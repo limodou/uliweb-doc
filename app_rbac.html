@@ -72,15 +72,15 @@
     <a next-chapter href="app_template.html">template <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">rbac(权限控制)</h1>
+            <h1 id="title_1">rbac(权限控制)<a class="anchor" href="#title_1">&para;</a></h1>
 <p>RBAC是基于角色控制的英文简写。在Uliweb中，提供了一个rbac的模块，它将提供一个基本的Role(角色表)和Permission(权限表)，以及它们之间的关系。Role和Permission之间是多对多的关系。同时Role有指向User表的引用。</p>
-<h2 id="title_1.1">原理</h2>
+<h2 id="title_1-1">原理<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>为了保证操作的安全性，我们通常会在某些重要的操作上设置权限来控制，比如重要的链接或按钮，重要的 URL 上，前者相当于在界面上进行控制，后者相当于在服务上进行控制。在通常情况下，我们需要在展示和后台处理上都添加权限控制，以便防止用户通过程序的方式来进行攻击。</p>
 <p>这里权限说得还是有些笼统，细分起来，我们可以通过角色或权限来控制。比如某个菜单，我们允许某个角色的用户可以访问，也可以设计成具有某种权限的角色可以访问。到底用哪个，这个取决于你的需求和设计。</p>
 <p>在Uliweb中，角色、权限和用户之间的关系如下:</p>
 <pre class="prettyprint linenums"><code>Permission m:n Role m:n User</code></pre>
 <p>可以看出， Permission 和 User 之间没有直接的关系。在简单情况下可以只使用角色来判断，如只区分超级用户、登录用户和匿名用户可能就足够了。因此 Permission 可能就不需要使用。在复杂情况下，使用 Permission 可能更方便，配置起来也灵活。</p>
-<h2 id="title_1.2">只使用auth app来判断基本用户角色</h2>
+<h2 id="title_1-2">只使用auth app来判断基本用户角色<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>这里基本用户角色我定义为：超级用户、登录用户和匿名用户。</p>
 <p>如果我们不使用 rbac app ，只是使用 auth app 的话，在它所提供的 User 表中已经有一些信息可以用来进行基本判断，同时结合 middle_auth ，将可以直接区分：超级用户、登录用户和匿名用户。主要分两种情况：</p>
 <ol>
@@ -91,7 +91,7 @@
 <p>普通用户 -- user = User.get(User.c.username == username)     if user and not user.is_superuser</p></li>
 </ol>
 <p>在最简单情况下，你可能只使用auth就足够了，那么我们看看rbac会带给我们什么呢？</p>
-<h2 id="title_1.3">rbac app的安装</h2>
+<h2 id="title_1-3">rbac app的安装<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>首先是在settings.ini中安装app，如:</p>
 <pre class="prettyprint linenums"><code>INSTALLED_APPS = [
 #...
@@ -102,9 +102,9 @@
 <pre class="prettyprint linenums"><code>uliweb syncdb #用来创建相关的表
 uliweb dbinit uliweb.contrib.rbac #初始化相应的权限数据</code></pre>
 <p>rbac 允许将初始的 Role, Permission 和相应的关系等写在 settings.ini 中，然后通过 dbinit 命令来进行数据装入。并且角色和权限的装入可以多次执行，它只会覆盖，不删除。</p>
-<h2 id="title_1.4">rbac的配置</h2>
+<h2 id="title_1-4">rbac的配置<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>用户可以把 rbac 相关的信息配置在 settings.ini 中，然后通过 <code>dbini tuliweb.contrib.rbac</code> 将相关的数据导入进数据库中，主要可以使用的配置如下：</p>
-<h3 id="title_1.4.1">ROLES</h3>
+<h3 id="title_1-4-1">ROLES<a class="anchor" href="#title_1-4-1">&para;</a></h3>
 <p>ROLES用来配置角色信息，如:</p>
 <pre class="prettyprint linenums"><code>[ROLES]
 superuser = _('Super User'), 'uliweb.contrib.rbac.superuser', True
@@ -137,12 +137,12 @@ trusted = _('Trusted User'), 'uliweb.contrib.rbac.trusted', True</code></pre>
 <dd><p>是否保留的标志。缺省为 False ，这也是一个可选项。它的主要做用是用户可以根据它来区分当前的角色是否是保留的，从而可以进行不同的处理。 rbac 本身不对它做处理，而是将处理留给用户来使用。比如，对于保留的权限不允许删除。至于是否使用，可由用户自行决定。</p>
 </dd>
 </dl><p>关于如何判断一个用户是否某个角色，下面会详细解释，这里先不细说。</p>
-<h3 id="title_1.4.2">PERMISSIONS</h3>
+<h3 id="title_1-4-2">PERMISSIONS<a class="anchor" href="#title_1-4-2">&para;</a></h3>
 <p>PERMISSIONS用来定义权限信息，在rbac/settings.ini中没有缺省权限，示例如下:</p>
 <pre class="prettyprint linenums"><code>[PERMISSIONS]
 write = _('Write Permission')</code></pre>
 <p>它的定义很简单，就是权限名和权限名的显示文本。</p>
-<h3 id="title_1.4.3">ROLES_PERMISSIONS</h3>
+<h3 id="title_1-4-3">ROLES_PERMISSIONS<a class="anchor" href="#title_1-4-3">&para;</a></h3>
 <p>ROLES_PERMISSIONS用来定义角色和权限之间的关系，如:</p>
 <pre class="prettyprint linenums"><code>[ROLES_PERMISSIONS]
 permission_name = role
@@ -157,8 +157,8 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 <p>在 settings.ini 中定义的上述内容，应该只是做为初始化数据时使用，在运行时不应直接使用 settings.ini 中的数据，而是通过 rbac 提供的方法或 Model 来处理。</p>
 
 </div>
-<h2 id="title_1.5">rbac使用的表结构说明</h2>
-<h3 id="title_1.5.4">Permission</h3>
+<h2 id="title_1-5">rbac使用的表结构说明<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h3 id="title_1-5-4">Permission<a class="anchor" href="#title_1-5-4">&para;</a></h3>
 <p>权限表</p>
 <pre class="prettyprint linenums"><code>class Permission(Model):
     name = Field(str, max_length=80, required=True)
@@ -175,7 +175,7 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 <dt>props</dt>
 <dd><p>和前面讲的附加属性有关系。在 rbac 的设计中， Permission 中的 props 可以视为附加属性的模板和缺省值。即这个权限在关联到角色的时候，应该有哪些属性，它们的缺省值是什么。而在角色与权限的关系表中定义的是某个角色的真正取值。</p>
 </dd>
-</dl><h3 id="title_1.5.5">Role</h3>
+</dl><h3 id="title_1-5-5">Role<a class="anchor" href="#title_1-5-5">&para;</a></h3>
 <p>角色表</p>
 <pre class="prettyprint linenums"><code>class Role(Model):
     name = Field(str, max_length=80, required=True)
@@ -201,7 +201,7 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 <dt>permissions</dt>
 <dd><p>当前角色所绑定的权限</p>
 </dd>
-</dl><h3 id="title_1.5.6">Role_Perm_Rel</h3>
+</dl><h3 id="title_1-5-6">Role_Perm_Rel<a class="anchor" href="#title_1-5-6">&para;</a></h3>
 <p>角色和权限的关系表</p>
 <pre class="prettyprint linenums"><code>class Role_Perm_Rel(Model):
     role = Reference('role')
@@ -218,18 +218,18 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 <dt>props</dt>
 <dd><p>某个角色对应某个权限的附加属性</p>
 </dd>
-</dl><h2 id="title_1.6">role的判断</h2>
+</dl><h2 id="title_1-6">role的判断<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>对于某一个角色，rbac支持不同的判断方式，主要有:</p>
 <ol>
 <li>通过role对应的用户来判断。即通过Role表的users字段来判断。</li>
 <li>通过 role 判断方法来判断。即你可以提供一个方法，并将其按前面 ROLES 配置的说明中描述所讲的那样进行配置，这样在判断一个角色时，会使用这个方法对传入的用户进行判断。</li>
 </ol>
 <p>对于 rbac 提供的缺省的 superuser, trusted, anonymous 就是采用这种方式来判断的。如果对于一个角色，两种方法都提供了，则会先使用方法进行判断，如果不满足，再按用户进行判断，直到都不满足条件。其中只要有一个满足条件，就认为用户拥有某个用户的身份。</p>
-<h2 id="title_1.7">动态角色和静态角色</h2>
+<h2 id="title_1-7">动态角色和静态角色<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>在判断一个用户是否具有某种角色时，可能有两种情况：</p>
 <p>一种是只根据用户信息本身就可以判断出用户是否且有某种角色，如 superuser 角色的判断，就可以根据 user 对象的 is_superuser 来判断，它不需要再依赖其它的信息。uliweb 称之为 <strong>静态角色</strong> 。</p>
 <p>另一种情况就是，除了有用户信息外，还需要知道当前所访问的对象和用户之间的关系，如论坛的某个版块的版主，必须是和某个版块关联时才知道，只有用户信息是不够的，象这种只能在运行时，根据用户与访问对象的关系才能判断出来的角色， uliweb 称之为**动态角色**.</p>
-<h2 id="title_1.8">role判断函数的编写</h2>
+<h2 id="title_1-8">role判断函数的编写<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>写法如下:</p>
 <pre class="prettyprint linenums"><code>def superuser(user):
     return user and user.is_superuser
@@ -241,7 +241,7 @@ def manager(user, id):
     return obj.user.has(user)</code></pre>
 <p>上面是两种写法，分别对应于静态角色和动态角色的判断。</p>
 <p>写好之后，要按ROLES的配置要求写入settings.ini中。</p>
-<h2 id="title_1.9">通用角色、权限判断的方法</h2>
+<h2 id="title_1-9">通用角色、权限判断的方法<a class="anchor" href="#title_1-9">&para;</a></h2>
 <p>rbac提供两类角色和权限判断的方法，一种是通过function或functions进行函数调用的方式:</p>
 <dl>
 <dt>has_role(user, *role_names, **kwargs)</dt>
@@ -305,9 +305,9 @@ def topic_view(topic_id):
 &lt;/div&gt;
 {{end}}</code></pre>
 <p>这里主要是要有一个{{=message}}的标签。</p>
-<h2 id="title_1.10">如何将角色与用户关联</h2>
+<h2 id="title_1-10">如何将角色与用户关联<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>经过上面的学习，你可能已经了解到了如何写一个角色判断函数，并且将其配置到某个角色上。但是，如何实现用户与角色的关联呢？这个工作是由用户自已来完成的，在 plugs项目中已经有一个简单的实现，它主要是提供一个角色和权限的管理界面，并且可以关联用户和角色，角色和权限。而 rbac 只提供基本功能框架，不提供相应的管理界面。</p>
-<h2 id="title_1.11">小结</h2>
+<h2 id="title_1-11">小结<a class="anchor" href="#title_1-11">&para;</a></h2>
 <p>上面的内容有些多，下面小结一下简单的使用流程:</p>
 <ol>
 <li>安装uliweb.contrib.rbac</li>

@@ -70,7 +70,7 @@
 </div>
 
 
-            <h1 id="title_1">CSRF</h1>
+            <h1 id="title_1">CSRF<a class="anchor" href="#title_1">&para;</a></h1>
 <p>CSRF - Cross-site request forgery(跨站请求伪造)，可以去网上搜索一下它的意思。 它是一种比较危险的攻击手段。现在在 Uliweb 中也提供了对这种攻击的保护机制。此 机制是由Damon根据Django和Tornado的实现，再由我进行相应的修改编写而成。</p>
 <p>它实现的主要原理是：</p>
 <p>首先在后台生成相应的token，将其保存在session中（有效期缺省是30分钟）。然后在返 回前端时，将token保存在cookie中。这样我们就有了系统级别的token(session和cookie中 的都算)。我们可以认为这两个token都是安全的。</p>
@@ -78,9 +78,9 @@
 <p>然后将请求发送到后端时，我们比较系统的token和应用的token是否一致，如果不一致则 报错。</p>
 <p>可能你认为，这两个本就就一致，这样比较有什么意思呢？因为根据CSRF的攻击原理，攻 击者是在无法直接操作受害者机器的情况下来引导受害者访问一个正常的URL来进行攻击的。 由于cookie总是会上传到服务器，所以如果只检查cookie，将无法识别是否受到攻击。但 是如果在应用上増加token的信息，而攻击者是无法直接拿到这个token的，所以提交的数据 将无法带有正确的token，从而造成校验失败。</p>
 <p>所以本CSRF App的目的就是构造系统和应用级别的token处理，然后在后台进行比较。</p>
-<h2 id="title_1.1">保护范围</h2>
+<h2 id="title_1-1">保护范围<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>根据Django的代码，我们可以看出，一般的CSRF的保护都是对后台数据有修改的请求，如： POST，DELETE等。但是有些操作是通过GET方式来修改的，因此，如果在URL中带有token的 信息也将进行校验处理。</p>
-<h2 id="title_1.2">使用说明</h2>
+<h2 id="title_1-2">使用说明<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>使用csrf app，首先要在 <code>settings.ini</code> 中安装 <code>uliweb.contrib.csrf</code> app.</p>
 <p>安装好 csrf app后，相应的Middleware会自动生效。它将会依赖 <code>uliweb.contrib.session</code> App，不过，在csrf中已经设置好了相关的依赖，所以你不需要显示地安装 session app。</p>
 <p>整个csrf的处理过程是比较自动化的，和其它的csrf和实现可能不太一样。</p>
@@ -131,16 +131,16 @@ def process_response(self, request, response):
 <li><p>当返回的内存类型为 <code>text/html</code> 和 <code>application/xhtml+xml</code> 的自动扫描是否     存在 Form 元素，如果有，自动添加 <code>&lt;input type="hidden" name="csrf_token" value=token&gt;</code> 的信息。     这样对于存在Form场景是非常自动化的。如果不喜欢这种方式，完成可以写一个新的Middleware     来进行替換。</p></li>
 </ol>
 <p>让我们对不同的使用场景来进行描述。</p>
-<h3 id="title_1.2.1">Form</h3>
+<h3 id="title_1-2-1">Form<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <p>如果你采用Form来交互，其实在安装好 csrf App 之后不需要做特殊的处理，token的生 成，插入到Form中，token的校验都由Middleware完成了。你需要注意的是Form的method 一定要是 POST。</p>
-<h3 id="title_1.2.2">Ajax</h3>
+<h3 id="title_1-2-2">Ajax<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>Ajax比较特殊，它一般不用 Form ，直接通过ajax请求向后端发送数据。这里参考了django 针对jquery写的一个javascript片段，你需要在使用时将其 include 到你的模板中。例如:</p>
 <pre class="prettyprint linenums"><code>{{include "inc_jquery_csrf.html"}}</code></pre>
 <p>这个片段完全参考了Django的代码，除了cookie的token名是改为配置化的。它的主要作用是 先判断请求的类型，如果是修改类的，如:POST或DELETE则会将token从cookie中取出，然后插 入到http的头中，这一点和Form的方式不同。Form是作为数据提交的。</p>
-<h3 id="title_1.2.3">GET方法</h3>
+<h3 id="title_1-2-3">GET方法<a class="anchor" href="#title_1-2-3">&para;</a></h3>
 <p>前面主要是针对修改数据的操作，但是有时ajax的操作就是通过GET来完成的。所以我们 可以在相应的URL上包含token信息，这样Middleware一样会进行校验。例如:</p>
 <pre class="prettyprint linenums"><code>&lt;a href="/remove/{{=object.id}}?csrf_token={{=functions.get_token()}}"&gt;remove&lt;/a&gt;</code></pre>
-<h2 id="title_1.3">配置说明</h2>
+<h2 id="title_1-3">配置说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <pre class="prettyprint linenums"><code>[MIDDLEWARES]
 csrf = 'uliweb.contrib.csrf.middleware.CSRFMiddleware', 150
 

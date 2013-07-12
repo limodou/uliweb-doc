@@ -72,13 +72,13 @@
     <a next-chapter href="views.html">视图(View) <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">URL映射</h1>
+            <h1 id="title_1">URL映射<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb使用Werkzeug的Routing来进行URL的处理。当你使用manage.py的makeapp命令生成一个新 的App时，它会自动生成views.py文件，其中会自动从uliweb.core.SimpleFrame中导出expose 函数，它是一个decorator函数，用于修饰view函数。</p>
 <p>通过expose可以将一个URL与一个view函数进行绑定，然后通过url_for(这是SimpleFrame提供的用 于反向生成URL的方法)来生成反向的URL。</p>
-<h2 id="title_1.1">expose说明</h2>
+<h2 id="title_1-1">expose说明<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>目前，Uliweb取消了集中的URL配置，因此你需要在每个view方法前加上expose()来定义URL。 但同时，Uliweb还允许你将URL定义在settings.ini，以方便实现URL的替換。</p>
 <p>Uliweb目前提供两种View函数的写法，一种是简单的函数方式，另一种是类方式的定义，下 面分别进行描述。</p>
-<h3 id="title_1.1.1">普通View函数的处理</h3>
+<h3 id="title_1-1-1">普通View函数的处理<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>基本用法为：</p>
 <ol>
 <li><p>缺省映射</p><pre class="prettyprint linenums"><code>@expose()
@@ -117,9 +117,9 @@ def show(page):
 </dd>
 </dl><p>关于参数更多的说明请参见werkzeug下的routing.py程序。</p></li>
 </ol>
-<h3 id="title_1.1.2">类View函数的处理</h3>
-<p>详细的文档参见 <a href="views.html">视图(View)</a></p>
-<h3 id="title_1.1.3">在settings.ini中定义URL</h3>
+<h3 id="title_1-1-2">类View函数的处理<a class="anchor" href="#title_1-1-2">&para;</a></h3>
+<p>详细的文档参见 <a href="views.html" class="inner">视图(View)</a></p>
+<h3 id="title_1-1-3">在settings.ini中定义URL<a class="anchor" href="#title_1-1-3">&para;</a></h3>
 <p>Uliweb也支持将URL定义到settings.ini，其主要目的是为了允许别人替換。比如已经开 发了一个app，有一些常用的URL的定义。但是希望别人可以替換已经定义好的URL，如果 直接写到views中，则不会进行替換，只会添加。所以放到settings.ini中就可以方便替 換了。定义示例如下:</p>
 <pre class="prettyprint linenums"><code>[EXPOSES]
 login = '/login', 'plugs.user.views.login'
@@ -128,9 +128,9 @@ register = '/register', 'uliweb.contrib.auth.views.register'</code></pre>
 <p>Key是URL的名字，值一般是二元或三元的tuple。形式为:</p>
 <pre class="prettyprint linenums"><code>(url_pattern, view_function_path[, kwargs])</code></pre>
 <p>第一个为url模式，第二个为url对应的view函数的路径，第三个是可选的，应该是一个字典， 它是将传入expose中的参数。</p>
-<h3 id="title_1.1.4">GET和POST</h3>
+<h3 id="title_1-1-4">GET和POST<a class="anchor" href="#title_1-1-4">&para;</a></h3>
 <p>为了方便处理expose(methods=['GET', 'POST'])这样的URL，uliweb还定义了GET和POST， 分别用于处理GET和POST方法，其它的象DELETE要象上面这样定义。</p>
-<h3 id="title_1.1.5">与decorator联用时的注意事项</h3>
+<h3 id="title_1-1-5">与decorator联用时的注意事项<a class="anchor" href="#title_1-1-5">&para;</a></h3>
 <p>有时我们希望通过使用decorator来修饰view方法，包括类的view方法。那么由于expose 本身也是一个decorator，并且当函数有参数时，在expose不传入参数时，将自动对函数 的参数进行解析，而decorator的处理方式，有可能会造成新生成的方法与原始的方法参 数不同，会使得生成的URL出现问题。因此对于普通的view函数，建议将expose放在最下 面，以保证expose先执行。而在使用类view方法时，对于只有self参数的简单方法，可以 只加decorator，并且使用自动URL的处理。但对于带有除self之外的其它的参数，使用自 动URL处理可能会出现问题，因此建议添加expose的修饰，并且放在其它的decorator之上， 如:</p>
 <pre class="prettyprint linenums"><code>@expose('/myview')
 class MyView(object):
@@ -153,7 +153,7 @@ class MyView(object):
     @expose('test3/&lt;id&gt;')
     def test3(self, id):
         #可能不正确</code></pre>
-<h2 id="title_1.2">App URL 前缀定义</h2>
+<h2 id="title_1-2">App URL 前缀定义<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>当我们写好一个APP时我们可能预先假定了它应该使用的URL前缀，如 <code>/app</code> ，但是当 别人在使用时，可能并不希望使用 <code>/app</code> 的前缀，而是想使用其它的。因此 Uliweb 提供了一种App前缀的配置机制，可以在 <code>settings.ini</code> 中定义如下内容:</p>
 <pre class="prettyprint linenums"><code>[URL]
 appname = '/app_prefix'</code></pre>
@@ -163,7 +163,7 @@ appname = '/app_prefix'</code></pre>
 <p>如果某些链接的确不想添加这个前缀该如何处理，那么只要在 <code>@expose('/url')</code> 中添 加一个 <code>!</code> 号即可取消前缀的处理，如:  <code>@expose('!/url')</code></p>
 
 </div>
-<h2 id="title_1.3">url_for说明</h2>
+<h2 id="title_1-3">url_for说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>url_for可以根据view方法的名字来反向生成URL。要注意，它需要一个字符串形式的view方法名， 格式为:</p>
 <pre class="prettyprint linenums"><code>url_for('appname.views_module_name.function_name', **kwargs)</code></pre>
 <p>其中kwargs是与view方法中的参数相对应的。例如你在Hello中定义了如下URL:</p>
@@ -179,7 +179,7 @@ def index():
 <p>目前在views方法和template中都是可以直接使用这个函数的，不需要导入。</p>
 
 </div>
-<h2 id="title_1.4">convertor说明</h2>
+<h2 id="title_1-4">convertor说明<a class="anchor" href="#title_1-4">&para;</a></h2>
 <dl>
 <dt>int</dt>
 <dd><p>基本形式为：</p>

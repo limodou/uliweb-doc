@@ -72,10 +72,10 @@
     <a next-chapter href="uliweb_apps.html">Uliweb App 清单 <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">如何编写自已的命令</h1>
+            <h1 id="title_1">如何编写自已的命令<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb内置了一个命令系统，其中在uliweb/manage.py中已经内置了一些常用命令。同时 你也可以在某个app中，按照命令编写的要求来编写app相关的命令。这样一旦在settings.ini 中的 <code>INSTALLED_APPS</code> 里引入了这个app，这些命令就可以被 Uliweb 使用。你可以 输入 <code>uliweb</code> 来查看当前有哪些可用的命令。</p>
 <p>下面就来介绍一下如何编写自已的命令。</p>
-<h2 id="title_1.1">创建commands.py文件</h2>
+<h2 id="title_1-1">创建commands.py文件<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在你的app下创建一个commands.py的文件，文件结构如下:</p>
 <pre class="prettyprint linenums"><code>from uliweb.core.commands import Command
 from optparse import make_option
@@ -103,8 +103,8 @@ class DemoCommand(Command):
         print 'global_options=', global_options
         print 'args=', args</code></pre>
 <p>以上是一个命令的示例，仔细解释一下。</p>
-<h2 id="title_1.2">命令类</h2>
-<h3 id="title_1.2.1">类属性</h3>
+<h2 id="title_1-2">命令类<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-1">类属性<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <p>每个命令都应该从Command类派生而来。这个类有几个属性可以覆盖，分别为：</p>
 <dl>
 <dt>name</dt>
@@ -132,7 +132,7 @@ class DemoCommand(Command):
 <dt>check_apps</dt>
 <dd><p>用来检查app是否存在。如果设置为 <code>True</code> ，则假定传入的参数应该是 app 。这里 的参数是进行过命令行参数解析之后剩下的参数。</p>
 </dd>
-</dl><h3 id="title_1.2.2">类方法</h3>
+</dl><h3 id="title_1-2-2">类方法<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <dl>
 <dt>def get_apps(self, global_options, include_apps=None)</dt>
 <dd><p>返回当前项目所有app的清单。类似于uliweb中的get_apps，不过它因为使用了global_options 所以使用会更为简单</p>
@@ -143,7 +143,7 @@ class DemoCommand(Command):
 <dt>def handle(self, options, global_options, *args)</dt>
 <dd><p>用于子类继承的方法。用户自定义的命令应该覆盖这个方法。</p>
 </dd>
-</dl><h2 id="title_1.3">handler方法</h2>
+</dl><h2 id="title_1-3">handler方法<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>handler方法是命令类的主体，它接三个参数:</p>
 <dl>
 <dt>options</dt>
@@ -155,7 +155,7 @@ class DemoCommand(Command):
 <dt>args</dt>
 <dd><p>它就是参数解析之后剩下的参数。</p>
 </dd>
-</dl><h2 id="title_1.4">常用在命令中的uliweb方法</h2>
+</dl><h2 id="title_1-4">常用在命令中的uliweb方法<a class="anchor" href="#title_1-4">&para;</a></h2>
 <dl>
 <dt>extract_dirs</dt>
 <dd><p>从指定的模块的子目录下抽取相应的目录和文件到指定目录下。</p>
@@ -196,7 +196,7 @@ class DemoCommand(Command):
 <pre class="prettyprint linenums"><code>global_options.local_settings</code></pre>
 </dd>
 </dl></dd>
-</dl><h2 id="title_1.5">常用global_options属性</h2>
+</dl><h2 id="title_1-5">常用global_options属性<a class="anchor" href="#title_1-5">&para;</a></h2>
 <dl>
 <dt>verbose</dt>
 <dd><p>对应于 <code>-v</code> 参数。表示是否要冗余输出。</p>
@@ -213,7 +213,7 @@ class DemoCommand(Command):
 <dt>local_settings</dt>
 <dd><p>当前项目下的local_settings.ini文件。用户可以使用非local_settings.ini名字。</p>
 </dd>
-</dl><h2 id="title_1.6">Command类</h2>
+</dl><h2 id="title_1-6">Command类<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p><code>Command</code> 类是所有命令的基类。大多数方法请参见 <code>uliweb/core/commands.py</code> 文件。 其中有 <code>get_apps</code> 方法，功能和uliweb中的一样，不过需要传入的参数不同，如:</p>
 <p>get_apps --</p>
 <pre class="prettyprint linenums"><code>```
@@ -227,7 +227,7 @@ get_application(global_options)
 ```
 
 获得当前应用的实例，它将完成整个应用的初始化工作</code></pre>
-<h2 id="title_1.7">模块方法</h2>
+<h2 id="title_1-7">模块方法<a class="anchor" href="#title_1-7">&para;</a></h2>
 <dl>
 <dt>get_answer(message, answers='Yn', default='Y', quit='n')</dt>
 <dd><p>从命令行获得一个应答。</p>

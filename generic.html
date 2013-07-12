@@ -72,8 +72,8 @@
     <a next-chapter href="test.html">如何测试 <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">Generic 说明</h1>
-<h2 id="title_1.1">Genric是什么？</h2>
+            <h1 id="title_1">Generic 说明<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">Genric是什么？<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在编写View相关的代码时，我们遇到最多的处理恐怕就是：列表显示、添加、删除、更新、修改 了，一般的叫法是CRUD(Create, Read, Update, Delete)这里没有List。那么Generic的目的 就是把这些常见的处理进行封装，并且它可以和Uliorm相结合，可以比较容易地对表中的 记录进行处理。在Uliweb的utils/generic.py中提供了上述的功能。</p>
 <p>generic的整个设计思路是为了将处理程流进行复用。首先是根据按执行的功能分为不同的类。 然后将完整的处理流程封装到类中。但是在实际处理过程中，总会有各种各样的特殊的要求， 因此，你有两种扩展的方式：一种是派生新的类，另一种是将必要的参数和回调传入初始化 函数。一般的方式是采用第二种，因为这种方式相对简单。</p>
 <p>generic主要是对Model的界面处理进行了自动化，所以它主要是和Model相结合使用。</p>
@@ -82,9 +82,9 @@
 <p>本文档附带了一个示例，可以从 uliweb-doc/projects/genric_blog 中找到。</p>
 
 </div>
-<h2 id="title_1.2">ListView</h2>
+<h2 id="title_1-2">ListView<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>ListView用来处理列表显示。在最简单的情况下，你可能只需要在view中返回一个结果集， 然后在模板中对它进行展示。不过，这样一些处理将会集中在模板中。而ListView通过丰 富的参数，可以比较方便地进行：设置条件、处理字段、字段值的加工、不同的展示方式、 下载支持等。</p>
-<h3 id="title_1.2.1">ListView参数说明</h3>
+<h3 id="title_1-2-1">ListView参数说明<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <pre class="prettyprint linenums"><code>class ListView(SimpleListView):
     def __init__(self, model, condition=None, query=None, pageno=0, order_by=None,
         fields=None, rows_per_page=10, types_convert_map=None, pagination=True,
@@ -149,7 +149,7 @@
 <dt>render</dt>
 <dd><p>如果不希望ListView按缺省的数据加工方法对数据进行处理，可以传入自定义的render 函数。它是一个回调，调用形式为: <code>render(record, obj)</code> ，record为正在处理的记录， 它的值是一个二元的tuple，形式为: <code>(name, display)</code> 。obj为当前正在处理的对 象。</p>
 </dd>
-</dl><h3 id="title_1.2.2">字段列表定义</h3>
+</dl><h3 id="title_1-2-2">字段列表定义<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>在ListView中，用户可以有两种定义列表显示字段的方式：</p>
 <ol>
 <li>通过fields字段，传入字段列表</li>
@@ -185,7 +185,7 @@
             'age',
         ]</code></pre>
 <p>上面的定义也支持不存在的字段，支持简单定义和复杂定义。</p>
-<h3 id="title_1.2.3">执行流程描述</h3>
+<h3 id="title_1-2-3">执行流程描述<a class="anchor" href="#title_1-2-3">&para;</a></h3>
 <p>先给出代码示例:</p>
 <pre class="prettyprint linenums"><code>def list(self):
     from uliweb.utils.generic import ListView
@@ -215,7 +215,7 @@
 {{&lt;&lt; table}}
 {{end}}</code></pre>
 <p>直接展示 <code>{{&lt;&lt;table}}</code> 即可。</p>
-<h3 id="title_1.2.4">字段转換</h3>
+<h3 id="title_1-2-4">字段转換<a class="anchor" href="#title_1-2-4">&para;</a></h3>
 <p>ListView中可以对某个字段的值进行转換，同时这种转換支持对不存在的字段进行处理。 这里要使用 fields_convert_map 这个参数，它是一个 dict ，key就是要转換的字段名， value是对应的转換函数。转換函数定义为:</p>
 <pre class="prettyprint linenums"><code>def convert(value, obj):</code></pre>
 <p>其中value为对应字段的值，obj为对应的记录对象。你需要返回一个字符串。举例如下:</p>
@@ -226,8 +226,8 @@ fields_convert_map = {'title':title}
 view = ListView(model, fields_convert_map=fields_convert_map)</code></pre>
 <p>这样就可以在显示 title 字段时调用 title() 函数返回一个链接。</p>
 <p>如果返回值是 <code>None</code> 时，则表示将使用缺省的转換处理。它有着特殊的用途，主要是 在下载处理时。 <code>ListView</code> 在下载时，也可以指定 <code>fields_convert_map</code> ，但同时 展示时，你也可以也指定 <code>fields_convert_map</code> ，这样就存在两个转換映射。 generic 在处理时，会将这两个 <code>fields_convert_map</code> 进行合并。但是如果某个convert函数不想 要怎么办，一种方法是删除相应的 key，另一种方法是定义新的convert，简单地让它返回  <code>None</code> 就可以了。</p>
-<h3 id="title_1.2.5">不存在字段支持</h3>
-<p>如果是处理不存在的字段，第一步是在传入的 fields 中或在 class Table 中定义这个字 段的复杂方式，即至少要定义为一个dict，而且包含: name, verbose_name 属性。然后定义 一个convert函数，并且配置到 fields_convert_map 中。要记住，因为字段本身在 Model 中可能不存在，所以 value 是无值的，你只能使用 obj 或通过缺省值来传入其它的参数。 举例:</p>
+<h3 id="title_1-2-5">不存在字段或自定义字段支持<a class="anchor" href="#title_1-2-5">&para;</a></h3>
+<p>如果是处理不存在或自定义字段，第一步是在传入的 fields 中或在 class Table 中定义这个字 段的复杂方式，即至少要定义为一个dict，而且包含: name, verbose_name 属性。然后定义 一个convert函数，并且配置到 fields_convert_map 中。要记住，因为字段本身在 Model 中可能不存在，所以 value 是无值的，你只能使用 obj 或通过缺省值来传入其它的参数。 举例:</p>
 <pre class="prettyprint linenums"><code>fields = ['title', {'name':'action', 'verbose_name':'操作'}]
 
 def action(value, obj):
@@ -236,17 +236,17 @@ def action(value, obj):
 fields_convert_map = {'action':action}
 view = ListView(model, fields_convert_map=fields_convert_map)</code></pre>
 <p>采用这种方式，我们定义了一个不存在的 action 字段，它的内容是删除链接。</p>
-<h3 id="title_1.2.6">跳转到 View 页面</h3>
+<h3 id="title_1-2-6">跳转到 View 页面<a class="anchor" href="#title_1-2-6">&para;</a></h3>
 <p>View页面一般是用来显示详细信息的，因此在显示 List 内容时，我们需要某种方法从 List 页面跳转到 View 页面。那么通常的办法就是选一个合适的字段，对它写一个 convert 函数， 返回一个跳转到view页面的链接即可。代码不再提供。</p>
-<h3 id="title_1.2.7">Ajax请求处理</h3>
-<h3 id="title_1.2.8">与jquery easyui的结合</h3>
-<h3 id="title_1.2.9">分页处理</h3>
+<h3 id="title_1-2-7">Ajax请求处理<a class="anchor" href="#title_1-2-7">&para;</a></h3>
+<h3 id="title_1-2-8">与jquery easyui的结合<a class="anchor" href="#title_1-2-8">&para;</a></h3>
+<h3 id="title_1-2-9">分页处理<a class="anchor" href="#title_1-2-9">&para;</a></h3>
 <p>ListView可以分页也可以不分页。缺省情况下 <code>pagination=True</code> 表示分页。当处于分页 情况下，用户可以传入pageno和rows_per_page来控制起始的页号和每页显示的条数。如何获 得这些信息，你需要在ListView之外进行获取。</p>
 <div class="alert alert-info">
 <p>那么，为什么不将这个处理直接封装到 ListView中呢？因为随着前端使用的控件不同 可能会返回不同的分页关键字，比如有的使用 page和rows。所以你一般要在调用 ListView 之前进行转換。</p>
 
 </div>
-<h3 id="title_1.2.10">查询与条件</h3>
+<h3 id="title_1-2-10">查询与条件<a class="anchor" href="#title_1-2-10">&para;</a></h3>
 <p>在ListView中，第一个参数是Model的名字或类，那么为了返回正确的记录，你还可以传入 condition或query。其中condition对应合适查询条件，而query则对应合适的结果集。最终 的结果将由于传入这些参数而发生变化。整个查询的伪代码为:</p>
 <pre class="prettyprint linenums"><code>if 传入了query:
     结果集 = query
@@ -256,7 +256,7 @@ if condition is not None:
     结果集 = 结果集.filter(condition)
 if 需要分页:
     结果集 = 结果集.offset((页号-1)*每页条数).limit(每页条数)</code></pre>
-<h3 id="title_1.2.11">下载处理</h3>
+<h3 id="title_1-2-11">下载处理<a class="anchor" href="#title_1-2-11">&para;</a></h3>
 <p>ListView 提供下载功能，包括 .csv 和 .xls 下载功能。对于 xls 格式的下载，还需要 安装 xlrd, xlutils, xlwt 这几个 Exccel 读取和写入的模块。</p>
 <p>简单的示例：</p>
 <pre class="prettyprint linenums"><code>elif 'download' in request.GET:
@@ -298,10 +298,10 @@ if 需要分页:
 <dt>domain</dt>
 <dd><p>当数据中存在 <code>&lt;a href="xxxx"&gt;yyyy&lt;/a&gt;</code> 数据时，并且下载的格式为 xls ，则会自动 转为Excel中的链接。在转換链接时，domain 将会和链接的地址进行合并处理，这样 可以把形式为相对路径的链接转为绝对路径。从而在点击时是正确的。</p>
 </dd>
-</dl><h2 id="title_1.3">SimpleListView</h2>
+</dl><h2 id="title_1-3">SimpleListView<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>因为ListView是针对某个Model的，因此它也有一定的局限，比如在处理复杂的多表关联或 数据加工的结果就无能为力。所以SimpleListView是不与某个Model关联的，也因此你需要 定义一个表头，然后将其传入SimpleListView中。同时在convert中的obj参数值也将不再是 某个Model的对象，而有可能是一个dict或SQLAlchemy的ResultProxy对象。同时SimpleListView 也支持简单的select语句，但是在这种情况下表头还是要定义的。</p>
 <p>SimpleListView 是 ListView 的父类，除了不能直接使用 Model 外，基本功能与 ListView 是 一致的。</p>
-<h3 id="title_1.3.12">参数说明</h3>
+<h3 id="title_1-3-12">参数说明<a class="anchor" href="#title_1-3-12">&para;</a></h3>
 <pre class="prettyprint linenums"><code>class SimpleListView(object):
     def __init__(self, fields=None, query=None,
         pageno=0, rows_per_page=10, id='listview_table', fields_convert_map=None,
@@ -315,7 +315,7 @@ if 需要分页:
 <dt>manual</dt>
 <dd><p>是否手动传入记录总数。如果不是手动，则表示SimpleListView会自动对结果进行计数， 它一般是采用循环的方式，这样每次显示都要从头到尾遍历一遍，效率会很低。所以 可以在外部先统计好再传入，从而提高效率。</p>
 </dd>
-</dl><h2 id="title_1.4">SelectListView(0.1.7新増)</h2>
+</dl><h2 id="title_1-4">SelectListView(0.1.7新増)<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>从上面我们可以看到已经有两类的列表展示类： <code>ListView</code> 和 <code>SimpleListView</code> 。一种 主要是针对一张表的情况，另一种主要是针对自定义结果的情况。还有一种情况就是：我们 希望把一条 <code>select</code> 语句作为列表的方式显示出来，这样有可能涉及的表就不只一张，采用 上面的方式就无法满足。因此我们可以考虑 <code>SelectListView</code> 。它的主要特点就是：</p>
 <ul>
 <li>通过定义fields来列举将要在select中显示的字段</li>
@@ -323,7 +323,7 @@ if 需要分页:
 </ul>
 <p>这样， <code>SelectListView</code> 会自动生成 <code>select</code> 语句。</p>
 <p><code>SelectListView</code> 是从 <code>ListView</code> 继承来的。所以使用上基本上与 <code>ListView</code> 是一致的。</p>
-<h3 id="title_1.4.13">fields定义</h3>
+<h3 id="title_1-4-13">fields定义<a class="anchor" href="#title_1-4-13">&para;</a></h3>
 <p>定义方式和fields的类似。 <code>SelectListView</code> 的第一个参数仍然是 Model 类。每个 fields 项可以是一个字典或是一个字符串。如：</p>
 <pre class="prettyprint linenums"><code>fields = [
     'username',
@@ -332,13 +332,13 @@ if 需要分页:
 ]</code></pre>
 <p>上面即有字符串的形式，也有字典的形式。这里对 <code>name</code> 有特殊的要求。如果name中存在 <code>.</code> 则 <code>SelectListView</code> 会认为是 <code>model.fieldname</code> 的形式，因此它会尝试导入 <code>model</code> 然后去查看是否存在 <code>fieldname</code> 的字段。如果没找到，则视为未定义的字段，将在后续按 <code>fields_convert_map</code> 来处理。所以，通过这种方式就可以实现定义不同的表中的字段。</p>
 <p>上面的示例中， <code>hidden</code> 可以用来控制展示时是否隐藏。</p>
-<h3 id="title_1.4.14">数据转換</h3>
+<h3 id="title_1-4-14">数据转換<a class="anchor" href="#title_1-4-14">&para;</a></h3>
 <p>在显示时，有些值我们想进行必要的数据加工，比如文字改变显示的样式，添加一个链接等， 我们可以定义一个convert函数，如：</p>
 <pre class="prettyprint linenums"><code>def _group(value, obj):
     return '&lt;a href="/group/%d"&gt;%s&lt;/a&gt;' % (obj['group.id'], obj['group.name'])</code></pre>
 <p><code>obj</code> 在 <code>SelectListView</code> 中将是一个 <strong>dict</strong> ，所以你可以直接通过 <code>obj</code> 来引用每条记录 中的其它值。所以上述的代码就是根据 <code>group.id</code> 和 <code>group.name</code> 来生成一个链接。</p>
-<h2 id="title_1.5">AddView</h2>
-<h3 id="title_1.5.15">参数说明</h3>
+<h2 id="title_1-5">AddView<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h3 id="title_1-5-15">参数说明<a class="anchor" href="#title_1-5-15">&para;</a></h3>
 <pre class="prettyprint linenums"><code>class AddView(object):
     success_msg = _('The information has been saved successfully!')
     fail_msg = _('There are somethings wrong.')
@@ -402,10 +402,10 @@ if 需要分页:
 <dd><p>在保存数据到Model中时，如果用户没有输入值，则使用default_data中的数据，它作 为相应字段的缺省值。与data的区别：data是作为Form的初始值，default_data作为 Model的初始值。</p>
 </dd>
 <dt>fields</dt>
-<dd><p>可添加字段的列表。一个Model中可能有很多字段，但不是所有字段都需要在添加时录 入数据，因此可以通过fields来传入可编辑的字段列表。它也支持添加不存在的字段。 如果存在，则还需要提供get_form_field回调函数，详情见[处理不存在字段]的说明。 fields的处理和ListView的类似，它是一种动态的处理方式。如果是相对静态，可以 直接在Model中定义一个 AddForm 的class，在其中定义 fields。如果不想用AddForm 的名字，那么可以通过传入meta参数来改变。</p>
+<dd><p>可添加字段的列表。一个Model中可能有很多字段，但不是所有字段都需要在添加时录 入数据，因此可以通过fields来传入可编辑的字段列表。它也支持添加不存在的字段。 如果存在，则还需要提供get_form_field回调函数，详情见[处理不存在或自定义字段]的说明。 fields的处理和ListView的类似，它是一种动态的处理方式。如果是相对静态，可以 直接在Model中定义一个 AddForm 的class，在其中定义 fields。如果不想用AddForm 的名字，那么可以通过传入meta参数来改变。</p>
 </dd>
 <dt>get_form_field</dt>
-<dd><p>如果在fields或AddForm中给出Model中不存在的字段时，AddView会自动调用这个回调 函数来获得想要的字段对象。具体描述参见下面的[处理不存在的字段]。</p>
+<dd><p>如果在fields或AddForm中给出Model中不存在的字段时，AddView会自动调用这个回调 函数来获得想要的字段对象。具体描述参见下面的[处理不存在或自定义字段]。</p>
 </dd>
 <dt>pre_save</dt>
 <dd><p>在保存前要执行的回调函数，它的定义为:</p>
@@ -475,7 +475,7 @@ if 需要分页:
 <dt>fields_convert_map</dt>
 <dd><p>字段转換映射。它与上面的types_convert_map都是用来对静态字段进行转換处理的。 关于字段转換，详情参见ListView中的[字段转換]说明。</p>
 </dd>
-</dl><h3 id="title_1.5.16">简单代码示例</h3>
+</dl><h3 id="title_1-5-16">简单代码示例<a class="anchor" href="#title_1-5-16">&para;</a></h3>
 <pre class="prettyprint linenums"><code>def add(self):
     from uliweb.utils.generic import AddView
 
@@ -493,7 +493,7 @@ if 需要分页:
 {{&lt;&lt; form}}
 {{end}}</code></pre>
 <p>View中会返回一个form对象，它就是用来接受用户输入的表格。可以直接在模板中通过 <code>{{&lt;&lt;form}}</code> 来显示出来。</p>
-<h3 id="title_1.5.17">执行流程描述</h3>
+<h3 id="title_1-5-17">执行流程描述<a class="anchor" href="#title_1-5-17">&para;</a></h3>
 <p>在处理完列表展示之后，我们一般要做的第一件事就是添加记录。在添加记录前应该先有一 个入口，我们一般会放在 List 的页面中。作为一个标准的 HTML 的页面编辑的处理，先 考虑采用以下的处理流程:</p>
 <pre class="prettyprint linenums"><code>from uliweb import request
 
@@ -549,7 +549,7 @@ else:                               #显示编辑页面
 <li>如果失败，则返回出错结果</li>
 </ol>
 <p>上面的代码之所以看上去复杂，是因为要支持用户的扩展，所以在许多地方都添加了回调 和参数，允许用户对执行过程进行扩展。用户可以根据需要传入不同的回调来进行特殊的 处理。除了采用回调方式外，用户也可以对AddView类进行继承。</p>
-<h3 id="title_1.5.18">录入字段的配置</h3>
+<h3 id="title_1-5-18">录入字段的配置<a class="anchor" href="#title_1-5-18">&para;</a></h3>
 <p>前面说到，AddView支持通过fields参数来设定哪些字段可以编辑，也可以支持在Model中 定义一个AddForm的class，示例如下:</p>
 <pre class="prettyprint linenums"><code>class Blog(Model):
     __verbose_name__ = 'Blog'
@@ -563,7 +563,7 @@ else:                               #显示编辑页面
     class AddForm:
         fields = ['title', 'content']</code></pre>
 <p>这样，在AddForm中我们只定义了两个可录入的字段，其它的字段，要么使用缺省值，要么 可以自动生成，要么是在特殊情况下使用的。</p>
-<h3 id="title_1.5.19">处理不存在的字段</h3>
+<h3 id="title_1-5-19">处理不存在或自定义字段<a class="anchor" href="#title_1-5-19">&para;</a></h3>
 <p>如果在添加时希望有一些不在Model中的字段，可以先在fields或AddForm中定义这个字段名， 然后在写一个get_form_field的回调，再将其传入AddView中即可，示例如下:</p>
 <pre class="prettyprint linenums"><code>def get_form_field(name):
     #其中name为对应的字段名
@@ -577,7 +577,7 @@ view = AddView('blog', ok_url=get_url, fields=fields,
     get_form_field=get_form_field)
 return view.run()</code></pre>
 <p>上面是通过动态传入fields参数来添加不存在的字段，也可以在Model中的AddForm中定义。</p>
-<h3 id="title_1.5.20">数据校验处理</h3>
+<h3 id="title_1-5-20">数据校验处理<a class="anchor" href="#title_1-5-20">&para;</a></h3>
 <p>从AddView的功能，我们大概可以了解到它会自动将Model转为一个Form，并且会有一些简单 的校验。如果在Field定义时我们指定了required=True，则这个字段在Form中将成为必输 项，如果用户不输入内容或输入为空的内容，则校验会失败。除了必输项，我们有可能需要 对某个字段或某几个字段进行校验，该如何操作。这里其实就直接使用了Form类本身的校验 功能。Form的校验分为两种，一种是单个字段的校验，一种是多个字段的联合校验。示例 代码如下:</p>
 <pre class="prettyprint linenums"><code>class RegisterForm(Form):
     form_buttons = Submit(value=_('Register'), _class="button")
@@ -601,9 +601,9 @@ return view.run()</code></pre>
             return {'password1' : _('Passwords are not match.')}</code></pre>
 <p>上面是一个用户注册的Form，它要对用户名进行校验，还要对两次输入的密码进行校验。 对于用户名的校验采用了定义一个validate_fieldname的方式，其中fieldname是Form 中的字段。另一种方法是定义form_validate，它可以传入所有数据all_data，这样可以 同时检查多个字段。而validate_fieldname方法，只传入指定的字段值，所以无法同时检 查其它字段的值。如果有错误，对于validate_fieldname则只要返回一行出错原因的文本 即可。而form_validate则要返回一个出错的dict。其中key是出错的字段名。如果返回 None，则认为无错。在简单的情况下，你可以只写一个form_validate即可，所有的校验 都放在这里面处理。</p>
 <p>这里的Form只是一个示例，在一般使用AddView或EditView时，你并不需要在Form中定义 任何Field。如果定义的话，它会和Model中的字段同时展示出来。</p>
-<h3 id="title_1.5.21">Form的布局处理</h3>
-<h2 id="title_1.6">其它说明事项</h2>
-<h3 id="title_1.6.22">URL定义规范</h3>
+<h3 id="title_1-5-21">Form的布局处理<a class="anchor" href="#title_1-5-21">&para;</a></h3>
+<h2 id="title_1-6">其它说明事项<a class="anchor" href="#title_1-6">&para;</a></h2>
+<h3 id="title_1-6-22">URL定义规范<a class="anchor" href="#title_1-6-22">&para;</a></h3>
 <p>为了处理的一致性，我们一般可以假设CRUD的功能采用以下的URL定义规则，假设我们采用 class-based View的写法，如:</p>
 <pre class="prettyprint linenums"><code>#coding=utf8
 

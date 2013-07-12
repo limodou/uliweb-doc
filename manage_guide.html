@@ -72,8 +72,8 @@
     <a next-chapter href="orm.html">数据库和ORM <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">命令行工具使用指南</h1>
-<h2 id="title_1.1">uliweb</h2>
+            <h1 id="title_1">命令行工具使用指南<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">uliweb<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>当运行不带参数的uliweb命令时，会显示一个帮助信息，但是因为命令很多，所以这个帮 助只是列出可用命令的清单，如:</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb [global_options] [subcommand [options] [args]]
 
@@ -143,9 +143,9 @@ Usage: uliweb sql &lt;appname, appname, ...&gt;
 
 Display the table creation sql statement. If no apps, then process the whole dat
 abase.</code></pre>
-<h3 id="title_1.1.1">常用全局选项说明</h3>
+<h3 id="title_1-1-1">常用全局选项说明<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>除了命令，uliweb还提供了全局可用的参数，它与单个命令自已的参数不同，它是对 所有命令都可以使用的参数。</p>
-<h3 id="title_1.1.2">runserver</h3>
+<h3 id="title_1-1-2">runserver<a class="anchor" href="#title_1-1-2">&para;</a></h3>
 <p>启动开发服务器:</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb runserver [options]
 
@@ -172,13 +172,13 @@ $ openssl req -new -x509 -nodes -sha1 -days 365 -key ssl.key &gt; ssl.cert</code
 </div>
 <p>示例：</p>
 <pre class="prettyprint linenums"><code>uliweb runserver #启动缺省服务器</code></pre>
-<h3 id="title_1.1.3">develop</h3>
+<h3 id="title_1-1-3">develop<a class="anchor" href="#title_1-1-3">&para;</a></h3>
 <p>功能同runserver，但是会自动包含develop这个App。</p>
 <div class="alert alert-info">
 <p>使用这个命令，需要安装plugs。</p>
 
 </div>
-<h3 id="title_1.1.4">export</h3>
+<h3 id="title_1-1-4">export<a class="anchor" href="#title_1-1-4">&para;</a></h3>
 <p>将已安装的app目录下的文件导出到指定目录。它的作用是当部署到某些受限环境时，需要 将用到的模块源码打包上传，通过这个命令可以导出uliweb项目中已经安装的模块的源码， 未安装的app源码将不会导出。同时也可以导出指定模块的源码，如导出uliweb的源码。</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb export [options] [module1 module2]</code></pre>
 <p>参数说明:</p>
@@ -188,7 +188,7 @@ $ openssl req -new -x509 -nodes -sha1 -days 365 -key ssl.key &gt; ssl.cert</code
 
 uliweb export -d ../lib uliweb
 #uliweb包导出到 ``../lib`` 目录下。</code></pre>
-<h3 id="title_1.1.5">exportstatic</h3>
+<h3 id="title_1-1-5">exportstatic<a class="anchor" href="#title_1-1-5">&para;</a></h3>
 <p>将所有已安装的app下的static文件和子目录复制到一个统一的目录下。注意，如果你在apps的 settings.py中设定了INSTALLED_APPS参数，则所有设定的app将被处理，如果没有设置，则 按缺省方式，将apps目录下的所有app都进行处理。对于存在同名的文件，此命令缺省将进行检 查，如果发现文件名相同，但内容不同的文件将会给出指示，并且放弃对此文件的拷贝。可以 在命令行使用-no-check来关闭检查。</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb exportstatic [options] output_directory [app1, app2, ...]
 
@@ -204,8 +204,8 @@ Options:
 <p>示例：</p>
 <pre class="prettyprint linenums"><code>uliweb exportstatic static
 #将所有已安装的app下的static文件拷贝到static目录下。</code></pre>
-<p>目前exportstatic支持将css和js进行打包，合并，压缩的功能，具体描述详见 <a href="css_js_combine.html">CSS, JS合并与压缩</a></p>
-<h3 id="title_1.1.6">find</h3>
+<p>目前exportstatic支持将css和js进行打包，合并，压缩的功能，具体描述详见 <a href="css_js_combine.html" class="inner">CSS, JS合并与压缩</a></p>
+<h3 id="title_1-1-6">find<a class="anchor" href="#title_1-1-6">&para;</a></h3>
 <p>查找对象，包括：模板、URL对应的view、静态文件和Model定义的模块</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb find -u url
 or
@@ -214,29 +214,29 @@ or
 Usage: uliweb find -c static
 or
 Usage: uliweb find -m model_name</code></pre>
-<h3 id="title_1.1.7">makeproject</h3>
+<h3 id="title_1-1-7">makeproject<a class="anchor" href="#title_1-1-7">&para;</a></h3>
 <p>生成一个project框架，它将自动按给定的名字生成一个project目录，同时包含有初始子目录和文件。</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb makeproject [-f] projectname</code></pre>
 <p>参数说明:</p>
 <p>示例：</p>
 <pre class="prettyprint linenums"><code>uliweb makeproject project</code></pre>
 <p>创建project项目目录。</p>
-<h3 id="title_1.1.8">makeapp</h3>
+<h3 id="title_1-1-8">makeapp<a class="anchor" href="#title_1-1-8">&para;</a></h3>
 <p>生成一个app框架，它将自动按给定的名字生成一个app目录，同时包含有初始子目录和文件。</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb makeapp [-f] appname</code></pre>
 <p>参数说明:</p>
 <p>示例：</p>
 <pre class="prettyprint linenums"><code>uliweb makeapp Hello</code></pre>
 <p>创建Hello应用。如果当前目前下有apps目录，则将在apps目录下创建一个Hello的目录， 并带有初始的文件和结构。如果当前目前下没有apps目录，则直接创建Hello的目录。</p>
-<h3 id="title_1.1.9">makecmd</h3>
+<h3 id="title_1-1-9">makecmd<a class="anchor" href="#title_1-1-9">&para;</a></h3>
 <p>向指定的app或当前目录下生成一个commands.py模板。</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb makecmd [appname, ...]</code></pre>
 <p>示例：</p>
 <pre class="prettyprint linenums"><code>uliweb makecmd Hello</code></pre>
-<h3 id="title_1.1.10">makepkg</h3>
+<h3 id="title_1-1-10">makepkg<a class="anchor" href="#title_1-1-10">&para;</a></h3>
 <p>生成一个Python包结构目录，即带有__init__.py文件。</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb makepkg pkgname</code></pre>
-<h3 id="title_1.1.11">i18n</h3>
+<h3 id="title_1-1-11">i18n<a class="anchor" href="#title_1-1-11">&para;</a></h3>
 <p>i18n处理工具，用来从项目中提取_()形式的信息，并生成.pot文件。可以按app或全部app或整个 项目为单位进行处理。对于app或全部app方式，将在每个app下创建： <code>app/locale/[zh]/LC_MESSAGES/uliweb.pot</code> 这样的文件。其中[zh]根据语言的不同而不同。并且它还会把.pot文件自动合并到uliweb.po文件上。</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb i18n [options] &lt;appname, appname, ...&gt;</code></pre>
 <p>参数说明:</p>
@@ -246,10 +246,10 @@ Usage: uliweb find -m model_name</code></pre>
 uliweb i18n --apps -l zh_CN   #全部全部app的处理
 uliweb i18n -l zh_CN Test     #只处理 Test app
 uliweb i18n -p                #整个项目，使用en</code></pre>
-<h3 id="title_1.1.12">call</h3>
+<h3 id="title_1-1-12">call<a class="anchor" href="#title_1-1-12">&para;</a></h3>
 <pre class="prettyprint linenums"><code>Usage: uliweb call name</code></pre>
 <p>执行所有安装的App下的名为<name>.py程序。</p>
-<h3 id="title_1.1.13">support</h3>
+<h3 id="title_1-1-13">support<a class="anchor" href="#title_1-1-13">&para;</a></h3>
 <pre class="prettyprint linenums"><code>Usage: uliweb support supported_type</code></pre>
 <p>向当前的项目添加某种平台的支持文件。目前支持gae和doccloud。</p>
 <dl>
@@ -259,15 +259,15 @@ uliweb i18n -p                #整个项目，使用en</code></pre>
 <dt>dotcloud平台</dt>
 <dd><p>将额外拷贝requirements.txt和wsgi.py。不过一般情况下你有可能要修改requirements.txt 以满足你的要求。</p>
 </dd>
-</dl><h3 id="title_1.1.14">shell</h3>
+</dl><h3 id="title_1-1-14">shell<a class="anchor" href="#title_1-1-14">&para;</a></h3>
 <p>在当前项目目录下，进入shell环境。可以直接使用如application, settings.ini等全局 变量。</p>
 <p>可以带一个文件名参数，这样在进入shell交互环境之前可以先运行指定的文件。</p>
-<h2 id="title_1.2">其它App包含的命令</h2>
-<h3 id="title_1.2.15">orm app</h3>
+<h2 id="title_1-2">其它App包含的命令<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-15">orm app<a class="anchor" href="#title_1-2-15">&para;</a></h3>
 <p>orm app带有一系列针对数据库操作的命令，从0.1版本开始，uliorm开始支持多数据连接的 设置，具体的使用参见 ORM 的文档。同时在命令行工具上也支持对不同数据连接，它们共 同使用 <code>--engine</code> 参数。缺省为 <code>default</code> 。其它的数据库连接要在 <code>settings.ini</code> 中进行设置。</p>
 <p>可用命令列举如下：</p>
-<h4 id="title_1.2.15.1">alembic</h4>
-<p><a href="http://readthedocs.org/docs/alembic/en/latest/index.html">alembic</a> 是用于 sqlalchemy的数据库迁移工具。目前Uliweb已经集成了alembic的部分命令，分别为:</p>
+<h4 id="title_1-2-15-1">alembic<a class="anchor" href="#title_1-2-15-1">&para;</a></h4>
+<p><a href="http://readthedocs.org/docs/alembic/en/latest/index.html" class="outter">alembic</a> 是用于 sqlalchemy的数据库迁移工具。目前Uliweb已经集成了alembic的部分命令，分别为:</p>
 <pre class="prettyprint linenums"><code>init                        初始化alembic环境
 revision                    生成一个版本
     -m --message Message    可选的消息
@@ -293,23 +293,23 @@ help &lt;subcommand&gt;           查看某个子命令的帮助</code></pre>
 <p><code>alembic.ini</code> 为alembic使用的配置文件。 <code>env.py</code> 为自动处理时要调用的脚本。 uliweb主要是针对这两个文件进行了定制性的处理。上面的目录结构将会为每个数据库连接 创建一个目录。这样不同的数据库的脚本将分别存放。</p>
 <p>在使用alembic命令前，首先要安装它，简单的命令为:</p>
 <pre class="prettyprint linenums"><code>pip install alembic</code></pre>
-<h4 id="title_1.2.15.2">syncdb</h4>
+<h4 id="title_1-2-15-2">syncdb<a class="anchor" href="#title_1-2-15-2">&para;</a></h4>
 <p>自动根据已安装的app中settings.ini中所配置的MODELS信息，在数据库中创建不存在的表。 如果只是写在models.py中，但是未在settings.ini中进行配置，则不能自动创建。</p>
 <p>settings.ini中的写法如:</p>
 <pre class="prettyprint linenums"><code>[MODELS]
 question = 'ticket.models.Question'</code></pre>
 <p>其中key是与Model对应的真正的表名，不能随便起。</p>
-<h4 id="title_1.2.15.3">sql</h4>
+<h4 id="title_1-2-15-3">sql<a class="anchor" href="#title_1-2-15-3">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb sql &lt;appname, appname, ...&gt;</code></pre>
 <p>用于显示对应app的Create语句。但是目前还无法显示创建Index的信息。</p>
 <p>命令后面可以跟若干app名字，如果没有给出，则表示整个项目。</p>
-<h4 id="title_1.2.15.4">sqldot</h4>
+<h4 id="title_1-2-15-4">sqldot<a class="anchor" href="#title_1-2-15-4">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb sqldot &lt;appname, appname, ...&gt;</code></pre>
 <p>类似sql命令，但是它会将表及表的关系生成.dot文件，可以使用graphviz将dot文件转 为图形文件。</p>
-<h4 id="title_1.2.15.5">droptable</h4>
+<h4 id="title_1-2-15-5">droptable<a class="anchor" href="#title_1-2-15-5">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb droptable &lt;tablename, tablename, ...&gt;</code></pre>
 <p>从数据库中删除某些表。</p>
-<h4 id="title_1.2.15.6">dump</h4>
+<h4 id="title_1-2-15-6">dump<a class="anchor" href="#title_1-2-15-6">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb dump [options] &lt;appname, appname, ...&gt;</code></pre>
 <p>将数据从数据库中卸载下来。</p>
 <p>参数说明:</p>
@@ -317,38 +317,38 @@ question = 'ticket.models.Question'</code></pre>
 <p>dump系列函数在0.1版本后有所变化。因为支持了多数据库，所以缺省情况下，dump 出来的文件将存放到 <code>data/default</code> 目录下。如果指定了 <code>--engine other</code> 参数，则 文件将存放到 <code>data/other</code> 目录下。同时load系列函数也会作相同的处理。</p>
 
 </div>
-<h4 id="title_1.2.15.7">dumptable</h4>
+<h4 id="title_1-2-15-7">dumptable<a class="anchor" href="#title_1-2-15-7">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb dumptable [options] &lt;tablename, tablename, ...&gt;</code></pre>
 <p>将指定的表中的数据卸载下来。参数说明同dump。</p>
-<h4 id="title_1.2.15.8">dumptablefile</h4>
+<h4 id="title_1-2-15-8">dumptablefile<a class="anchor" href="#title_1-2-15-8">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb dumptablefile [options] tablename text_filename</code></pre>
 <p>将指定的表数据卸载到指定的文件中。此命令与dump和dumptable不同的地方是：这个命令 只处理一个表，并且可以指定输出文件名。而后两个命令不能指定文件名，它将按表名生 成文件名，并且放到指定的目录下。</p>
 <p>参数说明:</p>
-<h4 id="title_1.2.15.9">load</h4>
+<h4 id="title_1-2-15-9">load<a class="anchor" href="#title_1-2-15-9">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb load [options] &lt;appname, appname, ...&gt;</code></pre>
 <p>将数据装入到数据库中。</p>
 <p>参数说明:</p>
-<h4 id="title_1.2.15.10">loadtable</h4>
+<h4 id="title_1-2-15-10">loadtable<a class="anchor" href="#title_1-2-15-10">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb loadtable [options] &lt;tablename, tablename, ...&gt;</code></pre>
 <p>只装入指定的表名数据到数据库中。参数同load。</p>
-<h4 id="title_1.2.15.11">loadtablefile</h4>
+<h4 id="title_1-2-15-11">loadtablefile<a class="anchor" href="#title_1-2-15-11">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb loadtablefile [options] tablename text_filename</code></pre>
 <p>将指定的文件装入到对应的表中。</p>
 <p>参数说明:</p>
-<h4 id="title_1.2.15.12">reset</h4>
+<h4 id="title_1-2-15-12">reset<a class="anchor" href="#title_1-2-15-12">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb reset &lt;appname, appname, ...&gt;</code></pre>
 <p>重置整个数据库或指定的app。</p>
-<h4 id="title_1.2.15.13">resettable</h4>
+<h4 id="title_1-2-15-13">resettable<a class="anchor" href="#title_1-2-15-13">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb resettable &lt;tablename, tablename, ...&gt;</code></pre>
 <p>重置指定的表。</p>
-<h4 id="title_1.2.15.14">sqlhtml</h4>
+<h4 id="title_1-2-15-14">sqlhtml<a class="anchor" href="#title_1-2-15-14">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb sqlhtml &lt;appname, appname, ...&gt; &gt; output.html</code></pre>
 <p>对指定的app或整个数据库生成表结构的说明文档。</p>
-<h4 id="title_1.2.15.15">validatedb</h4>
+<h4 id="title_1-2-15-15">validatedb<a class="anchor" href="#title_1-2-15-15">&para;</a></h4>
 <pre class="prettyprint linenums"><code>Usage: uliweb validatedb [-t] &lt;appname, appname, ...&gt;</code></pre>
 <p>对指定的app或整个数据库进行结构校验，检查数据库中的字段与源码中的Model定义是否 一致。</p>
-<h3 id="title_1.2.16">auth app</h3>
-<h4 id="title_1.2.16.16">createsuperuser</h4>
+<h3 id="title_1-2-16">auth app<a class="anchor" href="#title_1-2-16">&para;</a></h3>
+<h4 id="title_1-2-16-16">createsuperuser<a class="anchor" href="#title_1-2-16-16">&para;</a></h4>
 <p>创建超级用户。</p>
 
             

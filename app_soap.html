@@ -72,7 +72,7 @@
     <a next-chapter href="app_auth.html">auth(用户认证处理) <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">soap</h1>
+            <h1 id="title_1">soap<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb 为了支持soap的处理，提供了 uliweb.contrib.soap app。它依赖于以下模块:</p>
 <dl>
 <dt>pysimplesoap</dt>
@@ -86,7 +86,7 @@
 <dt>httplib2 或 pycurl</dt>
 <dd><p>用于pysimplesoap的客户端处理。</p>
 </dd>
-</dl><h2 id="title_1.1">配置说明</h2>
+</dl><h2 id="title_1-1">配置说明<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>使用soap服务，首先要在settings.ini中安装uliweb.contrib.soap。例如:</p>
 <pre class="prettyprint linenums"><code>[GLOBAL]
 INSTALLED_APPS = [
@@ -122,7 +122,7 @@ prefix = 'pys'</code></pre>
 <dt>prefix</dt>
 <dd><p>名字空间的前缀，缺省为 'pys'。</p>
 </dd>
-</dl><h2 id="title_1.2">View的定义</h2>
+</dl><h2 id="title_1-2">View的定义<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>服务已经安装好了，下面是定义相关的处理函数。通常你仍然可以定义在views.py中。但是 要注意，这里我们并不使用@expose来处理，而是使用@soap来处理，但是它仍然有view一样 的特性。不过，返回的内容不是HTML而是XML。</p>
 <p>举例如下:</p>
 <pre class="prettyprint linenums"><code>from uliweb import decorators
@@ -156,7 +156,7 @@ args = {'a':str}</code></pre>
 <p>所以这个soap方法的名字叫 'hello'。</p>
 <p>soap的下面为所修饰的函数。这里正好为hello，也可以为别的。它需要定义一个参数，名 为 'a'，与args中的定义要一致。</p>
 <p>返回值直接为一个字符串。在返回时会自动对它进行封装。</p>
-<h2 id="title_1.3">类型描述说明</h2>
+<h2 id="title_1-3">类型描述说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>类型描述就是针对returns和args的声明使用的。它支持简单类型手复杂类型。复杂类型 一般指：数组和字典。</p>
 <p>当只有一个返回值时，一般定义为:</p>
 <pre class="prettyprint linenums"><code>{'name':type}</code></pre>
@@ -172,7 +172,7 @@ args = {'a':str}</code></pre>
 <p>其实就是:</p>
 <pre class="prettyprint linenums"><code>{'name':{'int':int}}</code></pre>
 <p>以上几种数据定义方式可以嵌套使用，从而形成更复杂的数据格式定义。</p>
-<h2 id="title_1.4">更复杂的一些示例</h2>
+<h2 id="title_1-4">更复杂的一些示例<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>这个例子实现将上传的整数数组相加后返回:</p>
 <pre class="prettyprint linenums"><code>@decorators.soap(returns={'a':int}, args={'a':[int]})
 def add(a):
@@ -189,7 +189,7 @@ def string(a):
         t.append(x['string'] + u'中文')
     return t</code></pre>
 <p>建议使用unicode进行中文处理。返回仍是一个数组。</p>
-<h2 id="title_1.5">客户端示例</h2>
+<h2 id="title_1-5">客户端示例<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>以下以suds作为客户端来演示如何访问soap服务。以hello为例，首先准备一个服务端代码。 在某个app中的views.py中添加如下代码:</p>
 <pre class="prettyprint linenums"><code>from uliweb import decorators
 from uliweb.contrib.soap import Date, DateTime, Decimal
@@ -225,7 +225,7 @@ Service ( UliwebSoapService ) tns="http://localhost:8000/SOAP"
 <p>可以看到我们定义的web service的一些信息，如有什么方法，需要什么参数等。</p>
 <p>然后通过 client.service.hello('limodou') 来调用服务，结果会是:</p>
 <pre class="prettyprint linenums"><code>test1: Hello:limodou</code></pre>
-<p>更详细的示例，可以参考 <a href="https://github.com/limodou/uliweb-doc">uliweb-doc/projects/soap_test</a> 中的代码。</p>
+<p>更详细的示例，可以参考 <a href="https://github.com/limodou/uliweb-doc" class="outter">uliweb-doc/projects/soap_test</a> 中的代码。</p>
 <p>另，通过设置apps/settings.ini:</p>
 <blockquote><p>[LOG] level = 'debug'</p>
 </blockquote>

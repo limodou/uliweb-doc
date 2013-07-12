@@ -70,8 +70,8 @@
     <a next-chapter href="app_soap.html">soap <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">staticfiles</h1>
-<h2 id="title_1.1">功能说明</h2>
+            <h1 id="title_1">staticfiles<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">功能说明<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>用于向uliweb中提供静态文件的服务。通常来说，静态文件服务分两种场景，一种是开发 环境，一种是生产环境。而staticfiles主要是使用在开发环境，在生产环境中，一般先 通过:</p>
 <pre class="prettyprint linenums"><code>uliweb exportstatic static</code></pre>
 <p>将所有静态文件导出到一个统一的静态目录下，然后通过web server的静态文件处理来统 一进行服务。但是在开发环境下，一般是使用开发服务器，因此，静态文件的处理需要使 用这个app来进行。</p>
@@ -85,7 +85,7 @@
 <p>间接使用url_for_static()的方法如: {{use "xxx"}}和{{link "link"}}的处理。</p>
 
 </div>
-<h2 id="title_1.2">配置项说明</h2>
+<h2 id="title_1-2">配置项说明<a class="anchor" href="#title_1-2">&para;</a></h2>
 <pre class="prettyprint linenums"><code>[GLOBAL]
 WSGI_MIDDLEWARES = ['wsgi_middleware_staticfiles']
 STATIC_VER = None
@@ -104,7 +104,7 @@ STATIC_FOLDER = ''</code></pre>
 <dd><p>静态URL的前缀。在Uliweb中，所有静态文件都有相同的前缀。</p>
 </dd>
 </dl><p>其它的为内部使用。</p>
-<h2 id="title_1.3">静态域名输出</h2>
+<h2 id="title_1-3">静态域名输出<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>目前在uliweb的default_settings.ini中増加了:</p>
 <pre class="prettyprint linenums"><code>[DOMAINS]
 default = {'domain':'', 'display':False}

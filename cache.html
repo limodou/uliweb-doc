@@ -72,10 +72,10 @@
     <a next-chapter href="xmlrpc.html">XMLRPC 使用说明 <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">Cache使用说明</h1>
-<h2 id="title_1.1">cache简介</h2>
+            <h1 id="title_1">Cache使用说明<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">cache简介<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>cache是用来临时保存数据的一种机制，在处理某些计算复杂或比较耗时的数据时，如果数 据变动不频繁，如：博客，论坛等以读为主的内容，可以考虑将处理好的数据存在缓存中， 需要时读出来，以提高性能。目前Uliweb的cache支持多种后端，它采用和session相同的 存储机制，所以在uliweb中cache也是放在weto模块中。主要的配置方式与session非常接近， 目前主要支持的后端有：文件、数据库、Redis。</p>
-<h2 id="title_1.2">cache配置说明</h2>
+<h2 id="title_1-2">cache配置说明<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>在使用前需要先定装 <code>uliweb.contrib.cache</code> app。如:</p>
 <pre class="prettyprint linenums"><code>[GLOBAL]
 INSTALLED_APPS = [
@@ -114,7 +114,7 @@ lock_dir = './caches/cache_files_lock'</code></pre>
 <p>connection_pool -- 使用host, port方式连接。值为一个dict，例如: {'host':'localhost', 'port':6379}</p></li>
 <li><p>memcache</p><p>connection -- 格式为 ['host:port']。格式为字符串的list，每个字符串为 'host:port' 的形式。     缺省为: ['localhost:11211']</p></li>
 </ol>
-<h2 id="title_1.3">Cache使用说明</h2>
+<h2 id="title_1-3">Cache使用说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>cache不象session有一个Middleware，使用cache就象api一样。所以一般使用流程如下:</p>
 <pre class="prettyprint linenums"><code>from uliweb import functions
 
@@ -134,7 +134,7 @@ cache = functions.get_cache()</code></pre>
 <dt>serial_cls</dt>
 <dd><p>配置项： <code>'CACHE/serial_cls'</code> ，序列化数据时使用的类，缺省为 <code>'weto.cache.Serial'</code> 。</p>
 </dd>
-</dl><h2 id="title_1.4">Cache对象方法</h2>
+</dl><h2 id="title_1-4">Cache对象方法<a class="anchor" href="#title_1-4">&para;</a></h2>
 <dl>
 <dt>cache.get(key, default=None, creator=None, expire=None)</dt>
 <dd><p>从cache中读取键值</p>

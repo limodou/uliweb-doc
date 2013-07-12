@@ -72,7 +72,7 @@
     <a next-chapter href="app_rbac.html">rbac(权限控制) <i class="icon-arrow-right"></i></a>
 </div>
 
-            <h1 id="title_1">auth(用户认证处理)</h1>
+            <h1 id="title_1">auth(用户认证处理)<a class="anchor" href="#title_1">&para;</a></h1>
 <p>在Uliweb中提供了一个auth的app，它是专门用来进行用户认证的。一般来说，用户认证功能可以理解为:登录、注册、注销、用户识别。</p>
 <dl>
 <dt>登录</dt>
@@ -95,7 +95,7 @@
 <dt>其它认证方式</dt>
 <dd><p>如采用open_id认证方式，使用其它网站的认证api等。</p>
 </dd>
-</dl><h2 id="title_1.1">用户认证的原理说明</h2>
+</dl><h2 id="title_1-1">用户认证的原理说明<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>我们知道HTTP是无状态的处理，所以为了在不同的请求中维护用户会话(session)的状态人们想出了多种办法，比如常见的session的处理。常见的session的处理基本上有两种方式：</p>
 <ol>
 <li>基于cookie的session处理方式     这种方式也是uliweb目前采用的方式。它首先在后台生成一个session对象，每个session对象有唯一的session_id。通过session_id可以找到对应的session对象。然后将用户的id保存到session对象中。而session_id则保存到cookie中。这样，利用session本身的机制，在用户访问页面时，首先识别出session信息，如果有，则再查找有没有用户id信息，然后取出用户对象并绑定到request.user属性上，供后续的处理来使用。如果session对象没找到或没有用户id的信息，则认为用户没有登录过，并绑定request.user为None。所以，这种方式，在前端只保留session_id的信息，利用session对象来处理用户登录的状态。而且用户登录的有效期是与session一致的。</li>
@@ -109,7 +109,7 @@
 <li>其它页面可以根据request.user为None或非None的值来知道当前访问的是登录用户还是匿名用户</li>
 </ul>
 <p>用户注销的过程比较简单，只要将session中的用户id删除即可。</p>
-<h2 id="title_1.2">auth app的使用</h2>
+<h2 id="title_1-2">auth app的使用<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>Uliweb中提供了auth app来进行用户识别、登录、注销甚至注册的功能。它提供了以下功能:</p>
 <ul>
 <li><p>一张用户表(User)，其中还提供了：</p><ul>
@@ -155,15 +155,15 @@ require_login = 'uliweb.contrib.auth.require_login'
 require_login = 'uliweb.contrib.auth.require_login'</code></pre></li>
 </ul></li>
 </ul>
-<h3 id="title_1.2.1">安装auth</h3>
+<h3 id="title_1-2-1">安装auth<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <p>向apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.auth'。</p>
 <p>当安装完毕后，你已经可以使用/login, /logout。但是你需要在首页或某个地方将相应的链接添加进去。同时auth的中间件已经生效，它依赖于session app，用户本身还需要orm的支持。不过这两个app都已经在config.ini中写好了，会自动依赖。</p>
-<h3 id="title_1.2.2">用户创建</h3>
+<h3 id="title_1-2-2">用户创建<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>有了相应的链接，你需要先创建几个用户。auth本身提供了一个命令，通过:</p>
 <pre class="prettyprint linenums"><code>uliweb createsuperuser</code></pre>
 <p>可以创建超级用户。</p>
 <p>非超级用户，要么通过添加register相关的功能（如添加/register到页面和在views.py或settings.ini中添加相应的链接）让用户自行创建用户。要么开发相应的用户管理app来管理用户。在plugs中有类似的例子，但是已经超出auth本身的功能了。auth不提供复杂的用户管理的功能，它只是完成基本的用户认证、注销、识别等功能。</p>
-<h3 id="title_1.2.3">判断用户是否登录的方法</h3>
+<h3 id="title_1-2-3">判断用户是否登录的方法<a class="anchor" href="#title_1-2-3">&para;</a></h3>
 <p>auth向settings.ini中注册了require_login的方法和decorator。因此，用户可以通过:</p>
 <pre class="prettyprint linenums"><code>from uliweb import function
 require_login = function('require_login')
@@ -188,7 +188,7 @@ from uliweb import decorators
 def user_admin():
     #do something</code></pre>
 <p>来使用require_login，用于判断用户是否已经登录，如果没有登录，在缺省情况下，它会自动使用名为 <code>login</code> 的 URL进行跳转，成功后再跳转到原来的URL上。用户可以在settings.ini中覆盖 <code>login</code> 的URL定义，也可以直接在require_login上传入 <code>next=url</code> 的参数。</p>
-<h3 id="title_1.2.4">auth功能扩展</h3>
+<h3 id="title_1-2-4">auth功能扩展<a class="anchor" href="#title_1-2-4">&para;</a></h3>
 <p>auth虽然是一个比较基础的功能，但是在实际使用中可能有非常多的变化形式，比如使用邮箱注册，使用其它的网站进行用户认证等。这些目前还不包含在uliweb中，需要用户自行扩展。但是这里给出扩展的建议：</p>
 <ol>
 <li>uliweb提供的功能可以作为参考，用户可以基于原auth进行扩展，如：替換template，Forms, Views等</li>
