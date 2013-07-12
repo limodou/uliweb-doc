@@ -92,13 +92,14 @@ apps/
 name = value</code></pre></li>
 </ol>
 <p>其中section是节的名字，可以是一般字符串或标识符。大小写敏感。</p>
-<pre class="prettyprint linenums"><code>name --
-是key，不应包含 '='
-
-value --
-是值，并且是符合python语法的，因此你可以写list, dict, tuple, 三重字符串和
-    其它的标准的python的类型。可以在符合python语法的情况下占多行。</code></pre>
-<ol>
+<dl>
+<dt>name</dt>
+<dd><p>是key，不应包含 '='</p>
+</dd>
+<dt>value</dt>
+<dd><p>是值，并且是符合python语法的，因此你可以写list, dict, tuple, 三重字符串和 其它的标准的python的类型。可以在符合python语法的情况下占多行。</p>
+</dd>
+</dl><ol>
 <li>不支持多级，只支持两级处理</li>
 <li>注释写法是第一列为 <code>'#'</code></li>
 <li>可以在文件头定义 <code>#coding=utf-8</code> 来声明此文件的编码，以便可以使用 <code>u'中文'</code> 这样的内容。</li>

@@ -45,12 +45,12 @@ settings.ini的写法是类ini格式，但是和标准的ini有所区别:
 
 其中section是节的名字，可以是一般字符串或标识符。大小写敏感。
 
-    name --
+name --
     是key，不应包含 '='
 
-    value --
+value --
     是值，并且是符合python语法的，因此你可以写list, dict, tuple, 三重字符串和
-        其它的标准的python的类型。可以在符合python语法的情况下占多行。
+    其它的标准的python的类型。可以在符合python语法的情况下占多行。
 
 
 1. 不支持多级，只支持两级处理
