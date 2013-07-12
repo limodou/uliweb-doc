@@ -264,9 +264,9 @@ view = ListView(model, fields_convert_map=fields_convert_map)
 要怎么办，一种方法是删除相应的 key，另一种方法是定义新的convert，简单地让它返回
  `None` 就可以了。
 
-### 不存在字段支持
+### 不存在字段或自定义字段支持
 
-如果是处理不存在的字段，第一步是在传入的 fields 中或在 class Table 中定义这个字
+如果是处理不存在或自定义字段，第一步是在传入的 fields 中或在 class Table 中定义这个字
 段的复杂方式，即至少要定义为一个dict，而且包含: name, verbose_name 属性。然后定义
 一个convert函数，并且配置到 fields_convert_map 中。要记住，因为字段本身在 Model
 中可能不存在，所以 value 是无值的，你只能使用 obj 或通过缺省值来传入其它的参数。
@@ -580,14 +580,14 @@ default_data --
 fields --
     可添加字段的列表。一个Model中可能有很多字段，但不是所有字段都需要在添加时录
     入数据，因此可以通过fields来传入可编辑的字段列表。它也支持添加不存在的字段。
-    如果存在，则还需要提供get_form_field回调函数，详情见[处理不存在字段]的说明。
+    如果存在，则还需要提供get_form_field回调函数，详情见[处理不存在或自定义字段]的说明。
     fields的处理和ListView的类似，它是一种动态的处理方式。如果是相对静态，可以
     直接在Model中定义一个 AddForm 的class，在其中定义 fields。如果不想用AddForm
     的名字，那么可以通过传入meta参数来改变。
 
 get_form_field --
     如果在fields或AddForm中给出Model中不存在的字段时，AddView会自动调用这个回调
-    函数来获得想要的字段对象。具体描述参见下面的[处理不存在的字段]。
+    函数来获得想要的字段对象。具体描述参见下面的[处理不存在或自定义字段]。
 
 pre_save --
     在保存前要执行的回调函数，它的定义为:
@@ -824,7 +824,7 @@ class Blog(Model):
 可以自动生成，要么是在特殊情况下使用的。
 
 
-### 处理不存在的字段
+### 处理不存在或自定义字段
 
 如果在添加时希望有一些不在Model中的字段，可以先在fields或AddForm中定义这个字段名，
 然后在写一个get_form_field的回调，再将其传入AddView中即可，示例如下:
