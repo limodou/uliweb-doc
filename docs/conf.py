@@ -32,7 +32,7 @@ copyright = u'2013, Limodou'
 # custom_css = ['/static/custom.css']
 custom_css = []
 # The short X.Y version.
-version = '0.1.7'
+version = '0.2'
 
 # config menus
 # format: ('name', 'caption', 'link')
