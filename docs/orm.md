@@ -230,13 +230,29 @@ class Todo(Model):
 {% alert class=info %}
 如在MySQL中修改某张表的存储引擎，可以:
 
-
 ```
 __table_args__ = {'mysql_engine':'MyISAM'} #'InnoDB'
 ```
-
 {% endalert %}
 
+### 表的映射
+
+什么叫表的映射，就是它只是现有表的一个映射，在执行syncdb, reset, alembic相关命令
+时，不会在数据库中执行create table或drop table的操作。因此，它只是用来映射。
+
+这里，映射的表，可以是真正的表，或者是视图(View)。
+
+它的作用？比如有两个项目，其中一个项目功能比较简单，它将使用另一个项目的表，因此
+它本身并不需要建表，只要映射就可以了。因此它只需要把另一个项目的App添加到项目中。
+另外，在使用alembic时，因为数据库的表是
+由两个项目组成的，所以需要某种方式来区分：哪些表要真正创建，哪些表是已经存在直接
+映射即可。因此Uliweb 0.1.7就引入了 `__mapping_only__` 属性。需要时，在Model的类
+属性中定义即可，如：
+
+```
+class User(Model):
+    __mapping_only__ = True
+```
 
 ### 连接引擎设置
 
