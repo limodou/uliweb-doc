@@ -114,9 +114,7 @@ send_mail(from_, to_, subject, message, html=False, attachments=None)
 
 
 {% alert class=info %}
-如果同时有多个收信人时，to_可以为以','号分隔的邮件列表，也可以是一个list。如:
-mailto:'abc@com,bcd@com'或[mailto:'abc@com', mailto:'bcd@com']。
-
+如果同时有多个收信人时，to_需要是一个list。如: `['abc@com', 'bcd@com']` 。
 {% endalert %}
 
 ## 本机测试

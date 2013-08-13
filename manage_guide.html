@@ -274,6 +274,8 @@ revision                    生成一个版本
     --autogenerate          自动生成版本
 diff                        相当于使用revision时自动带autogenerate
     -m --message Message    可选的消息
+    -f --force              强制比较。如果不设，则当上一个版本没有更新
+                            时，则不能进行新的比较
 upgrade revision            升级指定的版本，当前版本为head
     --sql                   不真正执行升级，而是生成sql
     --tag TAG               指定一个tag（不是太明白作用）
@@ -293,6 +295,10 @@ help &lt;subcommand&gt;           查看某个子命令的帮助</code></pre>
 <p><code>alembic.ini</code> 为alembic使用的配置文件。 <code>env.py</code> 为自动处理时要调用的脚本。 uliweb主要是针对这两个文件进行了定制性的处理。上面的目录结构将会为每个数据库连接 创建一个目录。这样不同的数据库的脚本将分别存放。</p>
 <p>在使用alembic命令前，首先要安装它，简单的命令为:</p>
 <pre class="prettyprint linenums"><code>pip install alembic</code></pre>
+<div class="alert alert-info">
+<p>为了更好的支持uliweb和mysql，我在原生的alembic上进行了修改，因此建议下载这个 版本 <a href="https://github.com/limodou/alembic" class="outter">https://github.com/limodou/alembic</a></p>
+
+</div>
 <h4 id="title_1-2-15-2">syncdb<a class="anchor" href="#title_1-2-15-2">&para;</a></h4>
 <p>自动根据已安装的app中settings.ini中所配置的MODELS信息，在数据库中创建不存在的表。 如果只是写在models.py中，但是未在settings.ini中进行配置，则不能自动创建。</p>
 <p>settings.ini中的写法如:</p>
