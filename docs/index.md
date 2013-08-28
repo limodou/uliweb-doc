@@ -78,3 +78,8 @@ plugs_apps.md
 plugs_dialog2.md
 {% endtoc %}
 
+## 技术分享
+
+{% toc max_depth=1,class="multiple2" %}
+articles/xhr_redirect_json.md
+{% endtoc %}
