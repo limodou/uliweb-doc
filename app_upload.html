@@ -176,11 +176,11 @@ FILESYSTEM_ENCODING = None</code></pre>
 
 @expose('/upload')
 def upload():
-    from uliweb.contrib.upload import save_file
+    from uliweb import functions
 
     form = F(action='/upload')
     if form.validate(request.params, request.files):
-        save_file(form.file.data.filename, form.file.data.file)
+        functions.save_file(form.file.data.filename, form.file.data.file)
         return redirect('/ok')
     else:
         #指定将要使用的模板文件名
@@ -188,13 +188,14 @@ def upload():
         #如果校验失败，则再次返回Form，将带有错误信息
         return {'form':form}</code></pre>
 <p>这里使用了upload中提供的save_file函数，它的原型为:</p>
-<pre class="prettyprint linenums"><code>save_file(filename, fobj, replace=False)</code></pre>
-<p>这里只提供了两个参数，一个是文件名，一个是文件对象。第三个没有提供，因此如果存在 同名的文件，将不会覆盖，而是自动添加象(1), (2)这样的内容。在save_file中会自动根 据相关的配置项：文件系统编码、保存目录信息来自动生成目标文件名并转換成合适的编码， 然后保存。</p>
+<pre class="prettyprint linenums"><code>save_file(filename, fobj, replace=False, convert=True)</code></pre>
+<p>这里只提供了两个参数，一个是文件名，一个是文件对象。第三个没有提供，因此如果存在 同名的文件，将不会覆盖，而是自动添加象(1), (2)这样的内容。在save_file中会自动根 据相关的配置项：文件系统编码、保存目录信息来自动生成目标文件名并转換成合适的编码， 然后保存。第4个参数用来控制是否自动进行文件名转換，缺省会转換。其目的是为了让文件 名不重复，没有乱码。</p>
+<p>这里save_file是通过functions对象来引用的。在upload中还定义了其它类似的通用方法， 后面我们会看到。</p>
 <p>为了方便处理Form字段，upload app还提供了save_file_field函数，具体使用参见下面的 函数说明。</p>
 <h3 id="title_1-3-4">放在一起的处理方式<a class="anchor" href="#title_1-3-4">&para;</a></h3>
 <p>我们可以考虑把显示和上传后的处理放在一起，也可以象这个例子一样，分开不同的URL。如果放在一起，逻辑可以是:</p>
 <pre class="prettyprint linenums"><code>def upload():
-    from uliweb.contrib.upload import save_file
+    from uliweb import functions
 
     form = F()
     #GET是显示用，POST是提交用
@@ -206,7 +207,7 @@ def upload():
         #以便形成完整的数据集，如果validate返回True，表示校验成功，并且
         #上传的数据将按照Form字段定义的类型已经做了转換
         if form.validate(request.params, request.files):
-            save_file(form.file.data.filename, form.file.data.file)
+            functions.save_file(form.file.data.filename, form.file.data.file)
             return redirect('/ok')
         else:
             #如果校验失败，则再次返回Form，将带有错误信息
@@ -215,18 +216,29 @@ def upload():
 <p>upload 把文件和下载的管理组织成了类的形式。这个类就是FileServing，你可以根据需要 从这个类进行派生。在缺省情况下，upload app会自动创建一个default_fileserving，而 前面所看到的UPLOAD的配置项就是这个缺省的文件服务类。同时，基于这个缺省的实例，提 供了下面的一些方法。在简单的情况下，你可以只使用缺省的文件服务对象就够了。</p>
 <p>FileServing的说明:</p>
 <pre class="prettyprint linenums"><code>class FileServing(object):
+    default_config = 'UPLOAD'
     options = {
-        'x_sendfile' : ('UPLOAD/X_SENDFILE', None),
-        'x_header_name': ('UPLOAD/X_HEADER_NAME', ''),
-        'x_file_prefix': ('UPLOAD/X_FILE_PREFIX', '/files'),
-        'to_path': ('UPLOAD/TO_PATH', './uploads'),
-        'buffer_size': ('UPLOAD/BUFFER_SIZE', 4096),
-        '_filename_converter': ('UPLOAD/FILENAME_CONVERTER', None),
+        'x_sendfile' : ('X_SENDFILE', None),
+        'x_header_name': ('X_HEADER_NAME', ''),
+        'x_file_prefix': ('X_FILE_PREFIX', '/files'),
+        'to_path': ('TO_PATH', './uploads'),
+        'buffer_size': ('BUFFER_SIZE', 4096),
+        '_filename_converter': ('FILENAME_CONVERTER', None),
     }
 
     #每个FileServing类有相应的settings配置项。因此FileServing的所有方法
     #都是根据这些配置项计算来的
+    #options中的每个值后面都可以使用 obj.xxx 来访问
+    #
+    #default_config表示会从哪里读配置信息。它会和下面的配置项合成，如，可以
+    #和TO_PATH合成为 UPLOAD/TO_PATH 。如果配置项中间有 '/' ，则认为不要进行合成。
 
+    def __init__(self, default_filename_converter_cls=UUIDFilenameConverter, config=None):
+        """
+        初始化函数。第一个参数表示文件名转換类，缺省使用UUID方式生成文件名
+        第二个参数表示读取配置项的名字，与Settings.ini中的section对应
+        """
+        
     def filename_convert(self, filename):
         """
         对文件名进行转換
@@ -338,11 +350,28 @@ def upload():
 
         它有什么用，在后面的download你会看到
         """</code></pre>
-<h2 id="title_1-5">upload app提供方法说明<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h2 id="title_1-5">自定义FileServing类<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>如果需要自定义FileServing类，可以从这个类派生。如果没有新増的配置项，只要定义 <code>default_config</code> 即可。它表示一个完整的section，用来定义options中所有的值。因此 我们需要在settings.ini中定义完整的配置信息，可以直接拷贝UPLOAD的定义。如果有些值 想采用UPLOAD的值，并且希望和UPLOAD值一起变化，那么可以在定义值的时候引用UPLOAD的值，如：</p>
+<pre class="prettyprint linenums"><code>[UPLOAD_TEST]
+TO_PATH = UPLOAD.TO_PATH
+BUFFER_SIZE = UPLOAD.BUFFER_SIZE
+FILENAME_CONVERTER =
+BACKEND =
+X_SENDFILE = None
+X_HEADER_NAME = ''
+X_FILE_PREFIX = '/files'</code></pre>
+<p>上面前两项使用了UPLOAD中的定义值。</p>
+<p>简单示例:</p>
+<pre class="prettyprint linenums"><code>class FileServingTest(FileServing):
+    default_config = 'UPLOAD_TEST'</code></pre>
+<h2 id="title_1-6">如何获取FileServing对象<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>想要获得FileServing实例，可以先导入这个类，然后创建它的实例。创建时可以传入对应的 配置section的名字，以获得完整的配置，否则使用类中定义的配置。</p>
+<p>另一种方法是使用 <code>get_fileserving(config)</code> 函数。它会使用FileServing作为BACKEND类，但 是配置项使用你指定的section的名字。这样不会创建新的类，但是实例的参数是可以不同。</p>
+<h2 id="title_1-7">upload app提供方法说明<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>以下方法都是基于缺省的default_fileserving对象来处理的。</p>
 <dl>
-<dt>get_backend()</dt>
-<dd><p>获得缺省的文件上传下载对象。</p>
+<dt>get_fileserving(config)</dt>
+<dd><p>获得缺省的文件上传下载对象。缺省使用UPLOAD的配置。如果传入其它的配置名，将 使用这个配置来创建FileServing对象。</p>
 </dd>
 <dt>file_serving(filename)</dt>
 <dd><p>缺省的文件下载函数。它是通过在 settings.ini 中配置了:</p>
@@ -380,7 +409,7 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
 <p>如果上面的文件名使用的是相对路径，则会根据当前的FileServing对象来决定使用 什么配置信息，比如文件保存的路径。但是如果使用绝对路径，则将使用绝对路径进 行处理。</p>
 
 </div>
-<h2 id="title_1-6">FilenameConverter类的说明<a class="anchor" href="#title_1-6">&para;</a></h2>
+<h2 id="title_1-8">FilenameConverter类的说明<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>upload提供了几个用于文件名上传后转换的类，并且可以在settings.ini进行配置，分别说明如下:</p>
 <ol>
 <li><p>FilenameConverter:</p><pre class="prettyprint linenums"><code>class FilenameConverter(object):
@@ -396,9 +425,9 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
                               getpid())).hexdigest(),
         ).hexdigest()</code></pre></li>
 </ol>
-<h2 id="title_1-7">BACKEND配置说明<a class="anchor" href="#title_1-7">&para;</a></h2>
+<h2 id="title_1-9">BACKEND配置说明<a class="anchor" href="#title_1-9">&para;</a></h2>
 <p>upload在启动时会缺省按照 <code>UPLOAD/BACKEND</code> 的定义来生成缺省的fileserving类。如果 没给出，则使用FileServing。通过修改 <code>BACKEND</code> ，用户就可以定义自已缺省的文件上传处理类。</p>
-<h2 id="title_1-8">X-Sendfile Nginx配置说明<a class="anchor" href="#title_1-8">&para;</a></h2>
+<h2 id="title_1-10">X-Sendfile Nginx配置说明<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>简单的处理流程可以表示为:</p>
 <p><img src="_static/upload_01.png" alt="image"/>
 </p>
@@ -429,6 +458,20 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
 </dl><p>启用Nginx进行文件下载处理的配置项应设置为:</p>
 <pre class="prettyprint linenums"><code>[UPLOAD]
 X_SENDFILE = 'nginx'</code></pre>
+<h2 id="title_1-11">functions定义说明<a class="anchor" href="#title_1-11">&para;</a></h2>
+<p>为了方便使用，在settings.ini中的FUNCTIONS中定义了一些全局函数，可以方便使用：</p>
+<ul>
+<li>get_filename</li>
+<li>save_file</li>
+<li>save_file_field</li>
+<li>save_image_field</li>
+<li>delete_filename</li>
+<li>get_url</li>
+<li>get_href</li>
+<li>download</li>
+<li>filename_convert</li>
+<li>get_fileserving</li>
+</ul>
 
             
             <div class="chapter-prev chapter-down">
