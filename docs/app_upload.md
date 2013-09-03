@@ -170,11 +170,11 @@ import os
 
 @expose('/upload')
 def upload():
-    from uliweb.contrib.upload import save_file
+    from uliweb import functions
 
     form = F(action='/upload')
     if form.validate(request.params, request.files):
-        save_file(form.file.data.filename, form.file.data.file)
+        functions.save_file(form.file.data.filename, form.file.data.file)
         return redirect('/ok')
     else:
         #指定将要使用的模板文件名
@@ -187,13 +187,17 @@ def upload():
 
 
 ```
-save_file(filename, fobj, replace=False)
+save_file(filename, fobj, replace=False, convert=True)
 ```
 
 这里只提供了两个参数，一个是文件名，一个是文件对象。第三个没有提供，因此如果存在
 同名的文件，将不会覆盖，而是自动添加象(1), (2)这样的内容。在save_file中会自动根
 据相关的配置项：文件系统编码、保存目录信息来自动生成目标文件名并转換成合适的编码，
-然后保存。
+然后保存。第4个参数用来控制是否自动进行文件名转換，缺省会转換。其目的是为了让文件
+名不重复，没有乱码。
+
+这里save_file是通过functions对象来引用的。在upload中还定义了其它类似的通用方法，
+后面我们会看到。
 
 为了方便处理Form字段，upload app还提供了save_file_field函数，具体使用参见下面的
 函数说明。
@@ -206,7 +210,7 @@ save_file(filename, fobj, replace=False)
 
 ```
 def upload():
-    from uliweb.contrib.upload import save_file
+    from uliweb import functions
 
     form = F()
     #GET是显示用，POST是提交用
@@ -218,7 +222,7 @@ def upload():
         #以便形成完整的数据集，如果validate返回True，表示校验成功，并且
         #上传的数据将按照Form字段定义的类型已经做了转換
         if form.validate(request.params, request.files):
-            save_file(form.file.data.filename, form.file.data.file)
+            functions.save_file(form.file.data.filename, form.file.data.file)
             return redirect('/ok')
         else:
             #如果校验失败，则再次返回Form，将带有错误信息
@@ -238,18 +242,29 @@ FileServing的说明:
 
 ```
 class FileServing(object):
+    default_config = 'UPLOAD'
     options = {
-        'x_sendfile' : ('UPLOAD/X_SENDFILE', None),
-        'x_header_name': ('UPLOAD/X_HEADER_NAME', ''),
-        'x_file_prefix': ('UPLOAD/X_FILE_PREFIX', '/files'),
-        'to_path': ('UPLOAD/TO_PATH', './uploads'),
-        'buffer_size': ('UPLOAD/BUFFER_SIZE', 4096),
-        '_filename_converter': ('UPLOAD/FILENAME_CONVERTER', None),
+        'x_sendfile' : ('X_SENDFILE', None),
+        'x_header_name': ('X_HEADER_NAME', ''),
+        'x_file_prefix': ('X_FILE_PREFIX', '/files'),
+        'to_path': ('TO_PATH', './uploads'),
+        'buffer_size': ('BUFFER_SIZE', 4096),
+        '_filename_converter': ('FILENAME_CONVERTER', None),
     }
 
     #每个FileServing类有相应的settings配置项。因此FileServing的所有方法
     #都是根据这些配置项计算来的
+    #options中的每个值后面都可以使用 obj.xxx 来访问
+    #
+    #default_config表示会从哪里读配置信息。它会和下面的配置项合成，如，可以
+    #和TO_PATH合成为 UPLOAD/TO_PATH 。如果配置项中间有 '/' ，则认为不要进行合成。
 
+    def __init__(self, default_filename_converter_cls=UUIDFilenameConverter, config=None):
+        """
+        初始化函数。第一个参数表示文件名转換类，缺省使用UUID方式生成文件名
+        第二个参数表示读取配置项的名字，与Settings.ini中的section对应
+        """
+        
     def filename_convert(self, filename):
         """
         对文件名进行转換
@@ -363,14 +378,49 @@ class FileServing(object):
         """
 ```
 
+## 自定义FileServing类
+
+如果需要自定义FileServing类，可以从这个类派生。如果没有新増的配置项，只要定义
+`default_config` 即可。它表示一个完整的section，用来定义options中所有的值。因此
+我们需要在settings.ini中定义完整的配置信息，可以直接拷贝UPLOAD的定义。如果有些值
+想采用UPLOAD的值，并且希望和UPLOAD值一起变化，那么可以在定义值的时候引用UPLOAD的值，如：
+
+```
+[UPLOAD_TEST]
+TO_PATH = UPLOAD.TO_PATH
+BUFFER_SIZE = UPLOAD.BUFFER_SIZE
+FILENAME_CONVERTER =
+BACKEND =
+X_SENDFILE = None
+X_HEADER_NAME = ''
+X_FILE_PREFIX = '/files'
+```
+
+上面前两项使用了UPLOAD中的定义值。
+
+简单示例:
+
+```
+class FileServingTest(FileServing):
+    default_config = 'UPLOAD_TEST'
+```
+
+## 如何获取FileServing对象
+
+想要获得FileServing实例，可以先导入这个类，然后创建它的实例。创建时可以传入对应的
+配置section的名字，以获得完整的配置，否则使用类中定义的配置。
+
+另一种方法是使用 `get_fileserving(config)` 函数。它会使用FileServing作为BACKEND类，但
+是配置项使用你指定的section的名字。这样不会创建新的类，但是实例的参数是可以不同。
 
 ## upload app提供方法说明
 
 以下方法都是基于缺省的default_fileserving对象来处理的。
 
 
-get_backend() --
-    获得缺省的文件上传下载对象。
+get_fileserving(config) --
+    获得缺省的文件上传下载对象。缺省使用UPLOAD的配置。如果传入其它的配置名，将
+    使用这个配置来创建FileServing对象。
 
 file_serving(filename) --
     缺省的文件下载函数。它是通过在 settings.ini 中配置了:
@@ -516,3 +566,17 @@ alias --
 X_SENDFILE = 'nginx'
 ```
 
+## functions定义说明
+
+为了方便使用，在settings.ini中的FUNCTIONS中定义了一些全局函数，可以方便使用：
+
+* get_filename
+* save_file
+* save_file_field
+* save_image_field
+* delete_filename
+* get_url
+* get_href
+* download
+* filename_convert
+* get_fileserving
