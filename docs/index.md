@@ -23,7 +23,7 @@ guestbook.md
 
 ### 功能说明
 
-{% toc max_depth=1,class="multiple3" %}
+{% toc max_depth=1 %}
 settings.md
 i18n.md
 mail.md
@@ -47,7 +47,7 @@ uliweb_apps.md
 
 ### 部署
 
-{% toc max_depth=1,class="multiple3" %}
+{% toc max_depth=1 %}
 sae.md
 bae.md
 heroku.md
@@ -55,13 +55,13 @@ heroku.md
 
 ### 专题
 
-{% toc max_depth=1,class="multiple3" %}
+{% toc max_depth=1 %}
 css_js_combine.md
 {% endtoc %}
 
 ### Uliweb内置APP文档
 
-{% toc max_depth=1,class="multiple3" %}
+{% toc max_depth=1 %}
 app_staticfiles.md
 app_soap.md
 app_auth.md
@@ -73,13 +73,13 @@ app_csrf.md
 
 ### Plugs使用
 
-{% toc max_depth=1,class="multiple3" %}
+{% toc max_depth=1 %}
 plugs_apps.md
 plugs_dialog2.md
 {% endtoc %}
 
 ## 技术分享
 
-{% toc max_depth=1,class="multiple2" %}
+{% toc max_depth=1 %}
 articles/xhr_redirect_json.md
 {% endtoc %}

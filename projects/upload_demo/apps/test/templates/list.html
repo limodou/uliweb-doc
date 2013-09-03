@@ -1,0 +1,10 @@
+{{extend "index.html"}}
+
+{{block content}}
+<p>
+<a href='/upload'>上传文件</a>
+</p>
+{{for row in objects:}}
+    <li>{{<< functions.get_url(row.filename)}} <a href='/edit/{{=row.id}}'>Edit</a> <a href='/delete/{{=row.id}}'>Delete</a></li>
+{{pass}}
+{{end}}
