@@ -69,6 +69,7 @@ app_rbac.md
 app_template.md
 app_upload.md
 app_csrf.md
+app_secretkey.md
 {% endtoc %}
 
 ### Plugs使用
