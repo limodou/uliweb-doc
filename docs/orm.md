@@ -469,7 +469,7 @@ type_class, type_attrs --
 auto_now --
     当设置为True时，在保存对象时，会自动使用当前系统时间来更新字段的取值。
 
-auto_add_now --
+auto_now_add --
     当设置为True时，仅创建对象时，会自动使用当前系统时间来更新字段的取值。
 
 format --

@@ -214,17 +214,19 @@ uliweb exportstatic static
 
 ### find
 
-查找对象，包括：模板、URL对应的view、静态文件和Model定义的模块
+查找对象，包括：模板、URL对应的view、静态文件、Model定义及配置项的定义位置的模块
 
 
 ```
 Usage: uliweb find -u url
 or
-Usage: uliweb find -t template
+Usage: uliweb find -t template --tree
 or
 Usage: uliweb find -c static
 or
 Usage: uliweb find -m model_name
+or
+Usage: uliweb find -o option
 ```
 
 
@@ -332,7 +334,8 @@ uliweb i18n -p                #整个项目，使用en
 Usage: uliweb call name
 ```
 
-执行所有安装的App下的名为<name>.py程序。
+执行所有安装的App下的名为<name>.py程序。如果是 'moduleA.moduleB' 则导入指定的模块
+执行其中的call()或main()方法。
 
 
 ### support
