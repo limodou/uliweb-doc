@@ -62,12 +62,7 @@
               <div>&laquo;</div>
             </div>
             
-            <div class="chapter-prev chapter-top">
-    <a prev-chapter href="deployment.html"><i class="icon-arrow-left"></i> 部署指南</a>
-</div>
-<div class="chapter-next chapter-top">
-    <a next-chapter href="orm.html">数据库和ORM <i class="icon-arrow-right"></i></a>
-</div>
+            <!-- prev_next_top -->
 
             <h1 id="title_1">命令行工具使用指南<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">uliweb<a class="anchor" href="#title_1-1">&para;</a></h2>
@@ -203,14 +198,16 @@ Options:
 #将所有已安装的app下的static文件拷贝到static目录下。</code></pre>
 <p>目前exportstatic支持将css和js进行打包，合并，压缩的功能，具体描述详见 <a href="css_js_combine.html" class="inner">CSS, JS合并与压缩</a></p>
 <h3 id="title_1-1-6">find<a class="anchor" href="#title_1-1-6">&para;</a></h3>
-<p>查找对象，包括：模板、URL对应的view、静态文件和Model定义的模块</p>
+<p>查找对象，包括：模板、URL对应的view、静态文件、Model定义及配置项的定义位置的模块</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb find -u url
 or
-Usage: uliweb find -t template
+Usage: uliweb find -t template --tree
 or
 Usage: uliweb find -c static
 or
-Usage: uliweb find -m model_name</code></pre>
+Usage: uliweb find -m model_name
+or
+Usage: uliweb find -o option</code></pre>
 <h3 id="title_1-1-7">makeproject<a class="anchor" href="#title_1-1-7">&para;</a></h3>
 <p>生成一个project框架，它将自动按给定的名字生成一个project目录，同时包含有初始子目录和文件。</p>
 <pre class="prettyprint linenums"><code>Usage: uliweb makeproject [-f] projectname</code></pre>
@@ -245,7 +242,7 @@ uliweb i18n -l zh_CN Test     #只处理 Test app
 uliweb i18n -p                #整个项目，使用en</code></pre>
 <h3 id="title_1-1-12">call<a class="anchor" href="#title_1-1-12">&para;</a></h3>
 <pre class="prettyprint linenums"><code>Usage: uliweb call name</code></pre>
-<p>执行所有安装的App下的名为<name>.py程序。</p>
+<p>执行所有安装的App下的名为<name>.py程序。如果是 'moduleA.moduleB' 则导入指定的模块 执行其中的call()或main()方法。</p>
 <h3 id="title_1-1-13">support<a class="anchor" href="#title_1-1-13">&para;</a></h3>
 <pre class="prettyprint linenums"><code>Usage: uliweb support supported_type</code></pre>
 <p>向当前的项目添加某种平台的支持文件。目前支持gae和doccloud。</p>
@@ -355,12 +352,7 @@ question = 'ticket.models.Question'</code></pre>
 <p>创建超级用户。</p>
 
             
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="deployment.html"><i class="icon-arrow-left"></i> 部署指南</a>
-</div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="orm.html">数据库和ORM <i class="icon-arrow-right"></i></a>
-</div>
+            <!-- prev_next_down -->
             
             <div class="source">
                 <i class="icon-download"></i><a href="./source/manage_guide.md">View Source</a>

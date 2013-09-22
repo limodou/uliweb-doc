@@ -53,12 +53,6 @@ bae.md
 heroku.md
 {% endtoc %}
 
-### 专题
-
-{% toc max_depth=1 %}
-css_js_combine.md
-{% endtoc %}
-
 ### Uliweb内置APP文档
 
 {% toc max_depth=1 %}
@@ -82,5 +76,8 @@ plugs_dialog2.md
 ## 技术分享
 
 {% toc max_depth=1 %}
+css_js_combine.md
 articles/xhr_redirect_json.md
+articles/find_option.md
+articles/svg_mimetype_config.md
 {% endtoc %}

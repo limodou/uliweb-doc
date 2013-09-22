@@ -62,12 +62,7 @@
               <div>&laquo;</div>
             </div>
             
-            <div class="chapter-prev chapter-top">
-    <a prev-chapter href="xmlrpc.html"><i class="icon-arrow-left"></i> XMLRPC 使用说明</a>
-</div>
-<div class="chapter-next chapter-top">
-    <a next-chapter href="uliweb_apps.html">Uliweb App 清单 <i class="icon-arrow-right"></i></a>
-</div>
+            <!-- prev_next_top -->
 
             <h1 id="title_1">如何编写自已的命令<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb内置了一个命令系统，其中在uliweb/manage.py中已经内置了一些常用命令。同时 你也可以在某个app中，按照命令编写的要求来编写app相关的命令。这样一旦在settings.ini 中的 <code>INSTALLED_APPS</code> 里引入了这个app，这些命令就可以被 Uliweb 使用。你可以 输入 <code>uliweb</code> 来查看当前有哪些可用的命令。</p>
@@ -212,19 +207,16 @@ class DemoCommand(Command):
 </dd>
 </dl><h2 id="title_1-6">Command类<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p><code>Command</code> 类是所有命令的基类。大多数方法请参见 <code>uliweb/core/commands.py</code> 文件。 其中有 <code>get_apps</code> 方法，功能和uliweb中的一样，不过需要传入的参数不同，如:</p>
-<p>get_apps --</p>
-<pre class="prettyprint linenums"><code>```
-get_apps(global_options, include_apps=None)
-```
-
-使用起来比uliweb下的get_apps要简单一些。</code></pre>
-<p>get_application --</p>
-<pre class="prettyprint linenums"><code>```
-get_application(global_options)
-```
-
-获得当前应用的实例，它将完成整个应用的初始化工作</code></pre>
-<h2 id="title_1-7">模块方法<a class="anchor" href="#title_1-7">&para;</a></h2>
+<dl>
+<dt>get_apps</dt>
+<dd><pre class="prettyprint linenums"><code>get_apps(global_options, include_apps=None)</code></pre>
+<p>使用起来比uliweb下的get_apps要简单一些。</p>
+</dd>
+<dt>get_application</dt>
+<dd><pre class="prettyprint linenums"><code>get_application(global_options)</code></pre>
+<p>获得当前应用的实例，它将完成整个应用的初始化工作</p>
+</dd>
+</dl><h2 id="title_1-7">模块方法<a class="anchor" href="#title_1-7">&para;</a></h2>
 <dl>
 <dt>get_answer(message, answers='Yn', default='Y', quit='n')</dt>
 <dd><p>从命令行获得一个应答。</p>
@@ -266,12 +258,7 @@ get_input("Creation Theme([a]ngularjs):", default="a", choices=['a'],
 </dd>
 </dl>
             
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="xmlrpc.html"><i class="icon-arrow-left"></i> XMLRPC 使用说明</a>
-</div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="uliweb_apps.html">Uliweb App 清单 <i class="icon-arrow-right"></i></a>
-</div>
+            <!-- prev_next_down -->
             
             <div class="source">
                 <i class="icon-download"></i><a href="./source/command.md">View Source</a>

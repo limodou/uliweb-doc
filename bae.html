@@ -62,12 +62,7 @@
               <div>&laquo;</div>
             </div>
             
-            <div class="chapter-prev chapter-top">
-    <a prev-chapter href="sae.html"><i class="icon-arrow-left"></i> SAE 部署及开发指南</a>
-</div>
-<div class="chapter-next chapter-top">
-    <a next-chapter href="heroku.html">Heroku 部署说明 <i class="icon-arrow-right"></i></a>
-</div>
+            <!-- prev_next_top -->
 
             <h1 id="title_1">BAE 部署及开发指南<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Baidu Application Engine(简称bae)是百度发布的类似于GAE的云环境，目前提供了对 python的支持。不过现在还要测试过程中，所以以下的部署说明有可能会发生变化。bae 的环境有些和sae(Sina Application Engine)类似，不过还是有一些区别，后面会简单 介绍。本文档假设你已经有了bae的帐号。</p>
@@ -129,16 +124,19 @@ application = make_application(project_dir=project_path)</code></pre>
 <dl>
 <dt>::</dt>
 <dd><p>#app.conf</p>
-<p>handlers: --</p>
-<pre class="prettyprint linenums"><code>* url : /?(.*)
-    script : index.py
-* expire : .jpg modify 10 years
-* expire : .swf modify 10 years
-* expire : .png modify 10 years
-* expire : .gif modify 10 years
-* expire : .JPG modify 10 years
-* expire : .ico modify 10 years</code></pre>
+<dl>
+<dt>handlers:</dt>
+<dd><ul>
+<li>url : /?(.*)     script : index.py</li>
+<li>expire : .jpg modify 10 years</li>
+<li>expire : .swf modify 10 years</li>
+<li>expire : .png modify 10 years</li>
+<li>expire : .gif modify 10 years</li>
+<li>expire : .JPG modify 10 years</li>
+<li>expire : .ico modify 10 years</li>
+</ul>
 </dd>
+</dl></dd>
 </dl><p>这是 <code>app.conf</code> 内容。原来 url 那行就是 '/' ，这里会替換为 <code>/?(.*)</code> 。上面的 格式是yaml的，所以和GAE很象。这个文件也可以直接在界面上进行修改。同时所有的文件 都可以在界面上直接修改。修改后会自动保存到svn中，你可以 update 与本地文件进行合并 处理。这点还是很方便的。</p>
 <p>经过上面的处理，我们在 0 目录下已经有了:</p>
 <pre class="prettyprint linenums"><code>lib/
@@ -207,12 +205,7 @@ MYSQL_DB #不可用</code></pre>
 <p>BAE 和 SAE 为国内提供了云部署环境，支持 Python 很给力，不过限制比起我用过的 dotCloud等国外的环境还是有些多了点，比如 dotCloud 提供了命令行工具，可以 ssh 登录服务器，这样安装调试都很方便。并且没有太多环境的限制。希望以后在这些方便 可以加强。</p>
 
             
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="sae.html"><i class="icon-arrow-left"></i> SAE 部署及开发指南</a>
-</div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="heroku.html">Heroku 部署说明 <i class="icon-arrow-right"></i></a>
-</div>
+            <!-- prev_next_down -->
             
             <div class="source">
                 <i class="icon-download"></i><a href="./source/bae.md">View Source</a>

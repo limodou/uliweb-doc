@@ -62,12 +62,7 @@
               <div>&laquo;</div>
             </div>
             
-            <div class="chapter-prev chapter-top">
-    <a prev-chapter href="app_upload.html"><i class="icon-arrow-left"></i> upload(文件上传及显示处理)</a>
-</div>
-<div class="chapter-next chapter-top">
-    <a next-chapter href="app_secretkey.html">secretkey(DES加解密处理) <i class="icon-arrow-right"></i></a>
-</div>
+            <!-- prev_next_top -->
 
             <h1 id="title_1">CSRF<a class="anchor" href="#title_1">&para;</a></h1>
 <p>CSRF - Cross-site request forgery(跨站请求伪造)，可以去网上搜索一下它的意思。 它是一种比较危险的攻击手段。现在在 Uliweb 中也提供了对这种攻击的保护机制。此 机制是由Damon根据Django和Tornado的实现，再由我进行相应的修改编写而成。</p>
@@ -169,12 +164,7 @@ check_csrf_token = 'uliweb.contrib.csrf.check_csrf_token'</code></pre>
 <p>其实使用 <code>csrf_token</code> 和 <code>check_csrf_token</code> 再结合相应的cookie及应用的集成也可以 实现其它的csrf的处理模式。</p>
 
             
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="app_upload.html"><i class="icon-arrow-left"></i> upload(文件上传及显示处理)</a>
-</div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="app_secretkey.html">secretkey(DES加解密处理) <i class="icon-arrow-right"></i></a>
-</div>
+            <!-- prev_next_down -->
             
             <div class="source">
                 <i class="icon-download"></i><a href="./source/app_csrf.md">View Source</a>
