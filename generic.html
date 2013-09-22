@@ -62,7 +62,12 @@
               <div>&laquo;</div>
             </div>
             
-            <!-- prev_next_top -->
+            <div class="chapter-prev chapter-top">
+    <a prev-chapter href="middleware.html"><i class="icon-arrow-left"></i> Middleware 开发</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="test.html">如何测试 <i class="icon-arrow-right"></i></a>
+</div>
 
             <h1 id="title_1">Generic 说明<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">Genric是什么？<a class="anchor" href="#title_1-1">&para;</a></h2>
@@ -637,7 +642,12 @@ class BlogView(object):
 </dl><p>如果你相把 <id> 放在动作前面，那么你要在每个方法前使用如:  <code>@expose('&lt;id&gt;/edit')</code> 这样的方式。如果这个view函数还有其它的decorator，那么你要把 <code>@expose</code> 放在前上面， 以保证函数名是正确的。同时其它的 decorator 在处理时一定要保证生成的新的函数名与 原来的函数名是一致的。</p>
 
             
-            <!-- prev_next_down -->
+            <div class="chapter-prev chapter-down">
+    <a prev-chapter href="middleware.html"><i class="icon-arrow-left"></i> Middleware 开发</a>
+</div>
+<div class="chapter-next chapter-down">
+    <a next-chapter href="test.html">如何测试 <i class="icon-arrow-right"></i></a>
+</div>
             
             <div class="source">
                 <i class="icon-download"></i><a href="./source/generic.md">View Source</a>

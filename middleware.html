@@ -62,7 +62,12 @@
               <div>&laquo;</div>
             </div>
             
-            <!-- prev_next_top -->
+            <div class="chapter-prev chapter-top">
+    <a prev-chapter href="form.html"><i class="icon-arrow-left"></i> Form使用</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="generic.html">Generic 说明 <i class="icon-arrow-right"></i></a>
+</div>
 
             <h1 id="title_1">Middleware 开发<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb中的Middleware是类似于django的Middleware，它可以在交易处理前和处理后，以 及出错时执行Middleware中的方法，起到一种通用的中间件的作用。Middleware是基于请 求的，它和平时的wsgi middleware不同，wsgi middleware是基于应用级的，当然也可以 处理请求，但是比Middleware还要底层，本文就不讨论了。</p>
@@ -149,7 +154,12 @@ for m in reversed(middlewares):
 <p>的顺序来执行。</p>
 
             
-            <!-- prev_next_down -->
+            <div class="chapter-prev chapter-down">
+    <a prev-chapter href="form.html"><i class="icon-arrow-left"></i> Form使用</a>
+</div>
+<div class="chapter-next chapter-down">
+    <a next-chapter href="generic.html">Generic 说明 <i class="icon-arrow-right"></i></a>
+</div>
             
             <div class="source">
                 <i class="icon-download"></i><a href="./source/middleware.md">View Source</a>
