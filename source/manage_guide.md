@@ -120,6 +120,7 @@ Options:
   --ssl                 以https方式启动服务。此方式将自动使用pyOpenSSH来创建证书
   --ssl-key=SSL_KEY     如果不想自动创建证书，则可以指定ssl-key和ssl-cert来使用已经
   --ssl-cert=SSL_CERT   生成好的证书。ssl-key和ssl-cert可以同时使用。ssl为单独使用。
+  --tornado             使用tornado来提供服务
 ```
 
 参数说明:
@@ -348,14 +349,24 @@ Usage: uliweb support supported_type
 向当前的项目添加某种平台的支持文件。目前支持gae和doccloud。
 
 
-gae平台 --
+gae --
     将额外拷贝app.yaml和gae_handler.py。
 
-dotcloud平台 --
+dotcloud --
     将额外拷贝requirements.txt和wsgi.py。不过一般情况下你有可能要修改requirements.txt
     以满足你的要求。
 
-
+bae --
+    将额外拷贝app.conf和index.py。
+    
+heroku --
+    将额外拷贝app.py, lib, Procfile和 requirements.txt.
+    
+sae --
+    将额外拷贝index.wsgi和lib.
+    
+tornado --
+    将额外拷贝 tornado_handler.py.
 
 ### shell
 

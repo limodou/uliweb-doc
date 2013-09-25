@@ -158,7 +158,8 @@ Options:
                         进程方式启动的个数。缺省是1个。在windows下无法使用
   --ssl                 以https方式启动服务。此方式将自动使用pyOpenSSH来创建证书
   --ssl-key=SSL_KEY     如果不想自动创建证书，则可以指定ssl-key和ssl-cert来使用已经
-  --ssl-cert=SSL_CERT   生成好的证书。ssl-key和ssl-cert可以同时使用。ssl为单独使用。</code></pre>
+  --ssl-cert=SSL_CERT   生成好的证书。ssl-key和ssl-cert可以同时使用。ssl为单独使用。
+  --tornado             使用tornado来提供服务</code></pre>
 <p>参数说明:</p>
 <div class="alert alert-info">
 <p>在werkzeug的文档中有如何生成key和cert文件的方法，示例如下:</p>
@@ -252,11 +253,23 @@ uliweb i18n -p                #整个项目，使用en</code></pre>
 <pre class="prettyprint linenums"><code>Usage: uliweb support supported_type</code></pre>
 <p>向当前的项目添加某种平台的支持文件。目前支持gae和doccloud。</p>
 <dl>
-<dt>gae平台</dt>
+<dt>gae</dt>
 <dd><p>将额外拷贝app.yaml和gae_handler.py。</p>
 </dd>
-<dt>dotcloud平台</dt>
+<dt>dotcloud</dt>
 <dd><p>将额外拷贝requirements.txt和wsgi.py。不过一般情况下你有可能要修改requirements.txt 以满足你的要求。</p>
+</dd>
+<dt>bae</dt>
+<dd><p>将额外拷贝app.conf和index.py。</p>
+</dd>
+<dt>heroku</dt>
+<dd><p>将额外拷贝app.py, lib, Procfile和 requirements.txt.</p>
+</dd>
+<dt>sae</dt>
+<dd><p>将额外拷贝index.wsgi和lib.</p>
+</dd>
+<dt>tornado</dt>
+<dd><p>将额外拷贝 tornado_handler.py.</p>
 </dd>
 </dl><h3 id="title_1-1-14">shell<a class="anchor" href="#title_1-1-14">&para;</a></h3>
 <p>在当前项目目录下，进入shell环境。可以直接使用如application, settings.ini等全局 变量。</p>
