@@ -80,4 +80,5 @@ css_js_combine.md
 articles/xhr_redirect_json.md
 articles/find_option.md
 articles/svg_mimetype_config.md
+articles/tornado_support.md
 {% endtoc %}
