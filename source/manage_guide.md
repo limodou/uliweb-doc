@@ -338,6 +338,14 @@ Usage: uliweb call name
 执行所有安装的App下的名为<name>.py程序。如果是 'moduleA.moduleB' 则导入指定的模块
 执行其中的call()或main()方法。
 
+### install
+
+```
+Usage: uliweb install [appname,...]
+```
+
+执行在项目目录下或app目录下的requirements.txt。如果不指定appname，则是扫描整个项
+目，如果指定app，则只扫描指定app下的requirements.txt。
 
 ### support
 
@@ -346,7 +354,7 @@ Usage: uliweb call name
 Usage: uliweb support supported_type
 ```
 
-向当前的项目添加某种平台的支持文件。目前支持gae和doccloud。
+向当前的项目添加某种平台的支持文件。目前支持gae, doccloud, fcgi, bae, heroku, sae, tornado, gevent, gevent-socketio。
 
 
 gae --
@@ -365,8 +373,18 @@ heroku --
 sae --
     将额外拷贝index.wsgi和lib.
     
+fcgi --
+    将额外拷贝 fcgi_handler.py.
+
 tornado --
     将额外拷贝 tornado_handler.py.
+    
+gevent --
+    将额外拷贝 gevent_handler.py
+    
+gevent-socketio --
+    将额外拷贝 gevent_socketio_handler.py
+
 
 ### shell
 
