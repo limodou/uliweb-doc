@@ -81,4 +81,5 @@ articles/xhr_redirect_json.md
 articles/find_option.md
 articles/svg_mimetype_config.md
 articles/tornado_support.md
+articles/gevent_support.md
 {% endtoc %}
