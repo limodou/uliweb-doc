@@ -68,7 +68,13 @@
 
 
             <h1 id="title_1">Uliweb 更新日志<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">0.2<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">0.2.1<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ul>
+<li>添加 <code>uliweb.utils.timeit</code> 模块，用户可以使用 <code>with timeit(prompt):</code> 来计算下面   代码的执行时间</li>
+<li>修改 <code>file_serving()</code> 处理的 <code>action</code> 缺省值为 <code>None</code>. 这样缺省的 <code>/uploads</code> 文件   服务不再是默认为下载。</li>
+<li>修复ORM的Reference的validate问题。它影响Reference的默认缺省值。</li>
+</ul>
+<h2 id="title_1-2">0.2<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>修复 auth.models <code>get_href</code> 错误</li>
@@ -99,7 +105,7 @@
 <li><code>make_application()</code> 可以重入。</li>
 <li>添加 <code>ORM/MODELS_CONFIG</code> 配置支持。</li>
 </ul>
-<h2 id="title_1-2">0.1.7<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-3">0.1.7<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>増加 pretty_dict 函数，可以以缩近的形式打印dict数据结构，主要是为了输出。</li>
@@ -120,7 +126,7 @@
 <li>升级werkzeug的版本到0.9.1</li>
 <li>増加一个colorloged.py模块，可以用它来输出带颜色的日志信息。</li>
 </ul>
-<h2 id="title_1-3">0.1.6<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-4">0.1.6<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>添加CSRF APP，可以支持CSRF的保护</li>
@@ -168,7 +174,7 @@ des.descrypt(d)</code></pre></li>
 <li><p>删除0.1.4中提供的APPS_LAYOUT的机制，但是可以在模板中替換为:</p><pre class="prettyprint linenums"><code>{{extend settings.APP_LAYOUTS.get('messages', 'layout.html')}}</code></pre>
 <p>因此仍然可以把要替換的模板配置到settings.ini中。另一种办法是在新的app中直接定义一个要替換的同名模板，以实现新的要求。</p></li>
 </ul>
-<h2 id="title_1-4">0.1.5<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h2 id="title_1-5">0.1.5<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>修改cache设置，移除file_dir和lock_dir</li>
@@ -190,7 +196,7 @@ des.descrypt(d)</code></pre></li>
 <li>在uliweb中添加validator，使用[VALIDATORS]机制</li>
 <li>在generic.py中添加IS_LENGTH_LESSTHAN，如果max_length存在。</li>
 </ul>
-<h2 id="title_1-5">0.1.4<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h2 id="title_1-6">0.1.4<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>功能优化</p>
 <ul>
 <li>向utils/date増加毫秒格式的支持</li>
