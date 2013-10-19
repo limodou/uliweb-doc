@@ -74,8 +74,7 @@
 <div class="alert alert-warning">
 <p>关于如何安装uliweb这里不再描述了，有兴趣地找一找Hello, Uliweb文档。</p>
 
-</div>
-<h2 id="title_1-1">构建流程<a class="anchor" href="#title_1-1">&para;</a></h2>
+</div><h2 id="title_1-1">构建流程<a class="anchor" href="#title_1-1">&para;</a></h2>
 <h3 id="title_1-1-1">创建项目<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>进入一个初始目录（假定为$project），开始创建项目。</p>
 <p>进入命令行，执行:</p>
@@ -136,8 +135,7 @@ uliweb makeapp todo</code></pre>
 <div class="alert alert-warning">
 <p>注意，整个uliweb的教程全部使用utf-8编码（主要指模板及程序文件），以后也建议你使用utf-8编码。</p>
 
-</div>
-<h2 id="title_1-4">静态文件处理<a class="anchor" href="#title_1-4">&para;</a></h2>
+</div><h2 id="title_1-4">静态文件处理<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>为了方便，我从原来的版本中拷贝了styles目录到simple_todo/apps/todo/static 中去。</p>
 <h2 id="title_1-5">settings.ini配置<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>下面配置一下settings.ini文件。</p>
@@ -182,7 +180,7 @@ def index():
 * Restarting with reloader...
 * Loading DebuggedApplication...</code></pre>
 <p>说明，开发服务器已经准备完毕了，可以通过访问 <a href="http://localhost:8000" class="outter">http://localhost:8000</a> 来看效果了。 可以看到如下的效果:</p>
-<p><img src="_static/first.png" alt="image"/>
+<p><img src="_static/first.png" alt="image" class="img-polaroid"/>
 </p>
 <h2 id="title_1-7">添加数据库配置<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>基本架子已经搭好。下面是进行数据库配置。</p>
@@ -317,7 +315,7 @@ class Todo(object):
 <p>不好，报错了，说是使用了“Default Template”，这是怎么回事？</p>
 <p>因为我们使用了class view的方式，所以对于模板目录有一个小小的变化，那就是要在 templates中定义一个和Todo一样的目录，然后将index.html放到这个下面。这样，所有 在class view中定义的方法对应的模板都放到相应的类目录中。</p>
 <p>改完以后，再运行，结果是这个样子。</p>
-<p><img src="_static/view_index.png" alt="image"/>
+<p><img src="_static/view_index.png" alt="image" class="img-polaroid"/>
 </p>
 <h2 id="title_1-10">实现新增Todo<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>只要能添加就好办了。下面写添加代码:</p>
@@ -340,11 +338,11 @@ class Todo(object):
 </ol>
 <p>上面的代码将判断是否有title，如果没有则报错。如果有，则保存。让我们运行一下。</p>
 <p>让我们输入：这是一个测试</p>
-<p><img src="_static/new.png" alt="image"/>
+<p><img src="_static/new.png" alt="image" class="img-polaroid"/>
 </p>
 <p>如果我们什么都不输会怎么样？</p>
 <p>怎么回事，又报错！晕啊，程序真是不好写，Uliweb不好玩啊。先看下界面吧:</p>
-<p><img src="_static/error.png" alt="image"/>
+<p><img src="_static/error.png" alt="image" class="img-polaroid"/>
 </p>
 <p>这是一个调试界面，在Uliweb中使用了werkzeug的调试器，可以在Debug状态下，当出错时 显示出错界面，非常不错。上面的错误就是找不到error.html模板。为什么？因为我们没 有定义这样的一个模板。好吧，让我们在todo/templates下创建一个，因为它不是与class view 对应，所以不需要放在Todo目录下。</p>
 <p>创建的error.html代码如下:</p>

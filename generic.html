@@ -78,8 +78,7 @@
 <div class="alert alert-info">
 <p>本文档附带了一个示例，可以从 uliweb-doc/projects/genric_blog 中找到。</p>
 
-</div>
-<h2 id="title_1-2">ListView<a class="anchor" href="#title_1-2">&para;</a></h2>
+</div><h2 id="title_1-2">ListView<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>ListView用来处理列表显示。在最简单的情况下，你可能只需要在view中返回一个结果集， 然后在模板中对它进行展示。不过，这样一些处理将会集中在模板中。而ListView通过丰 富的参数，可以比较方便地进行：设置条件、处理字段、字段值的加工、不同的展示方式、 下载支持等。</p>
 <h3 id="title_1-2-1">ListView参数说明<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <pre class="prettyprint linenums"><code>class ListView(SimpleListView):
@@ -101,9 +100,12 @@
 </dd>
 <dt>order_by</dt>
 <dd><p>对查询结果进行排序。它可以是排序字段的列表，写法要符合sqlalchemy的要求，比如:</p>
-<pre class="prettyprint linenums"><code>(Model.c.name, Model.c.age.desc())</code></pre>
-<p>可以有多个排序字段，可以按升序或降序排序。</p>
 </dd>
+</dl><pre class="prettyprint linenums"><code>```
+(Model.c.name, Model.c.age.desc())
+```
+可以有多个排序字段，可以按升序或降序排序。</code></pre>
+<dl>
 <dt>pageno</dt>
 <dd><p>页号。ListView支持分页查询。第一页是从0开始。</p>
 </dd>
@@ -242,8 +244,7 @@ view = ListView(model, fields_convert_map=fields_convert_map)</code></pre>
 <div class="alert alert-info">
 <p>那么，为什么不将这个处理直接封装到 ListView中呢？因为随着前端使用的控件不同 可能会返回不同的分页关键字，比如有的使用 page和rows。所以你一般要在调用 ListView 之前进行转換。</p>
 
-</div>
-<h3 id="title_1-2-10">查询与条件<a class="anchor" href="#title_1-2-10">&para;</a></h3>
+</div><h3 id="title_1-2-10">查询与条件<a class="anchor" href="#title_1-2-10">&para;</a></h3>
 <p>在ListView中，第一个参数是Model的名字或类，那么为了返回正确的记录，你还可以传入 condition或query。其中condition对应合适查询条件，而query则对应合适的结果集。最终 的结果将由于传入这些参数而发生变化。整个查询的伪代码为:</p>
 <pre class="prettyprint linenums"><code>if 传入了query:
     结果集 = query
@@ -355,10 +356,17 @@ if 需要分页:
 </dd>
 <dt>ok_url</dt>
 <dd><p>成功后转換的URL地址。注意，它可以是一个回调函数，形式为:</p>
-<pre class="prettyprint linenums"><code>def get_url(id):
-    return '&lt;a href="/view/%d"&gt;查看&lt;/a&gt;' % id</code></pre>
-<p>为什么需要使用回调。因为它是基于这样的处理：在添加完记录后，需要跳转到view页 面。但是在调用AddView时，因为相应的对象还没有创建，所以没有对应的id，这样就 没有办法在调用时就传入还不存在的URL。因此采用回调的方式，会将保存后的id传入 回调函数，这样就可以动态创建新对象的URL地址了。如果不是跳转到view页面，则可 以考虑不采用回调。</p>
 </dd>
+</dl><pre class="prettyprint linenums"><code>```
+def get_url(id):
+    return '&lt;a href="/view/%d"&gt;查看&lt;/a&gt;' % id
+```
+为什么需要使用回调。因为它是基于这样的处理：在添加完记录后，需要跳转到view页
+面。但是在调用AddView时，因为相应的对象还没有创建，所以没有对应的id，这样就
+没有办法在调用时就传入还不存在的URL。因此采用回调的方式，会将保存后的id传入
+回调函数，这样就可以动态创建新对象的URL地址了。如果不是跳转到view页面，则可
+以考虑不采用回调。</code></pre>
+<dl>
 <dt>ok_template</dt>
 <dd><p>如果用户没有定义ok_template，并且不是json的返回方式，则将使用这个参数定义的 模板来展示页面。</p>
 </dd>
@@ -370,13 +378,16 @@ if 需要分页:
 </dd>
 <dt>form_args</dt>
 <dd><p>此参数将在生成Form实例时传入。它是一个dict，主要可以使用的参数如:</p>
-<pre class="prettyprint linenums"><code>{'action':提交对应的url,
+</dd>
+</dl><pre class="prettyprint linenums"><code>```
+{'action':提交对应的url,
  'method':提交方法，缺省为POST,
  'html_attrs':创建&lt;form&gt;时将使用的HTML的样式,
         #它也是一个dict，可以使用 {'id':Form的id值, 'class':类名} 等
  'buttons':对应的按钮
-}</code></pre>
-</dd>
+}
+```</code></pre>
+<dl>
 <dt>static_fields</dt>
 <dd><p>标识哪些是静态字段。有时我们定义在fiells或AddForm中的字段并不都是需要编辑的， 而是只读的字段，通过这个参数可以指定哪些是只读字段。不过要注意的是，这些字段 在用户提交后不会在提交数据中存在。</p>
 </dd>
@@ -406,27 +417,39 @@ if 需要分页:
 </dd>
 <dt>pre_save</dt>
 <dd><p>在保存前要执行的回调函数，它的定义为:</p>
-<pre class="prettyprint linenums"><code>def pre_save(data):
-    ...</code></pre>
-<p>其中，data是一个dict，并且它将直接会传入到AddView所关联的Model中，所以你可以 在这里通过修改data的值或添加新的值，从而影响保存到Model的数据。因此可以在这里 来设置缺省值，或对数据进行进一步加工。</p>
 </dd>
+</dl><pre class="prettyprint linenums"><code>```
+def pre_save(data):
+    ...
+```
+其中，data是一个dict，并且它将直接会传入到AddView所关联的Model中，所以你可以
+在这里通过修改data的值或添加新的值，从而影响保存到Model的数据。因此可以在这里
+来设置缺省值，或对数据进行进一步加工。</code></pre>
+<dl>
 <dt>post_save</dt>
 <dd><p>在保存后要执行的回调函数，它的定义为:</p>
-<pre class="prettyprint linenums"><code>def post_save(obj, data):
+</dd>
+</dl><pre class="prettyprint linenums"><code>```
+def post_save(obj, data):
     """
     obj 为保存后创建的对象
     data 为保存时使用的data数据
-    """</code></pre>
-<p>如果在保存完某个对象后，还要进行其它的Model的操作，那么在post_save中是合适的 位置。</p>
-</dd>
+    """
+```
+如果在保存完某个对象后，还要进行其它的Model的操作，那么在post_save中是合适的
+位置。</code></pre>
+<dl>
 <dt>post_created_form</dt>
 <dd><p>在创建完Form实例后将要调用的回调函数。它允许你对生成的Form作进一步的加工，比 如将原来非必输项的某个字段的required属性改为True，从而变成必输项。它的定义为:</p>
-<pre class="prettyprint linenums"><code>def post_created_form(fcls, model):
+</dd>
+</dl><pre class="prettyprint linenums"><code>```
+def post_created_form(fcls, model):
     """
     fcls 是对应的Form类
     model 是对应的Model类
-    """</code></pre>
-</dd>
+    """
+```</code></pre>
+<dl>
 <dt>layout</dt>
 <dd><p>uliweb中的Form支持不同的布局处理。一个布局是用来处理Form展示的类，它可以决 定是使用table还是div来展示一个form。具体layout的用途和对应的layout_cls有关。 详情参见[Form的布局处理]</p>
 </dd>
@@ -441,25 +464,28 @@ if 需要分页:
 </dd>
 <dt>success_data</dt>
 <dd><p>此参数可以有几个值，它是与返回json数据有关。如果在执行run()时传入了 run(json_result=True) 则表示返回结果为一个json的数据。这时，如果成功则会根据success_data的值来决定 返回的json内容。</p>
+</dd>
+</dl><pre class="prettyprint linenums"><code>True --
+        表示使用缺省的结果返回，那么它会简单的调用创建对象的to_dict()方法生成一个
+    dict，然后返回。
+function --
+        如果要自已加工，则可以传入一个回调函数，形式为:
+    ```
+    def success_data(obj, data):
+        """
+        obj为新创建的对象
+        data为保存时使用的数据
+        """
+    ```
+    这个函数需要返回一个dict值。</code></pre>
 <dl>
-<dt>True</dt>
-<dd><pre class="prettyprint linenums"><code>表示使用缺省的结果返回，那么它会简单的调用创建对象的to_dict()方法生成一个</code></pre>
-<p>dict，然后返回。</p>
-</dd>
-<dt>function</dt>
-<dd><pre class="prettyprint linenums"><code>如果要自已加工，则可以传入一个回调函数，形式为:</code></pre>
-<pre class="prettyprint linenums"><code>def success_data(obj, data):
-    """
-    obj为新创建的对象
-    data为保存时使用的数据
-    """</code></pre>
-<p>这个函数需要返回一个dict值。</p>
-</dd>
-</dl></dd>
 <dt>json_func</dt>
 <dd><p>当返回结果为json是，一般情况下会使用uliweb的json函数。但是有些情况，如在ie中使用 了iframe处理方式来调用jquery的jquery.form插件时，会有问题，原因是json返回的content_type 不正确。这里不能简单地返回 <code>application/json</code> 的类型，而是要返回 <code>text/html</code> 类型，示例代码如:</p>
-<pre class="prettyprint linenums"><code>json_func=partial(json, content_type='text/html;charset=utf-8')</code></pre>
 </dd>
+</dl><pre class="prettyprint linenums"><code>```
+json_func=partial(json, content_type='text/html;charset=utf-8')
+```</code></pre>
+<dl>
 <dt>meta</dt>
 <dd><p>静态字段集定义所对应的class名。</p>
 </dd>

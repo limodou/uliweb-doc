@@ -174,7 +174,7 @@ class Todo(View):
 <p>在Todo中还定义了一些类属性，用于具体的配置。如model对应要处理的表。layout表示整 体要使用的布局文件，这里是base.html。key_field是表示在显示列表时，哪个字段将展 示为相应的查看链接。其它的给注释了，它们显示的都是相应的缺省值。可以看到它还包含 了相应的分页的处理。</p>
 <p>上面 <code>_('New')</code> 是i18n(国际化)处理的例子。 <code>_</code> 是在 <code>from uliweb.i18n import ugettext as _</code> 中定义的。</p>
 <p>改完以后，再运行，结果是这个样子。</p>
-<p><img src="_static/plugs_todo_index.png" alt="image"/>
+<p><img src="_static/plugs_todo_index.png" alt="image" class="img-polaroid"/>
 </p>
 <p>这里的代码已经完成了整个的：列表显示，增加，删除，修改，查看的功能。但是它是以 一种预定义的方式来展示的，可能不能满足你的要求，但是作为快速开发会非常方便。</p>
 <p>你仍然可以使用更底层一些的generic.py来实现更加个性化的代码。</p>

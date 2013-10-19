@@ -77,24 +77,23 @@
 <li>进入 <a href="http://developer.baidu.com/service" class="outter">http://developer.baidu.com/service</a></li>
 <li>点击百度应用引擎，点击 “立刻开始使用”</li>
 </ol>
-<p><img src="_static/bae1.png" alt="image"/>
+<p><img src="_static/bae1.png" alt="image" class="img-polaroid"/>
 </p>
 <ol>
 <li>然后创建应用</li>
 <li>创建好后，大概是这样:</li>
 </ol>
-<p><img src="_static/bae2.png" alt="image"/>
+<p><img src="_static/bae2.png" alt="image" class="img-polaroid"/>
 </p>
 <ol>
 <li><p>点击版本管理后，新建一个版本。这里bae的版本和sae差不多，都是用数字作为版本     目录。它是从0开始。创建好后，在下面可以看到svn的地址。这样可以用Svn工具checkout     代码了。用户名口令就是百度的用户名口令。</p></li>
 </ol>
-<p><img src="_static/bae3.png" alt="image"/>
+<p><img src="_static/bae3.png" alt="image" class="img-polaroid"/>
 </p>
 <div class="alert alert-info">
 <p>要注意的是，我在使用chrome 21.x dev版本时报了一些js的错，所以后来切換到了 ie上来执行。说是我的chrome版本太高了，不知道算不算bug。</p>
 
-</div>
-<ol>
+</div><ol>
 <li><p>缺省情况下，刚checkout出来的代码只有3个文件:</p><pre class="prettyprint linenums"><code>app.conf
 favicon.ico
 index.py</code></pre></li>
@@ -129,20 +128,17 @@ application = make_application(project_dir=project_path)</code></pre>
 <dl>
 <dt>::</dt>
 <dd><p>#app.conf</p>
-<dl>
-<dt>handlers:</dt>
-<dd><ul>
-<li>url : /?(.*)     script : index.py</li>
-<li>expire : .jpg modify 10 years</li>
-<li>expire : .swf modify 10 years</li>
-<li>expire : .png modify 10 years</li>
-<li>expire : .gif modify 10 years</li>
-<li>expire : .JPG modify 10 years</li>
-<li>expire : .ico modify 10 years</li>
-</ul>
 </dd>
-</dl></dd>
-</dl><p>这是 <code>app.conf</code> 内容。原来 url 那行就是 '/' ，这里会替換为 <code>/?(.*)</code> 。上面的 格式是yaml的，所以和GAE很象。这个文件也可以直接在界面上进行修改。同时所有的文件 都可以在界面上直接修改。修改后会自动保存到svn中，你可以 update 与本地文件进行合并 处理。这点还是很方便的。</p>
+</dl><pre class="prettyprint linenums"><code>handlers: --
+    * url : /?(.*)
+        script : index.py
+    * expire : .jpg modify 10 years
+    * expire : .swf modify 10 years
+    * expire : .png modify 10 years
+    * expire : .gif modify 10 years
+    * expire : .JPG modify 10 years
+    * expire : .ico modify 10 years</code></pre>
+<p>这是 <code>app.conf</code> 内容。原来 url 那行就是 '/' ，这里会替換为 <code>/?(.*)</code> 。上面的 格式是yaml的，所以和GAE很象。这个文件也可以直接在界面上进行修改。同时所有的文件 都可以在界面上直接修改。修改后会自动保存到svn中，你可以 update 与本地文件进行合并 处理。这点还是很方便的。</p>
 <p>经过上面的处理，我们在 0 目录下已经有了:</p>
 <pre class="prettyprint linenums"><code>lib/
 app.conf
@@ -150,13 +146,13 @@ index.py
 favicon.ico</code></pre>
 <p>然后我们要把 uliweb 的压缩包放到 <code>lib</code> 目录下。因为 lib 会自动加入到 sys.path 中。所以我们要保留 uliweb 子目录，以便可以直接导入 uliweb 。这里这样的处理是因为 bae中还没有预装 uliweb 所以我们要自已上传。</p>
 <p>然后我们创建 project 目录，把 uliweb-doc/projects/simple_todo 的代码拷贝过来。这样 我们的目录结构基本上就是:</p>
-<p><img src="_static/bae4.png" alt="image"/>
+<p><img src="_static/bae4.png" alt="image" class="img-polaroid"/>
 </p>
 <h2 id="title_1-3">Simple To Do 部署<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>simple to do 是一个简单的todo展示。功能很简单，但是它使用到了数据库。所以使用 这个例子是为了验证数据库的安装是否正确。但是没有使用到session，所以无法测试session 是否可以正常使用。</p>
 <h3 id="title_1-3-3">创建数据库实例<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>在bae 的面板上点击 "云数据库" -&gt; "我的数据库" ，然后创建数据库:</p>
-<p><img src="_static/bae5.png" alt="image"/>
+<p><img src="_static/bae5.png" alt="image" class="img-polaroid"/>
 </p>
 <p>这里名称我们一会要使用。</p>
 <h3 id="title_1-3-4">simple_todo settings.ini修改<a class="anchor" href="#title_1-3-4">&para;</a></h3>
@@ -196,7 +192,7 @@ MYSQL_DB #不可用</code></pre>
 <h3 id="title_1-3-6">启动<a class="anchor" href="#title_1-3-6">&para;</a></h3>
 <p>将修改后的代码每次一提交，bae 会自动启动应用。使用预览的话可以看到每个版本的情况。 如果执行正确，在应用面板中，对于相要生效的版本点击前面的 radio button。bae会提 示你生效，一旦生效。你就可以通过域名来访问了。</p>
 <p>uliweb的演示版本为:  <a href="http://0.uliweb.duapp.com/" class="outter">http://0.uliweb.duapp.com/</a> 有兴趣可以试试。下面为页面示例:</p>
-<p><img src="_static/bae6.png" alt="image"/>
+<p><img src="_static/bae6.png" alt="image" class="img-polaroid"/>
 </p>
 <h2 id="title_1-4">BAE的受限环境说明<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>具体的受限说明详见下面的开发文档。特别要说明的是上面的 <code>settings.ini</code> 中的 <code>DEBUG</code><code>为</code><code>False</code> 。 为什么，因为bae把 <code>wsgi['stderr']</code> 给禁掉了。而 uliweb 的 debug 功能是依赖于 werkzeug 的 <code>DebugApplication</code> 类，它要使用 <code>wsgi['stderr']</code> 的。因为写不进去，所以就会报错。 不知道这块为什么要禁掉，这样调试就会很麻烦。</p>

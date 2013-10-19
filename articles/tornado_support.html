@@ -95,9 +95,7 @@
             "keyfile": options.ssl_key,
         }
     else:
-        ctx = None
-
-    container = tornado.wsgi.WSGIContainer(app)
+        ctx = None</code></pre><pre class="prettyprint linenums"><code>    container = tornado.wsgi.WSGIContainer(app)
     http_server = tornado.httpserver.HTTPServer(container, 
         ssl_options=ctx)
     http_server.listen(options.port, address=options.hostname)

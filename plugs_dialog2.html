@@ -65,7 +65,9 @@
             <div class="chapter-prev chapter-top">
     <a prev-chapter href="plugs_apps.html"><i class="icon-arrow-left"></i> Plugs App 清单</a>
 </div>
-
+<div class="chapter-next chapter-top">
+    <a next-chapter href="plugs/menus.html">menus - 菜单管理 <i class="icon-arrow-right"></i></a>
+</div>
 
             <h1 id="title_1">如何使用dialog2打开编辑窗口<a class="anchor" href="#title_1">&para;</a></h1>
 <p>使用dialog2打开窗口主要有两种方式：</p>
@@ -124,32 +126,28 @@ message_type:'bootstrap'
 <h3 id="title_1-1-4">Form的处理<a class="anchor" href="#title_1-1-4">&para;</a></h3>
 <p>因为使用了dialog2插件，如果在提交时，你想使用ajaxForm来处理，则需求按它的要求 在 <code>&lt;form&gt;</code> 中添加 <code>class=ajax</code> 属性。如果 Form 本身是手写代码很容易添加属性， 那么在自动生成 Form 内容的情况下，就需要一些技巧了。有以下方法可以在生成 Form 时添加class属性：</p>
 <ol>
-<li><p>在view中传入form参数</p><p>一般我们会使用generic.py中的 AddView，EditView等来自动生成Form。因此我们可以 向它们传入form_args参数，如:</p>
-<pre class="prettyprint linenums"><code>form_args={'action':request.path, 
+<li><p>在view中传入form参数</p><p>一般我们会使用generic.py中的 AddView，EditView等来自动生成Form。因此我们可以 向它们传入form_args参数，如:</p><pre class="prettyprint linenums"><code>form_args={'action':request.path, 
 'html_attrs':{'class':'ajax form-horizontal'},
 }</code></pre></li>
-<li><p>在模板中进行处理</p><p>我们可以利用Form类提供的build属性将Form的生成分成几部分，如：</p>
-<dl>
+<li><p>在模板中进行处理</p><p>我们可以利用Form类提供的build属性将Form的生成分成几部分，如：</p><dl>
 <dt>begin</dt>
 <dd><pre class="prettyprint linenums"><code>&lt;form class=xxxx&gt;</code></pre>
+<p>body --</p>
 </dd>
-<dt>body</dt>
-<dd><p>Form的内容</p>
-</dd>
+</dl><pre class="prettyprint linenums"><code>Form的内容</code></pre>
+<dl>
 <dt>buttons_line</dt>
-<dd><p>Form的按钮行</p>
+<dd><p>Form的按钮行 end --</p>
 </dd>
-<dt>end</dt>
-<dd><pre class="prettyprint linenums"><code>&lt;/form&gt;</code></pre>
-</dd>
-</dl><p>其中，每一部分都可以单独运行。这样我们就可以保留需要的内容，将其它的内容进 行替換。举例如下：</p>
-<pre class="prettyprint linenums"><code>&lt;form class="ajax {{=defined('form_class') or 'form-horizontal'}}" 
+</dl><pre class="prettyprint linenums"><code>```
+&lt;/form&gt;
+```</code></pre>
+<p>其中，每一部分都可以单独运行。这样我们就可以保留需要的内容，将其它的内容进 行替換。举例如下：</p><pre class="prettyprint linenums"><code>&lt;form class="ajax {{=defined('form_class') or 'form-horizontal'}}" 
     method="POST" action="{{=defined('action') or functions.request_url()}}"&gt;
 {{build = form.build}}
 {{&lt;&lt; build.body}}
 {{&lt;&lt; build.buttons_line}}
-&lt;/form&gt;</code></pre>
-<p>这个例子自定义了 begin 和 end 。在 <code>&lt;form&gt;</code> 上添加了 <code>ajax</code> 的 class。</p></li>
+&lt;/form&gt;</code></pre><p>这个例子自定义了 begin 和 end 。在 <code>&lt;form&gt;</code> 上添加了 <code>ajax</code> 的 class。</p></li>
 </ol>
 <div class="alert alert-info">
 <p>原来是使用 <code>request.url</code> 来表示请求的URL，但是在群集部署情况下， <code>request.url</code> 将是处理请求机器的IP，不是接入机的IP。所以会不正确。而 <code>functions.request_url()</code> 会只使用相对路径，避免了这一问题。</p>
@@ -159,7 +157,9 @@ message_type:'bootstrap'
             <div class="chapter-prev chapter-down">
     <a prev-chapter href="plugs_apps.html"><i class="icon-arrow-left"></i> Plugs App 清单</a>
 </div>
-
+<div class="chapter-next chapter-down">
+    <a next-chapter href="plugs/menus.html">menus - 菜单管理 <i class="icon-arrow-right"></i></a>
+</div>
             
             <div class="source">
                 <i class="icon-download"></i><a href="./source/plugs_dialog2.md">View Source</a>

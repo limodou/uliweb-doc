@@ -70,7 +70,7 @@
             <h1 id="title_1">Uliweb 简介<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">它是什么<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Uliweb是一个新的Python Web Framework，它之所以会产生是因为现有的框架多少有些令人 不满意的地方，而且许多情况下这些不满意的地方或多或少对我开发Web有影响，因此在经过对 不少框架的学习之后，我决定开发一个新的框架，希望可以综合我认为其它框架中尽可能多的 优点，同时使这个新的框架尽可能的简单，易于上手和使用。</p>
-<p>这个项目是由Limodou <a href="&#x6D;a&#x69;&#x6C;t&#x6F;&#x3A;lim&#x6F;d&#x6F;&#x75;&#x40;g&#x6D;ail.&#x63;&#x6F;m" class="inner">&#x6C;&#x69;&#x6D;&#x6F;dou&#x40;g&#x6D;ai&#x6C;.&#x63;&#x6F;&#x6D;</a>发起并创建的。其中得到了许多人的帮助。</p>
+<p>这个项目是由Limodou <a href="m&#x61;&#x69;l&#x74;o:&#x6C;imodo&#x75;@gmai&#x6C;.&#x63;&#x6F;m" class="inner">&#x6C;&#x69;&#x6D;odou&#x40;g&#x6D;a&#x69;&#x6C;.c&#x6F;&#x6D;</a>发起并创建的。其中得到了许多人的帮助。</p>
 <h2 id="title_1-2">License<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>Uliweb按照BSD进行发布。</p>
 <h2 id="title_1-3">基础组件<a class="anchor" href="#title_1-3">&para;</a></h2>
@@ -99,8 +99,10 @@
 <li><p>分散开发统一管理。采用App方式的项目组织。每个App有自已的配置文件，templates目录，     static目录。使得Uliweb的App重用非常方便。同时在使用上却可以将所有App看成一个整体，     可以相互引用静态文件和模板。缺省是所有App都是生效的，也可以指定哪些App是生效的。     所有生效App的配置文件在启动时会统一进行处理，最终合成一个完整的配置视图。</p></li>
 </ul></li>
 <li><p>URL处理</p><ul>
-<li><p>灵活强大的URL映射。采用Werkzeug的Routing模块，可以非常方便地定义URL，并与View函数     进行绑定。同时可以根据view函数反向生成URL。支持URL参数定义，支持缺省URL定义，如:</p><pre class="prettyprint linenums"><code>appname/view_module/function_name</code></pre></li>
-</ul></li>
+<li>灵活强大的URL映射。采用Werkzeug的Routing模块，可以非常方便地定义URL，并与View函数     进行绑定。同时可以根据view函数反向生成URL。支持URL参数定义，支持缺省URL定义，如:</li>
+</ul><pre class="prettyprint linenums"><code>```
+appname/view_module/function_name
+```</code></pre></li>
 <li><p>View与Template</p><ul>
 <li>View模板的自动套用。当view返回dict对象时，自动根据view函数的名字查找对应的模板。</li>
 <li>目前View方法支持一般函数和类的方式。</li>

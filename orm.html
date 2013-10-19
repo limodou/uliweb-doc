@@ -94,8 +94,7 @@ transaction = 'uliweb.orm.middle_transaction.TransactionMiddle'</code></pre>
 <div class="alert alert-info">
 <p>自动建表对于sqlite有一个问题。如果在你执行一个事务时，非查询和更新类的语句 会引发事务的自动提交。而自动建表就是会先查找表是否存在，因此会破坏事务的处理。 所以建议对于sqlite禁止自动建表，而是手工建表。其它的暂时还没有发现。</p>
 
-</div>
-<p><code>AUTO_DOTRANSACTION</code> 用于指示是否在执行 <code>do_</code> 时自动根据环境来创建新的共享 的线程连接并启动事务，详情参见下面关于多数据库连接的说明。</p>
+</div><p><code>AUTO_DOTRANSACTION</code> 用于指示是否在执行 <code>do_</code> 时自动根据环境来创建新的共享 的线程连接并启动事务，详情参见下面关于多数据库连接的说明。</p>
 <dl>
 <dt><code>CONNECTION</code> 用于设置数据库连接串。它是遵循SQLAlchemy的要求的。（详情可以参考</dt>
 <dd><p><a href="http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments" class="outter">http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments</a>）</p>
@@ -179,8 +178,7 @@ class Note(Model):
 <p>如在MySQL中修改某张表的存储引擎，可以:</p>
 <pre class="prettyprint linenums"><code>__table_args__ = {'mysql_engine':'MyISAM'} #'InnoDB'</code></pre>
 
-</div>
-<h3 id="title_1-3-4">表的映射<a class="anchor" href="#title_1-3-4">&para;</a></h3>
+</div><h3 id="title_1-3-4">表的映射<a class="anchor" href="#title_1-3-4">&para;</a></h3>
 <p>什么叫表的映射，就是它只是现有表的一个映射，在执行syncdb, reset, alembic相关命令 时，不会在数据库中执行create table或drop table的操作。因此，它只是用来映射。</p>
 <p>这里，映射的表，可以是真正的表，或者是视图(View)。</p>
 <p>它的作用？比如有两个项目，其中一个项目功能比较简单，它将使用另一个项目的表，因此 它本身并不需要建表，只要映射就可以了。因此它只需要把另一个项目的App添加到项目中。 另外，在使用alembic时，因为数据库的表是 由两个项目组成的，所以需要某种方式来区分：哪些表要真正创建，哪些表是已经存在直接 映射即可。因此Uliweb 0.1.7就引入了 <code>__mapping_only__</code> 属性。需要时，在Model的类 属性中定义即可，如：</p>
@@ -247,7 +245,6 @@ class Note(Model):
 </tr>
 <tr><td>PICKLE</td><td>PickleProperty,</td>
 </tr>
-
 </table>
 <p>小写的，都是Python内置的类型或类。大写的都是uliorm为了方便记忆而创建的。而上面 看到的关于Node的示例就是使用Field来定义字段的。</p>
 <h3 id="title_1-3-9">ID 属性<a class="anchor" href="#title_1-3-9">&para;</a></h3>
@@ -263,10 +260,16 @@ class Note(Model):
 </dd>
 <dt>name</dt>
 <dd><p>字段名，用在所创建的表中。它一般是和Property的实例名相同。例如:</p>
-<pre class="prettyprint linenums"><code>class User(Model):
-    username = StringProperty(name='user_name')</code></pre>
-<p>username就是Property的实例名，而name缺省不给出的话就是 <code>username</code>, 上面的 示例是指定了一个不同的值。因此你通过orm引用属性时要使用 <code>username</code>，但是 直接对数据库查询或操作时，即要使用 <code>user_name</code>, 因此为了避免造成理解和使用 上的混乱，建议不要指定 <code>name</code> 参数。</p>
 </dd>
+</dl><pre class="prettyprint linenums"><code>```
+class User(Model):
+    username = StringProperty(name='user_name')
+```
+username就是Property的实例名，而name缺省不给出的话就是 `username`, 上面的
+示例是指定了一个不同的值。因此你通过orm引用属性时要使用 `username`，但是
+直接对数据库查询或操作时，即要使用 `user_name`, 因此为了避免造成理解和使用
+上的混乱，建议不要指定 `name` 参数。</code></pre>
+<dl>
 <dt>default</dt>
 <dd><p>字段的缺省值。注意，default可以是一个函数。在创建一个Model的实例时，对于未 给出值的属性，uliorm会自动使用default给字段赋值。因此，如果default没有赋值， 则这个值一般为None。但是对于象IntegerProperty之类的特殊字段来说，缺省值不是None，如</p>
 <p>0。同时，在调用时要注意default函数执行是否可以成功。因为有的时候需要 在某个环境下，而你在执行时可能不具备所要求的环境，比如default函数要处理request.user， 但是你有可能在批处理中去创建实例，这样request.user是不会存在的，因此会报错。 简单的处理就是把Model.field.default置为None。</p>
@@ -276,12 +279,16 @@ class Note(Model):
 </dd>
 <dt>validators</dt>
 <dd><p>当给一个属性赋值时，uliorm会根据这个参数来校验传入值的合法性。它应该是一个 函数，这个函数应写为:</p>
-<pre class="prettyprint linenums"><code>def validator(data):
+</dd>
+</dl><pre class="prettyprint linenums"><code>```
+def validator(data):
     xxx
     if error:
-        raise BadValueError, message</code></pre>
-<p>如果校验失败，这个函数应该抛出一个 BadValueError的异常。如果成功，则返回 None或不返回。</p>
-</dd>
+        raise BadValueError, message
+```
+如果校验失败，这个函数应该抛出一个 BadValueError的异常。如果成功，则返回
+None或不返回。</code></pre>
+<dl>
 <dt>choices</dt>
 <dd><p>当属性值的取值范围是有限时可以使用。它是一个list，每个元素是一个二元tuple， 格式为(value, display)，value为取值，display为显示信息。目前，uliorm并不用 它来校验传入数据的正确性，用户可以根据需要自定义校验函数，传入validators中 进行校验处理。</p>
 </dd>
@@ -322,40 +329,23 @@ class Note(Model):
 </dd>
 <dt>format</dt>
 <dd><p>用来设置日期时间的格式串，uliorm会用它进行日期格式的转换。在缺省情况 下，当传入一个字符串格式的日期字段时，uliorm会进行以下尝试:</p>
-<table class="table table-bordered">
-<tr><td>格式串</td><td>样例</td>
-</tr>
-<tr><td>'%Y-%m-%d %H:%M:%S'</td><td>'2006-10-25 14:30:59'</td>
-</tr>
-<tr><td>'%Y-%m-%d %H:%M'</td><td>'2006-10-25 14:30'</td>
-</tr>
-<tr><td>'%Y-%m-%d'</td><td>'2006-10-25'</td>
-</tr>
-<tr><td>'%Y/%m/%d %H:%M:%S'</td><td>'2006/10/25 14:30:59'</td>
-</tr>
-<tr><td>'%Y/%m/%d %H:%M'</td><td>'2006/10/25 14:30'</td>
-</tr>
-<tr><td>'%Y/%m/%d '</td><td>'2006/10/25 '</td>
-</tr>
-<tr><td>'%m/%d/%Y %H:%M:%S'</td><td>'10/25/2006 14:30:59'</td>
-</tr>
-<tr><td>'%m/%d/%Y %H:%M'</td><td>'10/25/2006 14:30'</td>
-</tr>
-<tr><td>'%m/%d/%Y'</td><td>'10/25/2006'</td>
-</tr>
-<tr><td>'%m/%d/%y %H:%M:%S'</td><td>'10/25/06 14:30:59'</td>
-</tr>
-<tr><td>'%m/%d/%y %H:%M'</td><td>'10/25/06 14:30'</td>
-</tr>
-<tr><td>'%m/%d/%y'</td><td>'10/25/06'</td>
-</tr>
-<tr><td>'%H:%M:%S'</td><td>'14:30:59'</td>
-</tr>
-<tr><td>'%H:%M'</td><td>'14:30'</td>
-</tr>
-</table>
 </dd>
-</dl><h4 id="title_1-3-11-7">BooleanProperty<a class="anchor" href="#title_1-3-11-7">&para;</a></h4>
+</dl><pre class="prettyprint linenums"><code>|| 格式串 || 样例 ||
+|| '%Y-%m-%d %H:%M:%S' || '2006-10-25 14:30:59' ||
+|| '%Y-%m-%d %H:%M' || '2006-10-25 14:30' ||
+|| '%Y-%m-%d' || '2006-10-25' ||
+|| '%Y/%m/%d %H:%M:%S' || '2006/10/25 14:30:59' ||
+|| '%Y/%m/%d %H:%M' || '2006/10/25 14:30' ||
+|| '%Y/%m/%d ' || '2006/10/25 ' ||
+|| '%m/%d/%Y %H:%M:%S' || '10/25/2006 14:30:59' ||
+|| '%m/%d/%Y %H:%M' || '10/25/2006 14:30' ||
+|| '%m/%d/%Y' || '10/25/2006' ||
+|| '%m/%d/%y %H:%M:%S' || '10/25/06 14:30:59' ||
+|| '%m/%d/%y %H:%M' || '10/25/06 14:30' ||
+|| '%m/%d/%y' || '10/25/06' ||
+|| '%H:%M:%S' || '14:30:59' ||
+|| '%H:%M' || '14:30' ||</code></pre>
+<h4 id="title_1-3-11-7">BooleanProperty<a class="anchor" href="#title_1-3-11-7">&para;</a></h4>
 <p>与 <code>Boolean</code> 相对应。不过对于不同的数据库底层可能还是不同。具体是由SQLAlchemy 来实现的。</p>
 <h4 id="title_1-3-11-8">DecimalProperty<a class="anchor" href="#title_1-3-11-8">&para;</a></h4>
 <p>与 <code>Numric</code> 相对应。它有两个参数：</p>
@@ -398,8 +388,7 @@ class Note(Model):
 </dl><div class="alert alert-info">
 <p>Uliweb中Model对应的表名一方面可以通过 <code>__tablename__</code> 来指定。另一方面，它 可以将Model的类名小写作为表名。</p>
 
-</div>
-<h2 id="title_1-4">关系定义<a class="anchor" href="#title_1-4">&para;</a></h2>
+</div><h2 id="title_1-4">关系定义<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>uliorm支持以下几种关系的定义: OneToOne, Reference, SelfReference, ManyToMany.</p>
 <h3 id="title_1-4-13">OneToOne<a class="anchor" href="#title_1-4-13">&para;</a></h3>
 <p>OneToOne是用来定义一对一的关系。</p>
@@ -426,8 +415,7 @@ True
 <div class="alert alert-info">
 <p>注意，OneToOne只是一个关系，它并不会自动根据主表记录自动创建关联表的记录。</p>
 
-</div>
-<h3 id="title_1-4-14">Reference<a class="anchor" href="#title_1-4-14">&para;</a></h3>
+</div><h3 id="title_1-4-14">Reference<a class="anchor" href="#title_1-4-14">&para;</a></h3>
 <p>uliorm使用 <code>Reference</code> 来定义多对一的关系。</p>
 <pre class="prettyprint linenums"><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
@@ -471,8 +459,7 @@ True
 </dl><div class="alert alert-info">
 <p>uliorm的Reference关系并不会生成ForeignKey的外键。因为，一旦使用外键，则删除 导入数据时都有一个执行顺序，非常难处理。所以在设计上没有采用外键。</p>
 
-</div>
-<h3 id="title_1-4-15">SelfReference<a class="anchor" href="#title_1-4-15">&para;</a></h3>
+</div><h3 id="title_1-4-15">SelfReference<a class="anchor" href="#title_1-4-15">&para;</a></h3>
 <p>如果你想引用自身,你可以使用 <code>SelfReference</code>, 例如:</p>
 <pre class="prettyprint linenums"><code>&gt;&gt;&gt; class User(Model):
 ...     username = Field(unicode)
@@ -539,8 +526,7 @@ user = User.get(User.c.id==5)</code></pre>
 <div class="alert alert-info">
 <p>注意，在结果集上，你可以多个使用filter()连接多个 <code>and</code> 的条件，而get不支 持这样的用法。比如你可以 User.filter(User.c.id=5).filter(User.c.year&gt;30)。</p>
 
-</div>
-<pre class="prettyprint linenums"><code>user = User.get_or_notfound(5)</code></pre>
+</div><pre class="prettyprint linenums"><code>user = User.get_or_notfound(5)</code></pre>
 <p>使用get_or_notfound可以当无满足条件的对象时抛出一个NotFound的异常。</p>
 <h4 id="title_1-5-17-15">删除实例<a class="anchor" href="#title_1-5-17-15">&para;</a></h4>
 <pre class="prettyprint linenums"><code>user = User.get(5)
@@ -556,20 +542,21 @@ user.save()</code></pre>
 <div class="alert alert-info">
 <p>注意，象创建和更新时，在调用相关的方法时，你传入的是key=value的写法，这里 key就是字段的名字。但是在写条件时，你要使用 Model.c.fieldname 这样的写法， 并且不是赋值，而是python的各种运算符。不要搞错了。</p>
 
-</div>
-<p>Uliorm在保存时会根据对象的id值是否为None来判断是否是insert还是update。如果你直接 设置了id值，但是又希望通过insert来插入数据，可以在调用save时传入 <code>insert=True</code> 。</p>
+</div><p>Uliorm在保存时会根据对象的id值是否为None来判断是否是insert还是update。如果你直接 设置了id值，但是又希望通过insert来插入数据，可以在调用save时传入 <code>insert=True</code> 。</p>
 <div class="alert alert-warning">
 <p>Model中更新数据库相关的方法，如: save, delete, get, get_or_notfound, count, remove 都可以传入connection参数，它可以是数据库连接名或真正的连接对象。</p>
 
-</div>
-<h4 id="title_1-5-17-17">其它的API<a class="anchor" href="#title_1-5-17-17">&para;</a></h4>
+</div><h4 id="title_1-5-17-17">其它的API<a class="anchor" href="#title_1-5-17-17">&para;</a></h4>
 <dl>
 <dt>to_dict(fields=[], convert=True, manytomany=False)</dt>
 <dd><p>将实例的值转为一个dict对象。如果没有给出fields参数，则所有字段都将转出。 注意，这里对 <code>ManyToMany</code> 属性有特殊的处理。因为 <code>ManyToMany</code> 属性并 不是真正的表中的字段，所以缺省情况下是不会包含这些值的，如果指定manytomany为 True，则会也把相应的 <code>ManyToMany</code> 所对应的对象集的ID取出来，组织为一个list。 如果convert=True，则在取出字段值的时候，还会调用field_str函数进行值的处理。 在调用field_str时，strict保持为False不变。 举例:</p>
-<pre class="prettyprint linenums"><code>a = User.get(1)
-a.to_dict() #this will dump all fields
-a.to_dict(['name', 'age'])    #this will only dump 'name' and 'age' fields</code></pre>
 </dd>
+</dl><pre class="prettyprint linenums"><code>```
+a = User.get(1)
+a.to_dict() #this will dump all fields
+a.to_dict(['name', 'age'])    #this will only dump 'name' and 'age' fields
+```</code></pre>
+<dl>
 <dt>field_str(v, strict=False)</dt>
 <dd><p>将某个字段的值转为字符串表示。如果strict为False，则只会处理日期类型、Decimal 类型和将Unicode转为字符串。如果strict为True，则：None会转为''，其它的全部转为 字符串。</p>
 </dd>
@@ -578,11 +565,14 @@ a.to_dict(['name', 'age'])    #this will only dump 'name' and 'age' fields</code
 </dd>
 <dt>get_datastore_value(field_name)</dt>
 <dd><p>返回指定字段的数据库的值。特别是对于 <code>Reference</code> 字段，如果直接使用inst.reference 则得到的会是引用的对象，而不是数据库保存的值。而使用 <code>get_datastore_value()</code> 可以得到数据库的值。</p>
-<div class="alert alert-info">
-<p>uliorm会将 <code>Reference</code> 字段保存到 <code>_field_name_</code> 的属性中，因此可以 直接使用它来得到 <code>Reference</code> 的值。比如 <code>User.c.system</code> 可能是指向 <code>System</code> 表的引用，直接使用 <code>user.system</code> 会得到对象的 <code>System</code> 的对象。而使用 <code>user._system_</code> 则得到对应的数据库的值。</p>
-
-</div></dd>
-</dl><h3 id="title_1-5-18">Model级<a class="anchor" href="#title_1-5-18">&para;</a></h3>
+</dd>
+</dl><pre class="prettyprint linenums"><code>{% alert class=info %}
+uliorm会将 `Reference` 字段保存到 `_field_name_` 的属性中，因此可以
+直接使用它来得到 `Reference` 的值。比如 `User.c.system` 可能是指向 `System`
+表的引用，直接使用 `user.system` 会得到对象的 `System` 的对象。而使用 `user._system_`
+则得到对应的数据库的值。
+{% endalert %}</code></pre>
+<h3 id="title_1-5-18">Model级<a class="anchor" href="#title_1-5-18">&para;</a></h3>
 <p>uliorm在Model级上的操作主要有两类，一类是直接通过Model.func来调用的，另一类是通 过Model.func或Model.relationship的方式返回结果集，再在结果集上进行操作。对于与 查询相关的函数，是可以连在一起使用的，比如:</p>
 <pre class="prettyprint linenums"><code>User.filter(...).filter(...).count()</code></pre>
 <p>有些方法会返回结果集，因此你可以在返回值的基础上，再调用查询相关的方法。有些方法会 直接返回结果，不能再调用查询相关的方法。</p>
@@ -599,8 +589,7 @@ User.filter(User.c.year&lt;18).remove()</code></pre>
 <div class="alert alert-info">
 <p>注意，结果集的删除是使用 <code>remove</code> ，而实例的删除是使用 <code>delete</code> 。</p>
 
-</div>
-<h4 id="title_1-5-18-20">记录条数统计<a class="anchor" href="#title_1-5-18-20">&para;</a></h4>
+</div><h4 id="title_1-5-18-20">记录条数统计<a class="anchor" href="#title_1-5-18-20">&para;</a></h4>
 <p>Model中提供了 <code>count(condition)</code> 来计算满足条件的记录数。同时你也可以利用结果 集来统计，例如:</p>
 <pre class="prettyprint linenums"><code>User.count(User.c.year&lt;18)
 #等价于
@@ -618,14 +607,12 @@ User.filter(User.c.year&lt;18).count()</code></pre>
 </dd>
 <dt>get_engine_name()</dt>
 <dd><p>获得当前表所使用的数据库连接的名字。在多个地方都可以设置数据库连接，uliweb 将按以下顺序来判断：</p>
-<ul>
-<li>是否设置了 <code>__engine_name__</code></li>
-<li>是否在 <code>settings.ini</code> 中设置了对应的连接名</li>
-<li><code>'default'</code></li>
-</ul>
-<p>这样在缺省情况下，数据库连接名为 <code>default</code> .</p>
 </dd>
-</dl><h3 id="title_1-5-19">关系级<a class="anchor" href="#title_1-5-19">&para;</a></h3>
+</dl><pre class="prettyprint linenums"><code>* 是否设置了 `__engine_name__`
+* 是否在 `settings.ini` 中设置了对应的连接名
+* `'default'`
+这样在缺省情况下，数据库连接名为 `default` .</code></pre>
+<h3 id="title_1-5-19">关系级<a class="anchor" href="#title_1-5-19">&para;</a></h3>
 <h4 id="title_1-5-19-22">一对一(One to One)<a class="anchor" href="#title_1-5-19-22">&para;</a></h4>
 <p>一对一关系没什么特别的，例如:</p>
 <pre class="prettyprint linenums"><code>&gt;&gt;&gt; class Test(Model):
@@ -642,8 +629,7 @@ User.filter(User.c.year&lt;18).count()</code></pre>
 <div class="alert alert-info">
 <p>注意，关系的建立是在相关的对象创建之后，而不是会根据关系自动创建对应的对象。</p>
 
-</div>
-<h4 id="title_1-5-19-23">多对一(Many to One)<a class="anchor" href="#title_1-5-19-23">&para;</a></h4>
+</div><h4 id="title_1-5-19-23">多对一(Many to One)<a class="anchor" href="#title_1-5-19-23">&para;</a></h4>
 <pre class="prettyprint linenums"><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
 ...     year = Field(int)
@@ -684,37 +670,51 @@ for row in query:</code></pre>
 </dd>
 <dt>filter(condition): Result</dt>
 <dd><p>按条件查询。可以多个filter连用。返回结果集本身。 示例:</p>
-<pre class="prettyprint linenums"><code>User.filter(User.c.age &gt; 30).filter(User.c.username.like('Lee' + '%%'))</code></pre>
 </dd>
+</dl><pre class="prettyprint linenums"><code>```
+User.filter(User.c.age &gt; 30).filter(User.c.username.like('Lee' + '%%'))
+```</code></pre>
+<dl>
 <dt>connect(engine_name): Result</dt>
 <dd><p>切換到指定的连接名上，engine_name可以是连接名，Engine对象或Connection对象。</p>
 </dd>
 <dt>count(): int</dt>
 <dd><p>返回满足条件的记录条数。需要与前面的all(), filter()连用。</p>
-<div class="alert alert-info">
-<p>在Model中也有一个count()方法，但是它是可以带条件的，比如: <code>User.count(User.c.age &gt; 30)</code> 。 它可以等同于 <code>User.filter(User.c.age &gt; 30).count()</code></p>
-
-</div>
-<p>示例:</p>
-<pre class="prettyprint linenums"><code>User.all().count()
-User.filter(User.c.username == 'a').count()</code></pre>
 </dd>
+</dl><pre class="prettyprint linenums"><code>{% alert class=info %}
+在Model中也有一个count()方法，但是它是可以带条件的，比如: `User.count(User.c.age &gt; 30)` 。
+它可以等同于 `User.filter(User.c.age &gt; 30).count()`
+{% endalert %}
+示例:
+```
+User.all().count()
+User.filter(User.c.username == 'a').count()
+```</code></pre>
+<dl>
 <dt>remove(): None</dt>
 <dd><p>删除所有满足条件的记录。它其实是调用 Model.remove(condition)。可以和 <code>all()</code> 和 <code>filter()</code> 连用。</p>
 </dd>
 <dt>update(**kwargs):</dt>
 <dd><p>执行一条update语句。例如:</p>
-<pre class="prettyprint linenums"><code>User.filter(User.c.id==1).update(username='test')</code></pre>
-<p>它等同于:</p>
-<pre class="prettyprint linenums"><code>do_(User.table.update().where(User.c.id==1).values(username='test'))</code></pre>
 </dd>
+</dl><pre class="prettyprint linenums"><code>```
+User.filter(User.c.id==1).update(username='test')
+```
+它等同于:
+```
+do_(User.table.update().where(User.c.id==1).values(username='test'))
+```</code></pre>
+<dl>
 <dt>order_by(*field): Result</dt>
 <dd><p>向查询中添加 <code>ORDER BY</code> 字句。例如:</p>
-<pre class="prettyprint linenums"><code>result.order_by(User.c.year.desc()).order_by(User.c.username.asc())
-#or
-result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
-<p>缺省情况下是按升序排列，所以asc()可以不加。</p>
 </dd>
+</dl><pre class="prettyprint linenums"><code>```
+result.order_by(User.c.year.desc()).order_by(User.c.username.asc())
+#or
+result.order_by(User.c.year.desc(), User.c.username.asc())
+```
+缺省情况下是按升序排列，所以asc()可以不加。</code></pre>
+<dl>
 <dt>limit(n): Result</dt>
 <dd><p>向查询中添加 <code>LIMIT</code> 子句。<code>n</code> 是一个整数。</p>
 </dd>
@@ -726,11 +726,14 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 </dd>
 <dt>values(*fields): 结果 generator</dt>
 <dd><p>它将根据前面设置的条件立即返回一个结果的generator。每行只会列出指定的字段值。 fields为字段列表，可以直接是字段的名字，也可以是Model.c.fieldname的形式。 例如:</p>
-<pre class="prettyprint linenums"><code>&gt;&gt;&gt; print a1.tttt.all().values(Test1.c.name, Test1.c.year)
+</dd>
+</dl><pre class="prettyprint linenums"><code>```
+&gt;&gt;&gt; print a1.tttt.all().values(Test1.c.name, Test1.c.year)
 [(u'user', 5), (u'aaaa', 10)]
 &gt;&gt;&gt; print a1.tttt.all().values('name', 'year')
-a1.tttt.all().values(Test1.c.name, Test1.c.year)</code></pre>
-</dd>
+a1.tttt.all().values(Test1.c.name, Test1.c.year)
+```</code></pre>
+<dl>
 <dt>one(): value</dt>
 <dd><p>只返回结果集中的第一条记录。如果没有记录，则返回 <code>None</code> 。</p>
 </dd>
@@ -767,8 +770,7 @@ a1.tttt.all().values(Test1.c.name, Test1.c.year)</code></pre>
 <div class="alert alert-info">
 <p>一般情况下，只有事务处理Middleware捕获到了异常时，才会自动对事务进行回滚。 因此，如果你自行捕获了异常并进行了处理，一般要自行去处理异常。</p>
 
-</div>
-<p>手工处理事务，uliorm提供了基于线程模式的连接处理。uliorm提供了：Begin(), Commit(), 和Rollback()函数。当执行Begin()时，它会先检查是否当前线程已经存在一个连接， 如果存在，则直接使用，如果不存在则，如果传入了create=True，则自动创建一个连接， 并绑到当前的线程中。如果create=False，则使用engine的连接。同时Commit()和Rollback() 都会使用类似的方式，以保证与Begin()中获得的连接一致。</p>
+</div><p>手工处理事务，uliorm提供了基于线程模式的连接处理。uliorm提供了：Begin(), Commit(), 和Rollback()函数。当执行Begin()时，它会先检查是否当前线程已经存在一个连接， 如果存在，则直接使用，如果不存在则，如果传入了create=True，则自动创建一个连接， 并绑到当前的线程中。如果create=False，则使用engine的连接。同时Commit()和Rollback() 都会使用类似的方式，以保证与Begin()中获得的连接一致。</p>
 <h3 id="title_1-6-22">Web事务模式<a class="anchor" href="#title_1-6-22">&para;</a></h3>
 <p>一般你要使用事务中间件，它的处理代码很简单，为:</p>
 <pre class="prettyprint linenums"><code>class TransactionMiddle(Middleware):
@@ -823,23 +825,13 @@ select(User.c, User.c.username=='limodou').execute()</code></pre>
 <h2 id="title_1-8">Model配置化<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>uliorm在考虑Model的可替换性时，提供了一种配置机制。这种机制主要是由orm app来初 始化的，它对Model的编写有一定的要求。使用配置机制的好处主要有两点：</p>
 <ol>
-<li><p>可以方便使用，不用关心要使用的Model是在哪里定义的。orm提供了 <code>get_model()</code>     方法，可以传入字符串的表名或真正的Model对象。因此在一般情况下，使用字符串     形式是最方便的。比如我们想获得一个User的Model，可以使用:</p><pre class="prettyprint linenums"><code>User = get_model('user')</code></pre>
-<p>但是使用这种字符串的形式，对于Model的配置有要求。需要在settings.ini中配置:</p>
-<pre class="prettyprint linenums"><code>[MODELS]
-user = 'uliweb.contrib.auth.models.User'</code></pre>
-<p>其中key为引用的别名。它可以是表名（一般为Model类名小写），也可以不是表名。 value为表所对应的Model类的路径。uliorm将在需要时自动进行导入。</p>
-<div class="alert alert-info">
+<li><p>可以方便使用，不用关心要使用的Model是在哪里定义的。orm提供了 <code>get_model()</code>     方法，可以传入字符串的表名或真正的Model对象。因此在一般情况下，使用字符串     形式是最方便的。比如我们想获得一个User的Model，可以使用:</p><pre class="prettyprint linenums"><code>User = get_model('user')</code></pre><p>但是使用这种字符串的形式，对于Model的配置有要求。需要在settings.ini中配置:</p><pre class="prettyprint linenums"><code>[MODELS]
+user = 'uliweb.contrib.auth.models.User'</code></pre><p>其中key为引用的别名。它可以是表名（一般为Model类名小写），也可以不是表名。 value为表所对应的Model类的路径。uliorm将在需要时自动进行导入。</p><div class="alert alert-info">
 <p>为什么需要表名呢？因为orm提供的命令行工具中，syncdb会自动创建数据库中 不存在的表，它就是使用的真正的表名。</p>
 
-</div>
-<div class="alert alert-info">
-<p>在使用多数据库连接时，可以在上面的MODELS中的每张表的路径后面添加数据库 连接名，如:</p>
-<pre class="prettyprint linenums"><code>[MODELS]
+</div><p>{% alert class=info %} 在使用多数据库连接时，可以在上面的MODELS中的每张表的路径后面添加数据库 连接名，如:</p><pre class="prettyprint linenums"><code>[MODELS]
 user = 'uliweb.contrib.auth.models.User', 'test'
-user = 'uliweb.contrib.auth.models.User', ['default', 'test']</code></pre>
-<p>第一种是说只在 <code>test</code> 中使用User表。而第二种则表示可以在 <code>default</code> 或 <code>test</code> 中使用User表，决定的顺序一是根据 Model 的 <code>__engine_name</code> 的设置或执行时使用 <code>connect(engine_name)</code> 进行设定。否则将使用第一个。</p>
-
-</div></li>
+user = 'uliweb.contrib.auth.models.User', ['default', 'test']</code></pre><p>第一种是说只在 <code>test</code> 中使用User表。而第二种则表示可以在 <code>default</code> 或 <code>test</code> 中使用User表，决定的顺序一是根据 Model 的 <code>__engine_name</code> 的设置或执行时使用 <code>connect(engine_name)</code> 进行设定。否则将使用第一个。 {% endalert %}</p></li>
 <li><p>可以有条件的方便进行替换。     在某些时候，你可能发现某个app的表结构要扩展几个字段，但是因为已经有许多Model     和这个表实现了关联，而且这个app提供了其它与些Model相关的一些方法。因此，如果     简单地替换这个app，有可能会要同时修改其它的app的代码，比如导入处理等。如是你     在定义关系时使用的是get_model(name)的形式，并且name是字符串，这样你实际上已经     实现了Model的配置化。因此你就可以定义新的Model类，并且配置到settings.ini中来     替换原来的Model。如果不是把配置信息写到同一个settings.ini中，那么，你可以把     新的App定义到原来的App之后(这里指INSTALLED_APPS)，这样后面定义的内容会覆盖前     面定义的内容。这种做比较适合扩展字段的情况，或表结构的修改不影响其它的功能调     用的情况。</p></li>
 </ol>
 <p>在定义关系时，象OneToOne, Reference和ManyToMany时既可以接受字符串的Model名，也 可以直接传入Model的类，都可以。</p>
@@ -888,10 +880,13 @@ except:
 <dl>
 <dt>set_auto_create(flag)</dt>
 <dd><p>设置是否自动建表。flag取值为True或False。缺省为False。这一功能在开发时比较 有用，因为可以不使用uliweb syncdb来建表，但是在生产环境中建议关闭，手动来 处理。</p>
-<div class="alert alert-info">
-<p>在使用sqlite时，发现有问题。当处于一个事务中，如果出现非select, update 之类的语句，sqlite会自动提交事务，造成事务处理不是按你的预期，所以也需 要关闭这个功能。</p>
-
-</div></dd>
+</dd>
+</dl><pre class="prettyprint linenums"><code>{% alert class=info %}
+在使用sqlite时，发现有问题。当处于一个事务中，如果出现非select, update
+之类的语句，sqlite会自动提交事务，造成事务处理不是按你的预期，所以也需
+要关闭这个功能。
+{% endalert %}</code></pre>
+<dl>
 <dt>set_debug_query(flag)</dt>
 <dd><p>设置调试模式。如果flag为True，则生成的SQL语句将输出到日志中。如果你是通过 <code>get_connection()</code> 得到的一个数据库连接对象，可以简单地设置 <code>db.echo = True</code> 来激活调试模式。</p>
 </dd>
@@ -900,15 +895,18 @@ except:
 </dd>
 <dt>get_connection(connection='', default=True, debug=None, engine_name=None, connection_type='long', **args)</dt>
 <dd><p>建立一个数据库连接，并返回连接对象。 connection需要按SQLAlchemy的要求来编写。 get_connection既可以支持原来的单数据库连接模式，也可以支持多数据库连接模式， 还可以支持缺省连接模式，既上次创建过，然后复用原来的连接。那么它按以下策略 来处理:</p>
-<pre class="prettyprint linenums"><code>if connection 不为空:
+</dd>
+</dl><pre class="prettyprint linenums"><code>```
+if connection 不为空:
     则缺建新的连接
     if default is True:
         则将连接设置到线程中进行共享
     else:
         不共享
 else:
-    按engine_name来返回连接。如果engine_name为None，则使用 default</code></pre>
-</dd>
+    按engine_name来返回连接。如果engine_name为None，则使用 default
+```</code></pre>
+<dl>
 <dt>get_model(model, engine_name=None)</dt>
 <dd><p>返回指定连接的 <code>model</code> 对应的Class。如果是字符串值，则需要根据Model配置的要求在settings.ini 中定义Model的信息才有效果。也可以传入Model的类。 如果engine_name不为None，则根据给定的engine_name来查找Model。如果不存在，则 抛出异常。 如果engine_name为空时，将会智能搜索。如果某个Model只设置了一个数据库连接， 则自动使用这个连接，如果存在多个则会抛出异常。</p>
 </dd>
@@ -935,11 +933,12 @@ else:
 </dd>
 <dt>do_(sql, ec=None)</dt>
 <dd><p>执行一条SQL语句。使用当前的线程连接。只有当使用非ORM的API时才需要使用它 来处理，比如直接使用SQLAlchemy提供的：select, update, delete, insert时，可 以这样:</p>
-<pre class="prettyprint linenums"><code>from uliweb.orm import do_
-    
-result = do_(select(User.c, User.c.username=='limodou'))</code></pre>
 </dd>
-</dl><h2 id="title_1-11">多数据库连接<a class="anchor" href="#title_1-11">&para;</a></h2>
+</dl><pre class="prettyprint linenums"><code>```
+from uliweb.orm import do_
+result = do_(select(User.c, User.c.username=='limodou'))
+```</code></pre>
+<h2 id="title_1-11">多数据库连接<a class="anchor" href="#title_1-11">&para;</a></h2>
 <p>从 0.1 版本开始，uliorm 就开始支持多数据库连接了，多数据库连接在这里有两种涵义:</p>
 <ul>
 <li>同类数据库的不同连接</li>
@@ -1013,8 +1012,7 @@ Result.connect(engine_name)</code></pre>
 <div class="alert alert-info">
 <p>原来想实现隐式的连接切換功能，即不要显示地使用象 <code>connect()</code> 这样的方法。但是 发现很难做到。</p>
 
-</div>
-<h3 id="title_1-11-29">多数据库下的语句执行与事务处理<a class="anchor" href="#title_1-11-29">&para;</a></h3>
+</div><h3 id="title_1-11-29">多数据库下的语句执行与事务处理<a class="anchor" href="#title_1-11-29">&para;</a></h3>
 <p>在数据库处理中，所有的语句都需要在连接上被执行，事务也是在连接上被处理。不同的 连接意味着不同的处理。考虑到web处理和批处理的方式不同，我们可以考虑以下的场景:</p>
 <ul>
 <li><p>web处理一般是按请求来执行的，因此一个请求过来，创建一个连接，处理完毕后释放。     连接可以是长连接或短连接。长连接意味着将使用连接池，因此所谓的释放就是放回池     子里供下一次使用。而短连接就没有池子，释放就是真正的关闭，下次请求将再次创建。     而不管长连接还是短连接，处理模式都基本相同。     为了简化处理，我们可以每次当请求进入时自动创建一个连接，然后启动事务，并且把     这个连接放到线程环境中，这样所有使用 <code>do_</code> 就可以直接利用这个共享的连接和事务     了。这样的处理只是为了简化。因为有可能一个请求并没有事务处理，甚至不涉及到数据     操作，这样做有些过头了，不过目前为了简化，uliweb就是这样设计的。     当支持多数据库连接时，情况有了一些变化。原来可以只自动建一个连接，但是现     在有可能是有多个连接。那么我们要为所有的连接创建实例，并启动事务吗？因此，     现在的策略就是只为缺省的连接创建连接实例，并启动事务。对于其它的连接，     Uliorm 増加了一个名为 <code>AUTO_DOTRANSACTION</code> 的配置项，缺省为 <code>True</code>.     它的作用就是当你执行 <code>do_</code> 时自动创建连接并启动事务。另一种做法就是使用     <code>Begin(ec=engine_name)</code> 来手工创建连接和事务。目前只要是基本的 SQL 语句     ，包括： select, update, insert, delete 都是封装到了 <code>do_</code> 中了。而象     <code>create</code> 之类的是直接绑定到某个 engine 上，无法直接使用 <code>do_</code> , 所以     自动创建连接和事务一般还是可行的。象建表目前不建议自动创建，所以都是在命     令行上来执行的，它们都有特殊的处理。     同时在处理完毕后，也不能只关闭和提交缺省的连接了，需要对所有创建的连接（包括     自动创建的连接）执行事务提交和关闭。     不过这些已经通过修改middle_transaction完成了。所以在简单情况下用户不用过份关心     这些细节。并且这种做法是兼容只有一个数据库连接的情况。</p></li>
@@ -1033,55 +1031,45 @@ Result.connect(engine_name)</code></pre>
 <dl>
 <dt>pre_save:call</dt>
 <dd><p>保存一个对象 <strong>前</strong> 发出的信号 参数： instance, created, data, old_data</p>
+</dd>
+</dl><pre class="prettyprint linenums"><code>instance --
+        为保存的对象
+created --
+        True为创建，False为修改
+data --
+        新的数据
+old_data --
+        旧的数据</code></pre>
 <dl>
-<dt>instance</dt>
-<dd><pre class="prettyprint linenums"><code>为保存的对象</code></pre>
-</dd>
-<dt>created</dt>
-<dd><pre class="prettyprint linenums"><code>True为创建，False为修改</code></pre>
-</dd>
-<dt>data</dt>
-<dd><pre class="prettyprint linenums"><code>新的数据</code></pre>
-</dd>
-<dt>old_data</dt>
-<dd><pre class="prettyprint linenums"><code>旧的数据</code></pre>
-</dd>
-</dl></dd>
 <dt>post_save:call</dt>
 <dd><p>保存一个对象 <strong>后</strong> 发出的信号。参数同 <code>pre_save</code></p>
 </dd>
 <dt>pre_delete:call</dt>
 <dd><p>删除一个对象 <strong>前</strong> 发出的信号 参数： instance</p>
-<dl>
-<dt>instance</dt>
-<dd><pre class="prettyprint linenums"><code>为待删除的对象</code></pre>
 </dd>
-</dl></dd>
+</dl><pre class="prettyprint linenums"><code>instance --
+        为待删除的对象</code></pre>
+<dl>
 <dt>post_delete:call</dt>
 <dd><p>删除一个对象 <strong>后</strong> 发出的信号 参数： instance</p>
-<dl>
-<dt>instance</dt>
-<dd><pre class="prettyprint linenums"><code>为待删除的对象</code></pre>
 </dd>
-</dl></dd>
+</dl><pre class="prettyprint linenums"><code>instance --
+        为待删除的对象</code></pre>
+<dl>
 <dt>get_object:get</dt>
 <dd><p>通过Model.get()获得一个对象 <strong>前</strong> 发出的信号。get_object和set_object 相结合可以实现简单的对get()方式的单对象的缓存处理。在uliweb中已经提供了一个 名为objcache的app，它可以在获取简单条件的对象时自动进行缓存的处理。 参数: condition</p>
-<dl>
-<dt>condition</dt>
-<dd><pre class="prettyprint linenums"><code>调用get()方法所使用的条件，它是SQLAlchemy的一个表达式对象</code></pre>
 </dd>
-</dl></dd>
+</dl><pre class="prettyprint linenums"><code>condition --
+        调用get()方法所使用的条件，它是SQLAlchemy的一个表达式对象</code></pre>
+<dl>
 <dt>set_object:call</dt>
 <dd><p>通过Model.get()获得一个对象 <strong>后</strong> 发出的信号 参数: condition, instance</p>
-<dl>
-<dt>condition</dt>
-<dd><pre class="prettyprint linenums"><code>调用get()方法所使用的条件，它是SQLAlchemy的一个表达式对象</code></pre>
 </dd>
-<dt>instance</dt>
-<dd><pre class="prettyprint linenums"><code>所获得的对象实例</code></pre>
-</dd>
-</dl></dd>
-</dl><h3 id="title_1-12-32">定义接收函数<a class="anchor" href="#title_1-12-32">&para;</a></h3>
+</dl><pre class="prettyprint linenums"><code>condition --
+        调用get()方法所使用的条件，它是SQLAlchemy的一个表达式对象
+instance --
+        所获得的对象实例</code></pre>
+<h3 id="title_1-12-32">定义接收函数<a class="anchor" href="#title_1-12-32">&para;</a></h3>
 <p>当使用uliorm时，它会根据执行情况自动发出相应的信号，此时如果有订阅此信号的方法存 在则将被自动调用，如果不存在，则继续后面的处理。在uliweb中，一般将订阅方法写在 settings.ini中，以减少启动时的导入处理。举例如下:</p>
 <pre class="prettyprint linenums"><code>[BINDS]
 audit.post_save = 'post_save'

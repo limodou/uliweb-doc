@@ -375,15 +375,24 @@ X_FILE_PREFIX = '/files'</code></pre>
 </dd>
 <dt>file_serving(filename)</dt>
 <dd><p>缺省的文件下载函数。它是通过在 settings.ini 中配置了:</p>
-<pre class="prettyprint linenums"><code>[EXPOSES]
-file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_serving'</code></pre>
-<p>这样所有以 <code>/uploads</code> 开头的 URL都会被 <code>file_serving</code> 处理，从而提供服务。</p>
-<div class="alert alert-info">
-<p>在这里还有特殊的扩展处理。在缺省情况下，上传后的文件为了保证唯一性会自动 对文件名进行转換，具体用什么要看使用哪个文件名生成器处理的。详见下面 <code>FilenameConverter</code> 的有关说明。因此，当下载文件名还是使用转換后的文件 名会非常不方便。所以这里有一个扩展，就是在传入的URL上添加一个特殊的 query_string，如:</p>
-<pre class="prettyprint linenums"><code>xxxxxxxxx.txt?alt=中文.txt</code></pre>
-<p>这样alt对应的就是想另存为的文件名。这样只要 <code>&lt;a&gt;</code> 标签加上 <code>alt</code> 信息就可以 以想要的文件名来保存。</p>
-
-</div></dd>
+</dd>
+</dl><pre class="prettyprint linenums"><code>```
+[EXPOSES]
+file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_serving'
+```
+这样所有以 `/uploads` 开头的 URL都会被 `file_serving` 处理，从而提供服务。
+{% alert class=info %}
+在这里还有特殊的扩展处理。在缺省情况下，上传后的文件为了保证唯一性会自动
+对文件名进行转換，具体用什么要看使用哪个文件名生成器处理的。详见下面
+`FilenameConverter` 的有关说明。因此，当下载文件名还是使用转換后的文件
+名会非常不方便。所以这里有一个扩展，就是在传入的URL上添加一个特殊的 query_string，如:
+```
+xxxxxxxxx.txt?alt=中文.txt
+```
+这样alt对应的就是想另存为的文件名。这样只要 `&lt;a&gt;` 标签加上 `alt` 信息就可以
+以想要的文件名来保存。
+{% endalert %}</code></pre>
+<dl>
 <dt>get_filename(filename, filesystem=False, convert=False)</dt>
 <dd><p>用于获得目标文件，即将TO_PATH与filename进行连接。同时，如果给出filesystem为 True，则将文件名转为文件系统的编码。否则返回的将是unicode。 convert=False 表示不对文件名进行转換</p>
 </dd>
@@ -408,8 +417,7 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
 </dl><div class="alert alert-info">
 <p>如果上面的文件名使用的是相对路径，则会根据当前的FileServing对象来决定使用 什么配置信息，比如文件保存的路径。但是如果使用绝对路径，则将使用绝对路径进 行处理。</p>
 
-</div>
-<h2 id="title_1-8">FilenameConverter类的说明<a class="anchor" href="#title_1-8">&para;</a></h2>
+</div><h2 id="title_1-8">FilenameConverter类的说明<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>upload提供了几个用于文件名上传后转换的类，并且可以在settings.ini进行配置，分别说明如下:</p>
 <ol>
 <li><p>FilenameConverter:</p><pre class="prettyprint linenums"><code>class FilenameConverter(object):
@@ -429,7 +437,7 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
 <p>upload在启动时会缺省按照 <code>UPLOAD/BACKEND</code> 的定义来生成缺省的fileserving类。如果 没给出，则使用FileServing。通过修改 <code>BACKEND</code> ，用户就可以定义自已缺省的文件上传处理类。</p>
 <h2 id="title_1-10">X-Sendfile Nginx配置说明<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>简单的处理流程可以表示为:</p>
-<p><img src="_static/upload_01.png" alt="image"/>
+<p><img src="_static/upload_01.png" alt="image" class="img-polaroid"/>
 </p>
 <p>以上的处理可以理解为：</p>
 <ol>
@@ -452,10 +460,9 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
 </dd>
 <dt>alias</dt>
 <dd><p>指明/files后对应的文件信息存放的路径。这里还可以考虑使用root，它们的区别就是:</p>
-<blockquote><p>例如URL为 /files/filename，如果配置为 alias /download，则将要读取的文件应该是 /download/filename，而如果配置为 root /download，则将要读取的文件将是 /download/files/filename</p>
-</blockquote>
 </dd>
-</dl><p>启用Nginx进行文件下载处理的配置项应设置为:</p>
+</dl><pre class="prettyprint linenums"><code>&gt; 例如URL为 /files/filename，如果配置为 alias /download，则将要读取的文件应该是 /download/filename，而如果配置为 root /download，则将要读取的文件将是 /download/files/filename</code></pre>
+<p>启用Nginx进行文件下载处理的配置项应设置为:</p>
 <pre class="prettyprint linenums"><code>[UPLOAD]
 X_SENDFILE = 'nginx'</code></pre>
 <h2 id="title_1-11">functions定义说明<a class="anchor" href="#title_1-11">&para;</a></h2>

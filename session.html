@@ -118,12 +118,11 @@ force = False</code></pre>
 <dl>
 <dt>type</dt>
 <dd><p>表示session存储后端的类型，目前可用的值有：</p>
-<ol>
-<li>file 文件系统</li>
-<li>database 数据库</li>
-<li>redis redis数据库</li>
-</ol>
 </dd>
+</dl><pre class="prettyprint linenums"><code>1. file 文件系统
+1. database 数据库
+1. redis redis数据库</code></pre>
+<dl>
 <dt>remember_me_timeout</dt>
 <dd><p>只在设置了session.remember = True时生效。它是以秒为单位计算的值。一旦session.remember 为True时，将同时将session.cookie的有效期设置为此值。</p>
 </dd>
@@ -137,14 +136,9 @@ force = False</code></pre>
 data_dir = './sessions'</code></pre>
 <p>针对不同的后端要设置的参数。对于不同的后端类型，需要设置的参数不同，上面为'file' 方式的后端参数。下面根据不同类型分别列出所需要的参数:</p>
 <ol>
-<li><p>file</p><p>data_dir -- 是session文件保存的目录</p>
-<p>file_dir -- 是session数据文件保存的目录。每个session对象将保存到一个文件中。如果没     有指定，它将是data_dir + '/session_files'目录。</p>
-<p>lock_dir -- 是读写session文件时所使用的文件锁目录。如果没有指定，它将是data_dir + '/session_files_lock'。</p></li>
-<li><p>datebase</p><p>url -- sqlalchemy数据库连接串，和ORM一致。详情可以看ORM的文档或sqlalchemy的文档。</p>
-<p>table_name -- session的表名。缺省为'session'。</p>
-<p>auto_create -- 是否自动创建。缺省为True。</p></li>
-<li><p>redis</p><p>unix_socket_path -- redis socket 文件名。这是使用socket方式通用时需要进行设置。</p>
-<p>connection_pool -- 使用host, port方式连接。值为一个dict，例如: {'host':'localhost', 'port':6379}</p></li>
+<li><p>file</p><p>data_dir -- 是session文件保存的目录</p><p>file_dir -- 是session数据文件保存的目录。每个session对象将保存到一个文件中。如果没     有指定，它将是data_dir + '/session_files'目录。</p><p>lock_dir -- 是读写session文件时所使用的文件锁目录。如果没有指定，它将是data_dir + '/session_files_lock'。</p></li>
+<li><p>datebase</p><p>url -- sqlalchemy数据库连接串，和ORM一致。详情可以看ORM的文档或sqlalchemy的文档。</p><p>table_name -- session的表名。缺省为'session'。</p><p>auto_create -- 是否自动创建。缺省为True。</p></li>
+<li><p>redis</p><p>unix_socket_path -- redis socket 文件名。这是使用socket方式通用时需要进行设置。</p><p>connection_pool -- 使用host, port方式连接。值为一个dict，例如: {'host':'localhost', 'port':6379}</p></li>
 </ol>
 <pre class="prettyprint linenums"><code>[SESSION_COOKIE]
 cookie_id = 'uliweb_session_id'

@@ -96,10 +96,12 @@ name = value</code></pre></li>
 </dd>
 <dt>name</dt>
 <dd><p>key，不应包含 '='，可以不是标识符。</p>
-<div class="alert alert-danger">
-<p>name不能与Ini初始化时传入的env中的key重名，如果有会报错。比如不能是 <code>set</code>, 因为 <code>set</code> 是作为内置类型在初始化时自动添加到 env 中的。</p>
-
-</div></dd>
+</dd>
+</dl><pre class="prettyprint linenums"><code>{% alert class=danger %}
+name不能与Ini初始化时传入的env中的key重名，如果有会报错。比如不能是 `set`,
+因为 `set` 是作为内置类型在初始化时自动添加到 env 中的。
+{% endalert %}</code></pre>
+<dl>
 <dt>value</dt>
 <dd><p>值，并且是符合python语法的，因此你可以写list, dict, tuple, 三重字符串和 其它的标准的python的类型。可以在符合python语法的情况下占多行。也可以是简单 的表达式。</p>
 </dd>
@@ -125,15 +127,13 @@ Project = _('Project')</code></pre>
 <ol>
 <li><p>section内部引用，即引用的配置项是在同一节中当前配置项之前定义的其它的项，如：</p><pre class="prettyprint linenums"><code>[DEFAULT]
 a = 'http://abc.com'
-b = a + '/index'</code></pre>
-<p>一个section内部引用，直接在value部分写对应的配置项名称即可。但是要注意，因为 key并不要求一定是标识符，所以，如果key的定义不是标识符，则直接引用的话，可能 会因为eval执行时出错。这样就要使用第二种方法。</p></li>
+b = a + '/index'</code></pre><p>一个section内部引用，直接在value部分写对应的配置项名称即可。但是要注意，因为 key并不要求一定是标识符，所以，如果key的定义不是标识符，则直接引用的话，可能 会因为eval执行时出错。这样就要使用第二种方法。</p></li>
 <li><p>跨section引用。它需要在配置项前面添加所在的section的名称，如：</p><pre class="prettyprint linenums"><code>[DEFAULT]
 a = 'http://abc.com'
 [OTHER]
 b = DEFAULT.a + '/index'
 c = DEFAULT['a'] + '/index'
-d = OTHER.b + '/test'</code></pre>
-<p>上面示例中， <code>b</code> 引用了 <code>DEFAULT</code> 中的配置项。 <code>c</code> 是采用dict下标的写法，适 用于key不是标识符的情况。 <code>d</code> 则是以添加section名字的方式来实现section内部 引用。</p></li>
+d = OTHER.b + '/test'</code></pre><p>上面示例中， <code>b</code> 引用了 <code>DEFAULT</code> 中的配置项。 <code>c</code> 是采用dict下标的写法，适 用于key不是标识符的情况。 <code>d</code> 则是以添加section名字的方式来实现section内部 引用。</p></li>
 </ol>
 <h2 id="title_1-6">字符串引用扩展<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>引用方式一般是为了解决某个值在多个配置项中重复出现，而采用的减化手段。一般可以 使用表达式的方法进行值的加工。如果是字符串，还可以直接在字符串中定义如 <code>{{expr}}</code> 这样的格式串来引用配置项的值。如：</p>
@@ -146,11 +146,8 @@ b = '{{DEFAULT.a}}/index'</code></pre>
 <ol>
 <li><p>web环境中，如果是在view函数中进行处理，则直接可以使用settings对象。如：</p><pre class="prettyprint linenums"><code>@expose('/index')
 def index():
-    return str(settings)</code></pre>
-<p>因为uliweb会自动向所有的view函数注入settings对象，所以可以直接使用。</p></li>
-<li><p>命令行或web环境中非view函数</p><p>最通用的做法，可以在需要使用settings的代码中通过导入来使用settings对象，如：</p>
-<pre class="prettyprint linenums"><code>from uliweb import settings</code></pre>
-<p>那么建议是在函数内部导入，不要写在模板顶层。这样确保settings在使用时一定被 创建好了。uliweb会保证settings在创建时，是线程安全的。</p></li>
+    return str(settings)</code></pre><p>因为uliweb会自动向所有的view函数注入settings对象，所以可以直接使用。</p></li>
+<li><p>命令行或web环境中非view函数</p><p>最通用的做法，可以在需要使用settings的代码中通过导入来使用settings对象，如：</p><pre class="prettyprint linenums"><code>from uliweb import settings</code></pre><p>那么建议是在函数内部导入，不要写在模板顶层。这样确保settings在使用时一定被 创建好了。uliweb会保证settings在创建时，是线程安全的。</p></li>
 </ol>
 <p>有了settings对象，我们就可以调用它的方法和属性来引用配置文件中的各个值了。settings 对象，你可以理解为一个二级的字典或二级的对象树。如果key或section名都是标识符，通 常情况下使用 <code>.</code> 的属性引用方式就可以了，不然可以象字典一样使用下标或 <code>get()</code> 等 方法来使用。常见的使用方式有:</p>
 <ol>
@@ -168,8 +165,10 @@ def index():
 <ul>
 <li><p>某个app定义了一串配置项，如：</p><pre class="prettyprint linenums"><code>[PARA]
 domain = 'http://localhost:8000'
-login_url = domain + '/login'</code></pre></li>
-<li>然后当部署到某个环境中时，用户希望在local_settings.ini中覆盖上面的domain的值     为实际的地址。</li>
+login_url = domain + '/login'</code></pre>
+<ul>
+<li>然后当部署到某个环境中时，用户希望在local_settings.ini中覆盖上面的domain的值</li>
+</ul><p>为实际的地址。</p></li>
 </ul>
 <p>这时会有这样的问题：在解析app的settings.ini文件时，domain的值已经解析出来了，因 此在处理login_url时，它的值也就固定下来了。等local_settings.ini再覆盖domain， login_url已经不会再重新计算了。</p>
 <p>所以为了解决因为多个settings.ini按顺序导入，但是变量提前计算的问题，在0.2版本中 引入了Lazy的处理方式。即，在读取多个settings.ini时，并不计算配置项的值，只是放 到这个配置项对应的数组中，等全部读取完毕，由uliweb主动调用settings的freeze()方法 开始对所有未计算的值进行求值。通过这样的方法就延迟了求值的时间，保证了最终想到的 结果。</p>

@@ -141,16 +141,16 @@
 <li>register.html 用来显示注册界面</li>
 </ul></li>
 <li><p>settings.ini配置内容：</p><ul>
-<li><p>提供以下内容:</p><pre class="prettyprint linenums"><code>[EXPOSES]
+<li>提供以下内容:</li>
+</ul><pre class="prettyprint linenums"><code>```
+[EXPOSES]
 login = '/login', 'uliweb.contrib.auth.views.login'
 logout = '/logout', 'uliweb.contrib.auth.views.logout'
-    
 [FUNCTIONS]
 require_login = 'uliweb.contrib.auth.require_login'
-    
 [DECORATORS]
-require_login = 'uliweb.contrib.auth.require_login'</code></pre></li>
-</ul></li>
+require_login = 'uliweb.contrib.auth.require_login'
+```</code></pre></li>
 </ul>
 <h3 id="title_1-2-1">安装auth<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <p>向apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.auth'。</p>

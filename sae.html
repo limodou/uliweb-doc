@@ -90,23 +90,17 @@
 <pre class="prettyprint linenums"><code>```
 import sae
 import sys, os
-    
 path = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.join(path, 'project')
 sys.path.insert(0, project_path)
 sys.path.insert(0, os.path.join(path, 'lib'))
-    
 from uliweb.manage import make_application
 app = make_application(project_dir=project_path)
-    
 application = sae.create_wsgi_app(app)
 ```</code></pre>
 <p>其中 <code>project</code> 和 <code>lib</code> 都已经加入到 <code>sys.path</code> 中了。所以建议使用上面     的路径，不然就要手工修改这个文件了。</p>
 <ol>
-<li><p>然后就可以按正常的开发app的流程来创建app并写代码了，如:</p><pre class="prettyprint linenums"><code>cd project
-uliweb makeapp simple_todo
-    
-这时一个最简单的Hello, Uliweb已经开发完毕了。</code></pre></li>
+<li><p>然后就可以按正常的开发app的流程来创建app并写代码了，如:</p><p><code>`</code>` cd project uliweb makeapp simple_todo</p><p>这时一个最简单的Hello, Uliweb已经开发完毕了。 <code>`</code>`</p></li>
 <li><p>如果有静态文件，则需要放在版本目录下，Uliweb提供了命令可以提取安装的app的静态文件:</p><pre class="prettyprint linenums"><code>cd project
 uliweb exportstatic ../static</code></pre></li>
 <li><p>如果有第三方源码包同时要上传到sae中怎么办，Uliweb提供了export命令可以导出已经     安装的app或指定的模块的源码到指定目录下:</p><pre class="prettyprint linenums"><code>cd project
