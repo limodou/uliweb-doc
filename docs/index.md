@@ -71,6 +71,7 @@ app_secretkey.md
 {% toc max_depth=1 %}
 plugs_apps.md
 plugs_dialog2.md
+plugs/menus.md
 {% endtoc %}
 
 ## 技术分享

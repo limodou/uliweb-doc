@@ -18,6 +18,7 @@ templates = {'index':'index.html', '*':'default.html'}
 tag_class = {
     'table':'table table-bordered',
     'pre':'prettyprint linenums',
+    'img':'img-polaroid',
 }
 
 # pre code theme css only : sons-of-obsidian, sunburst
