@@ -79,7 +79,7 @@ rbac 允许将初始的 Role, Permission 和相应的关系等写在 settings.in
 
 ## rbac的配置
 
-用户可以把 rbac 相关的信息配置在 settings.ini 中，然后通过 `dbini tuliweb.contrib.rbac` 将相关的数据导入进数据库中，主要可以使用的配置如下：
+用户可以把 rbac 相关的信息配置在 settings.ini 中，然后通过 `dbinit uliweb.contrib.rbac` 将相关的数据导入进数据库中，主要可以使用的配置如下：
 
 
 ### ROLES
