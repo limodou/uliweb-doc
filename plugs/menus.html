@@ -119,13 +119,23 @@ name2 = {'parent':'name1', 'title':'title', 'link':'link'}</code></pre><p>基本
 <li><strong>title</strong> 表示菜单显示名。</li>
 <li><strong>link</strong> 表示链接。对于父菜单应为空或不提供。</li>
 <li><strong>name</strong> 表示菜单名。对于key=value的定义，key将自动保存到 <code>value['name']</code> 上。但是对于定义在subs中的子菜单，要显示定义name值。</li>
+<li><strong>check</strong> 校验函数。当返回为True时显示菜单。详情见权限控制。</li>
 <li><strong>subs</strong> 表示子菜单。可以通过定义parent来关联父子菜单，这种形式更适合将不同的app的菜单进行组合。对于一个app中的菜单，可以直接通过 subs 来定义子菜单，同时不需要定义parent。注意，在定义subs时需要指明它的name值。</li>
 </ul></li>
 <li><p>显示菜单。为了通用，其实并不需要定义展示部分，可以由用户自已处理。通过 <code>get_menu()</code> 来返回菜单项即可，然后自已编写显示代码。不过为了方便，menus实现了缺省的菜单显示。它使用一个jquery的插件 <a href="https://github.com/tefra/navgoco" class="outter">navgoco</a>
  来显示菜单。在menus中提供了一个menu()函数，它可以生成navgoco所需要的html代码。为了方便引入navgoco所需要的js及初始化js代码，menus提供了inc_menu.html模板，可以让用户在需要的地方通过 <code>{{include "inc_menu.html"}}</code> 来引入相应的内容，并在模板上定义了 menu() 函数。在这个函数中使用了 menus 中的menu函数。但是为了通用，并不是直接引入，而是通过functions.menu来调用，这样可以让用户在需要的时候替換为自已的方法。</p><p>在 inc_menu.html和menus中各有一个menu函数。menus的menu只是单纯的生成菜单结构的html代码。而inc_menu.html是为了在模板中提供更一致的调用接口和方便生成html以及javascript代码，它会调用menus中的函数。所以一般使用的是模板中的menu函数。</p></li>
-<li>权限控制。除了上面必输的一些属性外，你还可以自已添加一些属性用来进行特殊的处理。在plugs的menu函数中，还提供了权限控制支持。它可以传入一个check参数，用来检查菜单项是否要显示（注意，这里只决定要不要显示，并不能防止用户直接输入url来访问），这是一个回调函数，参数是正在处理的菜单项，如果返回True表示可以查看，返回False为看不到。在menus app中实现了一个缺省的检查函数，它是 plugs.menus.default_validator，它可以检查菜单项定义中的roles和permissions属性，因此它要使用 uliweb.contrib.rbac这个app。这个缺省的检查函数将与用户传入的check函数一起生效，因此哪怕你不传check参数，default_validator也会生效。如果不想让它生效，要么自已写一个menu函数，不再使用menus提供的缺省实现，自然不会进行这样的处理；要么修改settings.ini中的配置MENUS_CONFIG，使用 <code>validators &lt;= []</code> 。注意 <code>&lt;=</code> 是表示不进行自动合并，而是替換。</li>
+<li>权限控制。除了上面必输的一些属性外，你还可以自已添加一些属性用来进行特殊的处理。在plugs的menu函数中，还提供了权限控制支持。它可以传入一个check参数，用来检查菜单项是否要显示（注意，这里只决定要不要显示，并不能防止用户直接输入url来访问），这是一个回调函数，函数原型为 <code>def validator(menuitem, context)</code> , menuitem为要处理的菜单项，context为上下文对象，它是一个dict。主要是用于进行缓存处理，在每次调用显示菜单中将置为 <code>{}</code> 。在后面的default_validator中用它来缓存has_role和has_permission的结果。如果返回True表示可以查看，返回False为看不到。在menus app中实现了一个缺省的检查函数，它是 plugs.menus.default_validator，它可以检查菜单项定义中的roles和permissions属性，因此它要使用 uliweb.contrib.rbac这个app。这个缺省的检查函数将与用户传入的check函数一起生效，因此哪怕你不传check参数，default_validator也会生效。如果不想让它生效，要么自已写一个menu函数，不再使用menus提供的缺省实现，自然不会进行这样的处理；要么修改settings.ini中的配置MENUS_CONFIG，使用 <code>validators &lt;= []</code> 。注意 <code>&lt;=</code> 是表示不进行自动合并，而是替換。</li>
 </ol>
-<h2 id="title_1-3">使用示例<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-3">命令行显示<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>为了方便查看菜单结构，menus提供了menu命令，如：</p>
+<pre class="prettyprint linenums"><code>uliweb menu
+uliweb menu main</code></pre>
+<p>第一个命令将显示全部菜单树，第二个只显示指定的菜单树。显示结果如：</p>
+<pre class="prettyprint linenums"><code>MAIN [MAIN]
+    home [Home]
+    admin [Admin]</code></pre>
+<p>每项的前面是名字，后面是标题。如果有中文，它是按settings.ini的编码，有可能控制台上看到的是乱码。</p>
+<h2 id="title_1-4">使用示例<a class="anchor" href="#title_1-4">&para;</a></h2>
 <ol>
 <li>在 <code>INSTALLED_APPS</code> 中配置 <code>plugs.menus</code></li>
 <li><p>在对应的app下配置MENUS，如：</p><pre class="prettyprint linenums"><code>[MENUS]

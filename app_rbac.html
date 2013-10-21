@@ -97,7 +97,7 @@
 uliweb dbinit uliweb.contrib.rbac #初始化相应的权限数据</code></pre>
 <p>rbac 允许将初始的 Role, Permission 和相应的关系等写在 settings.ini 中，然后通过 dbinit 命令来进行数据装入。并且角色和权限的装入可以多次执行，它只会覆盖，不删除。</p>
 <h2 id="title_1-4">rbac的配置<a class="anchor" href="#title_1-4">&para;</a></h2>
-<p>用户可以把 rbac 相关的信息配置在 settings.ini 中，然后通过 <code>dbini tuliweb.contrib.rbac</code> 将相关的数据导入进数据库中，主要可以使用的配置如下：</p>
+<p>用户可以把 rbac 相关的信息配置在 settings.ini 中，然后通过 <code>dbinit uliweb.contrib.rbac</code> 将相关的数据导入进数据库中，主要可以使用的配置如下：</p>
 <h3 id="title_1-4-1">ROLES<a class="anchor" href="#title_1-4-1">&para;</a></h3>
 <p>ROLES用来配置角色信息，如:</p>
 <pre class="prettyprint linenums"><code>[ROLES]
