@@ -126,7 +126,8 @@ format_package = "[%(levelname)s %(name)] %(message)s"</code></pre>
 </dl><div class="alert alert-info">
 <p>从logging中定义的日志级别可以看到有：CRITICAL(同FATAL), ERROR, WARNING(同WARN), INFO, DEBUG, NOTSET。级别的大小是从高向低排的，最高的数值越大。当你设置了 某个日志级别，只有大于等于这个级别的才可以输出。一般来说，在创建logger或 handler时，如果没有指定日志级别，缺省都是NOTSET，所以所有的日志都会输出。</p>
 
-</div><h3 id="title_1-2-2">logger定义<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+</div>
+<h3 id="title_1-2-2">logger定义<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>针对不同的logger，可以定义不同的日志配置。所有logger都定义在  中。 它可以定义logger的level, 还可以定义多个handler，在缺省情况下，当不定义handler时 会使用logging.StreamHandler类来处理。每个logger的配置形如:</p>
 <pre class="prettyprint linenums"><code>[LOG.Loggers]
 key = value</code></pre>
@@ -148,10 +149,12 @@ key = value</code></pre>
 </dl><div class="alert alert-info">
 <p>为什么handlers和format不能同时定义？因为一个logger可以支持多个handler，而 format只定义了某个handler的格式串。在通常情况下，在定义handler时，同时可以 定义它的日志级别和format信息。所以format的参数在这里，只是用来处理最简单的 情况。</p>
 
-</div><div class="alert alert-info">
+</div>
+<div class="alert alert-info">
 <p>设置什么参数会定义handler呢？一是设置了format，二是设置了handlers。其它情况 下不会创建handler。因此，你要根据一个logger是否真生有handler来考虑如何设置 propagate。如果一个logger没有handler，则没必要关闭propagate，这样就可以使用 父logger的handler来输出了。如果一个handler都没有找到，则logging会错说日志对 象还没有配置。</p>
 
-</div><h3 id="title_1-2-3">handler的定义<a class="anchor" href="#title_1-2-3">&para;</a></h3>
+</div>
+<h3 id="title_1-2-3">handler的定义<a class="anchor" href="#title_1-2-3">&para;</a></h3>
 <p>所有的handler都定义在  中，形式为:</p>
 <pre class="prettyprint linenums"><code>[LOG.Handlers]
 key = value</code></pre>
@@ -173,7 +176,8 @@ key = value</code></pre>
 </dl><div class="alert alert-info">
 <p>从上面可以看出，handler和logger都可以定义自已的日志级别。同时root logger用于 定义缺省的日志级别。所你你可以根据需要在不同的对象上实现有区别的日志级别定义。</p>
 
-</div><h3 id="title_1-2-4">formatter的定义<a class="anchor" href="#title_1-2-4">&para;</a></h3>
+</div>
+<h3 id="title_1-2-4">formatter的定义<a class="anchor" href="#title_1-2-4">&para;</a></h3>
 <p>从前面可以看出，在定义logger和handler时都可以直接定义format串，并不一定需要定义 formatter。那么formatter的存在只是为了复用。你可以先定义几种常用的日志格式，然后 在定义logger和handler时引用它，这样会比较简单。只不过要注意，在[LOG]中定义的format 不能是formatter的引用，因为它是要使用basicConfig()来处理的，而它是不接受一个 Formatter对象的。formatter的定义形式为:</p>
 <blockquote><p>key = value</p>
 </blockquote>

@@ -119,7 +119,8 @@ def show_document(filename, lang):
 <div class="alert alert-info">
 <p>要注意，以上的环境只能用在view函数中，当view调用其它的方法时，还是需要传入相应的参数。 有些全局性的对象将放在 uliweb/__init__.py 中，因此可以直接导入。详情见 <a href="globals.html" class="inner">全局环境</a> 的文档。</p>
 
-</div><h3 id="title_1-2-4">view环境的扩展<a class="anchor" href="#title_1-2-4">&para;</a></h3>
+</div>
+<h3 id="title_1-2-4">view环境的扩展<a class="anchor" href="#title_1-2-4">&para;</a></h3>
 <p>如果你认为上面的环境还不够，那么你可以直接向env中增加新的对象，然后在view方法中可以通过 env.object的方式来使用它。你需要在某个app的settings.py文件中增加相应的插件处理。如:</p>
 <pre class="prettyprint linenums"><code>from uliweb.core.dispatch import bind
 @bind('prepare_default_env')
@@ -194,7 +195,8 @@ class UserView(object):
 <div class="alert alert-info">
 <p>注意，一般不要定义__init__()。因为Uliweb在调用Class-View时，会自动创建类的 实例，如果定义__init__()则不要带参数或全部使用缺省值。</p>
 
-</div><div class="alert alert-info">
+</div>
+<div class="alert alert-info">
 <p>注意，如果在方法上还想使用decorator来进行修饰，如果方法无参数，则顺序不影响 最终的URL生成。如果方法有参数，建议不要使用缺省URL的生成方式，而是主动定义 expose，并且将expose放在所有其它的decorator之上。</p>
 
 </div>

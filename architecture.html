@@ -143,12 +143,9 @@
 </dd>
 <dt>View</dt>
 <dd><p>则采函数或类的方式。当 Uliweb 在调用 view 函数时，会自动向函数注入一些对象， 这一点有些象 web2py 。不过 web2py 是基于 exec ，而 Uliweb 是通过向函数注入 变量 (func_globals) 来实现的。这种方式会在某种程序上减少一些导入代码，非常 方便。不过，它只对直接的 view 方法有效，对于 view 函数中又调用的函数无效。 因此你还可以直接通过</p>
+<pre class="prettyprint linenums"><code>from uliweb import request, response</code></pre>
+<p>这样的方式来导入一些全局性的对象。</p>
 </dd>
-</dl><pre class="prettyprint linenums"><code>```
-from uliweb import request, response
-```
-这样的方式来导入一些全局性的对象。</code></pre>
-<dl>
 <dt>Template</dt>
 <dd><p>一般你不需要主动来调用， Uliweb 采用自动映射的做法，即当一个 view 函数返回 一个 dict 变量时，会自动查找模板并进行处理。当返回值不是 dict 对象时将不自 动套用模板。如果在 response 中直接给 response.template 指定模板名，可以不 使用缺省的模板。缺省模板文件名是与 view 函数名一样，但扩展名为 .html 。</p>
 </dd>

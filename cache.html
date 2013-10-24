@@ -86,11 +86,12 @@ expiretime = 3600</code></pre>
 <dl>
 <dt>type</dt>
 <dd><p>表示session存储后端的类型，目前可用的值有：</p>
+<ol>
+<li>file 文件系统</li>
+<li>database 数据库</li>
+<li>redis redis数据库</li>
+</ol>
 </dd>
-</dl><pre class="prettyprint linenums"><code>1. file 文件系统
-1. database 数据库
-1. redis redis数据库</code></pre>
-<dl>
 <dt>expiretime</dt>
 <dd><p>超时时间。在使用cache时，用户可以手工设置每项key的超时时间，如果没有给出， 则使用缺省值。</p>
 </dd>
@@ -100,10 +101,46 @@ file_dir = './caches/cache_files'
 lock_dir = './caches/cache_files_lock'</code></pre>
 <p>针对不同的后端要设置的参数。对于不同的后端类型，需要设置的参数不同，上面为'file' 方式的后端参数。下面根据不同类型分别列出所需要的参数:</p>
 <ol>
-<li><p>file</p><p>data_dir -- 是cache文件保存的目录</p><p>file_dir -- 是cache数据文件保存的目录。每个cache对象将保存到一个文件中。如果没     有指定，它将是data_dir + '/session_files'目录。</p><p>lock_dir -- 是读写cache文件时所使用的文件锁目录。如果没有指定，它将是data_dir + '/session_files_lock'。</p></li>
-<li><p>datebase</p><p>url -- sqlalchemy数据库连接串，和ORM一致。详情可以看ORM的文档或sqlalchemy的文档。</p><p>table_name -- cache的表名。缺省为'session'。注意，因为cache使用的是和session一样的底层存储     所以如果使用数据库后端，一定要设置新的表名。</p><p>auto_create -- 是否自动创建。缺省为True。</p></li>
-<li><p>redis</p><p>unix_socket_path -- redis socket 文件名。这是使用socket方式通用时需要进行设置。</p><p>connection_pool -- 使用host, port方式连接。值为一个dict，例如: {'host':'localhost', 'port':6379}</p></li>
-<li><p>memcache</p><p>connection -- 格式为 ['host:port']。格式为字符串的list，每个字符串为 'host:port' 的形式。     缺省为: ['localhost:11211']</p></li>
+<li><p>file</p><dl>
+<dt>data_dir</dt>
+<dd>
+</dd>
+</dl><p>是cache文件保存的目录</p><dl>
+<dt>file_dir</dt>
+<dd>
+</dd>
+</dl><p>是cache数据文件保存的目录。每个cache对象将保存到一个文件中。如果没     有指定，它将是data_dir + '/session_files'目录。</p><dl>
+<dt>lock_dir</dt>
+<dd>
+</dd>
+</dl><p>是读写cache文件时所使用的文件锁目录。如果没有指定，它将是data_dir + '/session_files_lock'。</p></li>
+<li><p>datebase</p><dl>
+<dt>url</dt>
+<dd>
+</dd>
+</dl><p>sqlalchemy数据库连接串，和ORM一致。详情可以看ORM的文档或sqlalchemy的文档。</p><dl>
+<dt>table_name</dt>
+<dd>
+</dd>
+</dl><p>cache的表名。缺省为'session'。注意，因为cache使用的是和session一样的底层存储     所以如果使用数据库后端，一定要设置新的表名。</p><dl>
+<dt>auto_create</dt>
+<dd>
+</dd>
+</dl><p>是否自动创建。缺省为True。</p></li>
+<li><p>redis</p><dl>
+<dt>unix_socket_path</dt>
+<dd>
+</dd>
+</dl><p>redis socket 文件名。这是使用socket方式通用时需要进行设置。</p><dl>
+<dt>connection_pool</dt>
+<dd>
+</dd>
+</dl><p>使用host, port方式连接。值为一个dict，例如: {'host':'localhost', 'port':6379}</p></li>
+<li><p>memcache</p><dl>
+<dt>connection</dt>
+<dd>
+</dd>
+</dl><p>格式为 ['host:port']。格式为字符串的list，每个字符串为 'host:port' 的形式。     缺省为: ['localhost:11211']</p></li>
 </ol>
 <h2 id="title_1-3">Cache使用说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>cache不象session有一个Middleware，使用cache就象api一样。所以一般使用流程如下:</p>
@@ -129,21 +166,22 @@ cache = functions.get_cache()</code></pre>
 <dl>
 <dt>cache.get(key, default=None, creator=None, expire=None)</dt>
 <dd><p>从cache中读取键值</p>
+<ul>
+<li>key 为要读取的键值</li>
+<li>default 为缺省值。当key不存在时，将返回此值。</li>
+<li>creator 当key不存在时，如果给出creator则会调用creator得到一个值，并且将     此值保存到cache中。如果指定了此参数，default值将会被忽略。</li>
+<li>expire 与creator联用，用来设置超时时间。</li>
+</ul>
+<p>如果key不存时，并且没有指定default或creator，则会引发异常。</p>
 </dd>
-</dl><pre class="prettyprint linenums"><code>* key 为要读取的键值
-* default 为缺省值。当key不存在时，将返回此值。
-* creator 当key不存在时，如果给出creator则会调用creator得到一个值，并且将
-    此值保存到cache中。如果指定了此参数，default值将会被忽略。
-* expire 与creator联用，用来设置超时时间。
-如果key不存时，并且没有指定default或creator，则会引发异常。</code></pre>
-<dl>
 <dt>cache.set(key, value, expire=None)</dt>
 <dd><p>向cache设置键值</p>
+<ul>
+<li>key 为要设置的键值</li>
+<li>value 为要设置的值</li>
+<li>expire 为超时时间，如果不设，则使用配置中的缺省值</li>
+</ul>
 </dd>
-</dl><pre class="prettyprint linenums"><code>* key 为要设置的键值
-* value 为要设置的值
-* expire 为超时时间，如果不设，则使用配置中的缺省值</code></pre>
-<dl>
 <dt>cache.delete(key)</dt>
 <dd><p>删除某一键值</p>
 </dd>

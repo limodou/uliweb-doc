@@ -150,7 +150,8 @@ appname = '/app_prefix'</code></pre>
 <div class="alert alert-info">
 <p>如果某些链接的确不想添加这个前缀该如何处理，那么只要在 <code>@expose('/url')</code> 中添 加一个 <code>!</code> 号即可取消前缀的处理，如:  <code>@expose('!/url')</code></p>
 
-</div><h2 id="title_1-3">url_for说明<a class="anchor" href="#title_1-3">&para;</a></h2>
+</div>
+<h2 id="title_1-3">url_for说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>url_for可以根据view方法的名字来反向生成URL。要注意，它需要一个字符串形式的view方法名， 格式为:</p>
 <pre class="prettyprint linenums"><code>url_for('appname.views_module_name.function_name', **kwargs)</code></pre>
 <p>其中kwargs是与view方法中的参数相对应的。例如你在Hello中定义了如下URL:</p>
@@ -165,68 +166,57 @@ def index():
 <div class="alert alert-info">
 <p>目前在views方法和template中都是可以直接使用这个函数的，不需要导入。</p>
 
-</div><h2 id="title_1-4">convertor说明<a class="anchor" href="#title_1-4">&para;</a></h2>
+</div>
+<h2 id="title_1-4">convertor说明<a class="anchor" href="#title_1-4">&para;</a></h2>
 <dl>
 <dt>int</dt>
 <dd><p>基本形式为：</p>
+<pre class="prettyprint linenums"><code>&lt;int:name&gt;                      #简单形式
+&lt;int(fixed_digits=4):name&gt;      #带参数形式</code></pre>
+<p>支持参数有：</p>
+<ul>
+<li>fixed_digits 固定长度</li>
+<li>min 最小值</li>
+<li>max 最大值</li>
+</ul>
 </dd>
-</dl><pre class="prettyprint linenums"><code>```
-&lt;int:name&gt;                      #简单形式
-&lt;int(fixed_digits=4):name&gt;      #带参数形式
-```
-支持参数有：
-* fixed_digits 固定长度
-* min 最小值
-* max 最大值</code></pre>
-<dl>
 <dt>float</dt>
 <dd><p>基本形式为：</p>
+<pre class="prettyprint linenums"><code>&lt;float:name&gt;                    #简单形式
+&lt;float(min=0.01):name&gt;          #带参数形式</code></pre>
+<p>支持参数有：</p>
+<ul>
+<li>min 最小值</li>
+<li>max 最大值</li>
+</ul>
 </dd>
-</dl><pre class="prettyprint linenums"><code>```
-&lt;float:name&gt;                    #简单形式
-&lt;float(min=0.01):name&gt;          #带参数形式
-```
-支持参数有：
-* min 最小值
-* max 最大值</code></pre>
-<dl>
 <dt>string 和 unicode</dt>
 <dd><p>这两个其实是一样的。 基本形式为：</p>
+<pre class="prettyprint linenums"><code>&lt;string:name&gt;
+&lt;unicode(length=2):name&gt;</code></pre>
+<p>支持的参数有：</p>
+<ul>
+<li>minlength 最小长度</li>
+<li>maxlength 最大长度</li>
+<li>length 定长</li>
+</ul>
 </dd>
-</dl><pre class="prettyprint linenums"><code>```
-&lt;string:name&gt;
-&lt;unicode(length=2):name&gt;
-```
-支持的参数有：
-* minlength 最小长度
-* maxlength 最大长度
-* length 定长</code></pre>
-<dl>
 <dt>path</dt>
 <dd><p>与string和unicode类型，但是没有任何参数。就是匹配从第一个不是 <code>/</code> 的字符到跟着的字 符串或末尾之间的内容。基本形式为：</p>
-</dd>
-</dl><pre class="prettyprint linenums"><code>```
-&lt;path:name&gt;
-```
-举例：
-```
-'/static/&lt;path:filename&gt;'
-```
-可以匹配：
-```
-'/static/a.css'         -&gt; filename='a.css'
+<pre class="prettyprint linenums"><code>&lt;path:name&gt;</code></pre>
+<p>举例：</p>
+<pre class="prettyprint linenums"><code>'/static/&lt;path:filename&gt;'</code></pre>
+<p>可以匹配：</p>
+<pre class="prettyprint linenums"><code>'/static/a.css'         -&gt; filename='a.css'
 '/static/css/a.css'     -&gt; filename='css/a.css'
-'/static/image/a.gif'   -&gt; filename='image/a.gif'
-```</code></pre>
-<dl>
+'/static/image/a.gif'   -&gt; filename='image/a.gif'</code></pre>
+</dd>
 <dt>any</dt>
 <dd><p>基本形式为：</p>
+<pre class="prettyprint linenums"><code>&lt;any(about, help, imprint, u"class"):name&gt;</code></pre>
+<p>将匹配任何一个字符串。</p>
 </dd>
-</dl><pre class="prettyprint linenums"><code>```
-&lt;any(about, help, imprint, u"class"):name&gt;
-```
-将匹配任何一个字符串。</code></pre>
-
+</dl>
             
             <div class="chapter-prev chapter-down">
     <a prev-chapter href="template.html"><i class="icon-arrow-left"></i> 模板(Template)</a>

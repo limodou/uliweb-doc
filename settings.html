@@ -96,12 +96,10 @@ name = value</code></pre></li>
 </dd>
 <dt>name</dt>
 <dd><p>key，不应包含 '='，可以不是标识符。</p>
-</dd>
-</dl><pre class="prettyprint linenums"><code>{% alert class=danger %}
-name不能与Ini初始化时传入的env中的key重名，如果有会报错。比如不能是 `set`,
-因为 `set` 是作为内置类型在初始化时自动添加到 env 中的。
-{% endalert %}</code></pre>
-<dl>
+<div class="alert alert-danger">
+<p>name不能与Ini初始化时传入的env中的key重名，如果有会报错。比如不能是 <code>set</code>, 因为 <code>set</code> 是作为内置类型在初始化时自动添加到 env 中的。</p>
+
+</div></dd>
 <dt>value</dt>
 <dd><p>值，并且是符合python语法的，因此你可以写list, dict, tuple, 三重字符串和 其它的标准的python的类型。可以在符合python语法的情况下占多行。也可以是简单 的表达式。</p>
 </dd>

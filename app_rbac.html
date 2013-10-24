@@ -81,8 +81,28 @@
 <p>这里基本用户角色我定义为：超级用户、登录用户和匿名用户。</p>
 <p>如果我们不使用 rbac app ，只是使用 auth app 的话，在它所提供的 User 表中已经有一些信息可以用来进行基本判断，同时结合 middle_auth ，将可以直接区分：超级用户、登录用户和匿名用户。主要分两种情况：</p>
 <ol>
-<li><p>判断当前用户，使用request.user对象，可以区分：超级用户、登录用户和匿名用户</p><p>超级用户 -- if request.user and request.user.is_superuser</p><p>普通用户 -- if request.user and not request.user.is_superuser</p><p>匿名用户 -- if not request.user</p></li>
-<li><p>判断指定用户，需要从 User 表中动态获取，然后利用是否存在和 is_superuser 字段来判断是否为普通用户或超级用户，这里无法判断匿名用户</p><p>超级用户 -- user = User.get(User.c.username == username)     if user and user.is_superuser</p><p>普通用户 -- user = User.get(User.c.username == username)     if user and not user.is_superuser</p></li>
+<li><p>判断当前用户，使用request.user对象，可以区分：超级用户、登录用户和匿名用户</p><dl>
+<dt>超级用户</dt>
+<dd>
+</dd>
+</dl><p>if request.user and request.user.is_superuser</p><dl>
+<dt>普通用户</dt>
+<dd>
+</dd>
+</dl><p>if request.user and not request.user.is_superuser</p><dl>
+<dt>匿名用户</dt>
+<dd>
+</dd>
+</dl><p>if not request.user</p></li>
+<li><p>判断指定用户，需要从 User 表中动态获取，然后利用是否存在和 is_superuser 字段来判断是否为普通用户或超级用户，这里无法判断匿名用户</p><dl>
+<dt>超级用户</dt>
+<dd>
+</dd>
+</dl><p>user = User.get(User.c.username == username)     if user and user.is_superuser</p><dl>
+<dt>普通用户</dt>
+<dd>
+</dd>
+</dl><p>user = User.get(User.c.username == username)     if user and not user.is_superuser</p></li>
 </ol>
 <p>在最简单情况下，你可能只使用auth就足够了，那么我们看看rbac会带给我们什么呢？</p>
 <h2 id="title_1-3">rbac app的安装<a class="anchor" href="#title_1-3">&para;</a></h2>
@@ -146,10 +166,12 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 <div class="alert alert-info">
 <p>什么是附加属性？通常的权限与角色关系，我们可能只关心一个角色有什么样的权限就够了。但是对于特殊的场合，如审批处理，不同的角色可能审批的额度不同，但是对于只使用角色与权限关系的定位方式就无法定义不同的额度值来，因此在 uliweb 设计 rbac 时，在关系表中还添加了一个附加的 props 字段，利用它可以定义一些特殊的值。不过，目前没有更多对它的处理， rbac 只是把它定义成为了 PICKLE 字段，用户可以存储任意的简单数据类型，如： int, str, dict, list 等。这只是留作以后扩展使用的。</p>
 
-</div><div class="alert alert-info">
+</div>
+<div class="alert alert-info">
 <p>在 settings.ini 中定义的上述内容，应该只是做为初始化数据时使用，在运行时不应直接使用 settings.ini 中的数据，而是通过 rbac 提供的方法或 Model 来处理。</p>
 
-</div><h2 id="title_1-5">rbac使用的表结构说明<a class="anchor" href="#title_1-5">&para;</a></h2>
+</div>
+<h2 id="title_1-5">rbac使用的表结构说明<a class="anchor" href="#title_1-5">&para;</a></h2>
 <h3 id="title_1-5-4">Permission<a class="anchor" href="#title_1-5-4">&para;</a></h3>
 <p>权限表</p>
 <pre class="prettyprint linenums"><code>class Permission(Model):
@@ -241,11 +263,11 @@ def manager(user, id):
 </dd>
 <dt>has_permission(user, *permission_names, **kwargs)</dt>
 <dd><p>用户要传入 user 对象和权限的名字，权限名可以是多个。同时如果有动态角色，还要传入动态角色判断方法所需要的其它的参数。</p>
-</dd>
-</dl><pre class="prettyprint linenums"><code>{% alert class=info %}
-为什么判断权限有可能还需要传入动态角色所需要的参数呢？因为，在has_permission 中是根据遍历权限所对应的所有角色，检查用户是否拥有其中某个角色来处理的。
-{% endalert %}</code></pre>
-<p>以上两个方法可以在view或模块中进行使用。简单的方法通过:</p>
+<div class="alert alert-info">
+<p>为什么判断权限有可能还需要传入动态角色所需要的参数呢？因为，在has_permission 中是根据遍历权限所对应的所有角色，检查用户是否拥有其中某个角色来处理的。</p>
+
+</div></dd>
+</dl><p>以上两个方法可以在view或模块中进行使用。简单的方法通过:</p>
 <pre class="prettyprint linenums"><code>from uliweb import functions
 
 def index():
@@ -263,23 +285,21 @@ def index():
 <dl>
 <dt>check_role(*roles, **args_map)</dt>
 <dd><p>它需要传入角色名，可以是多个。其中 args_map 是一个将 view 函数中的参数映射为动态角色所需要的参数。当然它只是在有动态角色参数的时候才需要使用。并且它有一个限制就是：所要映射的参数需要在 view 函数的参数中存在。例如</p>
-</dd>
-</dl><pre class="prettyprint linenums"><code>```
-def topic_manager(user, tid):
+<pre class="prettyprint linenums"><code>def topic_manager(user, tid):
     """
     topic_manager是用来判断一个用户是否是某个主题的管理员，它需要一个tid
     的参数
     """
     pass
+
 from uliweb import decorators
+
 @decorators.check_role('topic_manager', tid=topic_id)
 @expose('/forum/topic/&lt;topic_id&gt;')
 def topic_view(topic_id):
-    pass
-```
-上面的例子定义了一个主题管理者 (topic_manager) 的角色，它需要一个动态的角色参数 tid 。然后在 topic_view 的定义中，我们想要判断某个用户是否是某个topic 的管理员，但是 topic_view 的参数是 topic_id ，所以我们通过映射的方法将 :tipic_id 映射为 tid 。
-使用 decorator 的形式，并不需要传入 user 对象，因为它会使用 request.user 。因此，它主要是用来处理 view 函数。在其它复杂的场合下，可能使用 has_role 或 has_permission 会更方便。</code></pre>
-<dl>
+    pass</code></pre>
+<p>上面的例子定义了一个主题管理者 (topic_manager) 的角色，它需要一个动态的角色参数 tid 。然后在 topic_view 的定义中，我们想要判断某个用户是否是某个topic 的管理员，但是 topic_view 的参数是 topic_id ，所以我们通过映射的方法将 :tipic_id 映射为 tid 。 使用 decorator 的形式，并不需要传入 user 对象，因为它会使用 request.user 。因此，它主要是用来处理 view 函数。在其它复杂的场合下，可能使用 has_role 或 has_permission 会更方便。</p>
+</dd>
 <dt>check_permission(*permissions, **args_map)</dt>
 <dd><p>它这decorator和check_role类似，它是用来判断当前用户是否拥有某种权限。</p>
 </dd>

@@ -103,23 +103,18 @@ requirements.txt</code></pre>
 </dd>
 <dt>Procfile</dt>
 <dd><p>Heroku 会采用 foreman 来启动应用，你可以在本地用它来启动 uliweb 项目。访问 地址可以是 <code>http://localhost:5000</code></p>
-</dd>
-</dl><pre class="prettyprint linenums"><code>{% alert class=info %}
-因为我更熟悉nginx+uwsgi的模式，因此使用foreman的话不知道有没有性能问题。
-并且没有看到如何配置静态文件？所以在我的试验中能用开发服务器来提供服务和
-静态文件的支持。
-{% endalert %}</code></pre>
-<dl>
+<div class="alert alert-info">
+<p>因为我更熟悉nginx+uwsgi的模式，因此使用foreman的话不知道有没有性能问题。 并且没有看到如何配置静态文件？所以在我的试验中能用开发服务器来提供服务和 静态文件的支持。</p>
+
+</div></dd>
 <dt>requirements.txt</dt>
 <dd><p>pip 安装需求文件，缺省要安装:</p>
-</dd>
-</dl><pre class="prettyprint linenums"><code>```
-Uliweb==0.1.1
+<pre class="prettyprint linenums"><code>Uliweb==0.1.1
 psycopg2==2.4.5
-SQLAlchemy==0.7.7
-```
-因为 heroku 采用的是 postgreSql 数据库。</code></pre>
-<p>然后将 simple_todo (在uliweb-doc/projects/simple_todo下) 的代码拷贝到项目目录下。 注意，这里没有单独创建一个project的项目目录，而是直接使用项目目录。所以在这个目 录下应该直接有 apps 子目录。当前目录结构如:</p>
+SQLAlchemy==0.7.7</code></pre>
+<p>因为 heroku 采用的是 postgreSql 数据库。</p>
+</dd>
+</dl><p>然后将 simple_todo (在uliweb-doc/projects/simple_todo下) 的代码拷贝到项目目录下。 注意，这里没有单独创建一个project的项目目录，而是直接使用项目目录。所以在这个目 录下应该直接有 apps 子目录。当前目录结构如:</p>
 <p><img src="_static/heroku2.png" alt="image" class="img-polaroid"/>
 </p>
 <p>因为 heroku 可以直接运行后端的命令，因此就可以直接运行 uliweb 的命令行工具，如 同步数据库。所以将项目目录直接做为uliweb项目是为了方便执行命令行。</p>

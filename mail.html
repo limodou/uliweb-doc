@@ -129,7 +129,8 @@ BACKEND = 'uliweb.mail.backends.gmail'</code></pre>
 <div class="alert alert-info">
 <p>如果同时有多个收信人时，to_需要是一个list。如: <code>['abc@com', 'bcd@com']</code> 。</p>
 
-</div><h2 id="title_1-3">本机测试<a class="anchor" href="#title_1-3">&para;</a></h2>
+</div>
+<h2 id="title_1-3">本机测试<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>如果你没有环境怎么办，Python提供了这样的方法，在本机命令行执行:</p>
 <pre class="prettyprint linenums"><code>python -m smtpd -n -c DebuggingServer localhost:1025</code></pre>
 <p>这样就启动了一个测试用的smtp服务器，将settings.ini中的HOST和PORT修改成： localhost和1025就可以在命令行下看到发送的文本了。不过要看效果的话可能还是要真正 给自已发个邮件才行。</p>

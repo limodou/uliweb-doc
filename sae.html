@@ -92,12 +92,15 @@
 <pre class="prettyprint linenums"><code>```
 import sae
 import sys, os
+
 path = os.path.dirname(os.path.abspath(__file__))
 project_path = os.path.join(path, 'project')
 sys.path.insert(0, project_path)
 sys.path.insert(0, os.path.join(path, 'lib'))
+
 from uliweb.manage import make_application
 app = make_application(project_dir=project_path)
+
 application = sae.create_wsgi_app(app)
 ```</code></pre>
 <p>其中 <code>project</code> 和 <code>lib</code> 都已经加入到 <code>sys.path</code> 中了。所以建议使用上面     的路径，不然就要手工修改这个文件了。</p>

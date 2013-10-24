@@ -132,17 +132,13 @@ message_type:'bootstrap'
 <li><p>在模板中进行处理</p><p>我们可以利用Form类提供的build属性将Form的生成分成几部分，如：</p><dl>
 <dt>begin</dt>
 <dd><pre class="prettyprint linenums"><code>&lt;form class=xxxx&gt;</code></pre>
-<p>body --</p>
-</dd>
-</dl><pre class="prettyprint linenums"><code>Form的内容</code></pre>
 <dl>
-<dt>buttons_line</dt>
-<dd><p>Form的按钮行 end --</p>
+<dt>body</dt>
+<dd>
 </dd>
-</dl><pre class="prettyprint linenums"><code>```
-&lt;/form&gt;
-```</code></pre>
-<p>其中，每一部分都可以单独运行。这样我们就可以保留需要的内容，将其它的内容进 行替換。举例如下：</p><pre class="prettyprint linenums"><code>&lt;form class="ajax {{=defined('form_class') or 'form-horizontal'}}" 
+</dl><p>Form的内容 buttons_line -- Form的按钮行 end -- <code>` &lt;/form&gt; `</code></p>
+</dd>
+</dl><p>其中，每一部分都可以单独运行。这样我们就可以保留需要的内容，将其它的内容进 行替換。举例如下：</p><pre class="prettyprint linenums"><code>&lt;form class="ajax {{=defined('form_class') or 'form-horizontal'}}" 
     method="POST" action="{{=defined('action') or functions.request_url()}}"&gt;
 {{build = form.build}}
 {{&lt;&lt; build.body}}

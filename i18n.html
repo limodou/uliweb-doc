@@ -116,14 +116,16 @@ class User(Model):
 <div class="alert alert-info">
 <p>使用lazy的函数不能支持 <code>_('%s') % 'name'</code> 这种形式，所以建议使用非lazy的函数</p>
 
-</div><h3 id="title_1-3-2">模板<a class="anchor" href="#title_1-3-2">&para;</a></h3>
+</div>
+<h3 id="title_1-3-2">模板<a class="anchor" href="#title_1-3-2">&para;</a></h3>
 <p>因为uliweb的模板会编译为.py文件，所以除了不用导入gettext函数外，和在程序中无差别。 一旦你配置了i18n的app，会自动向模板环境中添加 <code>_()</code> 函数。示例:</p>
 <pre class="prettyprint linenums"><code>&lt;div&gt;hi, {{=_('name')}}&lt;/div&gt;</code></pre>
 <p>所以要编辑的串，都要放在 <code>{{}}</code> 中，并且使用 <code>_()</code> 进行处理。</p>
 <div class="alert alert-warning">
 <p>在模板中 <code>_()</code> 中的字符串不要使用 <code>u''</code> 的形式，并且整个模板以utf-8来保存。</p>
 
-</div><h3 id="title_1-3-3">settings.ini<a class="anchor" href="#title_1-3-3">&para;</a></h3>
+</div>
+<h3 id="title_1-3-3">settings.ini<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>在settings.ini中也可以使用翻译函数，如:</p>
 <pre class="prettyprint linenums"><code>[DEFAULT]
 NAME = _('username')</code></pre>

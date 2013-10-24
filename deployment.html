@@ -118,7 +118,8 @@
 <div class="alert alert-info">
 <p>runcgi.py需要使用flup,下地址：[http://trac.saddi.com/flup](http://trac.saddi.com/flup)</p>
 
-</div><h2 id="title_1-3">IIS + SCGI<a class="anchor" href="#title_1-3">&para;</a></h2>
+</div>
+<h2 id="title_1-3">IIS + SCGI<a class="anchor" href="#title_1-3">&para;</a></h2>
 <ol>
 <li>下载安装pyISAPI_SCGI 地址: <a href="http://code.google.com/p/pyisapi-scgi/" class="outter">http://code.google.com/p/pyisapi-scgi/</a></li>
 <li>pyISAPI_SCGI配置方法 <a href="http://code.google.com/p/pyisapi-scgi/wiki/PyISAPI_SCGI_0_6_17" class="outter">http://code.google.com/p/pyisapi-scgi/wiki/PyISAPI_SCGI_0_6_17</a></li>
@@ -128,7 +129,8 @@
 <div class="alert alert-info">
 <p>runcgi.py需要使用flup,下地址：[http://trac.saddi.com/flup](http://trac.saddi.com/flup)</p>
 
-</div><h2 id="title_1-4">虚拟主机(DreamHost,BlueHost,HostMonsger等)<a class="anchor" href="#title_1-4">&para;</a></h2>
+</div>
+<h2 id="title_1-4">虚拟主机(DreamHost,BlueHost,HostMonsger等)<a class="anchor" href="#title_1-4">&para;</a></h2>
 <h3 id="title_1-4-3">FastCGI<a class="anchor" href="#title_1-4-3">&para;</a></h3>
 <ol>
 <li>安装python, 参考http://wiki.dreamhost.com/Python</li>
@@ -157,7 +159,8 @@ AddHandler cgi-script .py</code></pre></li>
 <div class="alert alert-info">
 <p>以CGI方式运行，需flup 1.0以上版本。</p>
 
-</div><h2 id="title_1-5">Nginx+uwsgi<a class="anchor" href="#title_1-5">&para;</a></h2>
+</div>
+<h2 id="title_1-5">Nginx+uwsgi<a class="anchor" href="#title_1-5">&para;</a></h2>
 <h3 id="title_1-5-5">Nginx<a class="anchor" href="#title_1-5-5">&para;</a></h3>
 <p>使用Nginx运行Uliweb，可以考虑使用nginx+uwsgi的模式，其中nginx采用反向代理的方式 来配置。uwsgi可以采用手工处理，也可以考虑使用supervisor来管理。</p>
 <p>在Nginx中配置比较简单，在nginx.conf中添加:</p>
@@ -185,7 +188,8 @@ include /etc/nginx/conf.d/*.conf;
 <div class="alert alert-warn">
 <p>在 <code>/your/path/to</code> 下应有 <code>static</code> 子目录。</p>
 
-</div><h3 id="title_1-5-6">uwsgi<a class="anchor" href="#title_1-5-6">&para;</a></h3>
+</div>
+<h3 id="title_1-5-6">uwsgi<a class="anchor" href="#title_1-5-6">&para;</a></h3>
 <p>uwsgi可以支持命令行方式启动，也可以由supervisor来管理（个人以为supervisor要简单 得多）。下面是一个命令行启动uwsgi的一个示例脚本(start.sh):</p>
 <pre class="prettyprint linenums"><code>#!/bin/bash
 
