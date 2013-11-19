@@ -27,7 +27,6 @@ guestbook.md
 settings.md
 i18n.md
 mail.md
-deployment.md
 manage_guide.md
 orm.md
 template.md
@@ -48,6 +47,7 @@ uliweb_apps.md
 ### 部署
 
 {% toc max_depth=1 %}
+deployment.md
 sae.md
 bae.md
 heroku.md

@@ -20,7 +20,6 @@ generic主要是对Model的界面处理进行了自动化，所以它主要是�
 
 {% alert class=info %}
 本文档附带了一个示例，可以从 uliweb-doc/projects/genric_blog 中找到。
-
 {% endalert %}
 
 ## ListView
@@ -496,7 +495,8 @@ class AddView(object):
         post_created_form=None, layout=None, file_replace=True, template_data=None,
         success_data=None, meta='AddForm', get_form_field=None, post_fail=None,
         types_convert_map=None, fields_convert_map=None, json_func=None,
-        file_convert=True):
+        file_convert=True, upload_to=None, upload_to_sub=None, 
+        fileserving_config='UPLOAD', protect=False, protect_field_name=None):
 ```
 
 
@@ -653,11 +653,11 @@ success_data --
     返回的json内容。
 
     True --
-            表示使用缺省的结果返回，那么它会简单的调用创建对象的to_dict()方法生成一个
+        表示使用缺省的结果返回，那么它会简单的调用创建对象的to_dict()方法生成一个
         dict，然后返回。
 
     function --
-            如果要自已加工，则可以传入一个回调函数，形式为:
+        如果要自已加工，则可以传入一个回调函数，形式为:
 
         ```
         def success_data(obj, data):
@@ -695,7 +695,34 @@ fields_convert_map --
     字段转換映射。它与上面的types_convert_map都是用来对静态字段进行转換处理的。
     关于字段转換，详情参见ListView中的[字段转換]说明。
 
-
+json_func --
+    在返回json数据时使用的json函数。缺省为uliweb中的json，在特殊情况下，如需要指
+    定json数据的content_type时可以：
+    
+    ```
+    from functools import partial
+    partial(json, content_type='text/html;charset=utf-8')
+    ```
+    
+file_convert --
+    是否进行文件名转換。在保存文件时，如果置为True，则可以根据文件服务的配置使用
+    相应的文件名转换方法对上传的文件进行转換。缺省使用的是UPLOAD的配置。
+    
+upload_to --
+    保存文件时对应的起始目录。缺省是使用UPLOAD的配置地址 `./uploads` 。可以指定为
+    其它的目录。
+    
+upload_to_sub --
+    保存文时对应的子目录。它将与 upload_to 合并生成最终的目录。
+    
+fileserving_config --
+    使用哪个文件服务配置，缺省为UPLOAD。
+    
+protect(0.2.2新増) --
+    是否对表单进行保护。缺省为False。当打开时，在展示表单时，将在后台自动生成一个
+    token，将其保存在Session中，并将token的值插入到Form的一个隐含字段中。当Form
+    下次再提交时，先检查这个token是否存在，如果不存在则报错。如果存在，则取出后删除。
+    这样可以防止多次提交。
 
 ### 简单代码示例
 

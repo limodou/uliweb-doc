@@ -276,6 +276,37 @@ A extend B - extend C2
 
 `{{include}}` 模板时，对应的模板也可以有类似的处理机制。
 
+### 模板的块调试(0.2.2)
+
+Uliweb的模板在结构变得复杂时，了解哪些块是在哪里定义的就变成比较困难的问题。uliweb
+提供命令行和运行时对块信息的调试输出。在命令行可以：
+
+```
+uliweb find -t index.html --tree --blocks --with-filename
+```
+
+可以输出指定模板的继承和包含使用情况。还可以输出其中使用到的block定义，包括每个block
+所在的模板文件名。
+
+在运行时，可以打开：
+
+```
+[GLOBAL]
+DEBUG_TEMPLATE = True
+```
+
+这样输出的页面就会有类似：
+
+```
+<!-- BLOCK title (apps/theme/templates/theme/skeleton.html) -->
+<!-- END title -->
+```
+
+这样的输出。不过要注意只用它来进行调试，不然有些地方可能会破块页面或其它非HTML
+输出的正确性。
+
+如果要使用动态输出，要注意需要配置 `uliweb.contrib.template` 这个APP，它会在启动
+时进行必要的初始化。
 
 ## uliweb.contrib.template App
 
