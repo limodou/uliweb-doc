@@ -349,7 +349,7 @@ if 需要分页:
         success_data=None, meta='AddForm', get_form_field=None, post_fail=None,
         types_convert_map=None, fields_convert_map=None, json_func=None,
         file_convert=True, upload_to=None, upload_to_sub=None, 
-        fileserving_config='UPLOAD', protect=True):</code></pre>
+        fileserving_config='UPLOAD', protect=False, protect_field_name=None):</code></pre>
 <dl>
 <dt>model</dt>
 <dd><p>此AddView所要处理的Model类或名称</p>
@@ -489,8 +489,8 @@ partial(json, content_type='text/html;charset=utf-8')</code></pre>
 <dt>fileserving_config</dt>
 <dd><p>使用哪个文件服务配置，缺省为UPLOAD。</p>
 </dd>
-<dt>pretect(0.2.2新増)</dt>
-<dd><p>是否对表单进行保护。缺省为True。当打开时，在展示表单时，将在后台自动生成一个 token，将其保存在Session中，并将token的值插入到Form的一个隐含字段中。当Form 下次再提交时，先检查这个token是否存在，如果不存在则报错。如果存在，则取出后删除。 这样可以防止多次提交。</p>
+<dt>protect(0.2.2新増)</dt>
+<dd><p>是否对表单进行保护。缺省为False。当打开时，在展示表单时，将在后台自动生成一个 token，将其保存在Session中，并将token的值插入到Form的一个隐含字段中。当Form 下次再提交时，先检查这个token是否存在，如果不存在则报错。如果存在，则取出后删除。 这样可以防止多次提交。</p>
 </dd>
 </dl><h3 id="title_1-5-16">简单代码示例<a class="anchor" href="#title_1-5-16">&para;</a></h3>
 <pre class="prettyprint linenums"><code>def add(self):
