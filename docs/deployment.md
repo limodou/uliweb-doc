@@ -240,6 +240,13 @@ location ~ ^/static/ {
 在 `/your/path/to` 下应有 `static` 子目录。
 {% endalert %}
 
+如果要支持favicon.ico，可以在配置文件中添加：
+
+```
+location = /favicon.ico {
+    alias /home/webd/www/favicon.ico;
+  }
+```
 
 ### uwsgi
 

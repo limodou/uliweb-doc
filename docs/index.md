@@ -69,15 +69,15 @@ app_secretkey.md
 ### Plugs使用
 
 {% toc max_depth=1 %}
-plugs_apps.md
-plugs_dialog2.md
+plugs/apps.md
+plugs/dialog2.md
 plugs/menus.md
 {% endtoc %}
 
 ## 技术分享
 
 {% toc max_depth=1 %}
-css_js_combine.md
+articles/css_js_combine.md
 articles/xhr_redirect_json.md
 articles/find_option.md
 articles/svg_mimetype_config.md
