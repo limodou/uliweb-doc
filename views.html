@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="url_mapping.html"><i class="icon-arrow-left"></i> URL映射</a>
+    <a prev-chapter href="./url_mapping.html"><i class="icon-arrow-left"></i> URL映射</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="form.html">Form使用 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./form.html">Form使用 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">视图(View)<a class="anchor" href="#title_1">&para;</a></h1>
@@ -109,12 +109,12 @@ def show_document(filename, lang):
 <ul>
 <li><p>application 这是Uliweb的实例，你可以用它来访问应用的各种属性，如：application.debug     表示是否处于调用状态，还可以通过它来调用一些方法，如：application.template()来处理模     板。当然直接导入template也是可以的。不过application.template()已经预设了环境进去。</p></li>
 <li>request 请求对象。</li>
-<li>response 应答对象。这个对象在传入时是一个空对象，你可以使用它，也可以自行构造一个Response     的对象进行返回。</li>
+<li><p>response 应答对象。这个对象在传入时是一个空对象，你可以使用它，也可以自行构造一个Response     的对象进行返回。</p></li>
 <li>url_for 它是与expose是相反的，它用来生根据view函数生成反向的URL。详情见 <a href="url_mapping.html" class="inner">URL映射</a> 的文档。</li>
 <li>redirect 用于重定义处理，后面为一个URL信息。</li>
-<li>error 用于输出错误信息，它将自动查找出错页面。你只要在任何app下的templates中增加     error.html，然后出错信息可以自已来定制。它也不需要前面加return，也将抛出一个异常。</li>
-<li>settings 是定义在所有有效的app settings.py文件中的配置项。注意，一个配置项的名称必须是     大写的。</li>
-<li>json 用于将dict对象包装成json格式并返回。</li>
+<li><p>error 用于输出错误信息，它将自动查找出错页面。你只要在任何app下的templates中增加     error.html，然后出错信息可以自已来定制。它也不需要前面加return，也将抛出一个异常。</p></li>
+<li><p>settings 是定义在所有有效的app settings.py文件中的配置项。注意，一个配置项的名称必须是     大写的。</p></li>
+<li><p>json 用于将dict对象包装成json格式并返回。</p></li>
 </ul>
 <div class="alert alert-info">
 <p>要注意，以上的环境只能用在view函数中，当view调用其它的方法时，还是需要传入相应的参数。 有些全局性的对象将放在 uliweb/__init__.py 中，因此可以直接导入。详情见 <a href="globals.html" class="inner">全局环境</a> 的文档。</p>
@@ -132,10 +132,10 @@ def prepare_default_env(sender, env):
 <p>在Uliweb中，view函数可以返回多种类型的结果。可能为：</p>
 <ul>
 <li><p>dict 变量。如果返回一个dict的变量，说明你希望由Uliweb自动套用一个模板，这个模板需要在     templates目录下，并且模板的文件名需要与view函数名相同，后缀为.html。如果你希望使用指     定的模板文件，则需要利用response对象，将指定的模板名赋给response.template属性就行了。</p></li>
-<li>response 对象。记得上面说过的吗？你可以直接使用response对象，比如调用它的response.write()     方法来写入返回的内容。</li>
+<li><p>response 对象。记得上面说过的吗？你可以直接使用response对象，比如调用它的response.write()     方法来写入返回的内容。</p></li>
 <li>字符串。你可以直接返回一个字符串，这样将被封装为一个普通的文本返回。</li>
 <li>json 对象，使用前面讲的json函数对dict对象进行包装。</li>
-<li>Reseponse实例。你可以主动创建一个Response的实例并返回。</li>
+<li><p>Reseponse实例。你可以主动创建一个Response的实例并返回。</p></li>
 </ul>
 <p>在某些情况下，你可以调用象redirect, error来中止view的运行。</p>
 <h3 id="title_1-2-6">view模块的入口处理<a class="anchor" href="#title_1-2-6">&para;</a></h3>
@@ -177,19 +177,20 @@ class UserView(object):
 <p>以上只是一个示例。使用基于类的view除了是以类的方式进行组织外，与一般的view方法 没有本质的区别，但同时又有一些其它的特性。</p>
 <ul>
 <li>建议使用New Style Class，即从object派生。不需要从特殊的基类派生。</li>
-<li>Class-View也支持类似模块级别的__begin__的处理，但它是一个方法。Uliweb在处理     Class-View会自动调用。</li>
+<li><p>Class-View也支持类似模块级别的__begin__的处理，但它是一个方法。Uliweb在处理     Class-View会自动调用。</p></li>
 <li>不要使用staticmethod对类方法进行处理。因此类方法可以是一般的方法或classmethod。</li>
-<li>如果方法名开始为'_'，则这个方法将不会被自动exposed，客户端将不能进行访问。这种     方式比较适合定义内部的函数。</li>
+<li><p>如果方法名开始为'_'，则这个方法将不会被自动exposed，客户端将不能进行访问。这种     方式比较适合定义内部的函数。</p></li>
 <li>如果使用Class-View并且要在Class上使用expose，你需要安装Python 2.6。</li>
 <li><p>在简单情况下，你在类上使用expose('/url')，而类的方法上不使用expose，则会自动对有效的     方法生成形如：/url/method_name 的链接形式，如果还带参数，则自动生成字符串形式     的参数。例如上面的register函数。在注释中可以看到。</p></li>
-<li><p>在上面的例子中已经演示了大部分的情况：</p><ul>
+<li><p>在上面的例子中已经演示了大部分的情况：</p>
+<ul>
 <li>类上使用expose</li>
 <li>覆盖自动URL的生成，如login()方法。因为这里使用了'/login'，相当于绝对路径。</li>
 <li>定义相对URL，如add()方法。</li>
 <li>使用缺省expose方式，同时定义了参数，如register()方法。</li>
 <li>expose('')将直接使用类上的URL。</li>
 <li>内部函数，不会被客户端访问到，如_common()方法。</li>
-<li>定义了__begin__()方法，可以在执行类方法前先被处理。</li>
+<li><p>定义了__begin__()方法，可以在执行类方法前先被处理。</p></li>
 </ul></li>
 </ul>
 <div class="alert alert-info">
@@ -202,14 +203,14 @@ class UserView(object):
 </div>
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="url_mapping.html"><i class="icon-arrow-left"></i> URL映射</a>
+    <a prev-chapter href="./url_mapping.html"><i class="icon-arrow-left"></i> URL映射</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="form.html">Form使用 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./form.html">Form使用 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/views.md">View Source</a>
+                <i class="icon-download"></i><a href="./views.md">View Source</a>
             </div>
           </div>
           

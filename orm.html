@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="manage_guide.html"><i class="icon-arrow-left"></i> 命令行工具使用指南</a>
+    <a prev-chapter href="./manage_guide.html"><i class="icon-arrow-left"></i> 命令行工具使用指南</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="template.html">模板(Template) <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./template.html">模板(Template) <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">数据库和ORM<a class="anchor" href="#title_1">&para;</a></h1>
@@ -621,7 +621,7 @@ User.filter(User.c.year&lt;18).count()</code></pre>
 <ul>
 <li>是否设置了 <code>__engine_name__</code></li>
 <li>是否在 <code>settings.ini</code> 中设置了对应的连接名</li>
-<li><code>'default'</code></li>
+<li><p><code>'default'</code></p></li>
 </ul>
 <p>这样在缺省情况下，数据库连接名为 <code>default</code> .</p>
 </dd>
@@ -823,13 +823,24 @@ select(User.c, User.c.username=='limodou').execute()</code></pre>
 <h2 id="title_1-8">Model配置化<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>uliorm在考虑Model的可替换性时，提供了一种配置机制。这种机制主要是由orm app来初 始化的，它对Model的编写有一定的要求。使用配置机制的好处主要有两点：</p>
 <ol>
-<li><p>可以方便使用，不用关心要使用的Model是在哪里定义的。orm提供了 <code>get_model()</code>     方法，可以传入字符串的表名或真正的Model对象。因此在一般情况下，使用字符串     形式是最方便的。比如我们想获得一个User的Model，可以使用:</p><pre class="prettyprint linenums"><code>User = get_model('user')</code></pre><p>但是使用这种字符串的形式，对于Model的配置有要求。需要在settings.ini中配置:</p><pre class="prettyprint linenums"><code>[MODELS]
-user = 'uliweb.contrib.auth.models.User'</code></pre><p>其中key为引用的别名。它可以是表名（一般为Model类名小写），也可以不是表名。 value为表所对应的Model类的路径。uliorm将在需要时自动进行导入。</p><div class="alert alert-info">
+<li><p>可以方便使用，不用关心要使用的Model是在哪里定义的。orm提供了 <code>get_model()</code>     方法，可以传入字符串的表名或真正的Model对象。因此在一般情况下，使用字符串     形式是最方便的。比如我们想获得一个User的Model，可以使用:</p>
+<pre class="prettyprint linenums"><code>User = get_model('user')</code></pre>
+<p>但是使用这种字符串的形式，对于Model的配置有要求。需要在settings.ini中配置:</p>
+<pre class="prettyprint linenums"><code>[MODELS]
+user = 'uliweb.contrib.auth.models.User'</code></pre>
+<p>其中key为引用的别名。它可以是表名（一般为Model类名小写），也可以不是表名。 value为表所对应的Model类的路径。uliorm将在需要时自动进行导入。</p>
+<div class="alert alert-info">
 <p>为什么需要表名呢？因为orm提供的命令行工具中，syncdb会自动创建数据库中 不存在的表，它就是使用的真正的表名。</p>
 
-</div><p>{% alert class=info %} 在使用多数据库连接时，可以在上面的MODELS中的每张表的路径后面添加数据库 连接名，如:</p><pre class="prettyprint linenums"><code>[MODELS]
+</div>
+<div class="alert alert-info">
+<p>在使用多数据库连接时，可以在上面的MODELS中的每张表的路径后面添加数据库 连接名，如:</p>
+<pre class="prettyprint linenums"><code>[MODELS]
 user = 'uliweb.contrib.auth.models.User', 'test'
-user = 'uliweb.contrib.auth.models.User', ['default', 'test']</code></pre><p>第一种是说只在 <code>test</code> 中使用User表。而第二种则表示可以在 <code>default</code> 或 <code>test</code> 中使用User表，决定的顺序一是根据 Model 的 <code>__engine_name</code> 的设置或执行时使用 <code>connect(engine_name)</code> 进行设定。否则将使用第一个。 {% endalert %}</p></li>
+user = 'uliweb.contrib.auth.models.User', ['default', 'test']</code></pre>
+<p>第一种是说只在 <code>test</code> 中使用User表。而第二种则表示可以在 <code>default</code> 或 <code>test</code> 中使用User表，决定的顺序一是根据 Model 的 <code>__engine_name</code> 的设置或执行时使用 <code>connect(engine_name)</code> 进行设定。否则将使用第一个。</p>
+
+</div></li>
 <li><p>可以有条件的方便进行替换。     在某些时候，你可能发现某个app的表结构要扩展几个字段，但是因为已经有许多Model     和这个表实现了关联，而且这个app提供了其它与些Model相关的一些方法。因此，如果     简单地替换这个app，有可能会要同时修改其它的app的代码，比如导入处理等。如是你     在定义关系时使用的是get_model(name)的形式，并且name是字符串，这样你实际上已经     实现了Model的配置化。因此你就可以定义新的Model类，并且配置到settings.ini中来     替换原来的Model。如果不是把配置信息写到同一个settings.ini中，那么，你可以把     新的App定义到原来的App之后(这里指INSTALLED_APPS)，这样后面定义的内容会覆盖前     面定义的内容。这种做比较适合扩展字段的情况，或表结构的修改不影响其它的功能调     用的情况。</p></li>
 </ol>
 <p>在定义关系时，象OneToOne, Reference和ManyToMany时既可以接受字符串的Model名，也 可以直接传入Model的类，都可以。</p>
@@ -933,7 +944,7 @@ result = do_(select(User.c, User.c.username=='limodou'))</code></pre>
 <p>从 0.1 版本开始，uliorm 就开始支持多数据库连接了，多数据库连接在这里有两种涵义:</p>
 <ul>
 <li>同类数据库的不同连接</li>
-<li>不同类的数据库的不同连接</li>
+<li><p>不同类的数据库的不同连接</p></li>
 </ul>
 <p>所以这里没有简单地使用多数据库的说法，而是采用多数据库连接的说法。</p>
 <p>在uliorm中多数据库连接的支持分为以下几方面的内容:</p>
@@ -941,7 +952,7 @@ result = do_(select(User.c, User.c.username=='limodou'))</code></pre>
 <li>数据库连接的定义，涉及到settings.ini的配置</li>
 <li>Model如何指定数据库连接，涉及到settings.ini的配置和Model的定义以及执行</li>
 <li>语句执行以及事务的多数据库连接的支持，包括中间件的支持，线程连接的处理等</li>
-<li>命令行多数据库的支持</li>
+<li><p>命令行多数据库的支持</p></li>
 </ul>
 <h3 id="title_1-11-27">数据库连接的定义<a class="anchor" href="#title_1-11-27">&para;</a></h3>
 <p>首先为了区分不同的数据库连接，并且方便地引用它们，每个连接都需要定义一个名字。 在没有特殊定义的情况下，总是会有一个 <code>default</code> 的连接存在。它就是使用原来的 数据库连接的定义。当需要定义其它的数据库连接时，可以在 ORM 下定义 CONNECTIONS 如:</p>
@@ -973,8 +984,8 @@ engine = get_connection()</code></pre>
 <h3 id="title_1-11-28">Model的连接设置<a class="anchor" href="#title_1-11-28">&para;</a></h3>
 <p>在设计uliorm的多数据库连接时我一直在想：多数据库连接在什么情况下会被使用呢？ 它们又是如何被使用呢？如果设计时考虑过多，会使得开发变得困难，因此我假设了以下 使用的场景:</p>
 <ul>
-<li>数据库表本身直接与不同的数据库连接相对应，它们不会混用。这可能是最简单的一种     情况了。在这种情况下，我们只要能定义出表与将要使用的引擎之间的关系就可以了。</li>
-<li>数据库表本身可能在多个不同的数据库连接中使用。这样，我们不仅要定义一张表与     不同的数据库连接关系，还要在运行时指定当前使用哪个连接。</li>
+<li><p>数据库表本身直接与不同的数据库连接相对应，它们不会混用。这可能是最简单的一种     情况了。在这种情况下，我们只要能定义出表与将要使用的引擎之间的关系就可以了。</p></li>
+<li><p>数据库表本身可能在多个不同的数据库连接中使用。这样，我们不仅要定义一张表与     不同的数据库连接关系，还要在运行时指定当前使用哪个连接。</p></li>
 </ul>
 <p>根据以上的假设，uliorm提供了静态配置和动态切換两种方式。</p>
 <p>静态配置又分为：settings.ini配置和Model属性配置。</p>
@@ -993,7 +1004,7 @@ user = 'uliweb.contrib.auth.models.User', ['default', 'test']</code></pre>
 <ol>
 <li>是否设置了 <code>__engine_name__</code></li>
 <li>是否在 <code>settings.ini</code> 中设置了对应的连接名</li>
-<li><code>'default'</code></li>
+<li><p><code>'default'</code></p></li>
 </ol>
 <p>所以缺省情况下是使用 <code>default</code> 。</p>
 <p>当一个Model设置了多个连接名，要么在运行时动态指定，要么uliweb会抛出异常。 所以为了动态指定，uliorm的许多函数和方法都添加了 <code>engine_name</code> 参数，比如:</p>
@@ -1008,7 +1019,8 @@ Result.connect(engine_name)</code></pre>
 <p>在数据库处理中，所有的语句都需要在连接上被执行，事务也是在连接上被处理。不同的 连接意味着不同的处理。考虑到web处理和批处理的方式不同，我们可以考虑以下的场景:</p>
 <ul>
 <li><p>web处理一般是按请求来执行的，因此一个请求过来，创建一个连接，处理完毕后释放。     连接可以是长连接或短连接。长连接意味着将使用连接池，因此所谓的释放就是放回池     子里供下一次使用。而短连接就没有池子，释放就是真正的关闭，下次请求将再次创建。     而不管长连接还是短连接，处理模式都基本相同。     为了简化处理，我们可以每次当请求进入时自动创建一个连接，然后启动事务，并且把     这个连接放到线程环境中，这样所有使用 <code>do_</code> 就可以直接利用这个共享的连接和事务     了。这样的处理只是为了简化。因为有可能一个请求并没有事务处理，甚至不涉及到数据     操作，这样做有些过头了，不过目前为了简化，uliweb就是这样设计的。     当支持多数据库连接时，情况有了一些变化。原来可以只自动建一个连接，但是现     在有可能是有多个连接。那么我们要为所有的连接创建实例，并启动事务吗？因此，     现在的策略就是只为缺省的连接创建连接实例，并启动事务。对于其它的连接，     Uliorm 増加了一个名为 <code>AUTO_DOTRANSACTION</code> 的配置项，缺省为 <code>True</code>.     它的作用就是当你执行 <code>do_</code> 时自动创建连接并启动事务。另一种做法就是使用     <code>Begin(ec=engine_name)</code> 来手工创建连接和事务。目前只要是基本的 SQL 语句     ，包括： select, update, insert, delete 都是封装到了 <code>do_</code> 中了。而象     <code>create</code> 之类的是直接绑定到某个 engine 上，无法直接使用 <code>do_</code> , 所以     自动创建连接和事务一般还是可行的。象建表目前不建议自动创建，所以都是在命     令行上来执行的，它们都有特殊的处理。     同时在处理完毕后，也不能只关闭和提交缺省的连接了，需要对所有创建的连接（包括     自动创建的连接）执行事务提交和关闭。     不过这些已经通过修改middle_transaction完成了。所以在简单情况下用户不用过份关心     这些细节。并且这种做法是兼容只有一个数据库连接的情况。</p></li>
-<li><p>命令行和批处理情况有简单的也有复杂的。简单的情况和web请求的处理类似，也可以在     开始创建相应的连接和事务，在处理完毕后关闭。复杂情况下也可以自已手工创建连接和     启动事务。目前在命令行处理时有几个关键点：连接获取，Model的获取。Uliorm是完全     支持脱离WEB环境来使用的。因此我们可以象test_orm.py中那样，自已去创建连接，     创建Model，然后创建表。在这种情况下，Uliweb启动时做的自动化处理全部无效了，比     如缺省的 <code>AUTO_DOTRANSACTION</code> 的设置, 缺置的 <code>Begin</code> 启动事务等。所以我们要自已去     启动事务。缺省情况下是自动提交的，所以每执行完一条SQL语句就会生效。     同时uliweb还支持通过调用 make_application 或 make_simple_application 来启动     应用的实例。后者是专门为命令行准备了，除了个别的参数不能设外，如：debug，其它的     都一样。一旦启动，你的开发就和WEB区别不大了。所以缺省情况下 <code>AUTO_DOTRANSACTION</code>     是为 <code>True</code> 的。因此你执行 <code>do_</code> 时会自动启动事务。但是因为它没有 middleware_transaction     的封装，所以无法在处理完成后自动提交或回滚。这样如果你自已不处理，结果将无法     保存。对于这种情况，要么我们直接手工启动事务，以明确的事务方式来工作。要么执行     <code>set_auto_dotransaction(False)</code> 来关闭自动生成事务，从而进入 autocommit 状态。     所以这点要比较注意。建议在命令行处理时，都主动使用事务。</p><div class="alert alert-info">
+<li><p>命令行和批处理情况有简单的也有复杂的。简单的情况和web请求的处理类似，也可以在     开始创建相应的连接和事务，在处理完毕后关闭。复杂情况下也可以自已手工创建连接和     启动事务。目前在命令行处理时有几个关键点：连接获取，Model的获取。Uliorm是完全     支持脱离WEB环境来使用的。因此我们可以象test_orm.py中那样，自已去创建连接，     创建Model，然后创建表。在这种情况下，Uliweb启动时做的自动化处理全部无效了，比     如缺省的 <code>AUTO_DOTRANSACTION</code> 的设置, 缺置的 <code>Begin</code> 启动事务等。所以我们要自已去     启动事务。缺省情况下是自动提交的，所以每执行完一条SQL语句就会生效。     同时uliweb还支持通过调用 make_application 或 make_simple_application 来启动     应用的实例。后者是专门为命令行准备了，除了个别的参数不能设外，如：debug，其它的     都一样。一旦启动，你的开发就和WEB区别不大了。所以缺省情况下 <code>AUTO_DOTRANSACTION</code>     是为 <code>True</code> 的。因此你执行 <code>do_</code> 时会自动启动事务。但是因为它没有 middleware_transaction     的封装，所以无法在处理完成后自动提交或回滚。这样如果你自已不处理，结果将无法     保存。对于这种情况，要么我们直接手工启动事务，以明确的事务方式来工作。要么执行     <code>set_auto_dotransaction(False)</code> 来关闭自动生成事务，从而进入 autocommit 状态。     所以这点要比较注意。建议在命令行处理时，都主动使用事务。</p>
+<div class="alert alert-info">
 <p>现在在 <code>make_simplae_application</code> 中増加了启动时自动将 <code>AUTO_DOTRANSACTION</code> 关闭的设置。所以使用它来启动应用环境直接就是 <code>autocommit</code> 的状态。</p>
 
 </div></li>
@@ -1142,14 +1154,14 @@ ALTER TABLE human MODIFY COLUMN `login_name` VARCHAR(40)
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="manage_guide.html"><i class="icon-arrow-left"></i> 命令行工具使用指南</a>
+    <a prev-chapter href="./manage_guide.html"><i class="icon-arrow-left"></i> 命令行工具使用指南</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="template.html">模板(Template) <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./template.html">模板(Template) <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/orm.md">View Source</a>
+                <i class="icon-download"></i><a href="./orm.md">View Source</a>
             </div>
           </div>
           

@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="orm.html"><i class="icon-arrow-left"></i> 数据库和ORM</a>
+    <a prev-chapter href="./orm.html"><i class="icon-arrow-left"></i> 数据库和ORM</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="url_mapping.html">URL映射 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./url_mapping.html">URL映射 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">模板(Template)<a class="anchor" href="#title_1">&para;</a></h1>
@@ -81,20 +81,21 @@
 <li>支持类django的block的功能(此功能由Uliweb扩展)</li>
 <li>提供一些方便的内置方法</li>
 <li>支持环境的扩展(可以扩展可以直接在模板中使用的对象和方法)</li>
-<li>先编译成Python代码，然后再执行</li>
+<li><p>先编译成Python代码，然后再执行</p></li>
 </ul>
 <h2 id="title_1-2">基本语法<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>Uliweb的模板的语法很简单，只有以下几种类型的标记：</p>
 <ul>
 <li><code>{{= result}}</code> 这是用来输出的标记。其中result可以是变量也可以是一个函数调用，它会自动  对输出的内容进行转义</li>
 <li><code>{{&lt;&lt; result}}</code> 这是用来输出非转义的内容，与上面相反。</li>
-<li><code>{{ ... }}</code> 只使用{{}}的话表示里面为Python代码，可以是任何的Python代码，如：     import之类的。如果是块语句，需要在块结束时使用pass。</li>
+<li><p><code>{{ ... }}</code> 只使用{{}}的话表示里面为Python代码，可以是任何的Python代码，如：     import之类的。如果是块语句，需要在块结束时使用pass。</p></li>
 <li><code>{{extend template}}</code> 其中template可以是字符串，如 <code>"layout.html"</code> 或变量。它表示从父模板继承。</li>
 <li><code>{{include template}}</code> 包括其它的模板。如果template省略，表示是子模板插入的位置。一个父模板只能定义一个插入点。</li>
 <li><code>{{block blockname}}{{end}}</code> 用于定义一个块。在子模板中，对于要覆盖的block需要进行定义，则生成的结果将用子模板中的block定义替换父模板的。</li>
 <li><code>{{super}}</code> 引用父模板。这是当存在扩展父模板的情况下，扩展的块可以通过 <code>{{super}}</code> 来引用父模板对应块的内容。</li>
 <li><code>{{# ... }}</code> 单行注释</li>
-<li><p><code>{{## ... ##}}</code> 片段注释。其中可以包含模板标签。(0.1.6増加) 如:</p><pre class="prettyprint linenums"><code>{{##
+<li><p><code>{{## ... ##}}</code> 片段注释。其中可以包含模板标签。(0.1.6増加) 如:</p>
+<pre class="prettyprint linenums"><code>{{##
 {{=name}}
 ##}}</code></pre></li>
 </ul>
@@ -118,13 +119,13 @@ template.prepare_view_env = 'prepare_view_env', 'uliweb.contrib.template.prepare
 <p>Uliweb的模板本身已经定义了一些方法可以直接使用。</p>
 <ul>
 <li>out对象 它可以用来输出信息，详见下面的说明。</li>
-<li><code>cycle(*args)</code> 可以在给定的值中进行循环输出，每次返回一个。</li>
+<li><p><code>cycle(*args)</code> 可以在给定的值中进行循环输出，每次返回一个。</p></li>
 </ul>
 <h2 id="title_1-5">out 对象<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>out 对象是模板中内置的用来输出文本的对象。你可以在模板中直接使用它，但一般是不需要的。它有以下的方法：</p>
 <ul>
 <li>write(text, escape=True) 输出文本。escape表示是否要进行转义。</li>
-<li>noescape(text) 输出不转义的文本。</li>
+<li><p>noescape(text) 输出不转义的文本。</p></li>
 </ul>
 <h2 id="title_1-6">编码<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>模板缺省是使用utf-8编码进行处理。如果你传入unicode字符串，将自动转为utf-8编码。如果不 是unicode，则不做处理。建议全部使用utf-8编码。</p>
@@ -224,14 +225,14 @@ if tag == 'a':
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="orm.html"><i class="icon-arrow-left"></i> 数据库和ORM</a>
+    <a prev-chapter href="./orm.html"><i class="icon-arrow-left"></i> 数据库和ORM</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="url_mapping.html">URL映射 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./url_mapping.html">URL映射 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/template.md">View Source</a>
+                <i class="icon-download"></i><a href="./template.md">View Source</a>
             </div>
           </div>
           

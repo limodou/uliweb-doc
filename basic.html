@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -64,7 +64,7 @@
             
             
 <div class="chapter-next chapter-top">
-    <a next-chapter href="plugs_todo.html">Simple Todo (Uliweb 版本) 之 高级篇 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./plugs_todo.html">Simple Todo (Uliweb 版本) 之 高级篇 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">Simple Todo (Uliweb 版本) 之 基础篇<a class="anchor" href="#title_1">&para;</a></h1>
@@ -91,7 +91,7 @@ uliweb makeapp todo</code></pre>
 <ul>
 <li>显示列表（无翻页）</li>
 <li>显示的同时可以删除和修改</li>
-<li>在显示页面上可以直接添加</li>
+<li><p>在显示页面上可以直接添加</p></li>
 </ul>
 <p>原教程的数据库配置是使用mysql，这里我使用sqlite，因为比较方便。</p>
 <h2 id="title_1-3">基本页面布局<a class="anchor" href="#title_1-3">&para;</a></h2>
@@ -159,7 +159,7 @@ EMAIL = 'limodou@gmail.com'</code></pre>
 <p>上面的代码目前还无法运行。不过我想看一看大概是什么样了，怎么办。因为目前，我们只 完成了：</p>
 <ul>
 <li>layout.html模板</li>
-<li>settings.ini的基本定义（数据库还没定义）</li>
+<li><p>settings.ini的基本定义（数据库还没定义）</p></li>
 </ul>
 <p>所以还差得远了。为了运行，我们首先要修改一下simple_todo/apps/todo/views.py，改 为:</p>
 <pre class="prettyprint linenums"><code>#coding=utf-8
@@ -282,7 +282,7 @@ CREATE TABLE todo (
 <p>这段代码是我从web.py版本中拷贝并修改的，它主要包含两部分：</p>
 <ol>
 <li>显示Todo列表的循环</li>
-<li>显示添加新的Todo的内容</li>
+<li><p>显示添加新的Todo的内容</p></li>
 </ol>
 <p>第一部分比较简单，我们希望向模板中传入一个todos的变量，它其实是所有todo的一个列表。 然后，在模板中进行循环。Uliweb的模板可以直接写Python代码，所以for后面的':'不要忘了。 同时for结束（包括其它的块语句结束，如：if, def, while等）都要在后面加上{{pass}}， 用来标识块缩近结束。所以在uliweb中你不用考虑缩近，但是要在适应的位置加上{{pass}}。</p>
 <p>在循环中，我们会显示Todo的标题，同时展示两个链接。这里我使用了和web.py版本不同的 格式，原来的是/todo/id/edit，看上去更RESTFul一些，我使用的是/todo/edit/id，为什么？ 其实也可以和原版本保持一致，不过，我想在views.py中展示如何使用class view的写法， 如何省事，所以就使用了这种格式。写成原来的格式也是可以的。</p>
@@ -305,12 +305,13 @@ class Todo(object):
         return {'todos':self.model.all()}</code></pre>
 <p>我把原来的代码删除了。简单解释一下：</p>
 <ol>
-<li>在Uliweb中class view的class可以是new style class，也可以是classic style class，     不过建议使用new style class。</li>
-<li>类上也可以加@expose()，这样，类中所有的方法都会带上这个前缀，除非你覆盖它，正     如下面的index一样。</li>
+<li><p>在Uliweb中class view的class可以是new style class，也可以是classic style class，     不过建议使用new style class。</p></li>
+<li><p>类上也可以加@expose()，这样，类中所有的方法都会带上这个前缀，除非你覆盖它，正     如下面的index一样。</p></li>
 <li><p>你可以在__init__中写一些初始化的代码。上面就是定义了要使用的model。这里get_model()     的使用是uliweb的一个创新（我认为是这样的）。虽然在前面，我们定义Model的时候好     象麻烦了点，因此还要修改settings.ini。但是这里就方便了。我们甚至不需要知道     todo表在哪里，就可以直接导入。</p></li>
 <li>对于index，这里又定义了一个@expose('/')，那么它将会覆盖缺省的URL定义。</li>
-<li>index将返回一个字典。获得一个Model的所以记录就是Model.all()。这里不象django     一样，还要加上objects，不需要。</li>
-<li><p>原教程中在列出所有todo时还对id进行了升序排列，但是缺省都是按主键排列，而id正好是     主键，所以这里我就省了。当然，如果你想加的话可以这样:</p><pre class="prettyprint linenums"><code>self.model.all().order_by(self.model.c.id)</code></pre></li>
+<li><p>index将返回一个字典。获得一个Model的所以记录就是Model.all()。这里不象django     一样，还要加上objects，不需要。</p></li>
+<li><p>原教程中在列出所有todo时还对id进行了升序排列，但是缺省都是按主键排列，而id正好是     主键，所以这里我就省了。当然，如果你想加的话可以这样:</p>
+<pre class="prettyprint linenums"><code>self.model.all().order_by(self.model.c.id)</code></pre></li>
 </ol>
 <p>这里的语法完全和sqlalchemy是一致的。在Model中有一个和sqlalchemy Table一样的     c属性，可以用来引用字段。这里就不多说了。</p>
 <p>让我们运行一下，刷新一下界面。</p>
@@ -331,12 +332,13 @@ class Todo(object):
 <p>注意这是Todo的一个新方法，要注意缩近。解释一下：</p>
 <ol>
 <li>new上没有定义@expose()，所以它的url将会是/todo/new</li>
-<li>有人要问，如果有些方法不想有真正的URL怎么办，那么所有以_开头的方法都不会对应     一个URL，也就不会被人访问到。</li>
-<li><p>在uliweb，有些方法和变量是全局的，比如上面的：request, error, redirect，都是     可以直接使用的。如果你想显示地使用它们，可以通过:</p><pre class="prettyprint linenums"><code>from uliweb import request, error, redirect</code></pre></li>
+<li><p>有人要问，如果有些方法不想有真正的URL怎么办，那么所有以_开头的方法都不会对应     一个URL，也就不会被人访问到。</p></li>
+<li><p>在uliweb，有些方法和变量是全局的，比如上面的：request, error, redirect，都是     可以直接使用的。如果你想显示地使用它们，可以通过:</p>
+<pre class="prettyprint linenums"><code>from uliweb import request, error, redirect</code></pre></li>
 <li>error目前会引发一个异常，所以并不需要return</li>
 <li><p>url_for可以反向获取一个URL，这里传入的是一个函数对应，所以url_for(Todo.index)     其实就是'/'。这种做法主要是因为：代码结构可能不容易变化，而URL却容易变化，通过     反向获取，会减少URL变化带来的修改。当然，你可以不用，直接写'/'。</p></li>
 <li><p>在uliweb中，instance=Model(**kwargs)可以用来创建一条记录，当然要注意使用instance.save()     来保存。上面我们没有传入post_date，但是由于在Model定义时，我们加入了auto_now_add，     所以在创建新记录时，它会自动使用服务器的时间。</p></li>
-<li>Uliweb的Request, Response目前是使用werkzeug（和Flask基础是一样的）库。</li>
+<li><p>Uliweb的Request, Response目前是使用werkzeug（和Flask基础是一样的）库。</p></li>
 </ol>
 <p>上面的代码将判断是否有title，如果没有则报错。如果有，则保存。让我们运行一下。</p>
 <p>让我们输入：这是一个测试</p>
@@ -395,10 +397,10 @@ class Todo(object):
         return redirect(url_for(Todo.index))</code></pre>
 <p>解释一下：</p>
 <ol>
-<li>现在edit有一个参数，那么自动生成的URL是什么样的？答案是/todo/edit/<id>，这也     就是为什么我前面要修改/todo/id/edit的原因，就是为了和class view生成的URL相一致。</li>
+<li><p>现在edit有一个参数，那么自动生成的URL是什么样的？答案是/todo/edit/<id>，这也     就是为什么我前面要修改/todo/id/edit的原因，就是为了和class view生成的URL相一致。</p></li>
 <li><p>edit这个函数在编辑时会执行两次，第一次是判断request.method=='GET'时，用于显示。     第二次是在修改后提交时，用于保存。在web.py的版本中，我们看到它是在Edit这个类中     通过定义了GET和POST方法来进行区分，而在Uliweb中则通过判断语句来进行区分，功能     一样，思路有所差别。不过，原来的版本中有关于记录是否存在的判断在GET和POST中     有相同的代码，而在Uliweb的版本中进行了合并。</p></li>
 <li>使用self.model.get(id)就可以获得一个对象。如果不存在，会返回None，而不是异常。</li>
-<li>todo.title = title 然后 todo.save() 这是典型的ORM操作。</li>
+<li><p>todo.title = title 然后 todo.save() 这是典型的ORM操作。</p></li>
 </ol>
 <p>不过写到这里，和web.py版本有所不同。主要是在成功后，web.py版本会利用error页面， 因为它有自动跳转的功能，来显示成功后的信息。而我删除了，所以在我的版本中不会显示 修改成功后的信息。不过，如果要做有很多种方式 ，比如通过session机制。或使用uliweb 中提供的flashmessage app等。这里就不再演示了。</p>
 <h2 id="title_1-12">删除Todo<a class="anchor" href="#title_1-12">&para;</a></h2>
@@ -480,11 +482,11 @@ urls = (
             
             
 <div class="chapter-next chapter-down">
-    <a next-chapter href="plugs_todo.html">Simple Todo (Uliweb 版本) 之 高级篇 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./plugs_todo.html">Simple Todo (Uliweb 版本) 之 高级篇 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/basic.md">View Source</a>
+                <i class="icon-download"></i><a href="./basic.md">View Source</a>
             </div>
           </div>
           

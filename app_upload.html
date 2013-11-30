@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="app_template.html"><i class="icon-arrow-left"></i> template</a>
+    <a prev-chapter href="./app_template.html"><i class="icon-arrow-left"></i> template</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="app_csrf.html">CSRF <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./app_csrf.html">CSRF <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">upload(文件上传及显示处理)<a class="anchor" href="#title_1">&para;</a></h1>
@@ -165,7 +165,7 @@ FILESYSTEM_ENCODING = None</code></pre>
 <p>你可以考虑先对其进行配置，然后使用它来处理文件的编码。因此，你需要做的处理主要就是:</p>
 <ol>
 <li>生成目标文件名（可能要处理文件名编码的问题）</li>
-<li>保存文件</li>
+<li><p>保存文件</p></li>
 </ol>
 <p>下面再看一看使用upload app的做法</p>
 <h3 id="title_1-3-3">使用upload app进行上传处理<a class="anchor" href="#title_1-3-3">&para;</a></h3>
@@ -412,15 +412,17 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
 <h2 id="title_1-8">FilenameConverter类的说明<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>upload提供了几个用于文件名上传后转换的类，并且可以在settings.ini进行配置，分别说明如下:</p>
 <ol>
-<li><p>FilenameConverter:</p><pre class="prettyprint linenums"><code>class FilenameConverter(object):
+<li><p>FilenameConverter:</p>
+<pre class="prettyprint linenums"><code>class FilenameConverter(object):
     @staticmethod
     def convert(filename):
         return filename</code></pre></li>
 </ol>
 <p>最基本的类，对文件名不作任何转換</p>
 <ol>
-<li>UUIDFilenameConverter 使用UUID方法生成文件名。文件名将保证唯一。</li>
-<li><p>MD5FilenameConverter 使用MD5算法生成文件名。具体算法:</p><pre class="prettyprint linenums"><code>f = md5(
+<li><p>UUIDFilenameConverter 使用UUID方法生成文件名。文件名将保证唯一。</p></li>
+<li><p>MD5FilenameConverter 使用MD5算法生成文件名。具体算法:</p>
+<pre class="prettyprint linenums"><code>f = md5(
             md5("%f%s%f%s" % (time.time(), id({}), random.random(),
                               getpid())).hexdigest(),
         ).hexdigest()</code></pre></li>
@@ -435,7 +437,7 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
 <ol>
 <li>用户请求的url在后台经过处理后，由后台处理添加一个内部的头信息，头信息带有一个新的URL，并且返回内容为空，因此真正的内容将由Nginx完成，所以只要添加相应的头信息即可。同时你也可能会返回其它的头信息，如: <code>'Content-Disposition'</code>, <code>'Content-Type'</code> 等。</li>
 <li>Nginx在发现 <code>'X-Accel-Redirect'</code> 头之后会自动删除，并且根据URL的信息去对应的目录下查找相应的文件，然后返回。</li>
-<li>因此用户看到的文件路径有可能和真正存放文件的路径不同。并且，允许后台处理根据需要来决定返回 <code>'X-Accel-Redirect'</code> 还是其它的信息，从而可以控制是否真正进行文件下载。一方面可以进行下载控制，另一方面可以对后台文件进行保护。</li>
+<li><p>因此用户看到的文件路径有可能和真正存放文件的路径不同。并且，允许后台处理根据需要来决定返回 <code>'X-Accel-Redirect'</code> 还是其它的信息，从而可以控制是否真正进行文件下载。一方面可以进行下载控制，另一方面可以对后台文件进行保护。</p></li>
 </ol>
 <p>Nginx的配置如下:</p>
 <pre class="prettyprint linenums"><code>location /files {
@@ -475,14 +477,14 @@ X_SENDFILE = 'nginx'</code></pre>
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="app_template.html"><i class="icon-arrow-left"></i> template</a>
+    <a prev-chapter href="./app_template.html"><i class="icon-arrow-left"></i> template</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="app_csrf.html">CSRF <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./app_csrf.html">CSRF <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/app_upload.md">View Source</a>
+                <i class="icon-download"></i><a href="./app_upload.md">View Source</a>
             </div>
           </div>
           

@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="deployment.html"><i class="icon-arrow-left"></i> 部署指南</a>
+    <a prev-chapter href="./deployment.html"><i class="icon-arrow-left"></i> 部署指南</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="bae.html">BAE 部署及开发指南 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./bae.html">BAE 部署及开发指南 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">SAE 部署及开发指南<a class="anchor" href="#title_1">&para;</a></h1>
@@ -82,11 +82,13 @@
 <li>创建一个新的应用，并且选择Python环境。</li>
 <li>从svn环境中checkout一个本地目录</li>
 <li>进入命令行，切換到svn目录下</li>
-<li><p>创建Uliweb项目:</p><pre class="prettyprint linenums"><code>uliweb makeproject project</code></pre></li>
+<li><p>创建Uliweb项目:</p>
+<pre class="prettyprint linenums"><code>uliweb makeproject project</code></pre></li>
 </ol>
 <p>会在当前目录下创建一个 <code>project</code> 的目录。这个目录可以是其它名字，不过它是和后面要使用的 <code>index.wsgi</code> 对应的，所以建议不要修改。</p>
 <ol>
-<li><p>创建 <code>index.wsgi</code> 文件，Uliweb提供了一个命令来做这事:</p><pre class="prettyprint linenums"><code>uliweb support sae</code></pre></li>
+<li><p>创建 <code>index.wsgi</code> 文件，Uliweb提供了一个命令来做这事:</p>
+<pre class="prettyprint linenums"><code>uliweb support sae</code></pre></li>
 </ol>
 <p>这样会在当前目录下创建一个 <code>index.wsgi</code> 的文件和 <code>lib</code> 目录。注意执行时是在svn的目录，即project的父目录中。 <code>index.wsgi</code> 的内容是:</p>
 <pre class="prettyprint linenums"><code>```
@@ -105,16 +107,22 @@ application = sae.create_wsgi_app(app)
 ```</code></pre>
 <p>其中 <code>project</code> 和 <code>lib</code> 都已经加入到 <code>sys.path</code> 中了。所以建议使用上面     的路径，不然就要手工修改这个文件了。</p>
 <ol>
-<li><p>然后就可以按正常的开发app的流程来创建app并写代码了，如:</p><p><code>`</code>` cd project uliweb makeapp simple_todo</p><p>这时一个最简单的Hello, Uliweb已经开发完毕了。 <code>`</code>`</p></li>
-<li><p>如果有静态文件，则需要放在版本目录下，Uliweb提供了命令可以提取安装的app的静态文件:</p><pre class="prettyprint linenums"><code>cd project
+<li><p>然后就可以按正常的开发app的流程来创建app并写代码了，如:</p>
+<pre class="prettyprint linenums"><code>cd project
+uliweb makeapp simple_todo
+
+这时一个最简单的Hello, Uliweb已经开发完毕了。</code></pre></li>
+<li><p>如果有静态文件，则需要放在版本目录下，Uliweb提供了命令可以提取安装的app的静态文件:</p>
+<pre class="prettyprint linenums"><code>cd project
 uliweb exportstatic ../static</code></pre></li>
-<li><p>如果有第三方源码包同时要上传到sae中怎么办，Uliweb提供了export命令可以导出已经     安装的app或指定的模块的源码到指定目录下:</p><pre class="prettyprint linenums"><code>cd project
+<li><p>如果有第三方源码包同时要上传到sae中怎么办，Uliweb提供了export命令可以导出已经     安装的app或指定的模块的源码到指定目录下:</p>
+<pre class="prettyprint linenums"><code>cd project
 uliweb export -d ../lib #这样是导出全部安装的app
 uliweb export -d ../lib module1 module2 #这样是导出指定的模块</code></pre></li>
 </ol>
 <p>为什么还需要导出安装的app，因为有些app不是放在uliweb.contrib中的，比如第三方     的，所以需要导出后上传。但是因为export有可能导出已经内置于uliweb中的app，所以     通常你可能还需要在 <code>lib</code> 目录下手工删除一些不需要的模块。</p>
 <ol>
-<li>提交代码 访问 <code>http://&lt;你的应用名称&gt;.sinaapp.com</code> ，就可看到项目的页面了。</li>
+<li><p>提交代码 访问 <code>http://&lt;你的应用名称&gt;.sinaapp.com</code> ，就可看到项目的页面了。</p></li>
 </ol>
 <h2 id="title_1-3">数据库配置<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>Uliweb中内置了一个对sae支持的app，还在不断完善中，目前可以方便使用sae提供的MySql 数据库。它是需要同时安装sqlalchemy才可以运行的。因此我们第一步先在本地安装好 sqlalchemy，然后在版本目录中，导出sqlalchemy到lib下:</p>
@@ -138,21 +146,21 @@ CONNECTION_TYPE = 'short'</code></pre>
 <li>数据库连接不能是长连接，超时时间目录为30s，所以才需要安装db_connection middleware，它就是用来保证每个请求创建数据库连接和关闭数据库连接。</li>
 <li>PIL模块目前还没有预装。PHP环境下的GD还不能用。</li>
 <li>虽然有临时目录可以写文件，但是os模块不能执行mkdirs，因此无法创建目录。</li>
-<li>文件上传目录只能使用数据库，sae提供的storage目录还无法使用。</li>
+<li><p>文件上传目录只能使用数据库，sae提供的storage目录还无法使用。</p></li>
 </ol>
 <h2 id="title_1-5">SAE的开发文档<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p><a href="http://readthedocs.org/docs/sae-python/en/latest/index.html" class="outter">http://readthedocs.org/docs/sae-python/en/latest/index.html</a></p>
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="deployment.html"><i class="icon-arrow-left"></i> 部署指南</a>
+    <a prev-chapter href="./deployment.html"><i class="icon-arrow-left"></i> 部署指南</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="bae.html">BAE 部署及开发指南 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./bae.html">BAE 部署及开发指南 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/sae.md">View Source</a>
+                <i class="icon-download"></i><a href="./sae.md">View Source</a>
             </div>
           </div>
           

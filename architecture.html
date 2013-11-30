@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="installation.html"><i class="icon-arrow-left"></i> 安装说明</a>
+    <a prev-chapter href="./installation.html"><i class="icon-arrow-left"></i> 安装说明</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="globals.html">全局环境 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./globals.html">全局环境 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">体系结构和机制<a class="anchor" href="#title_1">&para;</a></h1>
@@ -76,7 +76,7 @@
 <li>settings.ini 它是配置文件</li>
 <li>templates目录用于存放模板</li>
 <li>static目录用于存放静态文件</li>
-<li>views文件，用于存放view代码</li>
+<li><p>views文件，用于存放view代码</p></li>
 </ul>
 <p>这种组织方式使得Uliweb的App重用更为方便。</p>
 <p>apps的结构为：</p>
@@ -101,15 +101,15 @@
 <h2 id="title_1-2">App管理<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>一个项目可以由一个App或多个App组成，而且每个App的结构不一定要求完整，因此一个App可以：</p>
 <ul>
-<li>只有一个settings.ini 这样可以做一些初始化配置的工作，比如：数据库配置，i18n的     配置等</li>
+<li><p>只有一个settings.ini 这样可以做一些初始化配置的工作，比如：数据库配置，i18n的     配置等</p></li>
 <li>只有templates，可以提供一些公共的模板</li>
 <li>只有static，可以提供一些公共的静态文件</li>
-<li>其它的内容</li>
+<li><p>其它的内容</p></li>
 </ul>
 <p>Uliweb在启动时对于apps下的App有两种处理策略：</p>
 <ol>
 <li>认为全部App都是有效的(这种情况比较少见)</li>
-<li>根据 <code>apps/settings.ini</code> 和 <code>apps/local_settings.ini</code> 中的配置项 <code>INSTALLED_APPS</code> 来决     定哪些App是有效的</li>
+<li><p>根据 <code>apps/settings.ini</code> 和 <code>apps/local_settings.ini</code> 中的配置项 <code>INSTALLED_APPS</code> 来决     定哪些App是有效的</p></li>
 </ol>
 <p>Uliweb在启动时会根据有效的App来导入它们自已的settings.ini文件，并将其中配置项进行合 并最终形成一个完整的 <code>settings</code> 变量供App来使用。同时在处理生效的App的同时， 会自动查找所有 <code>views</code> 开头的文件和 <code>views</code> 子目录并进行导入，这块工作主要是为 了收集所有定义在views文件中的URL。</p>
 <p>这样当Uliweb启动完毕，所有App下的settings.ini和views文件将被导入。因此，你可以 在App下的 <code>__init__.py</code> 文件中做一些初始化的工作。不过对于大部分的配置工作，建 议采用在 <code>settings.ini</code> 中定义，然后再绑定对应的事件主题的方式，其目的是实现配置化。</p>
@@ -121,7 +121,7 @@
 <li><code>uliweb/core/default_settings.ini</code> 它是最初始的settings信息</li>
 <li>按定义的顺序导入每个App下的 <code>settings.ini</code> 信息</li>
 <li>导入 <code>apps/settings.ini</code> 信息</li>
-<li>导入 <code>apps/local_settings.ini</code> 信息</li>
+<li><p>导入 <code>apps/local_settings.ini</code> 信息</p></li>
 </ol>
 <p>如果出现同名配置项，则对于不可变数据类型，后定义的项将覆盖前面定义的值。如果是可 变数据类型，则将进行数据合并。</p>
 <h2 id="title_1-5">分散开发，集中使用<a class="anchor" href="#title_1-5">&para;</a></h2>
@@ -133,7 +133,7 @@
 <p>URL的格式采用werkzeug的routing模块处理方式。可以定义参数，可以反向生成URL。在 Uliweb中定义了两个方便的函数：</p>
 <ul>
 <li>expose 用来将URL与view方法进行映射</li>
-<li>url_for 用来根据view方法反向生成URL</li>
+<li><p>url_for 用来根据view方法反向生成URL</p></li>
 </ul>
 <h2 id="title_1-7">MVT框架<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>Uliweb 也采用 MVT 的框架。</p>
@@ -154,20 +154,20 @@
 <p>Uliweb提供了多种扩展的能力：</p>
 <ul>
 <li><p>plugin 扩展。这是一种插件处理机制。 Uliweb 已经预设了一些调用点，这些调用点     会在特殊的地方被执行。你可以针对这些调用点编写相应的处理，并且将其放在     settings.py 中，当 Uliweb 在启动时会自动对其进行采集，当程序运行到调用点位置     时，自动调用对应的插件函数。</p></li>
-<li>middleware 扩展。它与 Django 的机制完全类似。你可以在配置文件中配置     middleware 类。每个 middleware 可以处理请求和响应对象。</li>
+<li><p>middleware 扩展。它与 Django 的机制完全类似。你可以在配置文件中配置     middleware 类。每个 middleware 可以处理请求和响应对象。</p></li>
 <li><p>views 模块的初始化处理。在 views 模块中，如果你写了一个名为 <strong>begin</strong> 的函数     ，它将在执行要处理的 view 函数之前被处理，它相当于一个入口。因此你可以在这里     面做一些模块级别的处理，比如检查用户的权限。因此建议你根据功能将 view 函数分     到不同的模块中。</p></li>
 </ul>
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="installation.html"><i class="icon-arrow-left"></i> 安装说明</a>
+    <a prev-chapter href="./installation.html"><i class="icon-arrow-left"></i> 安装说明</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="globals.html">全局环境 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./globals.html">全局环境 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/architecture.md">View Source</a>
+                <i class="icon-download"></i><a href="./architecture.md">View Source</a>
             </div>
           </div>
           

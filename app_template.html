@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,17 +63,17 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="app_rbac.html"><i class="icon-arrow-left"></i> rbac(权限控制)</a>
+    <a prev-chapter href="./app_rbac.html"><i class="icon-arrow-left"></i> rbac(权限控制)</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="app_upload.html">upload(文件上传及显示处理) <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./app_upload.html">upload(文件上传及显示处理) <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">template<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb中已经可以自动处理模板了，为什么还要提供template功能？它的作用有以下几点:</p>
 <ol>
 <li>提供了一些有关模板处理的配置项</li>
-<li>为模板添加了两个新的tag：use和link</li>
+<li><p>为模板添加了两个新的tag：use和link</p></li>
 </ol>
 <h2 id="title_1-1">模板处理的配置项<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>打开uliweb.contrib.template的settings.ini，可以看到:</p>
@@ -106,7 +106,7 @@ RAISE_USE_EXCEPTION = True</code></pre>
 <p>你可以把它们定义在模板中的任何地方。如果没有定义，那么分两种情况：</p>
 <ol>
 <li>存在<head>标签，则toplinks对应于<head>之后。bottomlinks对应于</head>之前。</li>
-<li>不存在<head>标签，则全部显示在最前面。</li>
+<li><p>不存在<head>标签，则全部显示在最前面。</p></li>
 </ol>
 <h3 id="title_1-2-2">use 使用说明<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>name为模块名，它需要定义在某个app的 <code>template_plugins</code> 目录下，这个目录需要是Python的package的写法(即目录下有一个 <code>__init__.py</code>)，文件主名和name是一致，如，name为jquery，则文件名为jquery.py。</p>
@@ -161,7 +161,7 @@ name = {
 <dd><p>和在py文件中的写法是一样的。但是对于toplinks和bottomlinks，其中可以带有 <code>{xxx}</code> 这样的参数。那么它们将按这样的规则被处理:</p>
 <ul>
 <li>config 为参数的配置项，它将从settings.ini中读取</li>
-<li>default 为参数的缺省值，如果没有对应的settings.ini的值，将使用它。如果它也     没有，则值为 <code>''</code> 。</li>
+<li><p>default 为参数的缺省值，如果没有对应的settings.ini的值，将使用它。如果它也     没有，则值为 <code>''</code> 。</p></li>
 <li>如果用户在使用 use 时传入了 key-words 参数，则以用户传入的为准。</li>
 </ul>
 </dd>
@@ -174,14 +174,14 @@ name = {
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="app_rbac.html"><i class="icon-arrow-left"></i> rbac(权限控制)</a>
+    <a prev-chapter href="./app_rbac.html"><i class="icon-arrow-left"></i> rbac(权限控制)</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="app_upload.html">upload(文件上传及显示处理) <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./app_upload.html">upload(文件上传及显示处理) <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/app_template.md">View Source</a>
+                <i class="icon-download"></i><a href="./app_template.md">View Source</a>
             </div>
           </div>
           

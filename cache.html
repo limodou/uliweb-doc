@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="session.html"><i class="icon-arrow-left"></i> Session使用说明</a>
+    <a prev-chapter href="./session.html"><i class="icon-arrow-left"></i> Session使用说明</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="xmlrpc.html">XMLRPC 使用说明 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./xmlrpc.html">XMLRPC 使用说明 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">Cache使用说明<a class="anchor" href="#title_1">&para;</a></h1>
@@ -101,42 +101,51 @@ file_dir = './caches/cache_files'
 lock_dir = './caches/cache_files_lock'</code></pre>
 <p>针对不同的后端要设置的参数。对于不同的后端类型，需要设置的参数不同，上面为'file' 方式的后端参数。下面根据不同类型分别列出所需要的参数:</p>
 <ol>
-<li><p>file</p><dl>
+<li><p>file</p>
+<dl>
 <dt>data_dir</dt>
 <dd>
 </dd>
-</dl><p>是cache文件保存的目录</p><dl>
+</dl><p>是cache文件保存的目录</p>
+<dl>
 <dt>file_dir</dt>
 <dd>
 </dd>
-</dl><p>是cache数据文件保存的目录。每个cache对象将保存到一个文件中。如果没     有指定，它将是data_dir + '/session_files'目录。</p><dl>
+</dl><p>是cache数据文件保存的目录。每个cache对象将保存到一个文件中。如果没     有指定，它将是data_dir + '/session_files'目录。</p>
+<dl>
 <dt>lock_dir</dt>
 <dd>
 </dd>
 </dl><p>是读写cache文件时所使用的文件锁目录。如果没有指定，它将是data_dir + '/session_files_lock'。</p></li>
-<li><p>datebase</p><dl>
+<li><p>datebase</p>
+<dl>
 <dt>url</dt>
 <dd>
 </dd>
-</dl><p>sqlalchemy数据库连接串，和ORM一致。详情可以看ORM的文档或sqlalchemy的文档。</p><dl>
+</dl><p>sqlalchemy数据库连接串，和ORM一致。详情可以看ORM的文档或sqlalchemy的文档。</p>
+<dl>
 <dt>table_name</dt>
 <dd>
 </dd>
-</dl><p>cache的表名。缺省为'session'。注意，因为cache使用的是和session一样的底层存储     所以如果使用数据库后端，一定要设置新的表名。</p><dl>
+</dl><p>cache的表名。缺省为'session'。注意，因为cache使用的是和session一样的底层存储     所以如果使用数据库后端，一定要设置新的表名。</p>
+<dl>
 <dt>auto_create</dt>
 <dd>
 </dd>
 </dl><p>是否自动创建。缺省为True。</p></li>
-<li><p>redis</p><dl>
+<li><p>redis</p>
+<dl>
 <dt>unix_socket_path</dt>
 <dd>
 </dd>
-</dl><p>redis socket 文件名。这是使用socket方式通用时需要进行设置。</p><dl>
+</dl><p>redis socket 文件名。这是使用socket方式通用时需要进行设置。</p>
+<dl>
 <dt>connection_pool</dt>
 <dd>
 </dd>
 </dl><p>使用host, port方式连接。值为一个dict，例如: {'host':'localhost', 'port':6379}</p></li>
-<li><p>memcache</p><dl>
+<li><p>memcache</p>
+<dl>
 <dt>connection</dt>
 <dd>
 </dd>
@@ -169,8 +178,8 @@ cache = functions.get_cache()</code></pre>
 <ul>
 <li>key 为要读取的键值</li>
 <li>default 为缺省值。当key不存在时，将返回此值。</li>
-<li>creator 当key不存在时，如果给出creator则会调用creator得到一个值，并且将     此值保存到cache中。如果指定了此参数，default值将会被忽略。</li>
-<li>expire 与creator联用，用来设置超时时间。</li>
+<li><p>creator 当key不存在时，如果给出creator则会调用creator得到一个值，并且将     此值保存到cache中。如果指定了此参数，default值将会被忽略。</p></li>
+<li><p>expire 与creator联用，用来设置超时时间。</p></li>
 </ul>
 <p>如果key不存时，并且没有指定default或creator，则会引发异常。</p>
 </dd>
@@ -192,14 +201,14 @@ del cache['name']</code></pre>
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="session.html"><i class="icon-arrow-left"></i> Session使用说明</a>
+    <a prev-chapter href="./session.html"><i class="icon-arrow-left"></i> Session使用说明</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="xmlrpc.html">XMLRPC 使用说明 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./xmlrpc.html">XMLRPC 使用说明 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/cache.md">View Source</a>
+                <i class="icon-download"></i><a href="./cache.md">View Source</a>
             </div>
           </div>
           

@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="app_upload.html"><i class="icon-arrow-left"></i> upload(文件上传及显示处理)</a>
+    <a prev-chapter href="./app_upload.html"><i class="icon-arrow-left"></i> upload(文件上传及显示处理)</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="app_secretkey.html">secretkey(DES加解密处理) <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./app_secretkey.html">secretkey(DES加解密处理) <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">CSRF<a class="anchor" href="#title_1">&para;</a></h1>
@@ -86,7 +86,7 @@
 <p>一般的页面流程是：</p>
 <ul>
 <li>GET 一个页面，在页面中显示表格或内容，此时应生成token</li>
-<li>POST 数据，检查token是否正确</li>
+<li><p>POST 数据，检查token是否正确</p></li>
 </ul>
 <p>以上的处理主要是通过Middleware的机制完成的:</p>
 <pre class="prettyprint linenums"><code>def process_request(self, request):
@@ -124,8 +124,8 @@ def process_response(self, request, response):
 <p>通过Middleware把相应的页面流进行了处理。有几点要说明：</p>
 <ol>
 <li>csrf可以通过 <code>'CSRF/enable'</code> 来设置是否启用，缺省为启用</li>
-<li>对于请求方法为POST或DELETE的进行校验，同时对于GET方法，同时上传的数据中包含有     token信息的也进行校验</li>
-<li>在应答时创建token，如果token已经创建，则等到超时时间到达时，创建新的token。缺     省的token生存期是30分钟</li>
+<li><p>对于请求方法为POST或DELETE的进行校验，同时对于GET方法，同时上传的数据中包含有     token信息的也进行校验</p></li>
+<li><p>在应答时创建token，如果token已经创建，则等到超时时间到达时，创建新的token。缺     省的token生存期是30分钟</p></li>
 <li>通过设置 <code>response.csrf_pass</code> 可以跳过对响应报文中token串的自动处理</li>
 <li><p>当返回的内存类型为 <code>text/html</code> 和 <code>application/xhtml+xml</code> 的自动扫描是否     存在 Form 元素，如果有，自动添加 <code>&lt;input type="hidden" name="csrf_token" value=token&gt;</code> 的信息。     这样对于存在Form场景是非常自动化的。如果不喜欢这种方式，完成可以写一个新的Middleware     来进行替換。</p></li>
 </ol>
@@ -155,29 +155,31 @@ check_csrf_token = 'uliweb.contrib.csrf.check_csrf_token'</code></pre>
 <p>csrf提供以下配置:</p>
 <ul>
 <li>csrf 中间件</li>
-<li><p>基本配置</p><ul>
+<li><p>基本配置</p>
+<ul>
 <li><code>enable</code> 用来控制csrf机制是否生效</li>
 <li><code>timeout</code> 用来控制session中保存的token的生存期，缺省为30分钟</li>
 <li><code>form_token_name</code> 用来设置定义在Form中的隐藏字段名，缺省为 <code>csrf_token</code></li>
-<li><code>cookie_token_name</code> 用来设置cookie的token名，缺省为 <code>_csrf_token</code></li>
+<li><p><code>cookie_token_name</code> 用来设置cookie的token名，缺省为 <code>_csrf_token</code></p></li>
 </ul></li>
-<li><p>公共函数</p><ul>
+<li><p>公共函数</p>
+<ul>
 <li><code>csrf_token</code> 用来生成一个token，并保存到session中</li>
-<li><code>check_csrf_token</code> 用来校验一个token是否正确</li>
+<li><p><code>check_csrf_token</code> 用来校验一个token是否正确</p></li>
 </ul></li>
 </ul>
 <p>其实使用 <code>csrf_token</code> 和 <code>check_csrf_token</code> 再结合相应的cookie及应用的集成也可以 实现其它的csrf的处理模式。</p>
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="app_upload.html"><i class="icon-arrow-left"></i> upload(文件上传及显示处理)</a>
+    <a prev-chapter href="./app_upload.html"><i class="icon-arrow-left"></i> upload(文件上传及显示处理)</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="app_secretkey.html">secretkey(DES加解密处理) <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./app_secretkey.html">secretkey(DES加解密处理) <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/app_csrf.md">View Source</a>
+                <i class="icon-download"></i><a href="./app_csrf.md">View Source</a>
             </div>
           </div>
           

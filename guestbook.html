@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,7 +63,7 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="hello_uliweb.html"><i class="icon-arrow-left"></i> Hello, Uliweb</a>
+    <a prev-chapter href="./hello_uliweb.html"><i class="icon-arrow-left"></i> Hello, Uliweb</a>
 </div>
 
 
@@ -154,7 +154,7 @@ class Note(Model):
 <ul>
 <li>default 缺省值</li>
 <li>max_length 最大值</li>
-<li>verbose_name 提示信息</li>
+<li><p>verbose_name 提示信息</p></li>
 </ul>
 <p>象CharProperty和StringProperty，需要有一个max_length属性，如果没有给出，缺省是255。</p>
 <p>其它详细的说明可以在数据文档中查看。</p>
@@ -282,7 +282,7 @@ class NoteForm(Form):
 <li>label 用来显示一个标签</li>
 <li>required 用来校验是否输入，即不允许为空</li>
 <li>default 缺省值</li>
-<li>validators 校验器</li>
+<li><p>validators 校验器</p></li>
 </ul>
 <p>很象Model的定义，但有所不同。</p>
 <h3 id="title_1-11-5">编写new_comment.html模板文件<a class="anchor" href="#title_1-11-5">&para;</a></h3>
@@ -338,21 +338,21 @@ def del_comment(id):
 <ol>
 <li>ORM的使用，包括：ORM的初始化配置，Model的定义，简单的增加，删除，查询</li>
 <li>Form使用，包括：Form的定义，Form的布局，HTML代码生成，数据校验，出错处理</li>
-<li>模板的使用，包括： {{extend}} 的使用，在模板环境中增加自定义函数，子模板变量定义的     技巧，错误模板的使用，Python代码的嵌入</li>
+<li><p>模板的使用，包括： {{extend}} 的使用，在模板环境中增加自定义函数，子模板变量定义的     技巧，错误模板的使用，Python代码的嵌入</p></li>
 <li>View的使用，包括：redirect, error的使用, 静态文件处理</li>
 <li>URL映射的使用，包括：expose的使用，参数定义，与View函数的对应</li>
-<li>结构的了解，包括：Uliweb的app组织，settings.ini的简单使用，view函数与模板文件     的对应关系</li>
+<li><p>结构的了解，包括：Uliweb的app组织，settings.ini的简单使用，view函数与模板文件     的对应关系</p></li>
 </ol>
 <p>这里演示的View的处理还是基于函数的方式 ，在另一篇 <a href="basic.html" class="inner">Simple Todo (Uliweb 版本) 之 基础篇</a> 中有如何使用Class方式的View。</p>
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="hello_uliweb.html"><i class="icon-arrow-left"></i> Hello, Uliweb</a>
+    <a prev-chapter href="./hello_uliweb.html"><i class="icon-arrow-left"></i> Hello, Uliweb</a>
 </div>
 
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/guestbook.md">View Source</a>
+                <i class="icon-download"></i><a href="./guestbook.md">View Source</a>
             </div>
           </div>
           

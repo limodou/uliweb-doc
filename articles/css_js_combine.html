@@ -8,17 +8,17 @@
 <meta name="author" content="">
 
 <!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
+<script type="text/javascript" src="../static/asset/html5.js"></script>
 <![endif]-->
 
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/docs.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link href="../static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/docs.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link href="../static/bootheme.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
 
 <title>CSS，JS合并与压缩 - Uliweb-Doc</title>
 </head>
@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="../index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -64,7 +64,7 @@
             
             
 <div class="chapter-next chapter-top">
-    <a next-chapter href="articles/xhr_redirect_json.html">重定向在异步请求中的处理实现 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="../articles/xhr_redirect_json.html">重定向在异步请求中的处理实现 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">CSS，JS合并与压缩<a class="anchor" href="#title_1">&para;</a></h1>
@@ -90,7 +90,7 @@
 <p>这样的信息，其中 <code>STATIC_COMBINE</code> 表示以下定义的是资源文件如何打包的规则。上面 只是示例，你要根据实际情况来定义自已的组合。涵义比较简单：</p>
 <ul>
 <li>key没有特别要求，不重复就好</li>
-<li>值是一个list，同类的要放到一起</li>
+<li><p>值是一个list，同类的要放到一起</p></li>
 </ul>
 <p>uliweb的template app在启动时，会自动根据文件名数组生成md5值，并且添加 名为 <code>_cmb_</code> 的前缀。因为每个合并资源的数组内容不同，所以生成的md5值也不同。 但是，如果文件名没变，则md5的值也不会变。所以通过 md5 我们可以为每组资源生成 一个key，这个key就是合并后的文件名的主要部分。</p>
 <p>再说 <code>{{use}}</code> 。在调用时，一旦发现settings中有 <code>STATIC_COMBINE</code> ，则对引入的 每个资源文件名进行处理，检查这个文件名是否在 <code>STATIC_COMBINE</code> 的某个值的数组中 存在，如果存在，表示可以使用这组对应的合并资源文件名进行替換。所以最终的输出就 替換为对应的资源文件名。如果没找到，则原样输出。</p>
@@ -106,11 +106,11 @@
             
             
 <div class="chapter-next chapter-down">
-    <a next-chapter href="articles/xhr_redirect_json.html">重定向在异步请求中的处理实现 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="../articles/xhr_redirect_json.html">重定向在异步请求中的处理实现 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/css_js_combine.md">View Source</a>
+                <i class="icon-download"></i><a href="../articles/css_js_combine.md">View Source</a>
             </div>
           </div>
           
@@ -130,13 +130,13 @@
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
+<script type="text/javascript" src="../static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
 
 </body>
 </html>

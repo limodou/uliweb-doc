@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,16 +63,16 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="globals.html"><i class="icon-arrow-left"></i> 全局环境</a>
+    <a prev-chapter href="./globals.html"><i class="icon-arrow-left"></i> 全局环境</a>
 </div>
 
 
             <h1 id="title_1">Uliweb 更新日志<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">0.2.1<a class="anchor" href="#title_1-1">&para;</a></h2>
 <ul>
-<li>添加 <code>uliweb.utils.timeit</code> 模块，用户可以使用 <code>with timeit(prompt):</code> 来计算下面   代码的执行时间</li>
-<li>修改 <code>file_serving()</code> 处理的 <code>action</code> 缺省值为 <code>None</code>. 这样缺省的 <code>/uploads</code> 文件   服务不再是默认为下载。</li>
-<li>修复ORM的Reference的validate问题。它影响Reference的默认缺省值。</li>
+<li><p>添加 <code>uliweb.utils.timeit</code> 模块，用户可以使用 <code>with timeit(prompt):</code> 来计算下面   代码的执行时间</p></li>
+<li><p>修改 <code>file_serving()</code> 处理的 <code>action</code> 缺省值为 <code>None</code>. 这样缺省的 <code>/uploads</code> 文件   服务不再是默认为下载。</p></li>
+<li><p>修复ORM的Reference的validate问题。它影响Reference的默认缺省值。</p></li>
 </ul>
 <h2 id="title_1-2">0.2<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>更新内容</p>
@@ -92,7 +92,7 @@
 <li>向 uliweb/utils/image.py 添加 <code>test_image</code> 函数。</li>
 <li><p>添加 <code>xhr_redirect_json</code> 支持. 在启动uliewb应用时，可以传入 <code>xhr_redirect_json</code> (布尔值) 参数，   缺省值是 <code>True</code> 。它的作用是，如果请求是ajax，重定向将返回为一个json结果，错   误码是 500。所以前端可以使用它来根据需要进行重定向。</p></li>
 <li>ORM <code>remove/clear</code> 函数在传入空条件时将删除全部记录。</li>
-<li>向 uliweb.utils.common 中添加 <code>classonlymethod()</code> 方法, 它和classmethod类似，   但是它可以限制类属性只能通过类来调用，而不是实例。主要用来控制ORM的Model delete 方法 。</li>
+<li><p>向 uliweb.utils.common 中添加 <code>classonlymethod()</code> 方法, 它和classmethod类似，   但是它可以限制类属性只能通过类来调用，而不是实例。主要用来控制ORM的Model delete 方法 。</p></li>
 <li>重构上传App，添加 <code>download</code> 到 functions 配置。</li>
 <li>优化 secretkey app, 添加 <code>-o</code> 来指定输出文件名。向大部分加解密函数添加 <code>keyfile</code> 参数。</li>
 <li>向upload App添加 <code>MIME_TYPES</code> section，但是它只会对uliweb应用有效，而不是对web server。</li>
@@ -103,7 +103,7 @@
 <li>添加 <code>install</code> 命令支持，你可以在项目目录或app目录下写 <code>requirements.txt</code>。</li>
 <li>在执行 <code>makeproject</code> 时添加 <code>setup.py</code> 文件。</li>
 <li><code>make_application()</code> 可以重入。</li>
-<li>添加 <code>ORM/MODELS_CONFIG</code> 配置支持。</li>
+<li><p>添加 <code>ORM/MODELS_CONFIG</code> 配置支持。</p></li>
 </ul>
 <h2 id="title_1-3">0.1.7<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>更新内容</p>
@@ -124,7 +124,7 @@
 <li>向session的key増加了独立于整个session的失效期的，以key为单位的失效期参数。</li>
 <li>向ORM中的ManyToMany的ids()函数添加cache参数，用来指示是否将ids()得到的结果进行缓存。</li>
 <li>升级werkzeug的版本到0.9.1</li>
-<li>増加一个colorloged.py模块，可以用它来输出带颜色的日志信息。</li>
+<li><p>増加一个colorloged.py模块，可以用它来输出带颜色的日志信息。</p></li>
 </ul>
 <h2 id="title_1-4">0.1.6<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>更新内容</p>
@@ -137,8 +137,12 @@
 <li>使用inspect.isclass()来判断一个对象是否class，它可以兼容判断classic class和new style class</li>
 <li>修复 --version 命令参数的bug</li>
 <li>优化 import_mod_attr 函数，使其可以接受对象参数（原来只支持字符串路径形式）</li>
-<li><p>向 Dispatcher 増加 handler() 方法，可以用它返回的对象来执行：get(), post(), delete()等模拟客户端的RESTFul请求，例如：</p><p><code>`</code>` from uliweb import application</p><p>handler = application.handler() r = handler.get('/index')</p>
-<p>#r is response object <code>`</code>`</p></li>
+<li><p>向 Dispatcher 増加 handler() 方法，可以用它返回的对象来执行：get(), post(), delete()等模拟客户端的RESTFul请求，例如：</p>
+<pre class="prettyprint linenums"><code>from uliweb import application
+
+handler = application.handler()
+r = handler.get('/index')
+#r is response object</code></pre></li>
 <li>向 uliweb/utils/test.py 中添加 client_from_application() 方法</li>
 <li>向 make_application 和 make_simple_application 函数添加 dispatcher_cls和dispatcher_kwargs参数，可以在创建application时使用不同的Dispatcher类</li>
 <li>修复在extend同名模板时处理多次的bug</li>
@@ -157,18 +161,22 @@
 <li>优化template_plugins中的use模块的定义方式，简单的定义可以直接写在settings.ini中，同时可以支持版本的配置功能</li>
 <li>修改模板中在处理Python代码缩近时，对return, continue, break的反缩近处理，全部采用判断pass</li>
 <li>向html.py中添加一个Builder类，使用它可以直接生成包含不同部分的对象，可以对这些部分分别进行处理，最终合成统一的字符串，也可以根据需要分开使用。主要用在HTML代码的生成，允许用户根据需要结合使用或分拆使用</li>
-<li><p>向ORM中的get(), filter()等处理添加额外的不定关键字参数，这些参数将在执行select时传递给select方法。目前可以使用它来实现for_update的处理，如：</p><pre class="prettyprint linenums"><code>Model.get(Model.c.id==id, for_update=True)
+<li><p>向ORM中的get(), filter()等处理添加额外的不定关键字参数，这些参数将在执行select时传递给select方法。目前可以使用它来实现for_update的处理，如：</p>
+<pre class="prettyprint linenums"><code>Model.get(Model.c.id==id, for_update=True)
 Model.filter(condition).for_update().filter(condition)</code></pre></li>
 <li>关于for_update可以参考sqlalchemy相关的文档</li>
 <li>优化generic.py中的ListView和SimpleListView的处理，可以自动识别request中的page和rows值，当调用时没有传入pageno或rows_per_page参数时生效。</li>
-<li><p>添加 secretkey APP，可以用它进行加解密的处理。加密类可以由用户进行配置。纯Python的DES算法实现，可以考虑使用pyDes库。同时提供 uliweb makekey命令，可以自动生成key文件。key文件的路径可以配置到settings.ini中。加解密示例如下：</p><pre class="prettyprint linenums"><code>from uliweb import functions
+<li><p>添加 secretkey APP，可以用它进行加解密的处理。加密类可以由用户进行配置。纯Python的DES算法实现，可以考虑使用pyDes库。同时提供 uliweb makekey命令，可以自动生成key文件。key文件的路径可以配置到settings.ini中。加解密示例如下：</p>
+<pre class="prettyprint linenums"><code>from uliweb import functions
 des = functions.get_cipher()
 d = des.encrypt('hello')
 des.descrypt(d)</code></pre></li>
 <li>删除pagecache APP</li>
 <li>优化 safe_unicode 和 safe_str 函数，可以支持 i18n 的LazyString对象</li>
 <li>向 commands.py 模块中添加 get_input() 方法 ，可以用来当参数值不存时从命令行获得一个值</li>
-<li><p>删除0.1.4中提供的APPS_LAYOUT的机制，但是可以在模板中替換为:</p><pre class="prettyprint linenums"><code>{{extend settings.APP_LAYOUTS.get('messages', 'layout.html')}}</code></pre><p>因此仍然可以把要替換的模板配置到settings.ini中。另一种办法是在新的app中直接定义一个要替換的同名模板，以实现新的要求。</p></li>
+<li><p>删除0.1.4中提供的APPS_LAYOUT的机制，但是可以在模板中替換为:</p>
+<pre class="prettyprint linenums"><code>{{extend settings.APP_LAYOUTS.get('messages', 'layout.html')}}</code></pre>
+<p>因此仍然可以把要替換的模板配置到settings.ini中。另一种办法是在新的app中直接定义一个要替換的同名模板，以实现新的要求。</p></li>
 </ul>
 <h2 id="title_1-5">0.1.5<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>更新内容</p>
@@ -179,7 +187,8 @@ des.descrypt(d)</code></pre></li>
 <li>修改auth支持get_form功能</li>
 <li>改进file_storage过程。</li>
 <li>修正RedirectException显示bug。</li>
-<li><p>添加TablenameConvert到uliweb.orm中，通过orm.set_tablename_converter(converter)传递函数，或者在settings.ini中定义，如：</p><blockquote><p>[ORM] TABLENAME_CONVERTER = 'uliweb.utils.common.camel_to_'</p>
+<li><p>添加TablenameConvert到uliweb.orm中，通过orm.set_tablename_converter(converter)传递函数，或者在settings.ini中定义，如：</p>
+<blockquote><p>[ORM] TABLENAME_CONVERTER = 'uliweb.utils.common.camel_to_'</p>
 </blockquote>
 <p>当Model名字是CamelCase时，将转化为camel_case</p></li>
 <li>添加Reference，OneToOne，ManyToMany关系到Model层级</li>
@@ -188,7 +197,7 @@ des.descrypt(d)</code></pre></li>
 <li>在validator.py添加IS_LENGTH_LESSTHAN和IS_LENGTH_BETWEEN。</li>
 <li>添加[GLOBAL_OBJECTS]机制，此处的对象配置将被注入到uliweb中。</li>
 <li>在uliweb中添加validator，使用[VALIDATORS]机制</li>
-<li>在generic.py中添加IS_LENGTH_LESSTHAN，如果max_length存在。</li>
+<li><p>在generic.py中添加IS_LENGTH_LESSTHAN，如果max_length存在。</p></li>
 </ul>
 <h2 id="title_1-6">0.1.4<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>功能优化</p>
@@ -200,7 +209,8 @@ des.descrypt(d)</code></pre></li>
 <li>重构form的生成处理</li>
 <li>向 uliweb/utils/common.py get_choice() 中新増default参数</li>
 <li>増强模板extend和include的处理，当某个模板在调用extend和include时，如果被调用的模板和当前模板文件为同一文件时，则会使用更前一个同名但不同目录的文件。可以把同名文件理解为一个栈，但是它们的目录不同。在这种情况下，是使用当前文件位置的前一个文件。这样就可以实现同名模板的继承机制，以前只是取栈底的文件，没有继承的机制。</li>
-<li><p>添加APP_LAYOUTS的支持。如果在某个app的模板中使用了{{use template_layout}}，则此处template_layout为一个变量，并且，如果在settings.ini中定应义了对应的值时，如：</p><blockquote><p>[APP_LAYOUTS] appname = 'layout.html'</p>
+<li><p>添加APP_LAYOUTS的支持。如果在某个app的模板中使用了{{use template_layout}}，则此处template_layout为一个变量，并且，如果在settings.ini中定应义了对应的值时，如：</p>
+<blockquote><p>[APP_LAYOUTS] appname = 'layout.html'</p>
 </blockquote>
 <ul>
 <li>如果当前app的名字在APP_LAYOUTS中有定义，则使用配置的模板名。它的功能是可以将app级的layout模板进行配置化，不必hardcode。如果没定义，则缺省使用layout.html模板。</li>
@@ -210,7 +220,7 @@ des.descrypt(d)</code></pre></li>
 <li>向cache.get()中添加createor参数，它可以当key不存在时调用creator方法来生成value，并保存到cache中。同时value值可以为callable()对象。</li>
 <li>添加cache和session对memcache的后端存储的支持，添加inc()和dec()方法。</li>
 <li>调整了require_login的处理代码</li>
-<li>修改Redirect由原来的异常类改为函数，原来的异常类改为RedirectException。与redirect()的区别是，Redirect()将直接抛出异常。而redirect()返回一个response对象。</li>
+<li><p>修改Redirect由原来的异常类改为函数，原来的异常类改为RedirectException。与redirect()的区别是，Redirect()将直接抛出异常。而redirect()返回一个response对象。</p></li>
 </ul>
 <p>问题修复</p>
 <ul>
@@ -218,17 +228,17 @@ des.descrypt(d)</code></pre></li>
 <li>修复dispatch signal的bug</li>
 <li>设置werkzeug的日志级为为info</li>
 <li>wsgi_staticfiles的静态文件的处理顺序进行了倒序处理</li>
-<li>修复log格式串的bug</li>
+<li><p>修复log格式串的bug</p></li>
 </ul>
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="globals.html"><i class="icon-arrow-left"></i> 全局环境</a>
+    <a prev-chapter href="./globals.html"><i class="icon-arrow-left"></i> 全局环境</a>
 </div>
 
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/update.md">View Source</a>
+                <i class="icon-download"></i><a href="./update.md">View Source</a>
             </div>
           </div>
           

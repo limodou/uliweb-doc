@@ -8,17 +8,17 @@
 <meta name="author" content="">
 
 <!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
+<script type="text/javascript" src="../static/asset/html5.js"></script>
 <![endif]-->
 
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/docs.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link href="../static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/docs.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link href="../static/bootheme.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
 
 <title>如何使用dialog2打开编辑窗口 - Uliweb-Doc</title>
 </head>
@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="../index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,17 +63,17 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="plugs_apps.html"><i class="icon-arrow-left"></i> Plugs App 清单</a>
+    <a prev-chapter href="../plugs/apps.html"><i class="icon-arrow-left"></i> Plugs App 清单</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="plugs/menus.html">menus - 菜单管理 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="../plugs/menus.html">menus - 菜单管理 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">如何使用dialog2打开编辑窗口<a class="anchor" href="#title_1">&para;</a></h1>
 <p>使用dialog2打开窗口主要有两种方式：</p>
 <ul>
 <li>窗口内容已经在前端写好，只要打开即可</li>
-<li>窗口内容将从后台动态生成，后台需要有相应的view来生成窗口</li>
+<li><p>窗口内容将从后台动态生成，后台需要有相应的view来生成窗口</p></li>
 </ul>
 <h2 id="title_1-1">窗口内容从后台生成<a class="anchor" href="#title_1-1">&para;</a></h2>
 <h3 id="title_1-1-1">引用组件<a class="anchor" href="#title_1-1-1">&para;</a></h3>
@@ -121,15 +121,19 @@ message_type:'bootstrap'
 <li>success, done, error 为成功，完成及出错时的处理函数。缺省不提供。</li>
 <li><p>message 为应答信息使用的函数。应答信息是整个调用的结果，一般成功时也会返回。而出错     信息是按字段分别对应的信息。缺省使用poshytip中定义的 <code>show_message</code> 。(poshytip     已经在 <code>inc_jquery_dialog2.html</code> 被引用。</p></li>
 <li><p>field_prefix 用来处理当出错时来查找出错字段对应的容器元素。缺省是 <code>div_field_</code>。     这种格式是使用uliweb的Generic View自动生成时创建的。所以 <code>common_ajaxForm_success</code>     的处理是与Generic View配套的。其它不使用Generic View的情况下，你可能需要仿照 <code>common_ajaxForm_success</code>     来进行相应的成功或出错处理。</p></li>
-<li>message_type 用来指明出错时提示的风格。缺省使用 <code>bootstrap</code> 。还支持 <code>tip</code>     风格。它将使用 poshytip 控件来显示出错信息。</li>
+<li><p>message_type 用来指明出错时提示的风格。缺省使用 <code>bootstrap</code> 。还支持 <code>tip</code>     风格。它将使用 poshytip 控件来显示出错信息。</p></li>
 </ul>
 <h3 id="title_1-1-4">Form的处理<a class="anchor" href="#title_1-1-4">&para;</a></h3>
 <p>因为使用了dialog2插件，如果在提交时，你想使用ajaxForm来处理，则需求按它的要求 在 <code>&lt;form&gt;</code> 中添加 <code>class=ajax</code> 属性。如果 Form 本身是手写代码很容易添加属性， 那么在自动生成 Form 内容的情况下，就需要一些技巧了。有以下方法可以在生成 Form 时添加class属性：</p>
 <ol>
-<li><p>在view中传入form参数</p><p>一般我们会使用generic.py中的 AddView，EditView等来自动生成Form。因此我们可以 向它们传入form_args参数，如:</p><pre class="prettyprint linenums"><code>form_args={'action':request.path, 
+<li><p>在view中传入form参数</p>
+<p>一般我们会使用generic.py中的 AddView，EditView等来自动生成Form。因此我们可以 向它们传入form_args参数，如:</p>
+<pre class="prettyprint linenums"><code>form_args={'action':request.path, 
 'html_attrs':{'class':'ajax form-horizontal'},
 }</code></pre></li>
-<li><p>在模板中进行处理</p><p>我们可以利用Form类提供的build属性将Form的生成分成几部分，如：</p><dl>
+<li><p>在模板中进行处理</p>
+<p>我们可以利用Form类提供的build属性将Form的生成分成几部分，如：</p>
+<dl>
 <dt>begin</dt>
 <dd><pre class="prettyprint linenums"><code>&lt;form class=xxxx&gt;</code></pre>
 <dl>
@@ -138,12 +142,14 @@ message_type:'bootstrap'
 </dd>
 </dl><p>Form的内容 buttons_line -- Form的按钮行 end -- <code>` &lt;/form&gt; `</code></p>
 </dd>
-</dl><p>其中，每一部分都可以单独运行。这样我们就可以保留需要的内容，将其它的内容进 行替換。举例如下：</p><pre class="prettyprint linenums"><code>&lt;form class="ajax {{=defined('form_class') or 'form-horizontal'}}" 
+</dl><p>其中，每一部分都可以单独运行。这样我们就可以保留需要的内容，将其它的内容进 行替換。举例如下：</p>
+<pre class="prettyprint linenums"><code>&lt;form class="ajax {{=defined('form_class') or 'form-horizontal'}}" 
     method="POST" action="{{=defined('action') or functions.request_url()}}"&gt;
 {{build = form.build}}
 {{&lt;&lt; build.body}}
 {{&lt;&lt; build.buttons_line}}
-&lt;/form&gt;</code></pre><p>这个例子自定义了 begin 和 end 。在 <code>&lt;form&gt;</code> 上添加了 <code>ajax</code> 的 class。</p></li>
+&lt;/form&gt;</code></pre>
+<p>这个例子自定义了 begin 和 end 。在 <code>&lt;form&gt;</code> 上添加了 <code>ajax</code> 的 class。</p></li>
 </ol>
 <div class="alert alert-info">
 <p>原来是使用 <code>request.url</code> 来表示请求的URL，但是在群集部署情况下， <code>request.url</code> 将是处理请求机器的IP，不是接入机的IP。所以会不正确。而 <code>functions.request_url()</code> 会只使用相对路径，避免了这一问题。</p>
@@ -151,14 +157,14 @@ message_type:'bootstrap'
 </div>
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="plugs_apps.html"><i class="icon-arrow-left"></i> Plugs App 清单</a>
+    <a prev-chapter href="../plugs/apps.html"><i class="icon-arrow-left"></i> Plugs App 清单</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="plugs/menus.html">menus - 菜单管理 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="../plugs/menus.html">menus - 菜单管理 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/plugs_dialog2.md">View Source</a>
+                <i class="icon-download"></i><a href="../plugs/dialog2.md">View Source</a>
             </div>
           </div>
           
@@ -178,13 +184,13 @@ message_type:'bootstrap'
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
+<script type="text/javascript" src="../static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
 
 </body>
 </html>

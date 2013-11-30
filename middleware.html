@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="form.html"><i class="icon-arrow-left"></i> Form使用</a>
+    <a prev-chapter href="./form.html"><i class="icon-arrow-left"></i> Form使用</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="generic.html">Generic 说明 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./generic.html">Generic 说明 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">Middleware 开发<a class="anchor" href="#title_1">&para;</a></h1>
@@ -123,9 +123,9 @@ for m in reversed(middlewares):
         res = m.process_response(request, res)</code></pre>
 <ol>
 <li>先是对Middleware进行排序。</li>
-<li>对所有的Middleware中的process_request进行处理。如果有返回值不是None，则跳出     循环。这里会对Middleware中是否有process_reqeust方法进行判断。后面类似。</li>
+<li><p>对所有的Middleware中的process_request进行处理。如果有返回值不是None，则跳出     循环。这里会对Middleware中是否有process_reqeust方法进行判断。后面类似。</p></li>
 <li><p>然后是执行view方法，获得response。在执行中，如果出错，则按倒序对Middleware     进行处理。如果某个process_exception有返回值，则跳出循环。最后通过raise再次抛     出异常，让整个应用捕获。</p></li>
-<li>如果没有异常，则按倒序执行Middleware中的process_response方法。这里和process_request     不同。你需要强制返回response对象，因为它会传递到下一个处理方法中。</li>
+<li><p>如果没有异常，则按倒序执行Middleware中的process_response方法。这里和process_request     不同。你需要强制返回response对象，因为它会传递到下一个处理方法中。</p></li>
 </ol>
 <h2 id="title_1-4">配置<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>有两个地方可以配置：apps/settings.ini和某个应用下的settings.ini。</p>
@@ -142,9 +142,9 @@ for m in reversed(middlewares):
 <p>下面列出在contrib中定义的一些Middleware供参考:</p>
 <ul>
 <li><p>'uliweb.contrib.auth.middle_auth.AuthMiddle' ORDER=100 app='auth'     用于在请求进来时，向request添加一个user的对象。这样用户就可以直接通过request.user     来判断用户是否已经登录和得到登录用户对象。</p></li>
-<li>'uliweb.i18n.middle_i18n.I18nMiddle' ORDER=500 app='i18n'     用于i18n的处理，设置语言类型</li>
-<li>'uliweb.contrib.session.middle_session.SessionMiddle' ORDER=50 app='session'     请求进来时自动读取session。请求结束时自动保存cookie。</li>
-<li>'uliweb.orm.middle_transaction.TransactionMiddle' ORDER=80 app='orm'     提供事务的支持。当view出错时，自动回滚，成功时自动提交。</li>
+<li><p>'uliweb.i18n.middle_i18n.I18nMiddle' ORDER=500 app='i18n'     用于i18n的处理，设置语言类型</p></li>
+<li><p>'uliweb.contrib.session.middle_session.SessionMiddle' ORDER=50 app='session'     请求进来时自动读取session。请求结束时自动保存cookie。</p></li>
+<li><p>'uliweb.orm.middle_transaction.TransactionMiddle' ORDER=80 app='orm'     提供事务的支持。当view出错时，自动回滚，成功时自动提交。</p></li>
 </ul>
 <p>所以，当你使用了上面几个app时，它会自动按:</p>
 <pre class="prettyprint linenums"><code>'uliweb.contrib.session.middle_session.SessionMiddle'
@@ -155,14 +155,14 @@ for m in reversed(middlewares):
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="form.html"><i class="icon-arrow-left"></i> Form使用</a>
+    <a prev-chapter href="./form.html"><i class="icon-arrow-left"></i> Form使用</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="generic.html">Generic 说明 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./generic.html">Generic 说明 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/middleware.md">View Source</a>
+                <i class="icon-download"></i><a href="./middleware.md">View Source</a>
             </div>
           </div>
           

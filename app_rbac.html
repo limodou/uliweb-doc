@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="app_auth.html"><i class="icon-arrow-left"></i> auth(用户认证处理)</a>
+    <a prev-chapter href="./app_auth.html"><i class="icon-arrow-left"></i> auth(用户认证处理)</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="app_template.html">template <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./app_template.html">template <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">rbac(权限控制)<a class="anchor" href="#title_1">&para;</a></h1>
@@ -81,24 +81,29 @@
 <p>这里基本用户角色我定义为：超级用户、登录用户和匿名用户。</p>
 <p>如果我们不使用 rbac app ，只是使用 auth app 的话，在它所提供的 User 表中已经有一些信息可以用来进行基本判断，同时结合 middle_auth ，将可以直接区分：超级用户、登录用户和匿名用户。主要分两种情况：</p>
 <ol>
-<li><p>判断当前用户，使用request.user对象，可以区分：超级用户、登录用户和匿名用户</p><dl>
+<li><p>判断当前用户，使用request.user对象，可以区分：超级用户、登录用户和匿名用户</p>
+<dl>
 <dt>超级用户</dt>
 <dd>
 </dd>
-</dl><p>if request.user and request.user.is_superuser</p><dl>
+</dl><p>if request.user and request.user.is_superuser</p>
+<dl>
 <dt>普通用户</dt>
 <dd>
 </dd>
-</dl><p>if request.user and not request.user.is_superuser</p><dl>
+</dl><p>if request.user and not request.user.is_superuser</p>
+<dl>
 <dt>匿名用户</dt>
 <dd>
 </dd>
 </dl><p>if not request.user</p></li>
-<li><p>判断指定用户，需要从 User 表中动态获取，然后利用是否存在和 is_superuser 字段来判断是否为普通用户或超级用户，这里无法判断匿名用户</p><dl>
+<li><p>判断指定用户，需要从 User 表中动态获取，然后利用是否存在和 is_superuser 字段来判断是否为普通用户或超级用户，这里无法判断匿名用户</p>
+<dl>
 <dt>超级用户</dt>
 <dd>
 </dd>
-</dl><p>user = User.get(User.c.username == username)     if user and user.is_superuser</p><dl>
+</dl><p>user = User.get(User.c.username == username)     if user and user.is_superuser</p>
+<dl>
 <dt>普通用户</dt>
 <dd>
 </dd>
@@ -236,7 +241,7 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 <p>对于某一个角色，rbac支持不同的判断方式，主要有:</p>
 <ol>
 <li>通过role对应的用户来判断。即通过Role表的users字段来判断。</li>
-<li>通过 role 判断方法来判断。即你可以提供一个方法，并将其按前面 ROLES 配置的说明中描述所讲的那样进行配置，这样在判断一个角色时，会使用这个方法对传入的用户进行判断。</li>
+<li><p>通过 role 判断方法来判断。即你可以提供一个方法，并将其按前面 ROLES 配置的说明中描述所讲的那样进行配置，这样在判断一个角色时，会使用这个方法对传入的用户进行判断。</p></li>
 </ol>
 <p>对于 rbac 提供的缺省的 superuser, trusted, anonymous 就是采用这种方式来判断的。如果对于一个角色，两种方法都提供了，则会先使用方法进行判断，如果不满足，再按用户进行判断，直到都不满足条件。其中只要有一个满足条件，就认为用户拥有某个用户的身份。</p>
 <h2 id="title_1-7">动态角色和静态角色<a class="anchor" href="#title_1-7">&para;</a></h2>
@@ -328,19 +333,19 @@ def topic_view(topic_id):
 <li>如果有自定义的角色，权限，并且希望通过命令行导入；或者角色的判断是通过函数实现的，则要在 settings.ini 中进行配置</li>
 <li>执行uliweb dbinit uliweb.contrib.rbac来装入数据</li>
 <li>在程序中调用 has_role, has_permission, check_role, check_permission 等方法检查用户权限</li>
-<li>使用plugs/rbac_main或用户自行开发的角色、权限管理模块来管理角色或权限</li>
+<li><p>使用plugs/rbac_main或用户自行开发的角色、权限管理模块来管理角色或权限</p></li>
 </ol>
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="app_auth.html"><i class="icon-arrow-left"></i> auth(用户认证处理)</a>
+    <a prev-chapter href="./app_auth.html"><i class="icon-arrow-left"></i> auth(用户认证处理)</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="app_template.html">template <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./app_template.html">template <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/app_rbac.md">View Source</a>
+                <i class="icon-download"></i><a href="./app_rbac.md">View Source</a>
             </div>
           </div>
           

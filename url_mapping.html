@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="template.html"><i class="icon-arrow-left"></i> 模板(Template)</a>
+    <a prev-chapter href="./template.html"><i class="icon-arrow-left"></i> 模板(Template)</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="views.html">视图(View) <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./views.html">视图(View) <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">URL映射<a class="anchor" href="#title_1">&para;</a></h1>
@@ -78,32 +78,45 @@
 <h3 id="title_1-1-1">普通View函数的处理<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>基本用法为：</p>
 <ol>
-<li><p>缺省映射</p><p><code>`</code>` @expose() def index(arg1, arg2):     return {}</p><p>@expose def index(arg1, arg2):     return {} <code>`</code>`</p><p>当expose()不带任何参数(也可以不带括号)时，将进行缺省的映射。即URL将为:</p><pre class="prettyprint linenums"><code>/appname/view_function_name/&lt;arg1&gt;/&lt;arg2&gt;</code></pre><p>如果view函数没有参数，则为：</p><pre class="prettyprint linenums"><code>/appname/view_function_name</code></pre></li>
-<li><p>固定映射</p><pre class="prettyprint linenums"><code>@expose('/index')
+<li><p>缺省映射</p>
+<pre class="prettyprint linenums"><code>@expose()
+def index(arg1, arg2):
+    return {}
+
+@expose
+def index(arg1, arg2):
+    return {}</code></pre>
+<p>当expose()不带任何参数(也可以不带括号)时，将进行缺省的映射。即URL将为:</p>
+<pre class="prettyprint linenums"><code>/appname/view_function_name/&lt;arg1&gt;/&lt;arg2&gt;</code></pre>
+<p>如果view函数没有参数，则为：</p>
+<pre class="prettyprint linenums"><code>/appname/view_function_name</code></pre></li>
+<li><p>固定映射</p>
+<pre class="prettyprint linenums"><code>@expose('/index')
 def index():
     return {}</code></pre></li>
-<li><p>参数处理</p><p>当URL只有可变内容，可以配置为参数。一个参数的基本形式为：</p><pre class="prettyprint linenums"><code>&lt;convertor(arguments):name&gt;</code></pre><p>其中convertor和arguments是可以缺省的。convertor类型目前可以设置为：int, float, any, string, unicode, path等。不同的convertor需要不同的参数。详情请参见 下面的converter说明。最简单的形式就是 <code>&lt;name&gt;</code> 了，它将匹配/到/间的内容。 name为匹配后参数的名字，它需要与绑定的view方法中的参数名相匹配。</p></li>
-<li><p>其它参数</p><p>expose函数允许在义时除了给出URL字符串以外再提供其它的参数，比如：</p><dl>
+<li><p>参数处理</p>
+<p>当URL只有可变内容，可以配置为参数。一个参数的基本形式为：</p>
+<pre class="prettyprint linenums"><code>&lt;convertor(arguments):name&gt;</code></pre>
+<p>其中convertor和arguments是可以缺省的。convertor类型目前可以设置为：int, float, any, string, unicode, path等。不同的convertor需要不同的参数。详情请参见 下面的converter说明。最简单的形式就是 <code>&lt;name&gt;</code> 了，它将匹配/到/间的内容。 name为匹配后参数的名字，它需要与绑定的view方法中的参数名相匹配。</p></li>
+<li><p>其它参数</p>
+<p>expose函数允许在义时除了给出URL字符串以外再提供其它的参数，比如：</p>
+<dl>
 <dt>defaults</dt>
 <dd><p>它用来定义针对view函数中的参数的缺省值，例如你可以定义:</p>
-</dd>
-</dl><pre class="prettyprint linenums"><code>```
-@expose('/all', defaults={'page': 1})
+<pre class="prettyprint linenums"><code>@expose('/all', defaults={'page': 1})
 @expose('/all/&lt;int:page&gt;')
 def show(page):
-    return {}
-```</code></pre><pre class="prettyprint linenums"><code>这样两个URL都指向相同的view函数，但由于show方法需要一个page参数，所以对于第一
-个/all来说，需要定义一个缺省值。</code></pre><dl>
+    return {}</code></pre>
+<p>这样两个URL都指向相同的view函数，但由于show方法需要一个page参数，所以对于第一 个/all来说，需要定义一个缺省值。</p>
+</dd>
 <dt>build_only</dt>
 <dd><p>如果设置为True，将只用来生成URL，不用于匹配。目前Uliweb提供了静态文件的处理， 但一旦你想通过象Apache这样的web server来提供服务的话，就不再需要Uliweb的静态 文件服务了。但是有些文件的链接却是依赖于这个定义来反向生成的，因此为了不进行匹配， 可以加上这个参数，这样在访问时不会进行匹配，但是在反向生成URL时还可以使用。</p>
 </dd>
-</dl><dl>
 <dt>methods</dt>
 <dd><p>HTTP请求可以分为GET, POST等方法，使用methods可以用来指定要匹配的方法。比 如:</p>
+<pre class="prettyprint linenums"><code>@expose('/all', methods=['GET'])</code></pre>
 </dd>
-</dl><pre class="prettyprint linenums"><code>```
-@expose('/all', methods=['GET'])
-```</code></pre><p>关于参数更多的说明请参见werkzeug下的routing.py程序。</p></li>
+</dl><p>关于参数更多的说明请参见werkzeug下的routing.py程序。</p></li>
 </ol>
 <h3 id="title_1-1-2">类View函数的处理<a class="anchor" href="#title_1-1-2">&para;</a></h3>
 <p>详细的文档参见 <a href="views.html" class="inner">视图(View)</a></p>
@@ -219,14 +232,14 @@ def index():
 </dl>
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="template.html"><i class="icon-arrow-left"></i> 模板(Template)</a>
+    <a prev-chapter href="./template.html"><i class="icon-arrow-left"></i> 模板(Template)</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="views.html">视图(View) <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./views.html">视图(View) <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/url_mapping.md">View Source</a>
+                <i class="icon-download"></i><a href="./url_mapping.md">View Source</a>
             </div>
           </div>
           

@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="middleware.html"><i class="icon-arrow-left"></i> Middleware 开发</a>
+    <a prev-chapter href="./middleware.html"><i class="icon-arrow-left"></i> Middleware 开发</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="test.html">如何测试 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./test.html">如何测试 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">Generic 说明<a class="anchor" href="#title_1">&para;</a></h1>
@@ -150,7 +150,7 @@
 <p>在ListView中，用户可以有两种定义列表显示字段的方式：</p>
 <ol>
 <li>通过fields字段，传入字段列表</li>
-<li>通过在Model类中定义一个子类，来定义字段列表</li>
+<li><p>通过在Model类中定义一个子类，来定义字段列表</p></li>
 </ol>
 <p>第一种方法可以在运行时根据需要动态修改显示字段的列表，而第二种相对静态。代码示 例如下:</p>
 <pre class="prettyprint linenums"><code>fields = ['name', 'age',
@@ -196,7 +196,8 @@
 <li>从 generic 中导入 ListView 。</li>
 <li>根据需要对需要传入 ListView 中的参数或回调函数进行处理</li>
 <li>创建 ListView 实例</li>
-<li><p>返回 view.run()，它将返回一个 dict ，包含内容为:</p><pre class="prettyprint linenums"><code>{'table':以table方式显示的表格数据,
+<li><p>返回 view.run()，它将返回一个 dict ，包含内容为:</p>
+<pre class="prettyprint linenums"><code>{'table':以table方式显示的表格数据,
  'table_id':table的id,
  'total':总条数,
  'pageno':当前页号,
@@ -316,7 +317,7 @@ if 需要分页:
 <p>从上面我们可以看到已经有两类的列表展示类： <code>ListView</code> 和 <code>SimpleListView</code> 。一种 主要是针对一张表的情况，另一种主要是针对自定义结果的情况。还有一种情况就是：我们 希望把一条 <code>select</code> 语句作为列表的方式显示出来，这样有可能涉及的表就不只一张，采用 上面的方式就无法满足。因此我们可以考虑 <code>SelectListView</code> 。它的主要特点就是：</p>
 <ul>
 <li>通过定义fields来列举将要在select中显示的字段</li>
-<li>通过condition来定义条件</li>
+<li><p>通过condition来定义条件</p></li>
 </ul>
 <p>这样， <code>SelectListView</code> 会自动生成 <code>select</code> 语句。</p>
 <p><code>SelectListView</code> 是从 <code>ListView</code> 继承来的。所以使用上基本上与 <code>ListView</code> 是一致的。</p>
@@ -563,7 +564,7 @@ else:                               #显示编辑页面
 <ol>
 <li>如果是 GET 请求，则显示编辑界面</li>
 <li>如果是 POST 请求，则对数据进行校验，如果成功则保存，返回结果</li>
-<li>如果失败，则返回出错结果</li>
+<li><p>如果失败，则返回出错结果</p></li>
 </ol>
 <p>上面的代码之所以看上去复杂，是因为要支持用户的扩展，所以在许多地方都添加了回调 和参数，允许用户对执行过程进行扩展。用户可以根据需要传入不同的回调来进行特殊的 处理。除了采用回调方式外，用户也可以对AddView类进行继承。</p>
 <h3 id="title_1-5-18">录入字段的配置<a class="anchor" href="#title_1-5-18">&para;</a></h3>
@@ -663,14 +664,14 @@ class BlogView(object):
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="middleware.html"><i class="icon-arrow-left"></i> Middleware 开发</a>
+    <a prev-chapter href="./middleware.html"><i class="icon-arrow-left"></i> Middleware 开发</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="test.html">如何测试 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./test.html">如何测试 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/generic.md">View Source</a>
+                <i class="icon-download"></i><a href="./generic.md">View Source</a>
             </div>
           </div>
           

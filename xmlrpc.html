@@ -40,7 +40,7 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           
-          <li class="active" id="menu_home"><a href="index.html"><span>Home</span></a></li>
+          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
           
         </ul>
       </div>
@@ -63,10 +63,10 @@
             </div>
             
             <div class="chapter-prev chapter-top">
-    <a prev-chapter href="cache.html"><i class="icon-arrow-left"></i> Cache使用说明</a>
+    <a prev-chapter href="./cache.html"><i class="icon-arrow-left"></i> Cache使用说明</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="command.html">如何编写自已的命令 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./command.html">如何编写自已的命令 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">XMLRPC 使用说明<a class="anchor" href="#title_1">&para;</a></h1>
@@ -117,7 +117,8 @@ class Hello(object):
         return 'new_name'</code></pre>
 <p>说明如下:</p>
 <ol>
-<li><p>xmlrpc提供了一个同名的decorator函数，可以用来修饰普通的函数和类，以便将其转     为XMLRPC的服务。而这个decorator是定义在xmlrpc的settings.ini中的，例如:</p><pre class="prettyprint linenums"><code>[FUNCTIONS]
+<li><p>xmlrpc提供了一个同名的decorator函数，可以用来修饰普通的函数和类，以便将其转     为XMLRPC的服务。而这个decorator是定义在xmlrpc的settings.ini中的，例如:</p>
+<pre class="prettyprint linenums"><code>[FUNCTIONS]
 xmlrpc = 'uliweb.contrib.xmlrpc.xmlrpc'</code></pre></li>
 </ol>
 <p>为了获取真正的函数对象，uliweb提供了一个内部函数叫function。使用它就可以从     settings.ini的FUNCTIONS中获取一个形如'module.function'的函数对象。</p>
@@ -126,7 +127,7 @@ xmlrpc = 'uliweb.contrib.xmlrpc.xmlrpc'</code></pre></li>
 <li><p>xmlrpc可以支持带参数或不带参数。不带参数则会直接使用函数名作为将来调用的函数     名。如果是类，则形式为ClassName.MethodName的形式。如果带参数，则这个参数将作     为被调用的函数名，而不是原来的函数名了。所以上面的@xmlrpc('func')就是给所修     饰的函数重新起了一个名字，客户端应该使用func来访问，而不是new_func。如果是一     个类方法，这个名字会与类名进行合并。所以上面的@xmlrpc('name')处理后，你就应     该使用Hello.name来访问了。</p></li>
 <li>如果类函数是以'_'开头的，将不会被调用。</li>
 <li>在类方法上仍然可以使用xmlrpc，这样相当于创建了一个xmlrpc函数的别名。</li>
-<li>Uliweb提供的xmlrpc调用还支持与views相类似的__begin__和__end__的处理。同时可     以在类上使用。有兴趣的可以自行测试。</li>
+<li><p>Uliweb提供的xmlrpc调用还支持与views相类似的__begin__和__end__的处理。同时可     以在类上使用。有兴趣的可以自行测试。</p></li>
 </ol>
 <h2 id="title_1-3">测试<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>下面创建一个测试程序，如test_xmlrpc.py:</p>
@@ -146,14 +147,14 @@ new_func
 
             
             <div class="chapter-prev chapter-down">
-    <a prev-chapter href="cache.html"><i class="icon-arrow-left"></i> Cache使用说明</a>
+    <a prev-chapter href="./cache.html"><i class="icon-arrow-left"></i> Cache使用说明</a>
 </div>
 <div class="chapter-next chapter-down">
-    <a next-chapter href="command.html">如何编写自已的命令 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./command.html">如何编写自已的命令 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">
-                <i class="icon-download"></i><a href="./source/xmlrpc.md">View Source</a>
+                <i class="icon-download"></i><a href="./xmlrpc.md">View Source</a>
             </div>
           </div>
           
