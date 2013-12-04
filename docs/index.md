@@ -1,3 +1,5 @@
+![](_static/uliweb_media.png)
+
 # Uliweb 文档
 
 ## 介绍
@@ -18,6 +20,30 @@ plugs_todo.md
 hello_uliweb.md
 guestbook.md
 {% endtoc %}
+* [uliweb入门教程基础版本](http://uliweb.clkg.org/tutorial/read/22)
+* [uliweb入门教程--blog(1天体验版本)](http://uliweb.clkg.org/tutorial/read/3)
+* [uliweb中级篇--CMS](http://uliweb.clkg.org/tutorial/read/19)
+
+### Codepark 活动视频
+
+* Day 1
+
+    * github项目建立 [wmv下载](http://pan.baidu.com/share/link?shareid=3130751943&uk=889513934) [在线视频](http://www.tudou.com/programs/view/MsZYfchhWyw/?bid=03&pid=02&resourceId=22909963_03_05_02)
+    * uliwebzone介绍, uliweb入门讲解 [wmv下载](http://pan.baidu.com/share/link?shareid=3320943637&uk=889513934)
+    * 基础框架搭建 [wmv下载](http://pan.baidu.com/share/link?shareid=3324273125&uk=889513934)
+    
+* Day 2
+
+    * 从纯手工到使用Form来编写添加功能 [wmv下载](http://pan.baidu.com/share/link?shareid=3327090386&uk=889513934) [在线视频](http://www.tudou.com/programs/view/meDORhTcjJI/)
+    * 部署第一部分 [wmv下载](http://pan.baidu.com/share/link?shareid=3329851771&uk=889513934) [在线视频](http://www.tudou.com/programs/view/5ZC8CWZ-dGU/)
+    * 部署第二部分+geneirc替換Form实现的介绍 [wmv下载](http://pan.baidu.com/s/1zkfQU) [在线视频](http://www.tudou.com/programs/view/10_W-u_w8YI/)
+    
+* Day 3
+
+    * 活动页面的生成 [wmv下载](http://pan.baidu.com/share/link?shareid=3341522868&uk=889513934) [在线视频](http://www.tudou.com/programs/view/533byewawWU/)
+    * Redis的使用及邮件发送处理的实现 [wmv下载](http://pan.baidu.com/share/link?shareid=3334921213&uk=889513934) [在线视频](http://www.tudou.com/programs/view/jNjPj-jILec/)
+
+* 活动后的代码项目 https://github.com/limodou/codepark
 
 ## 技术文档
 
@@ -84,3 +110,5 @@ articles/svg_mimetype_config.md
 articles/tornado_support.md
 articles/gevent_support.md
 {% endtoc %}
+
+![](_static/uliweb_small.png)
