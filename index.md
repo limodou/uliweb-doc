@@ -111,4 +111,11 @@ articles/tornado_support.md
 articles/gevent_support.md
 {% endtoc %}
 
+## 讨论
+
+* 邮件列表 [https://groups.google.com/forum/#!forum/uliweb](https://groups.google.com/forum/#!forum/uliweb)
+* 论坛 http://uliweb.clkg.org
+
+<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
 ![](_static/uliweb_small.png)
