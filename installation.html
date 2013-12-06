@@ -73,19 +73,16 @@
 <h2 id="title_1-1">要求<a class="anchor" href="#title_1-1">&para;</a></h2>
 <ul>
 <li>Python 2.6+ 目前不支持3.X</li>
-<li><p>setuptools 0.6c11</p></li>
+<li><p>setuptools 0.6c11+</p></li>
 </ul>
 <h2 id="title_1-2">额外要求<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
 <li><p>SQLAlchemy 0.6+ (如果使用Uliweb ORM需要安装它)</p></li>
 </ul>
-<p>最简单的方法是使用easy_install，如:</p>
-<pre class="prettyprint linenums"><code>easy_install Uliweb</code></pre>
-<p>另外如果你想跟踪最新的代码，可以使用svn或git来下载代码，</p>
-<pre class="prettyprint linenums"><code>svn checkout http://uliweb.googlecode.com/svn/trunk/ uliweb
-cd uliweb
-python setup.py develop</code></pre>
-<p>或:</p>
+<p>最简单的方法是使用easy_install或pip，如:</p>
+<pre class="prettyprint linenums"><code>easy_install Uliweb
+pip install Uliweb</code></pre>
+<p>另外如果你想跟踪最新的代码，可以使用git来下载代码，</p>
 <pre class="prettyprint linenums"><code>git clone git://github.com/limodou/uliweb.git
 cd uliweb
 python setup.py develop</code></pre>

@@ -205,7 +205,9 @@ def get_apps(apps_dir, include_apps=None):
 根据一个apps目录，分析出所有可用的App的名字列表。
 
 
-### function
+### function(Deprecated)
+
+_建议使用functions_
 
 
 ```
@@ -310,6 +312,16 @@ unicode为False时，将会把obj中的unicode值转为encoding编码的串。�
 
 Uliweb提供了一个通用的异常类 - UliwebError，你可以考虑使用它。
 
+### Storage
+
+一个将字典对象进行封装后，可以使用 `.attr` 形式来使用key的类。
+
+### get_endpoint(0.2.2)
+
+可以获得一个函数表现为URL对应的endpoint值。对于一般函数，它是 `appname.views_XXX.functionname`.
+对于类方法，它是 `appname.views_XXX.classname.functionname`。
+
+它主要是用在以类的方式继承另一个类时，对原有方法进行替換时使用。
 
 ## 全局对象配置
 

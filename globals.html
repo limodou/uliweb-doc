@@ -158,7 +158,8 @@
 <h3 id="title_1-2-15">get_apps<a class="anchor" href="#title_1-2-15">&para;</a></h3>
 <pre class="prettyprint linenums"><code>def get_apps(apps_dir, include_apps=None):</code></pre>
 <p>根据一个apps目录，分析出所有可用的App的名字列表。</p>
-<h3 id="title_1-2-16">function<a class="anchor" href="#title_1-2-16">&para;</a></h3>
+<h3 id="title_1-2-16">function(Deprecated)<a class="anchor" href="#title_1-2-16">&para;</a></h3>
+<p><em>建议使用functions</em></p>
 <pre class="prettyprint linenums"><code>func = function('function_name')</code></pre>
 <p>用户可以在settings.ini中配置供外部使用的函数路径，通过function可以获得这个函数 的对象。例如在settings.ini中如下配置:</p>
 <pre class="prettyprint linenums"><code>[FUNCTIONS]
@@ -201,6 +202,11 @@ def hello():
 <p>中间件基类，所有 Middleware 类可以从它派生。</p>
 <h3 id="title_1-2-23">UliwebError<a class="anchor" href="#title_1-2-23">&para;</a></h3>
 <p>Uliweb提供了一个通用的异常类 - UliwebError，你可以考虑使用它。</p>
+<h3 id="title_1-2-24">Storage<a class="anchor" href="#title_1-2-24">&para;</a></h3>
+<p>一个将字典对象进行封装后，可以使用 <code>.attr</code> 形式来使用key的类。</p>
+<h3 id="title_1-2-25">get_endpoint(0.2.2)<a class="anchor" href="#title_1-2-25">&para;</a></h3>
+<p>可以获得一个函数表现为URL对应的endpoint值。对于一般函数，它是 <code>appname.views_XXX.functionname</code>. 对于类方法，它是 <code>appname.views_XXX.classname.functionname</code>。</p>
+<p>它主要是用在以类的方式继承另一个类时，对原有方法进行替換时使用。</p>
 <h2 id="title_1-3">全局对象配置<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>我们已经可以从 <code>from uliweb import *</code> 中获得许多的对象和方法，如果我们也想将 其它的对象可以通过 <code>from uliweb import xxx</code> 的形式来导入，要如何做呢？可以 在 <code>settings.ini</code> 中添加以下内容:</p>
 <pre class="prettyprint linenums"><code>[GLOBAL_OBJECTS]
