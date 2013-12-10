@@ -114,6 +114,7 @@ Options:
   -p PORT               绑定的端口号，缺省为8000
   --no-reload           禁止服务器自动重启。缺省是自动重启
   --no-debug            禁止服务器进入调试模式。缺省是进入
+  --color               输出彩色日志，缺省为不输出
   --thread              如果设置，则进入多线程工作模式。缺省是单线程
   --processes=PROCESSES
                         进程方式启动的个数。缺省是1个。在windows下无法使用
@@ -121,6 +122,9 @@ Options:
   --ssl-key=SSL_KEY     如果不想自动创建证书，则可以指定ssl-key和ssl-cert来使用已经
   --ssl-cert=SSL_CERT   生成好的证书。ssl-key和ssl-cert可以同时使用。ssl为单独使用。
   --tornado             使用tornado来提供服务
+  --gevent              使用gevent来提供服务
+  --gevent-socketio     使用gevent-socketio来提供服务
+  
 ```
 
 参数说明:
@@ -144,6 +148,18 @@ $ openssl req -new -x509 -nodes -sha1 -days 365 -key ssl.key > ssl.cert
 uliweb runserver #启动缺省服务器
 ```
 
+如果你想修改日志颜色，可以在settings.ini设置：
+
+```
+[LOG.COLORS]
+DEBUG = 'white'
+INFO = 'green'
+WARNING = 'yellow'
+ERROR = 'red'
+CRITICAL = 'red'
+```
+
+可用颜色为：BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE. 颜色值不区分大小写。
 
 ### develop
 
@@ -338,7 +354,35 @@ Usage: uliweb call name
 执行所有安装的App下的名为<name>.py程序。如果是 'moduleA.moduleB' 则导入指定的模块
 执行其中的call()或main()方法。
 
-### install
+### config(0.2.2)
+
+```
+Usage: uliweb config supported_type
+```
+
+输出支持的配置信息。缺省支持nginx和supervisor配置模板，你可以基于它们进行修改。
+
+你也可以自定义config输出，只要在app下创建 `template_files/config`
+的目录结构，然后创建 `xxxx.conf` 和 `xxxx.ini` 文件。在 `xxxx.ini` 中用来定义一些
+变量，这些变量将用于 `xxxx.conf` 中。
+
+ini格式定义示例为：
+
+```
+[INPUT]
+port = '', 80
+path =
+```
+
+port为变量名，值为一个tuple或者不定义，第一个值为提示用的文本，如果为空则表示没有额外
+说明。第二个表示缺省值。
+
+xxxx.conf 为uliweb格式的模板，如果存在模板变量，则需要与ini中的一致。同时
+有一些预定义的变量，如: project 表示项目目录名称，project_dir 表示项目目录。
+
+执行时可以： `uliweb config xxxx`
+
+### install(0.2)
 
 ```
 Usage: uliweb install [appname,...]
@@ -384,6 +428,9 @@ gevent --
     
 gevent-socketio --
     将额外拷贝 gevent_socketio_handler.py
+
+在0.2.2中，可以象config命令一样，在你的app下创建 `template_files/support/xxxx`
+这样的目录结构，下面放执行 `uliweb support xxxx` 时将要拷贝的文件及目录即可。
 
 
 ### shell
