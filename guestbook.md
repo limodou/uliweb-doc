@@ -6,22 +6,35 @@
 
 ## 准备
 
-在 uliweb-tests 项目中已经有完整的GuestBook的源代码，你可以从它里面检出:
+在 uliweb-doc 项目中已经有完整的GuestBook的源代码，你可以从它里面检出:
 
 
 ```
-svn checkout http://uliweb-tests.googlecode.com/svn/trunk/guestbook guestbook
-cd guestbook
+git clone git@github.com:limodou/uliweb-doc.git
+cd uliweb-doc/projects/guestbook
 uliweb runserver
 ```
 
-然后在浏览器输入 [http://localhost:8000/](http://localhost:8000/) 这样就可以看到了。目前缺省是使用
-sqlite3。如果你安装了python 2.5它已经是内置的。否则要安装相应的数据库和Python的绑定模
-块。目前Uliweb使用 [SqlAlchemy](http://www.sqlalchemy.org) 作为数据库底层驱动，
-它支持多种数据库，如：mysql, sqlite, postgresql, 等。
+然后在浏览器输入 [http://localhost:8000/](http://localhost:8000/) 这样就可以看到了。
+目前缺省是使用sqlite3。如果你安装了python 2.6它已经是内置的。否则要安装相应的数
+据库和Python的绑定模块。目前Uliweb使用 [SqlAlchemy](http://www.sqlalchemy.org) 
+作为数据库底层驱动，它支持多种数据库，如：mysql, sqlite, postgresql, 等。在开始
+这个例子之前要安装SQLAlchemy, 如：
 
-好了，源码准备好了，下一步，准备开发环境。
+```
+pip install SQLAlachemy
+```
 
+在Uliweb 0.2.2版本中，为了安装方便，在uliweb.contrib.orm中添加了一个requirements.txt，里
+面有最基础的ORM支持需要的包，所以可以这样安装：
+
+```
+uliweb install uliweb.contrib.orm
+```
+
+这样会自动安装 SQLAlchemy, mysqldb-python, alembic(修改版)
+
+好了，让我们从头开始做这个练习。
 
 ## 创建工程
 
@@ -62,10 +75,12 @@ ORM，但是你可以不使用它。Uliweb提供了插件机制，可以让你�
 
 ```
 INSTALLED_APPS = [
-    'GuestBook',
     'uliweb.contrib.orm',
+    'GuestBook',
     ]
 ```
+
+自已项目中的app建议放在最后，使用uliweb提供的app放在前面。
 
 然后添加下面的内容:
 
@@ -83,8 +98,8 @@ CONNECTION = 'sqlite:///guestbook.db'
 DEBUG = True
 
 INSTALLED_APPS = [
-    'GuestBook',
     'uliweb.contrib.orm',
+    'GuestBook',
     ]
 
 [ORM]
@@ -129,6 +144,9 @@ def prepare_view_env(sender, env):
 这也是一个dispatch的使用示例，它将向模板的环境中注入一个新的函数 `text2html`,
 这样你就可以在模板中直接使用text2html这个函数了。
 
+{% alert class=info %}
+这个不是必须的，只是显示了一下如何向模板中注入对象。
+{% endalert %}
 
 ## 准备Model
 
@@ -154,8 +172,8 @@ Uliorm在定义Model时支持两种定义方式：
 
 
 * 使用内部的Python类型，如：int, float, unicode, datetime.datetime, datetime.date,
-    datetime.time, decimal.Decimal, str, bool。另外还扩展了一些类型，如：BLOB, CHAR, TEXT, DECIMAL。
-    所以你在定义时只要使用Python的类型就好了。
+    datetime.time, decimal.Decimal, str, bool。另外还扩展了一些类型，如：BLOB, 
+    CHAR, TEXT, DECIMAL。所以你在定义时只要使用Python的类型就好了。
 * 然后就是象GAE一样的使用各种Property类，如：StringProperty, UnicodeProperty,
     IntegerProperty, BlobProperty, BooleanProperty, DateProperty, DateTimeProperty,
     TimeProperty, DecimalProperty, FloatProperty, TextProperty。
@@ -188,7 +206,6 @@ class Note(Model):
 {% alert class=info %}
 在定义Model时，Uliorm会自动为你添加 `id` 字段的定义，它将是一个主键，这一
 点与Django一样。
-
 {% endalert %}
 
 ## 配置及创建表结构
@@ -224,9 +241,9 @@ uliweb syncdb
 DEBUG = True
 
 INSTALLED_APPS = [
-    'GuestBook',
     'uliweb.contrib.orm',
     'uliweb.contrib.staticfiles',
+    'GuestBook',
     ]
 
 [ORM]
@@ -243,20 +260,22 @@ CONNECTION = 'sqlite:///guestbook.db'
 
 
 ```
-from uliweb import expose
-from models import Note
+from uliweb import expose, functions
 
 @expose('/')
 def index():
+    Note = functions.get_model('note')
     notes = Note.all().order_by(Note.c.datetime.desc())
     return {'notes':notes}
 ```
 
-在开始的地方，我们导入了Note类。后面我们会用到。
+首先从uliweb中导出一些常用的对象和函数。
 
 然后使用expose()来定义URL为 `/` 。
 
-然后是index()函数的定义。我们通过调用Note类的方法all()获得所有
+然后是index()函数的定义。
+
+我们通过functions.get_model('note')来获得Note类。我们通过调用Note类的方法all()获得所有
 记录。为了按时间倒序显示，使用order_by()方法，传入要按顺的字段。其中
 `Note.c.datetime.desc()` 是Sqlalchemy的用法，表示倒序。
 
@@ -269,6 +288,8 @@ note = Note.get(3)                  #获取id值为3的记录
 note = Note.get(Note.c.username=='limodou') #获取username为limodou的记录
 ```
 
+当要引用Model中的字段来生成条件时，要在类名后加 `.c` 。
+
 然后我们返回一个字典，这样会自动使用Uliweb的模板套用机制，即自动调用与view方法
 同名的模板文件。
 
@@ -277,12 +298,13 @@ note = Note.get(Note.c.username=='limodou') #获取username为limodou的记录
 在Uliweb中每个访问的URL与View之间要通过定义来实现，如使用expose。它需要一个URL的
 参数，然后在运行时，会把这个URL与所修饰的View方法进行对应，View方法将转化为：
 
+```
+appname.viewmodule.functioname
+```
 
-> appname.viewmodule.functioname
 的形式。它将是一个字符串。然后同时Uliweb还提供了一个反向函数url_for，它将用来根据
 View方法的字符串形式和对应的参数来反向生成URL，可以用来生成链接，在后面的模板中我
 们将看到。
-
 {% endalert %}
 
 ### 定义index.html模板
@@ -333,7 +355,6 @@ Form代码写在一起，因为那样代码比较多，同且如果用户输入�
 {% alert class=info %}
 因为在base.html中和guestbook.html用到了一些css和图形文件，因此你可以从Uliweb的
 GuestBook/static目录下将全部文件拷贝到你的目录下。
-
 {% endalert %}
 
 ## 增加留言
@@ -360,6 +381,7 @@ def new_comment():
     from forms import NoteForm
     import datetime
 
+    Note = functions.get_model('note')
     form = NoteForm()
     if request.method == 'GET':
         return {'form':form, 'message':''}
@@ -415,10 +437,10 @@ def new_comment():
 from uliweb.form import *
 
 class NoteForm(Form):
-    message = TextField(label='Message:', required=True)
-    username = StringField(label='Username:', required=True)
-    homepage = StringField(label='Homepage:')
-    email = StringField(label='Email:')
+    message = TextField(label='Message', required=True)
+    username = StringField(label='Username', required=True)
+    homepage = StringField(label='Homepage')
+    email = StringField(label='Email')
 ```
 
 这里我定义了4个字段，每个字段对应一种类型。象TextField
@@ -485,6 +507,7 @@ FileField, IntField, PasswordField, RadioSelectField等字段类型。
 ```
 @expose('/delete/<id>')
 def del_comment(id):
+    Note = functions.get_model('note')
     n = Note.get(int(id))
     if n:
         n.delete()
