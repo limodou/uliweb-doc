@@ -116,6 +116,12 @@ def show(page):
 <dd><p>HTTP请求可以分为GET, POST等方法，使用methods可以用来指定要匹配的方法。比 如:</p>
 <pre class="prettyprint linenums"><code>@expose('/all', methods=['GET'])</code></pre>
 </dd>
+<dt>name(uliweb扩展)</dt>
+<dd><p>用来给URL起个别名。如果不提供，则会将下面的函数转为字符串形式，称为endpoint， 以它作为name的值。endpoint的形式为： appname.modelname.functionname 。 它可以用在url_for()函数中。</p>
+</dd>
+<dt>template(uliweb 0.2.2扩展)</dt>
+<dd><p>直接用来设置View函数的模板，只有当View函数返回dict值时才生效。并且如果 view函数中定义了<code>response.template = 'xxx.html'</code> 则，response.template优先 级最高。</p>
+</dd>
 </dl><p>关于参数更多的说明请参见werkzeug下的routing.py程序。</p></li>
 </ol>
 <h3 id="title_1-1-2">类View函数的处理<a class="anchor" href="#title_1-1-2">&para;</a></h3>

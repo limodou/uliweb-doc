@@ -62,11 +62,9 @@
               <div>&laquo;</div>
             </div>
             
-            <div class="chapter-prev chapter-top">
-    <a prev-chapter href="./plugs_todo.html"><i class="icon-arrow-left"></i> Simple Todo (Uliweb 版本) 之 高级篇</a>
-</div>
+            
 <div class="chapter-next chapter-top">
-    <a next-chapter href="./guestbook.html">迷你留言板 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./basic.html">Simple Todo (Uliweb 版本) 之 基础篇 <i class="icon-arrow-right"></i></a>
 </div>
 
             <h1 id="title_1">Hello, Uliweb<a class="anchor" href="#title_1">&para;</a></h1>
@@ -78,12 +76,12 @@
 <p>进入你的工作目录，然后执行:</p>
 <pre class="prettyprint linenums"><code>uliweb makeproject project</code></pre>
 <p>执行成功后，在 project 目录下会是这样的:</p>
-<pre class="prettyprint linenums"><code>|-- app.yaml
+<pre class="prettyprint linenums"><code>|-- .gitignore
 |-- apps/
+|   |-- local_settings.ini
 |   `-- settings.ini
-|-- gae_handler.py
-|-- runcgi.py
-`-- wsgi_handler.wsgi</code></pre>
+|-- setup.py   
+`-- wsgi_handler.py</code></pre>
 <h2 id="title_1-3">创建Hello应用<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>然后让我们创建一个Hello的应用:</p>
 <pre class="prettyprint linenums"><code>cd project
@@ -150,11 +148,9 @@ return locals()</code></pre>
 </ul>
 
             
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="./plugs_todo.html"><i class="icon-arrow-left"></i> Simple Todo (Uliweb 版本) 之 高级篇</a>
-</div>
+            
 <div class="chapter-next chapter-down">
-    <a next-chapter href="./guestbook.html">迷你留言板 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./basic.html">Simple Todo (Uliweb 版本) 之 基础篇 <i class="icon-arrow-right"></i></a>
 </div>
             
             <div class="source">

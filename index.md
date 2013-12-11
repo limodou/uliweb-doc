@@ -15,9 +15,9 @@ update.md
 ## 教程
 
 {% toc max_depth=1 %}
+hello_uliweb.md
 basic.md
 plugs_todo.md
-hello_uliweb.md
 guestbook.md
 {% endtoc %}
 * [uliweb入门教程基础版本](http://uliweb.clkg.org/tutorial/read/22)
