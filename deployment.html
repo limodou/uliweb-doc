@@ -200,8 +200,10 @@ exitcodes=0,1,2</code></pre>
 <pre class="prettyprint linenums"><code>processes*gevent = 5 * 100 = 500</code></pre>
 <p>上面的module不用修改。</p>
 <p>那么uliweb还提供了 uliweb support gevent 命令，它会生成一个 gevent_handler.py的 文件，这个文件是用来单独执行的，所以它会绑定IP和端口。如果使用uwsgi就不需要它。 仍然使用原来的wsgi_handler就可以了。</p>
+<h3 id="title_1-1-4">配置文件的快速生成<a class="anchor" href="#title_1-1-4">&para;</a></h3>
+<p>为了方便，在uliweb 0.2.2版本之后，提供了 config 命令，可以快速 .</p>
 <h2 id="title_1-2">Apache<a class="anchor" href="#title_1-2">&para;</a></h2>
-<h3 id="title_1-2-4">mod_wsgi<a class="anchor" href="#title_1-2-4">&para;</a></h3>
+<h3 id="title_1-2-5">mod_wsgi<a class="anchor" href="#title_1-2-5">&para;</a></h3>
 <ol>
 <li><p>按 <a href="http://code.google.com/p/modwsgi/" class="outter">mod_wsgi</a> 的说明安装mod_wsgi到apache下。</p>
 <ul>
@@ -230,7 +232,7 @@ Allow from all
 <li>重启apache</li>
 <li><p>测试。启动浏览器输入： <a href="http://localhost/YOURURL" class="outter">http://localhost/YOURURL</a> 来检测你的网站可否可以正常访问。</p></li>
 </ol>
-<h3 id="title_1-2-5">静态文件<a class="anchor" href="#title_1-2-5">&para;</a></h3>
+<h3 id="title_1-2-6">静态文件<a class="anchor" href="#title_1-2-6">&para;</a></h3>
 <p>当需要使用apache来配置静态文件时，可以在配置文件中配置为:</p>
 <pre class="prettyprint linenums"><code>Alias /static/ /your/static/path/</code></pre>
 

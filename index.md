@@ -45,6 +45,10 @@ guestbook.md
 
 * 活动后的代码项目 https://github.com/limodou/codepark
 
+### Uliweb 视频
+
+* pycon-china-beijing 2013 《Uliweb比较与实践》[视频](http://pan.baidu.com/s/1em2XG) [PPT](http://t.cn/8k6kbty)
+
 ## 技术文档
 
 ### 功能说明
