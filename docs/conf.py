@@ -34,10 +34,10 @@ copyright = u'2013, Limodou'
 introduction = u'''<div><img src="_static/uliweb_media.png"/></div>
 <h2 class="ui header">Unlimited Python Web Framework</h2>
 <div>
-<a class="ui red large labeled icon button" href="build/semantic.zip">
+<a class="ui red large labeled icon button" href="https://pypi.python.org/packages/source/U/Uliweb/Uliweb-%s.tar.gz">
 <i class="awesome download cloud icon"></i> Download (%s)</a>
 </div>
-''' % version
+''' % (version, version)
 
 # You can add custom css files, just like
 # custom_css = ['/static/custom.css']
