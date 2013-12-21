@@ -1,10 +1,10 @@
 # 部署指南
 
 uliweb支持任何标准的wsgi方式的部署。缺省情况下，在创建一个项目后，会在项目目录
-下生成: `fast_handler.fcgi` 和 `wsgi_handler.py`.
+下生成: `wsgi_handler.py`.
 
-并且uliweb目录还支持：gae, sae和dotcloud。因此，如果想要在这些环境上部署，一般
-需要执行:
+并且uliweb目录还支持：gae, sae, dotcloud, gevent, gevent-socketio等。因此，如果
+想要在这些环境上部署，一般需要执行:
 
 
 ```
@@ -20,170 +20,6 @@ uliweb support [gae|sae|dotcloud]
 ```
 uliweb exportstatic /your/static/path
 ```
-
-
-## Apache
-
-
-### mod_wsgi
-
-
-1. 按 [mod_wsgi](http://code.google.com/p/modwsgi/) 的说明安装mod_wsgi到apache下。
-
-    * 拷贝mod_wsgi.so到apache的modules目录下
-
-    Window环境可以看：
-
-    > http://code.google.com/p/modwsgi/wiki/InstallationOnWindows
-    Linux环境可以看：
-
-    > http://code.google.com/p/modwsgi/wiki/InstallationOnLinux
-1. 配置 apache 的httpd.conf文件
-
-    > LoadModule wsgi_module modules/mod_wsgi.so
-    > WSGIScriptAlias / /path/to/uliweb/wsgi_handler.py
-    > 
-    > <Directory /path/to/youruliwebproject>
-    > Order deny,allow
-    > Allow from all
-    > </Directory>
-    > 
-    > 上面是将起始的URL设为/，你可以根据需要换为其它的起始URL，如/myproj。
-    > 
-    > 如果在windows下，示例为：
-    > 
-    > WSGIScriptAlias / d:/project/svn/uliweb/wsgi_handler.py
-    > 
-    > <Directory d:/project/svn/uliweb>
-    > Order deny,allow
-    > Allow from all
-    > </Directory>
-1. 重启apache
-1. 测试。启动浏览器输入： [http://localhost/YOURURL](http://localhost/YOURURL) 来检测你的网站可否可以正常访问。
-
-
-### 静态文件
-
-当需要使用apache来配置静态文件时，可以在配置文件中配置为:
-
-
-```
-Alias /static/ /your/static/path/
-```
-
-
-## Lighttpd + SCGI
-
-
-1. 配置lighttpd.conf：
-
-    ```
-    scgi.server=(
-       "/uliweb.scgi"=> (
-                        "main" => (
-                               "socket" => "/tmp/uliweb.sock",
-                               "check-local" => "disable",
-                               ),
-                       ),
-       )
-       url.rewrite-once = (
-                        "^(/.*)$" => "/uliweb.scgi$1",
-       )
-    ```
-
-1. 运行：
-
-    ```
-    python runcgi.py protocol=scgi socket=/tmp/uliweb.sck method=threaded daemonize=true
-    ```
-
-
-
-{% alert class=info %}
-runcgi.py需要使用flup,下地址：[http://trac.saddi.com/flup](http://trac.saddi.com/flup)
-
-{% endalert %}
-
-## IIS + SCGI
-
-
-1. 下载安装pyISAPI_SCGI 地址: [http://code.google.com/p/pyisapi-scgi/](http://code.google.com/p/pyisapi-scgi/)
-1. pyISAPI_SCGI配置方法 [http://code.google.com/p/pyisapi-scgi/wiki/PyISAPI_SCGI_0_6_17](http://code.google.com/p/pyisapi-scgi/wiki/PyISAPI_SCGI_0_6_17)
-1. 编辑scgi.conf:
-
-    ```
-    port=3033 #设置一个空闲的端口号
-    ```
-
-1. 运行:
-
-    ```
-    python runcgi.py protocol=scgi host=127.0.0.1 port=3033 method=threaded
-    ```
-
-
-
-{% alert class=info %}
-runcgi.py需要使用flup,下地址：[http://trac.saddi.com/flup](http://trac.saddi.com/flup)
-
-{% endalert %}
-
-## 虚拟主机(DreamHost,BlueHost,HostMonsger等)
-
-
-### FastCGI
-
-
-1. 安装python, 参考http://wiki.dreamhost.com/Python
-1. 新建dispatch.fcgi,内容：
-
-    ```
-    #!/home/yourname/bin/python (你安装的python的路径)
-    import sys
-    from runcgi import run
-    run(method='threaded',protocol='fcgi')
-    ```
-
-1. 编辑.htaccess，内容：
-
-    ```
-    Options +FollowSymLinks +ExecCGI
-    RewriteEngine On
-    RewriteBase /
-    RewriteRule ^(dispatch\.fcgi/.*)$ - [L]
-    RewriteRule ^(.*)$ dispatch.fcgi/$1 [L]
-    AddHandler fastcgi-script .fcgi #或者是AddHandler fcgid-script .fcgi
-    ```
-
-
-
-### CGI
-
-
-1. 安装python, 参考http://wiki.dreamhost.com/Python
-1. 修改runcgi.py,将第一行内容修改为：
-
-    ```
-    #!/home/yourname/bin/python (你安装的python的路径)
-    ```
-
-1. 修改.htaccess,内容：
-
-    ```
-    Options +FollowSymLinks +ExecCGI
-    RewriteEngine On
-    RewriteBase /
-    RewriteRule ^(runcgi\.py/.*)$ - [L]
-    RewriteRule ^(.*)$ runcgi.py/$! [L]
-    AddHandler cgi-script .py
-    ```
-
-
-
-{% alert class=info %}
-以CGI方式运行，需flup 1.0以上版本。
-
-{% endalert %}
 
 ## Nginx+uwsgi
 
@@ -216,6 +52,7 @@ server {
         location / {
                 include uwsgi_params;
                 #proxy_pass localhost:8000;
+                #proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
                 uwsgi_pass unix:///tmp/uwsgi.sock;
         }
 }
@@ -223,6 +60,9 @@ server {
 
 将uwsgi设置为反向代理有两种方式，一种是通过服务的方式，即上面注释掉的那一行，但
 是当请求过多，这种方式会报错。因此一般都采用socket文件的方法。
+
+如果你是 WEB-AP-DB 三层结构，在WEB层还有一个Nginx的话，那么上面的proxy_set_header可能
+需要加上，这样可以让AP层得到正确的客户端地址。
 
 上面就把Nginx设置好了。如果要使用Nignx提供静态文件服务，可以在上面的server中添加:
 
@@ -321,6 +161,7 @@ exitcodes=0,1,2
 这里把其它的配置都忽略掉了，只显示uliweb相关的配置，上面的许多参数可以根据要求
 进行修改。
 
+* `processes` 表示启动uwsgi进程的个数
 * `yourproject` 应改为实际的项目名称
 * `directory` 改为项目目录
 * `stdout_logfile` 的值改为实际的日志文件名
@@ -328,5 +169,106 @@ exitcodes=0,1,2
 其中 `--home xxx` 的作用是设置python环境，它主要是用于使用virtualenv来创建
 python环境的情况。
 
+
 然后使用supervisorctl就可以进行管理了。
 
+
+### uwsgi+gevent
+
+uwsgi在目前是支持gevent的支持，所以现在可以这样部署，以supervisor配置为例：
+
+```
+[program:yourproject]
+command = uwsgi
+ --socket /tmp/yourproject.sock
+ --harakiri 60
+ --reaper
+ --module wsgi_handler
+ --processes 5
+ --master
+ --gevent 100
+ --home /python/env
+ --chmod-socket=666
+ --limit-as 256
+ --socket-timeout 5
+ --max-requests 2
+directory=/path/to/yourproject
+stopsignal=QUIT
+autostart=true
+autorestart=true
+stdout_logfile=/tmp/yourproject.log
+redirect_stderr=true
+exitcodes=0,1,2
+```
+
+这里添加了 `--gevent` 参数，用来指明限制协程的数量。所以总的并发量是:
+
+```
+processes*gevent = 5 * 100 = 500
+```
+
+上面的module不用修改。
+
+那么uliweb还提供了 uliweb support gevent 命令，它会生成一个 gevent_handler.py的
+文件，这个文件是用来单独执行的，所以它会绑定IP和端口。如果使用uwsgi就不需要它。
+仍然使用原来的wsgi_handler就可以了。
+
+### 配置文件的快速生成
+
+为了方便，在uliweb 0.2.2版本之后，提供了 config 命令，可以快速
+.
+## Apache
+
+
+### mod_wsgi
+
+
+1. 按 [mod_wsgi](http://code.google.com/p/modwsgi/) 的说明安装mod_wsgi到apache下。
+
+    * 拷贝mod_wsgi.so到apache的modules目录下
+
+    Window环境可以看：
+
+    http://code.google.com/p/modwsgi/wiki/InstallationOnWindows
+    
+    Linux环境可以看：
+
+    http://code.google.com/p/modwsgi/wiki/InstallationOnLinux
+    
+1. 配置 apache 的httpd.conf文件
+
+    ```
+    LoadModule wsgi_module modules/mod_wsgi.so
+    WSGIScriptAlias / /path/to/uliweb/wsgi_handler.py
+    
+    <Directory /path/to/youruliwebproject>
+    Order deny,allow
+    Allow from all
+    </Directory>
+    ```
+    
+    上面是将起始的URL设为/，你可以根据需要换为其它的起始URL，如/myproj。
+    
+    如果在windows下，示例为：
+    
+    ```
+    WSGIScriptAlias / d:/project/svn/uliweb/wsgi_handler.py
+    
+    <Directory d:/project/svn/uliweb>
+    Order deny,allow
+    Allow from all
+    </Directory>
+    ```
+    
+1. 重启apache
+1. 测试。启动浏览器输入： [http://localhost/YOURURL](http://localhost/YOURURL) 来检测你的网站可否可以正常访问。
+
+
+### 静态文件
+
+当需要使用apache来配置静态文件时，可以在配置文件中配置为:
+
+
+```
+Alias /static/ /your/static/path/
+```

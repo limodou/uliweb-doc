@@ -98,6 +98,16 @@ Uliweb目前提供两种View函数的写法，一种是简单的函数方式，�
         @expose('/all', methods=['GET'])
         ```
     
+    name(uliweb扩展) --
+        用来给URL起个别名。如果不提供，则会将下面的函数转为字符串形式，称为endpoint，
+        以它作为name的值。endpoint的形式为： appname.modelname.functionname 。
+        它可以用在url_for()函数中。
+        
+    template(uliweb 0.2.2扩展) --
+        直接用来设置View函数的模板，只有当View函数返回dict值时才生效。并且如果
+        view函数中定义了`response.template = 'xxx.html'` 则，response.template优先
+        级最高。
+        
     关于参数更多的说明请参见werkzeug下的routing.py程序。
     
 
@@ -196,7 +206,6 @@ value是App的前缀。
 {% alert class=info %}
 如果某些链接的确不想添加这个前缀该如何处理，那么只要在 `@expose('/url')` 中添
 加一个 `!` 号即可取消前缀的处理，如:  `@expose('!/url')`
-
 {% endalert %}
 
 ## url_for说明
@@ -237,7 +246,6 @@ url_for('%s.views.index' % request.appname)
 
 {% alert class=info %}
 目前在views方法和template中都是可以直接使用这个函数的，不需要导入。
-
 {% endalert %}
 
 ## convertor说明

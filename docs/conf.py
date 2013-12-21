@@ -12,28 +12,36 @@ plugins = []
 source_suffix = ['.md', '.markdown']
 
 #template setttings
-template_dirs = "_build"
+template_dirs = "templates"
 templates = {'index':'index.html', '*':'default.html'}
 
 tag_class = {
-    'table':'table table-bordered',
-    'pre':'prettyprint linenums',
-    'img':'img-polaroid',
+    'table':'ui collapsing celled table segment',
+    'pre':'prettyprint',
 }
 
 # pre code theme css only : sons-of-obsidian, sunburst
 # can be found in static/asset directory
 pre_css = 'sons-of-obsidian'
 
+# The short X.Y version.
+version = '0.2.2'
+
 # General information about the project.
 project = u'Uliweb-Doc'
 project_url = './index.html'
 copyright = u'2013, Limodou'
+introduction = u'''<div><img src="_static/uliweb_media.png"/></div>
+<h2 class="ui header">Unlimited Python Web Framework</h2>
+<div>
+<a class="ui red large labeled icon button" href="build/semantic.zip">
+<i class="awesome download cloud icon"></i> Download (%s)</a>
+</div>
+''' % version
+
 # You can add custom css files, just like
 # custom_css = ['/static/custom.css']
 custom_css = []
-# The short X.Y version.
-version = '0.2'
 
 # config menus
 # format: ('name', 'caption', 'link')
@@ -53,11 +61,43 @@ footer = """<footer class="footer">
 </footer>
 """ % copyright
 
+footer = """
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
+    </div>
+  </div>
+"""
+
 # The master toctree document.
 master_doc = 'index'
 
 #download source display
 download_source = 'View Source'
+
+disqus = 'uliwebdoc'
 
 #disqus
 disqus_text = '''<div id="disqus_thread" style="margin:20px;"></div>
@@ -89,3 +129,6 @@ disqus_js = '''<script type="text/javascript">
    }());
    </script>
 '''
+
+theme = 'semantic'
+

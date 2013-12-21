@@ -26,12 +26,12 @@ uliweb makeproject project
 
 
 ```
-|-- app.yaml
+|-- .gitignore
 |-- apps/
+|   |-- local_settings.ini
 |   `-- settings.ini
-|-- gae_handler.py
-|-- runcgi.py
-`-- wsgi_handler.wsgi
+|-- setup.py   
+`-- wsgi_handler.py
 ```
 
 
@@ -171,7 +171,6 @@ return locals()
 使用 Uliweb 的开发服务器具备自动重启的功能，因此一般进行程序的修改不需要重启服务器，
 只要刷新浏览器就行。但有时程序出错或一些模板具备缓冲能力还是需要刷新。只要在命令行下
 输入 Ctrl+C 就可以结束开发服务器，然后重启就行。
-
 {% endalert %}
 
 ## 结束

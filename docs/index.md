@@ -1,7 +1,3 @@
-![](_static/uliweb_media.png)
-
-# Uliweb 文档
-
 ## 介绍
 
 {% toc max_depth=1 %}
@@ -15,9 +11,9 @@ update.md
 ## 教程
 
 {% toc max_depth=1 %}
+hello_uliweb.md
 basic.md
 plugs_todo.md
-hello_uliweb.md
 guestbook.md
 {% endtoc %}
 * [uliweb入门教程基础版本](http://uliweb.clkg.org/tutorial/read/22)
@@ -44,6 +40,10 @@ guestbook.md
     * Redis的使用及邮件发送处理的实现 [wmv下载](http://pan.baidu.com/share/link?shareid=3334921213&uk=889513934) [在线视频](http://www.tudou.com/programs/view/jNjPj-jILec/)
 
 * 活动后的代码项目 https://github.com/limodou/codepark
+
+### Uliweb 视频
+
+* pycon-china-beijing 2013 《Uliweb比较与实践》[视频](http://pan.baidu.com/s/1em2XG) [PPT](http://t.cn/8k6kbty) [土豆](http://www.tudou.com/programs/view/3Rwhnp7IWDg/)
 
 ## 技术文档
 
@@ -110,12 +110,3 @@ articles/svg_mimetype_config.md
 articles/tornado_support.md
 articles/gevent_support.md
 {% endtoc %}
-
-## 讨论
-
-* 邮件列表 [https://groups.google.com/forum/#!forum/uliweb](https://groups.google.com/forum/#!forum/uliweb)
-* 论坛 http://uliweb.clkg.org
-
-<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
-
-![](_static/uliweb_small.png)
