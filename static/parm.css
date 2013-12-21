@@ -139,3 +139,8 @@ color: inherit;
 background-color: transparent;
 border: 0;
 }
+
+@media (max-width: 480px) {
+#side-bar {display:none;}
+#markdown-content {width:100%;}
+}
