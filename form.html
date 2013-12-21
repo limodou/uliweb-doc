@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="./static/docs.css"/>
 <link href="./static/asset/prettify.css" rel="stylesheet">
 <link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
@@ -29,55 +23,37 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="./views.html"><i class="icon-arrow-left"></i> 视图(View)</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./middleware.html">Middleware 开发 <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">Form使用<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">Form使用<a class="anchor" href="#title_1">&para;</a></h1>
 <p>在编写Web应用中，经常要使用到的就是和用户的交互，在传统的HTML开发中，一般是使用 Form来进行的，它通过一组Form相关的界面元素，提供各种信息的录入。在ajax的处理过 程中，Form元素也经常被使用。除了前端的展示外，真正的交互是需要后台参与的，它包 括上传数据的解析和处理，然后可能会与数据库进行交互，并返回相应的结果。在Uliweb 中，提供了Form类来进行相关的处理，它的主要功能有:</p>
 <ol>
 <li>自动生成前端的展示代码，允许支持自定义布局</li>
-<li><p>对上传后的数据进行校验，如果正确则返回转換后的数据，如果出错，返回出错信息</p></li>
+<li>对上传后的数据进行校验，如果正确则返回转換后的数据，如果出错，返回出错信息</li>
 </ol>
 <h2 id="title_1-1">Form的定义<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在使用Form时，我们做的第一件事就是定义一个Form类，定义之后，我们会创建它的实例， 然后使用这个实例来展示或进行数据的校验处理。一个简单的Form类定义代码如下:</p>
-<pre class="prettyprint linenums"><code>from uliweb.form import *
+<pre class="prettyprint"><code>from uliweb.form import *
 
 class F(Form):
     title = StringField(label='中文:', required=True, help_string='Title help string')
@@ -93,7 +69,7 @@ class F(Form):
     file = FileField(label='file')</code></pre>
 <p>上面的代码定义了一个Form类，里面有很多的字段，类似于Model的定义。在uliewb/form/uliform.py 中定义了许多Form字段类，分别代表不同类型的字段。所有的字段都继承自 <code>BaseField</code> 类，对 于BaseField类的详细说明见下面。</p>
 <h2 id="title_1-2">BaseField<a class="anchor" href="#title_1-2">&para;</a></h2>
-<pre class="prettyprint linenums"><code>class BaseField(object):
+<pre class="prettyprint"><code>class BaseField(object):
     default_build = Text
     field_css_class = 'field'
     default_validators = []
@@ -105,7 +81,7 @@ class F(Form):
         multiple=False, idtype=None, static=False, **kwargs):</code></pre>
 <h2 id="title_1-3">Form的布局<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>Form本身只是用来定义用来接受用户输入的数据项，当我们需要将Form转为HTML代码展示在 页面上时，我们可以使用Layout类进行处理。一个Layout类用来处理Form的展示。Layout是基类， 真正使用的是它的子类。在Uliweb中已经缺省实现了若干Layout，分别为：</p>
-<pre class="prettyprint linenums"><code>Layout  (基类)
+<pre class="prettyprint"><code>Layout  (基类)
 CSSLayout   (使用Div来布局)
 TableLayout   (使用Table来布局)
 BootstrapLayout  (基于Bootstrap, 以div来布局)
@@ -115,12 +91,12 @@ QueryLayout (查询条件使用的Layout)</code></pre>
 <p>如果你使用Bootstrap作为前端可以考虑使用BoostrapLayout或BootstrapTableLayout。因为 Layout的处理要结合CSS，所以当不满足你的需要时，可以考虑自已来写Layout类。</p>
 <h3 id="title_1-3-1">如何使用某个Layout<a class="anchor" href="#title_1-3-1">&para;</a></h3>
 <p>在定义Form时，通过设置Form类的 <code>layout_class</code> 来指明用哪个Layout类。目前缺省是使用 BootstrapLayout。你可以通过:</p>
-<pre class="prettyprint linenums"><code>from uliweb.form import Form
+<pre class="prettyprint"><code>from uliweb.form import Form
 Form.layout_class = NewLayout</code></pre>
 <p>来统一修改所有Form的缺省Layout类，也可以只针对某个Form的子类来修改 <code>layout_class</code> 属性。</p>
 <h3 id="title_1-3-2">Layout说明<a class="anchor" href="#title_1-3-2">&para;</a></h3>
 <p>Layout是基类，它定义了实际使用的Layout的基本属性和要实现的方法。在实际中，你不应该 直接使用它。</p>
-<pre class="prettyprint linenums"><code>class Layout(object):
+<pre class="prettyprint"><code>class Layout(object):
     form_class = ''
     
     def __init__(self, form, layout=None, **kwargs):
@@ -162,26 +138,24 @@ Form.layout_class = NewLayout</code></pre>
 <h2 id="title_1-4">get_form (0.1.5 new)<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>可以方便替换contrib中对于Form的定义，也可以替换一些不同模块下的form，同时也可以增加一些复用。 使用get_form，首先需要向apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.form'， 安装完毕后，在配置文件的FUNCTIONS就引用了get_form这个函数</p>
 <p>因此如果想要使用get_form，可以采用下面的方式</p>
-<pre class="prettyprint linenums"><code>from uliweb.core.SimpleFrame import functions
+<pre class="prettyprint"><code>from uliweb.core.SimpleFrame import functions
 
 Form = functions.get_form('form_name')
 ...</code></pre>
 
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="./views.html"><i class="icon-arrow-left"></i> 视图(View)</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./form.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="./middleware.html">Middleware 开发 <i class="icon-arrow-right"></i></a>
-</div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="./form.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -196,35 +170,56 @@ Form = functions.get_form('form_name')
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
 <script src="./static/comment.js"></script>
 <script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -236,6 +231,8 @@ Form = functions.get_form('form_name')
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

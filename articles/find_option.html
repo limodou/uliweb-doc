@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="../static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
-<link href="../static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="../static/docs.css"/>
 <link href="../static/asset/prettify.css" rel="stylesheet">
 <link href="../static/toc/toc.css" rel="stylesheet">
-<link href="../static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="../static/parm.css"/>
 <link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
 
@@ -29,49 +23,31 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="../index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="../index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="../articles/xhr_redirect_json.html"><i class="icon-arrow-left"></i> 重定向在异步请求中的处理实现</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="../articles/svg_mimetype_config.html">svg mimetype在uliweb中的设置 <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">查找配置项的定义<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">查找配置项的定义<a class="anchor" href="#title_1">&para;</a></h1>
 <p>在uliweb中，我们会把配置写在各种settings.ini中，因为uliweb可以实现配置项的合并处理，所以我们最终拿到的配置值可能无法知道都是从哪些配置文件中来的，因此我新加了一个 <code>uliweb find -o option</code> 的命令。示例如下：</p>
-<pre class="prettyprint linenums"><code>D:\project\cc\ctasks-master&gt;uliweb find -o ASYNC_EXEC_CONFIG
+<pre class="prettyprint"><code>D:\project\cc\ctasks-master&gt;uliweb find -o ASYNC_EXEC_CONFIG
 ------ Combined value of [ASYNC_EXEC_CONFIG] ------
 
 [ASYNC_EXEC_CONFIG]
@@ -90,7 +66,7 @@ error_sendmail = 'print'
 .\apps\local_settings.ini     :0159 [ASYNC_EXEC_CONFIG]
 .\apps\local_settings.ini     :0160 error_sendmail = 'print'</code></pre>
 <p>可以看到，首先显示合并后的值，然后再显示都是从哪些settings.ini文件，哪行代码得到的配置。option的值可以是section的值，或section/key的值。再如：</p>
-<pre class="prettyprint linenums"><code>D:\project\cc\ctasks-master&gt;uliweb find -o GLOBAL/DEBUG
+<pre class="prettyprint"><code>D:\project\cc\ctasks-master&gt;uliweb find -o GLOBAL/DEBUG
 ------ Combined value of [GLOBAL/DEBUG] ------
 True
 ------ Detail   value of [GLOBAL/DEBUG] ------
@@ -98,21 +74,19 @@ True
 .\apps\settings.ini           :0004 DEBUG = True
 .\apps\local_settings.ini     :0095 DEBUG = True</code></pre>
 
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="../articles/xhr_redirect_json.html"><i class="icon-arrow-left"></i> 重定向在异步请求中的处理实现</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="../articles/find_option.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="../articles/svg_mimetype_config.html">svg mimetype在uliweb中的设置 <i class="icon-arrow-right"></i></a>
-</div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="../articles/find_option.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -127,35 +101,56 @@ True
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="../static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../static/semantic/javascript/semantic.min.js"></script>
 <script src="../static/asset/prettify.js"></script>
 <script src="../static/toc/toc.js"></script>
 <script src="../static/docs.js"></script>
 <script src="../static/comment.js"></script>
 <script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -167,6 +162,8 @@ True
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

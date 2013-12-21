@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="../static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
-<link href="../static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="../static/docs.css"/>
 <link href="../static/asset/prettify.css" rel="stylesheet">
 <link href="../static/toc/toc.css" rel="stylesheet">
-<link href="../static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="../static/parm.css"/>
 <link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
 
@@ -29,70 +23,52 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="../index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="../index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="../articles/tornado_support.html"><i class="icon-arrow-left"></i> Tornado的支持</a>
 </div>
 
-
-            <h1 id="title_1">在gevent及gevent-socketio上运行<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">在gevent及gevent-socketio上运行<a class="anchor" href="#title_1">&para;</a></h1>
 <p>在前面将tornado的支持添加到uliweb中之后，今天又完成了对gevent和gevent-socketio的支持。这里的支持是指可以在它们上面运行。因为tornado, gevent, gevent-socketio都可以作为服务器来跑wsgi的应用。我对两者的了解都不是太多。我之所以要研究它们，主要是想看一看能不能使用它们做一个基于socketio的聊天室的功能。使用socketio最主要的是使用websocket。当然socketio还支持其它的模式。这里我主要是想对socketio做支持。tornado有WebsocketHandler，不过看不去很难与uliweb集成，因为它的处理模式很特殊，很难用普通的view来处理。因此，我后面转到了gevent-socketio上。</p>
 <p>gevent的好处是通过monkey.patch_all()，将原来同步的IO操作处理为协程操作。这样，你的代码还是原来的同步的写法，并不需要特殊的写法，因此我认这是它的最大的一个优势。而gevent-socketio是在gevent的基础上实现了对socket.io js库的支持。</p>
 <p>socket.io是一个js的库，它既有服务器版本，可以运行在node.js上，也有client版本，运行在浏览器上。其实你完全可以使用socket.io实现服务器和客户端。不过这里我是想用uliweb来做为服务端。gevent-socketio提供了服务端的基础实现，使得对socket.io的支持做到简化。目前socket.io可以支持namespace，这样可以在客户端同时处理多个不同类型的请求，但是通过一个socket连接。并且它的通讯格式是带命令串的，这样发送和响应时都非常方便。socket.io给我的感觉还是挺简单的。但是在我安装socket.io的客户端时遇到了一个问题。socket.io的版本是分服务器和客户端的，如果你直接到 <a href="https://github.com/LearnBoost/socket.io-client" class="outter">https://github.com/LearnBoost/socket.io-client</a> 会看到 socket.io-client.js，不过这个其实不是直接可以在浏览器使用的版本。后来我在wiki看到说是在dist中，但是在这个仓库中看不到这个dist目录。很奇怪。后来是在 <a href="http://blog.pythonisito.com/2012/07/realtime-web-chat-with-socketio-and.html" class="outter">这篇文章</a> 中的链接中找到0.9.6的一个版本，其中有dist。很奇怪。后来我发现，现在最新的tag版本是0.9.16，原来可以将版本切換到对应的标签后，就会看到dist目录。如下图：</p>
-<p><img src="../_static/gevent_01.png" alt="在此输入图片描述" class="img-polaroid"/>
+<p><img src="../_static/gevent_01.png" alt="在此输入图片描述"/>
 </p>
 <p>搞定了socket.io-client，我又参考了上面的文章和gevent-socketio的一些例子。例子倒是没什么问题，但是发现werkzeug的DebugApplication和gevent配合的问题。如果我使用Debug模式，gevent处理就会有问题，去掉就好。于是我开始搜，找到gevent-socketio的一个<a href="https://github.com/abourget/gevent-socketio/issues/114" class="outter">issue</a>
 ，其中有人分析是DebugApplication的 <code>__call__</code> 返回的是Generator，造成了问题，但是答案还没来得及给出。我又在stackoverflow上找到一个回答，上面也提到了前面的issue，并给出了一个<a href="http://stackoverflow.com/questions/18319345/gevent-socketio-not-using-my-app-route-endpoint-for-socketio" class="outter">解决方案</a>
 ，就是派生一个新的DebugApplication子类，然后情况来返回不同的内容。避免了总了返回generator的情况。不过，它是判断如果是socket.io请求，就直接跳过DebugApplication的处理，如果有异常也不会象一般的页面一样显示异常页面。现在想想这个不太好解决，所以只能凑合了。</p>
 <p>现在uliweb和支持tornado一样，可以在开发时启动开发服务器，使用 <code>--gevent</code> 和 <code>-gevent-socketio</code> 来分别使用不同的服务模式。如果是要部署，可以运行：</p>
-<pre class="prettyprint linenums"><code>uliweb support gevent-socketio</code></pre>
+<pre class="prettyprint"><code>uliweb support gevent-socketio</code></pre>
 <p>这样会在当前的项目目录下生成 <code>gevent_socketio_handler.py</code> 文件，可以直接运行。可以使用 <code>-h</code> 和 <code>-p</code> 来传入IP和端口号。</p>
 
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="../articles/tornado_support.html"><i class="icon-arrow-left"></i> Tornado的支持</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="../articles/gevent_support.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
 
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="../articles/gevent_support.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -107,35 +83,56 @@
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="../static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../static/semantic/javascript/semantic.min.js"></script>
 <script src="../static/asset/prettify.js"></script>
 <script src="../static/toc/toc.js"></script>
 <script src="../static/docs.js"></script>
 <script src="../static/comment.js"></script>
 <script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -147,6 +144,8 @@
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

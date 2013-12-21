@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="./static/docs.css"/>
 <link href="./static/asset/prettify.css" rel="stylesheet">
 <link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
@@ -29,52 +23,34 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="./xmlrpc.html"><i class="icon-arrow-left"></i> XMLRPC 使用说明</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./uliweb_apps.html">Uliweb App 清单 <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">如何编写自已的命令<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">如何编写自已的命令<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb内置了一个命令系统，其中在uliweb/manage.py中已经内置了一些常用命令。同时 你也可以在某个app中，按照命令编写的要求来编写app相关的命令。这样一旦在settings.ini 中的 <code>INSTALLED_APPS</code> 里引入了这个app，这些命令就可以被 Uliweb 使用。你可以 输入 <code>uliweb</code> 来查看当前有哪些可用的命令。</p>
 <p>下面就来介绍一下如何编写自已的命令。</p>
 <h2 id="title_1-1">创建commands.py文件<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在你的app下创建一个commands.py的文件，文件结构如下:</p>
-<pre class="prettyprint linenums"><code>from uliweb.core.commands import Command
+<pre class="prettyprint"><code>from uliweb.core.commands import Command
 from optparse import make_option
 
 class DemoCommand(Command):
@@ -106,7 +82,7 @@ class DemoCommand(Command):
 <dl>
 <dt>name</dt>
 <dd><p>命令的名字。你将使用它来执行，执行方式如:</p>
-<pre class="prettyprint linenums"><code>uliweb demo</code></pre>
+<pre class="prettyprint"><code>uliweb demo</code></pre>
 </dd>
 <dt>option_list</dt>
 <dd><p>它是参数列表。定义形式为 <code>optparse</code> 所要求的格式。每个参数都使用 <code>make_option</code> 来定义。它支持短参数和长参数。其中短参数就是类似 <code>-d</code> ，长参数就是 <code>--demo</code> 。 <code>dest</code> 表示解析后的参数将使用的变量名。 <code>default</code> 为缺省值。 <code>action</code> 表示解析后的值如何存储，这里为 <code>store_true</code> ，表示一旦给出参数，则将保存为 <code>True</code> 。所以，这种方式会将参数解析为 <code>Boolean</code> 值。那么如果要解析为字符 串怎么做，只要去掉 <code>action</code> 即可，缺省就是字符串，这样可以在参数后面接收 参数。 <code>help</code> 为此参数的帮助信息。</p>
@@ -116,9 +92,9 @@ class DemoCommand(Command):
 </dd>
 <dt>args</dt>
 <dd><p>将用在帮助信息的显示上。它与下面的 <code>has_options</code> 一起用在帮助信息的显示上。 对命令的执行没有影响。如果定义 <code>has_options</code> 为 <code>True</code> ，则命令帮助显示 为:</p>
-<pre class="prettyprint linenums"><code>uliweb demo [options] &lt;args&gt;</code></pre>
+<pre class="prettyprint"><code>uliweb demo [options] &lt;args&gt;</code></pre>
 <p>如果为 <code>False</code> ，则命令显示为:</p>
-<pre class="prettyprint linenums"><code>uliweb demo &lt;args&gt;</code></pre>
+<pre class="prettyprint"><code>uliweb demo &lt;args&gt;</code></pre>
 </dd>
 <dt>has_options</dt>
 <dd><p>用于帮助信息的显示。</p>
@@ -156,41 +132,41 @@ class DemoCommand(Command):
 <dl>
 <dt>extract_dirs</dt>
 <dd><p>从指定的模块的子目录下抽取相应的目录和文件到指定目录下。</p>
-<pre class="prettyprint linenums"><code>from uliweb.utils.common import extract_dirs</code></pre>
+<pre class="prettyprint"><code>from uliweb.utils.common import extract_dirs</code></pre>
 <p>函数定义为:</p>
-<pre class="prettyprint linenums"><code>extract_dirs(module, path, dest_path, options)</code></pre>
+<pre class="prettyprint"><code>extract_dirs(module, path, dest_path, options)</code></pre>
 <dl>
 <dt>module</dt>
-<dd><pre class="prettyprint linenums"><code>模块名。</code></pre>
+<dd><pre class="prettyprint"><code>模块名。</code></pre>
 </dd>
 <dt>path</dt>
-<dd><pre class="prettyprint linenums"><code>模块下的目录路径。</code></pre>
+<dd><pre class="prettyprint"><code>模块下的目录路径。</code></pre>
 </dd>
 <dt>dest_path</dt>
-<dd><pre class="prettyprint linenums"><code>目标目录。</code></pre>
+<dd><pre class="prettyprint"><code>目标目录。</code></pre>
 </dd>
 <dt>options</dt>
-<dd><pre class="prettyprint linenums"><code>可使用参数。如:</code></pre>
-<pre class="prettyprint linenums"><code>verbose=global_options.verbose</code></pre>
+<dd><pre class="prettyprint"><code>可使用参数。如:</code></pre>
+<pre class="prettyprint"><code>verbose=global_options.verbose</code></pre>
 </dd>
 </dl></dd>
 <dt>get_apps</dt>
 <dd><p>获得当前项目下所有的app名字</p>
-<pre class="prettyprint linenums"><code>from uliweb import get_apps</code></pre>
+<pre class="prettyprint"><code>from uliweb import get_apps</code></pre>
 <p>函数定义为:</p>
-<pre class="prettyprint linenums"><code>get_apps(apps_dir, settings_file, local_settings_file)</code></pre>
+<pre class="prettyprint"><code>get_apps(apps_dir, settings_file, local_settings_file)</code></pre>
 <dl>
 <dt>apps_dir</dt>
-<dd><pre class="prettyprint linenums"><code>当前项目下的apps目录。使用时如:</code></pre>
-<pre class="prettyprint linenums"><code>global_options.apps_dir</code></pre>
+<dd><pre class="prettyprint"><code>当前项目下的apps目录。使用时如:</code></pre>
+<pre class="prettyprint"><code>global_options.apps_dir</code></pre>
 </dd>
 <dt>settings_file</dt>
-<dd><pre class="prettyprint linenums"><code>settings.ini文件路径。使用时如:</code></pre>
-<pre class="prettyprint linenums"><code>global_options.settings</code></pre>
+<dd><pre class="prettyprint"><code>settings.ini文件路径。使用时如:</code></pre>
+<pre class="prettyprint"><code>global_options.settings</code></pre>
 </dd>
 <dt>local_settings_file</dt>
-<dd><pre class="prettyprint linenums"><code>local_settings.ini文件路径，使用时如:</code></pre>
-<pre class="prettyprint linenums"><code>global_options.local_settings</code></pre>
+<dd><pre class="prettyprint"><code>local_settings.ini文件路径，使用时如:</code></pre>
+<pre class="prettyprint"><code>global_options.local_settings</code></pre>
 </dd>
 </dl></dd>
 </dl><h2 id="title_1-5">常用global_options属性<a class="anchor" href="#title_1-5">&para;</a></h2>
@@ -214,11 +190,11 @@ class DemoCommand(Command):
 <p><code>Command</code> 类是所有命令的基类。大多数方法请参见 <code>uliweb/core/commands.py</code> 文件。 其中有 <code>get_apps</code> 方法，功能和uliweb中的一样，不过需要传入的参数不同，如:</p>
 <dl>
 <dt>get_apps</dt>
-<dd><pre class="prettyprint linenums"><code>get_apps(global_options, include_apps=None)</code></pre>
+<dd><pre class="prettyprint"><code>get_apps(global_options, include_apps=None)</code></pre>
 <p>使用起来比uliweb下的get_apps要简单一些。</p>
 </dd>
 <dt>get_application</dt>
-<dd><pre class="prettyprint linenums"><code>get_application(global_options)</code></pre>
+<dd><pre class="prettyprint"><code>get_application(global_options)</code></pre>
 <p>获得当前应用的实例，它将完成整个应用的初始化工作</p>
 </dd>
 </dl><h2 id="title_1-7">模块方法<a class="anchor" href="#title_1-7">&para;</a></h2>
@@ -227,56 +203,54 @@ class DemoCommand(Command):
 <dd><p>从命令行获得一个应答。</p>
 <dl>
 <dt>message</dt>
-<dd><pre class="prettyprint linenums"><code>提示信息</code></pre>
+<dd><pre class="prettyprint"><code>提示信息</code></pre>
 </dd>
 <dt>answers</dt>
-<dd><pre class="prettyprint linenums"><code>为待提受的可选字符集合</code></pre>
+<dd><pre class="prettyprint"><code>为待提受的可选字符集合</code></pre>
 </dd>
 <dt>default</dt>
-<dd><pre class="prettyprint linenums"><code>为输入回车时的缺省值</code></pre>
+<dd><pre class="prettyprint"><code>为输入回车时的缺省值</code></pre>
 </dd>
 <dt>quit</dt>
-<dd><pre class="prettyprint linenums"><code>为退出输入字符</code></pre>
+<dd><pre class="prettyprint"><code>为退出输入字符</code></pre>
 </dd>
 </dl><p>示例:</p>
-<pre class="prettyprint linenums"><code>ans = get_answer(message, answers='Yn', quit='q')</code></pre>
+<pre class="prettyprint"><code>ans = get_answer(message, answers='Yn', quit='q')</code></pre>
 </dd>
 <dt>get_input(prompt, default=None, choices=None, option_value=None)</dt>
 <dd><p>判断命令行参数值是否存在，如果不存在则在命令行提示用户输入</p>
 <dl>
 <dt>prompt</dt>
-<dd><pre class="prettyprint linenums"><code>提示信息</code></pre>
+<dd><pre class="prettyprint"><code>提示信息</code></pre>
 </dd>
 <dt>default</dt>
-<dd><pre class="prettyprint linenums"><code>按回车时的缺省值</code></pre>
+<dd><pre class="prettyprint"><code>按回车时的缺省值</code></pre>
 </dd>
 <dt>choices</dt>
-<dd><pre class="prettyprint linenums"><code>可选输入值的范围</code></pre>
+<dd><pre class="prettyprint"><code>可选输入值的范围</code></pre>
 </dd>
 <dt>option_value</dt>
-<dd><pre class="prettyprint linenums"><code>命令输入的可选项，如果不为None，则会直接返回</code></pre>
+<dd><pre class="prettyprint"><code>命令输入的可选项，如果不为None，则会直接返回</code></pre>
 </dd>
 </dl><p>示例:</p>
-<pre class="prettyprint linenums"><code>get_input(prompt, default=url_prefix, option_value=options.url)
+<pre class="prettyprint"><code>get_input(prompt, default=url_prefix, option_value=options.url)
 get_input("Creation Theme([a]ngularjs):", default="a", choices=['a'],
     option_value=options.theme)</code></pre>
 </dd>
 </dl>
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="./xmlrpc.html"><i class="icon-arrow-left"></i> XMLRPC 使用说明</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./command.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="./uliweb_apps.html">Uliweb App 清单 <i class="icon-arrow-right"></i></a>
-</div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="./command.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -291,35 +265,56 @@ get_input("Creation Theme([a]ngularjs):", default="a", choices=['a'],
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
 <script src="./static/comment.js"></script>
 <script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -331,6 +326,8 @@ get_input("Creation Theme([a]ngularjs):", default="a", choices=['a'],
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="./static/docs.css"/>
 <link href="./static/asset/prettify.css" rel="stylesheet">
 <link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
@@ -29,47 +23,29 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="./url_mapping.html"><i class="icon-arrow-left"></i> URL映射</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./form.html">Form使用 <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">视图(View)<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">视图(View)<a class="anchor" href="#title_1">&para;</a></h1>
 <p>在Uliweb中，视图(view)相当于MVC框架中的Controller。</p>
 <h2 id="title_1-1">view模块的定义<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在Uliweb中，在一个app的目录下，所有以views开头的文件都将被视为视图模块。当你不使用集中的 URL管理的时候，Uliweb会自动将所有有效的app的视图文件在启动时进行导入，其目的就是为了搜集 所有的URL的定义。因此，只要你按规则进行定义文件名，在其中定义的URL就可以被自动发现。因此像： views.py, views_about.py都是合法的view模块。</p>
@@ -81,25 +57,25 @@
 <dd><p>pass</p>
 </dd>
 </dl><p>可以看到，它就是一个普通的函数。目前对于view函数，你只能使用普通的函数，而不能使用类。 每个view函数都应与一个或多个URL定义相匹配，一个完整的view定义如下:</p>
-<pre class="prettyprint linenums"><code>@expose('/index')
+<pre class="prettyprint"><code>@expose('/index')
 def index():
     pass</code></pre>
 <p>如果一个view函数没有使用expose来修饰的话，它将不会被用户所访问。</p>
 <p>expose后面是可以没有参数的，如:</p>
-<pre class="prettyprint linenums"><code>@expose
+<pre class="prettyprint"><code>@expose
 def index():
     pass</code></pre>
 <p>那么这个时候，一个view函数的URL将被定义为:</p>
-<pre class="prettyprint linenums"><code>/Appname/view_module_name/view_function_name</code></pre>
+<pre class="prettyprint"><code>/Appname/view_module_name/view_function_name</code></pre>
 <p>它是由app的名字，view模块名和view函数名组成的。这就是缺省的URL映射，已经很象是MVC的缺 省映射了。</p>
 <h3 id="title_1-2-2">view函数的参数<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>view函数是可以有参数的，但首先你需要先在它的URL中定义参数，如果URL中有参数，则view中就 要定义参数，如果没有则view中一般也没有。带参数的例子:</p>
-<pre class="prettyprint linenums"><code>@expose('/documents/&lt;lang&gt;/&lt;path:filename&gt;')
+<pre class="prettyprint"><code>@expose('/documents/&lt;lang&gt;/&lt;path:filename&gt;')
 def show_document(filename, lang):
     return _show(request, response, filename, env, lang, False)</code></pre>
 <p>关于URL的参数定义，参见 <a href="url_mapping.html" class="inner">URL映射</a> 的文档。这里可以看出，定义了两个参数： lang和filename，所以在下面的view函数中也定义了两个参数。</p>
 <p>但如果你的URL中没有那么多的参数怎么办？这个可以在URL的定义中解决，如:</p>
-<pre class="prettyprint linenums"><code>@expose('/documents/&lt;path:filename&gt;', defaults={'lang':''})
+<pre class="prettyprint"><code>@expose('/documents/&lt;path:filename&gt;', defaults={'lang':''})
 @expose('/documents/&lt;lang&gt;/&lt;path:filename&gt;')
 def show_document(filename, lang):
     return _show(request, response, filename, env, lang, False)</code></pre>
@@ -107,22 +83,22 @@ def show_document(filename, lang):
 <h3 id="title_1-2-3">view的环境<a class="anchor" href="#title_1-2-3">&para;</a></h3>
 <p>在Uliweb中，一个view函数是运行在某种环境中的，当需要调用view函数时，在调用前，我会向 函数的func_globals属性中注入一些对象，这些对象就可以直接在函数中使用了，你不再需要导入。 目前可用的对象有：</p>
 <ul>
-<li><p>application 这是Uliweb的实例，你可以用它来访问应用的各种属性，如：application.debug     表示是否处于调用状态，还可以通过它来调用一些方法，如：application.template()来处理模     板。当然直接导入template也是可以的。不过application.template()已经预设了环境进去。</p></li>
+<li>application 这是Uliweb的实例，你可以用它来访问应用的各种属性，如：application.debug     表示是否处于调用状态，还可以通过它来调用一些方法，如：application.template()来处理模     板。当然直接导入template也是可以的。不过application.template()已经预设了环境进去。</li>
 <li>request 请求对象。</li>
-<li><p>response 应答对象。这个对象在传入时是一个空对象，你可以使用它，也可以自行构造一个Response     的对象进行返回。</p></li>
+<li>response 应答对象。这个对象在传入时是一个空对象，你可以使用它，也可以自行构造一个Response     的对象进行返回。</li>
 <li>url_for 它是与expose是相反的，它用来生根据view函数生成反向的URL。详情见 <a href="url_mapping.html" class="inner">URL映射</a> 的文档。</li>
 <li>redirect 用于重定义处理，后面为一个URL信息。</li>
-<li><p>error 用于输出错误信息，它将自动查找出错页面。你只要在任何app下的templates中增加     error.html，然后出错信息可以自已来定制。它也不需要前面加return，也将抛出一个异常。</p></li>
-<li><p>settings 是定义在所有有效的app settings.py文件中的配置项。注意，一个配置项的名称必须是     大写的。</p></li>
-<li><p>json 用于将dict对象包装成json格式并返回。</p></li>
+<li>error 用于输出错误信息，它将自动查找出错页面。你只要在任何app下的templates中增加     error.html，然后出错信息可以自已来定制。它也不需要前面加return，也将抛出一个异常。</li>
+<li>settings 是定义在所有有效的app settings.py文件中的配置项。注意，一个配置项的名称必须是     大写的。</li>
+<li>json 用于将dict对象包装成json格式并返回。</li>
 </ul>
-<div class="alert alert-info">
+<div class="ui info message">
 <p>要注意，以上的环境只能用在view函数中，当view调用其它的方法时，还是需要传入相应的参数。 有些全局性的对象将放在 uliweb/__init__.py 中，因此可以直接导入。详情见 <a href="globals.html" class="inner">全局环境</a> 的文档。</p>
 
 </div>
 <h3 id="title_1-2-4">view环境的扩展<a class="anchor" href="#title_1-2-4">&para;</a></h3>
 <p>如果你认为上面的环境还不够，那么你可以直接向env中增加新的对象，然后在view方法中可以通过 env.object的方式来使用它。你需要在某个app的settings.py文件中增加相应的插件处理。如:</p>
-<pre class="prettyprint linenums"><code>from uliweb.core.dispatch import bind
+<pre class="prettyprint"><code>from uliweb.core.dispatch import bind
 @bind('prepare_default_env')
 def prepare_default_env(sender, env):
     from uliweb.utils.textconvert import text2html
@@ -131,24 +107,24 @@ def prepare_default_env(sender, env):
 <h3 id="title_1-2-5">view的返回<a class="anchor" href="#title_1-2-5">&para;</a></h3>
 <p>在Uliweb中，view函数可以返回多种类型的结果。可能为：</p>
 <ul>
-<li><p>dict 变量。如果返回一个dict的变量，说明你希望由Uliweb自动套用一个模板，这个模板需要在     templates目录下，并且模板的文件名需要与view函数名相同，后缀为.html。如果你希望使用指     定的模板文件，则需要利用response对象，将指定的模板名赋给response.template属性就行了。</p></li>
-<li><p>response 对象。记得上面说过的吗？你可以直接使用response对象，比如调用它的response.write()     方法来写入返回的内容。</p></li>
+<li>dict 变量。如果返回一个dict的变量，说明你希望由Uliweb自动套用一个模板，这个模板需要在     templates目录下，并且模板的文件名需要与view函数名相同，后缀为.html。如果你希望使用指     定的模板文件，则需要利用response对象，将指定的模板名赋给response.template属性就行了。</li>
+<li>response 对象。记得上面说过的吗？你可以直接使用response对象，比如调用它的response.write()     方法来写入返回的内容。</li>
 <li>字符串。你可以直接返回一个字符串，这样将被封装为一个普通的文本返回。</li>
 <li>json 对象，使用前面讲的json函数对dict对象进行包装。</li>
-<li><p>Reseponse实例。你可以主动创建一个Response的实例并返回。</p></li>
+<li>Reseponse实例。你可以主动创建一个Response的实例并返回。</li>
 </ul>
 <p>在某些情况下，你可以调用象redirect, error来中止view的运行。</p>
 <h3 id="title_1-2-6">view模块的入口处理<a class="anchor" href="#title_1-2-6">&para;</a></h3>
 <p>我建议将不同的view函数按照功能和处理分为不同的文件来存放。</p>
 <p>Uliweb支持一种view模块的入口和出口的处理。即你可以在view模块中定义名为 <code>__begin__</code> 和 <code>__end__</code> 的特殊的方法，它没有参数，但是就象普通的view函数一样，也是在view环境中运行的。 一旦view模块中存在这个特殊的方法，在执行每个view函数之前都会先调用这个函数。因此你可以 把它理解为初始化处理，比如给一些对象赋值。举例如下:</p>
-<pre class="prettyprint linenums"><code>def __begin__():
+<pre class="prettyprint"><code>def __begin__():
     from uliweb.contrib.auth.views import login
 
     if not request.user:
         return redirect(url_for(login) + '?next=%s' % url_for(doto_index))</code></pre>
 <h2 id="title_1-3">基于类的View方法<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>目前Uliweb也支持类的方式来定义view，这样可以有更好的封装性。举个例子:</p>
-<pre class="prettyprint linenums"><code>@expose('/user')
+<pre class="prettyprint"><code>@expose('/user')
 class UserView(object):
     def __begin__(self):
         if not request.user:
@@ -177,11 +153,11 @@ class UserView(object):
 <p>以上只是一个示例。使用基于类的view除了是以类的方式进行组织外，与一般的view方法 没有本质的区别，但同时又有一些其它的特性。</p>
 <ul>
 <li>建议使用New Style Class，即从object派生。不需要从特殊的基类派生。</li>
-<li><p>Class-View也支持类似模块级别的__begin__的处理，但它是一个方法。Uliweb在处理     Class-View会自动调用。</p></li>
+<li>Class-View也支持类似模块级别的__begin__的处理，但它是一个方法。Uliweb在处理     Class-View会自动调用。</li>
 <li>不要使用staticmethod对类方法进行处理。因此类方法可以是一般的方法或classmethod。</li>
-<li><p>如果方法名开始为'_'，则这个方法将不会被自动exposed，客户端将不能进行访问。这种     方式比较适合定义内部的函数。</p></li>
+<li>如果方法名开始为'_'，则这个方法将不会被自动exposed，客户端将不能进行访问。这种     方式比较适合定义内部的函数。</li>
 <li>如果使用Class-View并且要在Class上使用expose，你需要安装Python 2.6。</li>
-<li><p>在简单情况下，你在类上使用expose('/url')，而类的方法上不使用expose，则会自动对有效的     方法生成形如：/url/method_name 的链接形式，如果还带参数，则自动生成字符串形式     的参数。例如上面的register函数。在注释中可以看到。</p></li>
+<li>在简单情况下，你在类上使用expose('/url')，而类的方法上不使用expose，则会自动对有效的     方法生成形如：/url/method_name 的链接形式，如果还带参数，则自动生成字符串形式     的参数。例如上面的register函数。在注释中可以看到。</li>
 <li><p>在上面的例子中已经演示了大部分的情况：</p>
 <ul>
 <li>类上使用expose</li>
@@ -190,32 +166,30 @@ class UserView(object):
 <li>使用缺省expose方式，同时定义了参数，如register()方法。</li>
 <li>expose('')将直接使用类上的URL。</li>
 <li>内部函数，不会被客户端访问到，如_common()方法。</li>
-<li><p>定义了__begin__()方法，可以在执行类方法前先被处理。</p></li>
+<li>定义了__begin__()方法，可以在执行类方法前先被处理。</li>
 </ul></li>
 </ul>
-<div class="alert alert-info">
+<div class="ui info message">
 <p>注意，一般不要定义__init__()。因为Uliweb在调用Class-View时，会自动创建类的 实例，如果定义__init__()则不要带参数或全部使用缺省值。</p>
 
 </div>
-<div class="alert alert-info">
+<div class="ui info message">
 <p>注意，如果在方法上还想使用decorator来进行修饰，如果方法无参数，则顺序不影响 最终的URL生成。如果方法有参数，建议不要使用缺省URL的生成方式，而是主动定义 expose，并且将expose放在所有其它的decorator之上。</p>
 
 </div>
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="./url_mapping.html"><i class="icon-arrow-left"></i> URL映射</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./views.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="./form.html">Form使用 <i class="icon-arrow-right"></i></a>
-</div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="./views.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -230,35 +204,56 @@ class UserView(object):
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
 <script src="./static/comment.js"></script>
 <script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -270,6 +265,8 @@ class UserView(object):
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

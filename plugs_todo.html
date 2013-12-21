@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="./static/docs.css"/>
 <link href="./static/asset/prettify.css" rel="stylesheet">
 <link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
@@ -29,47 +23,29 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="./basic.html"><i class="icon-arrow-left"></i> Simple Todo (Uliweb 版本) 之 基础篇</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./guestbook.html">迷你留言板 <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">Simple Todo (Uliweb 版本) 之 高级篇<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">Simple Todo (Uliweb 版本) 之 高级篇<a class="anchor" href="#title_1">&para;</a></h1>
 <p>本版本是从 <a href="http://simple-is-better.com/news/detail-309" class="outter">http://simple-is-better.com/news/detail-309</a> 来的，并且已经使用Uliweb 实现了一个 <a href="http://limodou.github.com/uliweb-doc/basic.html" class="outter">基础版本</a> ，不过 这个基础版本讲述的是最基本的Uliweb的用法，因此叫基础篇。 在这个高级篇中，我希望向大家介绍更加高级一些的内容。其中有些功能要依赖于plugs和 generic的一些功能。</p>
 <p>plugs是我在开发时把认为可以复用的一些app发布出来，供大家使用。它收集了象基本的 页面布局，通用的view函数，jquery相关的一些界面代码和控件，以及其它的一些配套 功能。但是在这个教程中只会使用部分功能。plugs本身是需要安装，你可以直接下载源码 进行安装，也可以通过  或  来安装。不过因 为目前plugs还在不断优化中，因此建议直接通过下载源码来安装。现在plugs可以在 <a href="http://code.google.com/p/plugs" class="outter">http://code.google.com/p/plugs</a> 和 <a href="https://github.com/limodou/plugs" class="outter">https://github.com/limodou/plugs</a> 都可以找到。</p>
 <p>generic在plugs中存在一个app，它提供了封装好的view函数，可以直接使用。类似于django 的generic_view的功能。它提供了class-based的view和function-based的view方法，你可 以根据需要来使用。</p>
@@ -77,12 +53,12 @@
 <h2 id="title_1-1">构建流程<a class="anchor" href="#title_1-1">&para;</a></h2>
 <h3 id="title_1-1-1">构建初始环境<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>在基础篇中讲过的内容，这里不再缀述。假定目前初始为$project，操作如下:</p>
-<pre class="prettyprint linenums"><code>uliweb makeproject plugs_todo
+<pre class="prettyprint"><code>uliweb makeproject plugs_todo
 cd plugs_todo
 uliweb makeapp todo</code></pre>
 <h2 id="title_1-2">settings.ini配置<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>修改apps/settings.ini为以下内容:</p>
-<pre class="prettyprint linenums"><code>[GLOBAL]
+<pre class="prettyprint"><code>[GLOBAL]
 DEBUG = True
 
 INSTALLED_APPS = [
@@ -102,7 +78,7 @@ SUPPORT_LANGUAGES = ['en', 'zh_CN']</code></pre>
 <p>ORM段中我使用了sqlite数据库，同时关闭自动创建表的选项。在 <code>INSTALLED_APPS</code> 中加入 了'plugs.layout'和'todo'这两个app。由于使用了plugs，它是支持i18n的处理，因此上面 I18N一段就是相关的配置。在这个小网站，我们可以使用英文和中文。</p>
 <h2 id="title_1-3">基本布局<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>前面我们看到了，已经加入了 <code>plugs.generic</code> 和 <code>plugs.layout</code> 这两个app，其中 <code>plugs.generic</code> 提供了通用的Model的CRUD(Create Read Update Delete)的处理展示。在非常简单的情况下 可以直接使用它来生成相应的界面。而 <code>plugs.layout</code> 提供了基本的布局。在layout中 的settings.ini中有几个参数可以设置，缺省值为:</p>
-<pre class="prettyprint linenums"><code>[LAYOUT]
+<pre class="prettyprint"><code>[LAYOUT]
 COPYRIGHT = _('All rights reversed!')
 TITLE = _('Uliweb Plugs Demo')
 MENUS = [
@@ -111,7 +87,7 @@ MENUS = [
     ('about', _('About'), '/about'),
 ]</code></pre>
 <p>让我们修改一下，添加到apps/settings.ini中去:</p>
-<pre class="prettyprint linenums"><code>[LAYOUT]
+<pre class="prettyprint"><code>[LAYOUT]
 COPYRIGHT = 'Copyright&amp;copy; 任务跟踪 作者： limodou@gmail.com'
 TITLE = '任务跟踪'
 MENUS &lt;= [
@@ -119,25 +95,25 @@ MENUS &lt;= [
 ]</code></pre>
 <p>这里有一个特别的地方，那就是MENUS <= 它的作用是替换原来的值。因为pyini在处理时， 如果遇到相同名字的两个变量，如果变量是不可变对象，则直接替换，如：str, int等。但 如果值是可变对象，如：list, dict，则会进行合并。因为上面的MENUS是list，所以缺省 情况下会进行合并，而我们的目的是想替换，所以使用 <code>&lt;=</code> 就可以替换了。</p>
 <p>为了运行，我们首先要修改一下plugs_todo/apps/todo/views.py，改 为:</p>
-<pre class="prettyprint linenums"><code>#coding=utf-8
+<pre class="prettyprint"><code>#coding=utf-8
 from uliweb import expose
 
 @expose('/')
 def index():
     return {}</code></pre>
 <p>然后我们在plugs的layout.html的基础上，来创建一个通用的基础模板，如命名为basel.html, 内容如下:</p>
-<pre class="prettyprint linenums"><code>{{extend "layout.html"}}
+<pre class="prettyprint"><code>{{extend "layout.html"}}
 
 {{block userinfo}}{{end}}</code></pre>
 <p>因为layout.html中还有用户的信息，但是我们这里并不使用，因此，我们将block userinfo 置为空。</p>
 <p>然后在todo/templates下创建index.html，内容为:</p>
-<pre class="prettyprint linenums"><code>{{extend "base.html"}}</code></pre>
+<pre class="prettyprint"><code>{{extend "base.html"}}</code></pre>
 <p>好，目前差不多了，让我们回到命令行，在plugs_todo目录下运行:</p>
-<pre class="prettyprint linenums"><code>uliweb runserver</code></pre>
+<pre class="prettyprint"><code>uliweb runserver</code></pre>
 <p>如果没有错误，可以通过访问 <a href="http://localhost:8000" class="outter">http://localhost:8000</a> 看到如下界面:</p>
 <h2 id="title_1-4">创建Todo的Model<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>下面就是创建Todo表的结构。在todo下创建models.py文件，写入以下内容:</p>
-<pre class="prettyprint linenums"><code>#coding=utf-8
+<pre class="prettyprint"><code>#coding=utf-8
 from uliweb.orm import *
 
 class Todo(Model):
@@ -145,15 +121,15 @@ class Todo(Model):
     post_date = Field(datetime.datetime, verbose_name='提交时间', auto_now_add=True)
     finished = Field(bool, verbose_name='是否完成')</code></pre>
 <p>在todo下创建settings.ini，然后输入以下内容:</p>
-<pre class="prettyprint linenums"><code>[MODELS]
+<pre class="prettyprint"><code>[MODELS]
 todo = 'todo.models.Todo'</code></pre>
 <p>这样我们就将todo表做成配置化的了。关于配置化，详情可以查看 <a href="http://limodou.github.com/uliweb-doc/orm.html" class="outter">Uliweb ORM</a> 的文档。</p>
 <p>在命令行下运行:</p>
-<pre class="prettyprint linenums"><code>uliweb syncdb</code></pre>
+<pre class="prettyprint"><code>uliweb syncdb</code></pre>
 <p>来创建表。</p>
 <h2 id="title_1-5">处理Todo<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>下面开始写展示Todo列表的代码了，让我们看一下如何使用plugs.generic中的View Class。 编辑 todo/views.py 如下:</p>
-<pre class="prettyprint linenums"><code>#coding=utf-8
+<pre class="prettyprint"><code>#coding=utf-8
 from uliweb import expose
 from plugs.generic.views import View
 from uliweb.i18n import ugettext as _
@@ -174,28 +150,26 @@ class Todo(View):
 <p>在Todo中还定义了一些类属性，用于具体的配置。如model对应要处理的表。layout表示整 体要使用的布局文件，这里是base.html。key_field是表示在显示列表时，哪个字段将展 示为相应的查看链接。其它的给注释了，它们显示的都是相应的缺省值。可以看到它还包含 了相应的分页的处理。</p>
 <p>上面 <code>_('New')</code> 是i18n(国际化)处理的例子。 <code>_</code> 是在 <code>from uliweb.i18n import ugettext as _</code> 中定义的。</p>
 <p>改完以后，再运行，结果是这个样子。</p>
-<p><img src="_static/plugs_todo_index.png" alt="image" class="img-polaroid"/>
+<p><img src="_static/plugs_todo_index.png" alt="image"/>
 </p>
 <p>这里的代码已经完成了整个的：列表显示，增加，删除，修改，查看的功能。但是它是以 一种预定义的方式来展示的，可能不能满足你的要求，但是作为快速开发会非常方便。</p>
 <p>你仍然可以使用更底层一些的generic.py来实现更加个性化的代码。</p>
 <h2 id="title_1-6">后记<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>其实在plugs的相应的app中封装了好多的东西。比如flash message，表格的分页处理， 由Model转为Form的机制，下载的处理等。还包括一些ui的处理，如对jquery easyui的封 装等。它们都是构成plugs的基础，我会不断完善它们。</p>
 
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="./basic.html"><i class="icon-arrow-left"></i> Simple Todo (Uliweb 版本) 之 基础篇</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./plugs_todo.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="./guestbook.html">迷你留言板 <i class="icon-arrow-right"></i></a>
-</div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="./plugs_todo.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -210,35 +184,56 @@ class Todo(View):
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
 <script src="./static/comment.js"></script>
 <script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -250,6 +245,8 @@ class Todo(View):
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

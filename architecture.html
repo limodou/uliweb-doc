@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="./static/docs.css"/>
 <link href="./static/asset/prettify.css" rel="stylesheet">
 <link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
@@ -29,58 +23,40 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="./installation.html"><i class="icon-arrow-left"></i> 安装说明</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./globals.html">全局环境 <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">体系结构和机制<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">体系结构和机制<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">组织结构<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Uliweb 认为一个项目是由不同的模块组成，而采用了类似于Django App的方式来进行 项目的组织，它们都统一放在 apps 目录下。同时 Uliweb 的App可以是任何符合Uliweb 要求的Python包（使用uliweb makeapp appname创建即可），并且可以是独立的Python 模块放在非apps的地方，只要可以导入就可以了。Uliweb 的 app 的组织重点考虑了功能 及开发的独立性、复用性和配置化，每个 app 可以有自已独立的：</p>
 <ul>
 <li>settings.ini 它是配置文件</li>
 <li>templates目录用于存放模板</li>
 <li>static目录用于存放静态文件</li>
-<li><p>views文件，用于存放view代码</p></li>
+<li>views文件，用于存放view代码</li>
 </ul>
 <p>这种组织方式使得Uliweb的App重用更为方便。</p>
 <p>apps的结构为：</p>
-<pre class="prettyprint linenums"><code>apps/
+<pre class="prettyprint"><code>apps/
     .gitignore
     __init__.py
     settings.ini
@@ -101,15 +77,15 @@
 <h2 id="title_1-2">App管理<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>一个项目可以由一个App或多个App组成，而且每个App的结构不一定要求完整，因此一个App可以：</p>
 <ul>
-<li><p>只有一个settings.ini 这样可以做一些初始化配置的工作，比如：数据库配置，i18n的     配置等</p></li>
+<li>只有一个settings.ini 这样可以做一些初始化配置的工作，比如：数据库配置，i18n的     配置等</li>
 <li>只有templates，可以提供一些公共的模板</li>
 <li>只有static，可以提供一些公共的静态文件</li>
-<li><p>其它的内容</p></li>
+<li>其它的内容</li>
 </ul>
 <p>Uliweb在启动时对于apps下的App有两种处理策略：</p>
 <ol>
 <li>认为全部App都是有效的(这种情况比较少见)</li>
-<li><p>根据 <code>apps/settings.ini</code> 和 <code>apps/local_settings.ini</code> 中的配置项 <code>INSTALLED_APPS</code> 来决     定哪些App是有效的</p></li>
+<li>根据 <code>apps/settings.ini</code> 和 <code>apps/local_settings.ini</code> 中的配置项 <code>INSTALLED_APPS</code> 来决     定哪些App是有效的</li>
 </ol>
 <p>Uliweb在启动时会根据有效的App来导入它们自已的settings.ini文件，并将其中配置项进行合 并最终形成一个完整的 <code>settings</code> 变量供App来使用。同时在处理生效的App的同时， 会自动查找所有 <code>views</code> 开头的文件和 <code>views</code> 子目录并进行导入，这块工作主要是为 了收集所有定义在views文件中的URL。</p>
 <p>这样当Uliweb启动完毕，所有App下的settings.ini和views文件将被导入。因此，你可以 在App下的 <code>__init__.py</code> 文件中做一些初始化的工作。不过对于大部分的配置工作，建 议采用在 <code>settings.ini</code> 中定义，然后再绑定对应的事件主题的方式，其目的是实现配置化。</p>
@@ -121,7 +97,7 @@
 <li><code>uliweb/core/default_settings.ini</code> 它是最初始的settings信息</li>
 <li>按定义的顺序导入每个App下的 <code>settings.ini</code> 信息</li>
 <li>导入 <code>apps/settings.ini</code> 信息</li>
-<li><p>导入 <code>apps/local_settings.ini</code> 信息</p></li>
+<li>导入 <code>apps/local_settings.ini</code> 信息</li>
 </ol>
 <p>如果出现同名配置项，则对于不可变数据类型，后定义的项将覆盖前面定义的值。如果是可 变数据类型，则将进行数据合并。</p>
 <h2 id="title_1-5">分散开发，集中使用<a class="anchor" href="#title_1-5">&para;</a></h2>
@@ -133,7 +109,7 @@
 <p>URL的格式采用werkzeug的routing模块处理方式。可以定义参数，可以反向生成URL。在 Uliweb中定义了两个方便的函数：</p>
 <ul>
 <li>expose 用来将URL与view方法进行映射</li>
-<li><p>url_for 用来根据view方法反向生成URL</p></li>
+<li>url_for 用来根据view方法反向生成URL</li>
 </ul>
 <h2 id="title_1-7">MVT框架<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>Uliweb 也采用 MVT 的框架。</p>
@@ -143,7 +119,7 @@
 </dd>
 <dt>View</dt>
 <dd><p>则采函数或类的方式。当 Uliweb 在调用 view 函数时，会自动向函数注入一些对象， 这一点有些象 web2py 。不过 web2py 是基于 exec ，而 Uliweb 是通过向函数注入 变量 (func_globals) 来实现的。这种方式会在某种程序上减少一些导入代码，非常 方便。不过，它只对直接的 view 方法有效，对于 view 函数中又调用的函数无效。 因此你还可以直接通过</p>
-<pre class="prettyprint linenums"><code>from uliweb import request, response</code></pre>
+<pre class="prettyprint"><code>from uliweb import request, response</code></pre>
 <p>这样的方式来导入一些全局性的对象。</p>
 </dd>
 <dt>Template</dt>
@@ -153,26 +129,24 @@
 <h2 id="title_1-8">扩展处理<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>Uliweb提供了多种扩展的能力：</p>
 <ul>
-<li><p>plugin 扩展。这是一种插件处理机制。 Uliweb 已经预设了一些调用点，这些调用点     会在特殊的地方被执行。你可以针对这些调用点编写相应的处理，并且将其放在     settings.py 中，当 Uliweb 在启动时会自动对其进行采集，当程序运行到调用点位置     时，自动调用对应的插件函数。</p></li>
-<li><p>middleware 扩展。它与 Django 的机制完全类似。你可以在配置文件中配置     middleware 类。每个 middleware 可以处理请求和响应对象。</p></li>
-<li><p>views 模块的初始化处理。在 views 模块中，如果你写了一个名为 <strong>begin</strong> 的函数     ，它将在执行要处理的 view 函数之前被处理，它相当于一个入口。因此你可以在这里     面做一些模块级别的处理，比如检查用户的权限。因此建议你根据功能将 view 函数分     到不同的模块中。</p></li>
+<li>plugin 扩展。这是一种插件处理机制。 Uliweb 已经预设了一些调用点，这些调用点     会在特殊的地方被执行。你可以针对这些调用点编写相应的处理，并且将其放在     settings.py 中，当 Uliweb 在启动时会自动对其进行采集，当程序运行到调用点位置     时，自动调用对应的插件函数。</li>
+<li>middleware 扩展。它与 Django 的机制完全类似。你可以在配置文件中配置     middleware 类。每个 middleware 可以处理请求和响应对象。</li>
+<li>views 模块的初始化处理。在 views 模块中，如果你写了一个名为 <strong>begin</strong> 的函数     ，它将在执行要处理的 view 函数之前被处理，它相当于一个入口。因此你可以在这里     面做一些模块级别的处理，比如检查用户的权限。因此建议你根据功能将 view 函数分     到不同的模块中。</li>
 </ul>
 
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="./installation.html"><i class="icon-arrow-left"></i> 安装说明</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./architecture.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="./globals.html">全局环境 <i class="icon-arrow-right"></i></a>
-</div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="./architecture.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -187,35 +161,56 @@
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
 <script src="./static/comment.js"></script>
 <script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -227,6 +222,8 @@
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

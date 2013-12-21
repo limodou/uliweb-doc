@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="./static/docs.css"/>
 <link href="./static/asset/prettify.css" rel="stylesheet">
 <link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
@@ -29,60 +23,42 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            
+    <div class="twelve wide column" id="markdown-content">
+    
+        
 <div class="chapter-next chapter-top">
     <a next-chapter href="./installation.html">安装说明 <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">Uliweb 简介<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">Uliweb 简介<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">它是什么<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Uliweb是一个新的Python Web Framework，它之所以会产生是因为现有的框架多少有些令人 不满意的地方，而且许多情况下这些不满意的地方或多或少对我开发Web有影响，因此在经过对 不少框架的学习之后，我决定开发一个新的框架，希望可以综合我认为其它框架中尽可能多的 优点，同时使这个新的框架尽可能的简单，易于上手和使用。</p>
-<p>这个项目是由Limodou <a href="&#x6D;&#x61;&#x69;&#x6C;t&#x6F;&#x3A;&#x6C;&#x69;mo&#x64;o&#x75;@g&#x6D;&#x61;&#x69;&#x6C;.&#x63;&#x6F;m" class="inner">&#x6C;im&#x6F;do&#x75;@gm&#x61;&#x69;&#x6C;.c&#x6F;&#x6D;</a>发起并创建的。其中得到了许多人的帮助。</p>
+<p>这个项目是由Limodou <a href="&#x6D;a&#x69;l&#x74;o&#x3A;&#x6C;&#x69;&#x6D;&#x6F;dou@&#x67;mail&#x2E;co&#x6D;" class="inner">&#x6C;&#x69;modo&#x75;@gmail.&#x63;o&#x6D;</a>发起并创建的。其中得到了许多人的帮助。</p>
 <h2 id="title_1-2">License<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>Uliweb按照BSD进行发布。</p>
 <h2 id="title_1-3">基础组件<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>它并不完全是从头写的一个东西，我目前使用了一些库，如：</p>
 <ul>
-<li><p><a href="http://werkzeug.pocoo.org/" class="outter">Werkzeug</a> 用它来进行框架的核心处理，比如：命令行，     URL Mapping，Debug等。</p></li>
-<li><p><a href="http://www.sqlalchemy.org" class="outter">SqlAlchemy</a> 基于它封装了Uliorm，可以使用ORM对     数据库进行处理。</p></li>
+<li><a href="http://werkzeug.pocoo.org/" class="outter">Werkzeug</a> 用它来进行框架的核心处理，比如：命令行，     URL Mapping，Debug等。</li>
+<li><a href="http://www.sqlalchemy.org" class="outter">SqlAlchemy</a> 基于它封装了Uliorm，可以使用ORM对     数据库进行处理。</li>
 </ul>
 <p>还有一些比较小的引用，如：</p>
 <ul>
 <li>template 是从 <a href="http://mdp.cti.depaul.edu/" class="outter">web2py</a> 改造来的</li>
-<li><p>部分处理代码从 <a href="http://www.djangoproject.com/" class="outter">Django</a> 中借鉴</p></li>
+<li>部分处理代码从 <a href="http://www.djangoproject.com/" class="outter">Django</a> 中借鉴</li>
 </ul>
 <p>另外还有一些是自已新造的，如：</p>
 <ul>
@@ -90,50 +66,50 @@
 <li>i18n处理，包括对模板的处理</li>
 <li>Uliorm，是在SqlAlchemy基础之上进行的封装，同时参考了GAE中的datastore的代码</li>
 <li>框架的处理代码，这块不可能不自已造了</li>
-<li><p>插件机制，从Ulipad中移植并进行了改造</p></li>
+<li>插件机制，从Ulipad中移植并进行了改造</li>
 </ul>
 <h2 id="title_1-4">功能特点<a class="anchor" href="#title_1-4">&para;</a></h2>
 <ul>
 <li><p>组织管理</p>
 <ul>
 <li>采用MVT模型开发。</li>
-<li><p>分散开发统一管理。采用App方式的项目组织。每个App有自已的配置文件，templates目录，     static目录。使得Uliweb的App重用非常方便。同时在使用上却可以将所有App看成一个整体，     可以相互引用静态文件和模板。缺省是所有App都是生效的，也可以指定哪些App是生效的。     所有生效App的配置文件在启动时会统一进行处理，最终合成一个完整的配置视图。</p></li>
+<li>分散开发统一管理。采用App方式的项目组织。每个App有自已的配置文件，templates目录，     static目录。使得Uliweb的App重用非常方便。同时在使用上却可以将所有App看成一个整体，     可以相互引用静态文件和模板。缺省是所有App都是生效的，也可以指定哪些App是生效的。     所有生效App的配置文件在启动时会统一进行处理，最终合成一个完整的配置视图。</li>
 </ul></li>
 <li><p>URL处理</p>
 <ul>
 <li><p>灵活强大的URL映射。采用Werkzeug的Routing模块，可以非常方便地定义URL，并与View函数     进行绑定。同时可以根据view函数反向生成URL。支持URL参数定义，支持缺省URL定义，如:</p>
-<pre class="prettyprint linenums"><code>appname/view_module/function_name</code></pre></li>
+<pre class="prettyprint"><code>appname/view_module/function_name</code></pre></li>
 </ul></li>
 <li><p>View与Template</p>
 <ul>
 <li>View模板的自动套用。当view返回dict对象时，自动根据view函数的名字查找对应的模板。</li>
 <li>目前View方法支持一般函数和类的方式。</li>
-<li><p>环境方式运行。每个view函数在运行时会处于一个环境下，因此你不必写许多的import，许多     对象可以直接使用，比如request, response等。可以大大减少代码量。</p></li>
-<li><p>模板中可以直接嵌入Python代码，不需要考虑缩近，只要在块结束时使用pass。支持模板的     include和继承。</p></li>
+<li>环境方式运行。每个view函数在运行时会处于一个环境下，因此你不必写许多的import，许多     对象可以直接使用，比如request, response等。可以大大减少代码量。</li>
+<li>模板中可以直接嵌入Python代码，不需要考虑缩近，只要在块结束时使用pass。支持模板的     include和继承。</li>
 </ul></li>
 <li><p>ORM</p>
 <ul>
 <li>类Django和GAE的datastore，可以支持自动建表，同时提供命令行工具进行数据的备分，装入，建表等处理。</li>
 <li>提供多数据库连接的支持</li>
-<li><p>支持alembic的数据库迁移处理</p></li>
+<li>支持alembic的数据库迁移处理</li>
 </ul></li>
 <li><p>i18n</p>
 <ul>
 <li>支持代码和模板中的i18n处理</li>
 <li>支持浏览器语言和cookie的自动选择，动态切换语言</li>
-<li><p>提供命令行工具可以自动提取po文件，可以以App为单位或整个项目为单位。并在处理时自动将     所有语言文件进行合并处理。当发生修改时，再次提取可以自动进行合并。</p></li>
+<li>提供命令行工具可以自动提取po文件，可以以App为单位或整个项目为单位。并在处理时自动将     所有语言文件进行合并处理。当发生修改时，再次提取可以自动进行合并。</li>
 </ul></li>
 <li><p>扩展</p>
 <ul>
-<li><p>plugin扩展。这是一种插件处理机制。Uliweb已经预设了一些调用点，这些调用点会在特殊的地方     被执行。你可以针对这些调用点编写相应的处理，并且将其放在settings.py中，当Uliweb在启动     时会自动对其进行采集，当程序运行到调用点位置时，自动调用对应的插件函数。</p></li>
-<li><p>middleware扩展。它与Django的机制完全类似。你可以在配置文件中配置middleware类。每个     middleware可以处理请求和响应对象。</p></li>
-<li><p>views模块的初始化处理。在views模块中，如果你写了一个名为__begin__的函数，它将在执行     要处理的view函数之前被处理，它相当于一个入口。因此你可以在这里面做一些模块级别的处理，     比如检查用户的权限。因此建议你根据功能将view函数分到不同的模块中。</p></li>
+<li>plugin扩展。这是一种插件处理机制。Uliweb已经预设了一些调用点，这些调用点会在特殊的地方     被执行。你可以针对这些调用点编写相应的处理，并且将其放在settings.py中，当Uliweb在启动     时会自动对其进行采集，当程序运行到调用点位置时，自动调用对应的插件函数。</li>
+<li>middleware扩展。它与Django的机制完全类似。你可以在配置文件中配置middleware类。每个     middleware可以处理请求和响应对象。</li>
+<li>views模块的初始化处理。在views模块中，如果你写了一个名为__begin__的函数，它将在执行     要处理的view函数之前被处理，它相当于一个入口。因此你可以在这里面做一些模块级别的处理，     比如检查用户的权限。因此建议你根据功能将view函数分到不同的模块中。</li>
 </ul></li>
 <li><p>命令行工具</p>
 <ul>
 <li>可以自动创始初始工作环境，自动包含必要的目录结构，文件和代码</li>
 <li>静态文件导出，可以将所有生效的App下的static导出到一个统一的目录</li>
-<li><p>除了有项目组命令工具外，还提供APP专属命令工具，如ORM</p></li>
+<li>除了有项目组命令工具外，还提供APP专属命令工具，如ORM</li>
 </ul></li>
 <li><p>部署</p>
 <ul>
@@ -141,16 +117,16 @@
 <li>支持Apache下的mod_wsgi部署</li>
 <li>支持uwsgi部署</li>
 <li>支持dotcloud部署</li>
-<li><p>支持sae部署</p></li>
+<li>支持sae部署</li>
 </ul></li>
 <li><p>开发</p>
 <ul>
 <li>提供开发服务器，并当代码修改时自动装载修改的模块</li>
-<li><p>提供debug功能，可以查看出错的代码，包括模板中的错误</p></li>
+<li>提供debug功能，可以查看出错的代码，包括模板中的错误</li>
 </ul></li>
 <li><p>其它</p>
 <ul>
-<li><p>对于静态文件的支持可以处理HTTP_IF_MODIFIED_SINCE和trunk方式的静态文件处理。</p></li>
+<li>对于静态文件的支持可以处理HTTP_IF_MODIFIED_SINCE和trunk方式的静态文件处理。</li>
 </ul></li>
 </ul>
 <h2 id="title_1-5">项目目标<a class="anchor" href="#title_1-5">&para;</a></h2>
@@ -159,34 +135,34 @@
 <li>框架要足够灵活，并易于扩展</li>
 <li>包含足够的示例代码</li>
 <li>编写清晰易懂的文档</li>
-<li><p>能够在多种环境下使用</p></li>
+<li>能够在多种环境下使用</li>
 </ul>
 <h2 id="title_1-6">社区<a class="anchor" href="#title_1-6">&para;</a></h2>
 <ul>
 <li>邮件列表 <a href="http://groups.google.com/group/uliweb" class="outter">http://groups.google.com/group/uliweb</a></li>
-<li><p>QQ讨论组 162487035</p></li>
+<li>QQ讨论组 162487035</li>
 </ul>
 <h2 id="title_1-7">链接<a class="anchor" href="#title_1-7">&para;</a></h2>
 <ul>
 <li>Uliweb 项目主页 <a href="https://github.com/limodou/uliweb" class="outter">https://github.com/limodou/uliweb</a></li>
 <li>Uliweb-doc 文档项目 <a href="http://github.com/limodou/uliweb-doc" class="outter">http://github.com/limodou/uliweb-doc</a></li>
 <li>Uliweb-doc 在线文档查看链接 <a href="http://limodou.github.com/uliweb-doc/" class="outter">http://limodou.github.com/uliweb-doc/</a></li>
-<li><p>plugs Uliweb apps收集项目 <a href="https://github.com/limodou/plugs" class="outter">https://github.com/limodou/plugs</a></p></li>
+<li>plugs Uliweb apps收集项目 <a href="https://github.com/limodou/plugs" class="outter">https://github.com/limodou/plugs</a></li>
 </ul>
 
-            
-            
-<div class="chapter-next chapter-down">
-    <a next-chapter href="./installation.html">安装说明 <i class="icon-arrow-right"></i></a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./introduction.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="./introduction.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -201,35 +177,56 @@
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
 <script src="./static/comment.js"></script>
 <script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -241,6 +238,8 @@
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

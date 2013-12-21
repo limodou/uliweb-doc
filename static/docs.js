@@ -15,15 +15,18 @@ $(function(){
     window.prettyPrint && prettyPrint()
 
     function setup_toc(){
-        if ($('#toc').size() > 0)
+        var toc = $('#toc');
+        if (toc.size() > 0)
         {
-            $('#toc').height(viewport().height - $('#toc').offset()['top'] - 40);
-                //.width($('#toc-container').width());
-            $('#toc').toc({
+            toc.toc({
                 'selectors': 'h2,h3', //elements to use as headings
                 'highlightOffset': 0, //offset to trigger the next headline
                 'offset': 0
             });
+            var h = viewport().height - $('#toc').offset()['top'] - 40;
+            if (h < toc.height())
+                toc.height(h);
+            toc.stick_in_parent();
         }
     }
     
@@ -32,7 +35,7 @@ $(function(){
     $(window).resize(function(){
         setup_toc();
     });
-   
+     
      //add code comment process
      $('pre, .inline-tag').code_comment();
      

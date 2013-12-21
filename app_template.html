@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="./static/docs.css"/>
 <link href="./static/asset/prettify.css" rel="stylesheet">
 <link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
@@ -29,55 +23,37 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="./app_rbac.html"><i class="icon-arrow-left"></i> rbac(权限控制)</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./app_upload.html">upload(文件上传及显示处理) <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">template<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">template<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb中已经可以自动处理模板了，为什么还要提供template功能？它的作用有以下几点:</p>
 <ol>
 <li>提供了一些有关模板处理的配置项</li>
-<li><p>为模板添加了两个新的tag：use和link</p></li>
+<li>为模板添加了两个新的tag：use和link</li>
 </ol>
 <h2 id="title_1-1">模板处理的配置项<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>打开uliweb.contrib.template的settings.ini，可以看到:</p>
-<pre class="prettyprint linenums"><code>[TEMPLATE]
+<pre class="prettyprint"><code>[TEMPLATE]
 USE_TEMPLATE_TEMP_DIR = False
 TEMPLATE_TEMP_DIR = 'tmp/templates_temp'
 RAISE_USE_EXCEPTION = True</code></pre>
@@ -95,23 +71,23 @@ RAISE_USE_EXCEPTION = True</code></pre>
 </dl><h2 id="title_1-2">use 标签<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>在处理静态文件时，如css, js文件，比较麻烦的就是你要手工将相关的链接信息写入html中，不仅你要考虑哪些css和js要导入，它们的顺序是如何的，有可能还要考虑对于依赖其它的app的静态文件的处理，比如某个ui组件是依赖于jquery的，应如何处理和避免重复引入。因此template use设计了一种动态导入静态链接的功能，并且可以支持依赖app的静态链接导入。</p>
 <p>use 的语法形式为:</p>
-<pre class="prettyprint linenums"><code>{{use "name"}}
+<pre class="prettyprint"><code>{{use "name"}}
 {{use "name", value1, var2=value2}}</code></pre>
 <p>use后面为要导入的模块名，并且根据需要可以添加相应的变量。可以是位置参数或关键字参数。一般来说use相关的模板都是由app的提供者写好的，用户只是按要求使用即可。</p>
 <h3 id="title_1-2-1">使用use的好处<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <p>你可以自由在模板中使用{{use}}，根据use定义的次序，uliweb会自动安排返回的css, js等代码的顺序。并且会去除重复的内容。如多次使用相同的{{use}}不会有重复的内容出现。并且，它可以自动检查<head>中已经存在的链接，避免重复。</p>
 <p>你可以主动定义链接插入的位置，有两种：toplinks和bottomlinks。它们的写法是:</p>
-<pre class="prettyprint linenums"><code>&lt;!-- toplinks --&gt;
+<pre class="prettyprint"><code>&lt;!-- toplinks --&gt;
 &lt;!-- bottomlinks --&gt;</code></pre>
 <p>你可以把它们定义在模板中的任何地方。如果没有定义，那么分两种情况：</p>
 <ol>
 <li>存在<head>标签，则toplinks对应于<head>之后。bottomlinks对应于</head>之前。</li>
-<li><p>不存在<head>标签，则全部显示在最前面。</p></li>
+<li>不存在<head>标签，则全部显示在最前面。</li>
 </ol>
 <h3 id="title_1-2-2">use 使用说明<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>name为模块名，它需要定义在某个app的 <code>template_plugins</code> 目录下，这个目录需要是Python的package的写法(即目录下有一个 <code>__init__.py</code>)，文件主名和name是一致，如，name为jquery，则文件名为jquery.py。</p>
 <p>以jqutils.py为例，在plugs/ui/jquery/jquitls.py中:</p>
-<pre class="prettyprint linenums"><code>def call(app, var, env, ajaxForm=False, hoverIntent=False, spin=False):
+<pre class="prettyprint"><code>def call(app, var, env, ajaxForm=False, hoverIntent=False, spin=False):
     a = []
     a.append('jqutils/jqutils.css')
     if spin:
@@ -124,26 +100,26 @@ RAISE_USE_EXCEPTION = True</code></pre>
         a.append('jqutils/jquery.hoverIntent.minified.js')
     return {'toplinks':a, 'depends':[('jquery', {'ui':True})]}</code></pre>
 <p>你只要在某个.py中定义一个call函数，use标签在找到后，会自动调用。其中app, var, env是use会根据模板运行环境来提供。后面的参数是与{{use "name",xxxx}}中定义的参数相对应的。use会自动把name后的参数传入到call函数中。</p>
-<div class="alert alert-info">
+<div class="ui info message">
 <p>因为uliweb的模板是编译后运行的，因此use中传入的参数只会在编译时生效，在运行时就无效了。所以对于运行时才生效的变量应该通过在view中传入或在模板中进行定义。</p>
 
 </div><p>在call中，你可以修改env，这样可以添加新的变量，不过目前很少有这么做的。另一个主要的作用就是返回链接信息。这些链接信息可以是.css, .js文件，比如上面的'jqutuils/spin.min.js'。use标签会自动根据后缀是.css, .js的转为静态的链接。其它的保持不变，因此你可以使用:</p>
-<pre class="prettyprint linenums"><code>a.append('&lt;!--[if lt IE 9]&gt;')
+<pre class="prettyprint"><code>a.append('&lt;!--[if lt IE 9]&gt;')
 a.append('bootstrap/asset/html5.js')
 a.append('&lt;![endif]--&gt;')
 a.append('bootstrap/bootstrap.min.css')</code></pre>
 <p>传入一些代码片段。</p>
 <p>返回时，需要是一个dict，它有两个key，一个是 'toplinks', 一个是 'bottomlinks'。这是和前面所说的toplinks和bottomlinks的定义对应的。同时返回的dict中还可以包含depends或depends_after键字，它是用来指示外部依赖模块的。它的写法就是:</p>
-<pre class="prettyprint linenums"><code>'depends':['name1', 'name2']
+<pre class="prettyprint"><code>'depends':['name1', 'name2']
 'depends':[('name1', {'var1':'value1'})]</code></pre>
 <p>有两种主要写法。第一种是列出外部依赖的use模块，全部是使用缺省参数调用，即只传入app, var, env。第二种是带参数的依赖写法，每项内容为一个tuple，第一个元素是模块名，第二个是一个dict，列出相关要传入的参数。</p>
-<div class="alert alert-info">
+<div class="ui info message">
 <p>depends用于定义所依赖的模块在本模块之前被定义。而depends_after用于定义所依赖的模块在当前模块之后被定义，例如:less.js的处理就要在.less文件之后被定义。</p>
 
 </div>
 <h3 id="title_1-2-3">use 配置化(0.1.6新増)<a class="anchor" href="#title_1-2-3">&para;</a></h3>
 <p>在0.1.6之前，我们都需要在template_plugins 下写一个py文件。复杂情况下没有问题，不过 有时处理是很简单的，只是添加一些文件而已，所以在0.1.6中添加了将信息配置到settings.ini 中的能力。配置示例如下:</p>
-<pre class="prettyprint linenums"><code>[TEMPLATE_USE]
+<pre class="prettyprint"><code>[TEMPLATE_USE]
 name = {
    'toplinks':[
        'myapp/jquery.myapp.{version}.min.js',
@@ -161,7 +137,7 @@ name = {
 <dd><p>和在py文件中的写法是一样的。但是对于toplinks和bottomlinks，其中可以带有 <code>{xxx}</code> 这样的参数。那么它们将按这样的规则被处理:</p>
 <ul>
 <li>config 为参数的配置项，它将从settings.ini中读取</li>
-<li><p>default 为参数的缺省值，如果没有对应的settings.ini的值，将使用它。如果它也     没有，则值为 <code>''</code> 。</p></li>
+<li>default 为参数的缺省值，如果没有对应的settings.ini的值，将使用它。如果它也     没有，则值为 <code>''</code> 。</li>
 <li>如果用户在使用 use 时传入了 key-words 参数，则以用户传入的为准。</li>
 </ul>
 </dd>
@@ -169,24 +145,22 @@ name = {
 <p>这种用法适合于简单的情况，如果带有判断，还是要写为py文件的形式。</p>
 <h2 id="title_1-3">link 标签<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>使用use是需要有人预先写好相关的模块，它的好处是可以一次性返回多个.css, .js的信息。但是有些情况可有很简单，那么就可以考虑使用link标签，格式为:</p>
-<pre class="prettyprint linenums"><code>{{link 'path/to/xxx.css', media='screen', to='toplinks'}}</code></pre>
+<pre class="prettyprint"><code>{{link 'path/to/xxx.css', media='screen', to='toplinks'}}</code></pre>
 <p>其中media对应是'screen'或'print'，缺省为'screen'。to用来指示是输出到toplinks还是bottomlinks。缺省是'toplinks'。</p>
 
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="./app_rbac.html"><i class="icon-arrow-left"></i> rbac(权限控制)</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./app_template.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="./app_upload.html">upload(文件上传及显示处理) <i class="icon-arrow-right"></i></a>
-</div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="./app_template.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -201,35 +175,56 @@ name = {
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
 <script src="./static/comment.js"></script>
 <script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -241,6 +236,8 @@ name = {
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

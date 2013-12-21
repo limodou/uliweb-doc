@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="../static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
-<link href="../static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="../static/docs.css"/>
 <link href="../static/asset/prettify.css" rel="stylesheet">
 <link href="../static/toc/toc.css" rel="stylesheet">
-<link href="../static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="../static/parm.css"/>
 <link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
 
@@ -29,51 +23,33 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="../index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="../index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            
+    <div class="twelve wide column" id="markdown-content">
+    
+        
 <div class="chapter-next chapter-top">
     <a next-chapter href="../articles/xhr_redirect_json.html">重定向在异步请求中的处理实现 <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">CSS，JS合并与压缩<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">CSS，JS合并与压缩<a class="anchor" href="#title_1">&para;</a></h1>
 <p>在前端处理中，我们需要通过引入js,css来实现丰富的界面展示和交互功能，但是有时因为 使用众多的开源组件，造成我们的页面中存在大量的css和js文件。文件越多，与服务器交互 的次数越多，对整个的处理性能都有影响。因此现在有许多的方法来减少资源文件的数量 或延迟装载。在Uliweb中实现了一种简单的资源文件合并的支持，下面详细为大家介绍它 的使用方法。</p>
 <h2 id="title_1-1">使用与配置<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Uliweb的静态文件合并压缩只能处理css和js的压缩。使用它的前提是我们在模板中要使用 <code>{{use}}</code> 和 <code>{{link}}</code> 来引用静态文件。这样在后续的处理中，才可以自动对资源链接进行 替换。</p>
 <p>在我们使用 <code>{{use}}</code> 或 <code>{{link}}</code> 来引入资源时，uliweb会自动将对应的静态文件保 存到一个全局数组中。</p>
 <p>然后我们需要在settings中定义:</p>
-<pre class="prettyprint linenums"><code>[STATIC_COMBINE]
+<pre class="prettyprint"><code>[STATIC_COMBINE]
 1 = ['jquery/jquery-1.7.2.min.js', 'jsutils/json2.js']
 
 #jquitls
@@ -90,32 +66,32 @@
 <p>这样的信息，其中 <code>STATIC_COMBINE</code> 表示以下定义的是资源文件如何打包的规则。上面 只是示例，你要根据实际情况来定义自已的组合。涵义比较简单：</p>
 <ul>
 <li>key没有特别要求，不重复就好</li>
-<li><p>值是一个list，同类的要放到一起</p></li>
+<li>值是一个list，同类的要放到一起</li>
 </ul>
 <p>uliweb的template app在启动时，会自动根据文件名数组生成md5值，并且添加 名为 <code>_cmb_</code> 的前缀。因为每个合并资源的数组内容不同，所以生成的md5值也不同。 但是，如果文件名没变，则md5的值也不会变。所以通过 md5 我们可以为每组资源生成 一个key，这个key就是合并后的文件名的主要部分。</p>
 <p>再说 <code>{{use}}</code> 。在调用时，一旦发现settings中有 <code>STATIC_COMBINE</code> ，则对引入的 每个资源文件名进行处理，检查这个文件名是否在 <code>STATIC_COMBINE</code> 的某个值的数组中 存在，如果存在，表示可以使用这组对应的合并资源文件名进行替換。所以最终的输出就 替換为对应的资源文件名。如果没找到，则原样输出。</p>
 <p>这样用户可以根据需要，将不同的资源文件进行分组，进行压缩和替換，从而减少页面中 的资源引用的数量。</p>
 <h2 id="title_1-2">生成压缩文件<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>上面只完成了定义和替換工作，我们还需要通过某种方式将组件的资源文件真正合成我们 需要的结果文件。在命令行下使用：</p>
-<pre class="prettyprint linenums"><code>uliweb exportstatic --auto static</code></pre>
+<pre class="prettyprint"><code>uliweb exportstatic --auto static</code></pre>
 <p>这里 <code>--auto</code> 表示自动进行css和js的压缩。在uliweb中自动压缩模块，它们是使用 rminjs和rmincss来实现的。 <code>exportstatic</code> 命令会根据settings中的分组定义的信息 来生成不同的md5值，然后添加对应的 <code>_cmb_</code> 前缀和对应的 <code>.css</code> 或 <code>.js</code> 后缀， 这样就和 <code>{{use}}</code> 中使用 的是一致的。在执行时，命令首先会将以前生成的所有 <code>_cmb_</code> 开头的文件全部清除，再 生成新的结果文件。同时会以相同的文件主名生成 <code>.txt</code> 后缀的文本文件，将用来记录 哪些css或js文件合并到了这个文件中。这样如果有什么问题，可以查看内容来了解都合并 了哪些文件。</p>
 <h2 id="title_1-3">特别说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>一般 uliweb在定义静态文件时，会在每个app下的static下创建与app名字相同的子目录， 然后将静态文件放在这个目录，其目的是为了避免可能存在的同名冲突。但是压缩后， 原本可能在不同的目录下的文件会合并到一个文件中，并且输出到新的目录下，所以，原 来子目录的关系到了新的静态文件中可能就有存在问题。所以对于css中引入了其它的静态 资源的情况，如 <code>url(xxxxx)</code> ，uliweb会自动修改路径。但是如果js中也存在路径的问 题，则需要用户自已来解决。解决的方法：如使用绝对路径。这种方法也可以用在css文件中，即不 使用相对路径。但是这种做法，会修改引入的源文件，一旦升级还要再次修改，不是特别方便。 所以请用户自行选择。简单情况下，uliweb的处理应该可以满足要求。</p>
 <p>为了实现url的替換，uliweb是在原来的rmincss基础之上进行了修改，以便支持在原来的 url处理时合并指定路径的功能。</p>
 
-            
-            
-<div class="chapter-next chapter-down">
-    <a next-chapter href="../articles/xhr_redirect_json.html">重定向在异步请求中的处理实现 <i class="icon-arrow-right"></i></a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="../articles/css_js_combine.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="../articles/css_js_combine.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -130,35 +106,56 @@
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="../static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../static/semantic/javascript/semantic.min.js"></script>
 <script src="../static/asset/prettify.js"></script>
 <script src="../static/toc/toc.js"></script>
 <script src="../static/docs.js"></script>
 <script src="../static/comment.js"></script>
 <script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -170,6 +167,8 @@
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

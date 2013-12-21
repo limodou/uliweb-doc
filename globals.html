@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="./static/docs.css"/>
 <link href="./static/asset/prettify.css" rel="stylesheet">
 <link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
@@ -29,51 +23,33 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="./architecture.html"><i class="icon-arrow-left"></i> 体系结构和机制</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./update.html">Uliweb 更新日志 <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">全局环境<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">全局环境<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb提供了必要的运行环境和运行对象，因此我称之为全局环境。</p>
 <h2 id="title_1-1">对象<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>有一些全局性的对象可以方便地从 uliweb 中导入，如:</p>
-<pre class="prettyprint linenums"><code>from uliweb import (application, request, response,
+<pre class="prettyprint"><code>from uliweb import (application, request, response,
     settings, Request, Response)</code></pre>
 <h3 id="title_1-1-1">application<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>它是用来记录整个Uliweb项目的运行实例，全局唯一。application是 <code>uliweb.core.SimpleFrame.Dispatcher</code> 的实例，它有一些属性和方法可以让你使用，例如：</p>
@@ -106,7 +82,7 @@
 </blockquote>
 <h3 id="title_1-1-4">request<a class="anchor" href="#title_1-1-4">&para;</a></h3>
 <p>request 是上面 Request 类的实例的一个代理对象，并不是一个真正的 Request 对象， response 也是。但是你可以把它当成真正的 Request 和 Response 一样来使用。那么为什 么要这样，为了方便。真正的 Request 和 Response 对象会在收到一个请求时被创建 ，然后存放到 local 中，这样不同的线程将有不同实例。为了方便使用，采用代理方式， 这样用户就不用直接调用 local.reuqest 和 local.response ，而是简单使用 request 和 response 就可以根据不同的线程使用不同的对象了。</p>
-<div class="alert alert-info">
+<div class="ui info message">
 <p>request和response是有生存周期的，就是在收到请求时创建，在返回后失效。因此在使用它们 时，要确保你是在它们的生存周期中进行使用的。</p>
 
 </div><p>在讲View的环境时提到过：写一个view方法时有一些对象可以认为是全局的，其中就包括request和 response，但是这两个对象与其它的不同就是因为它是线程相关并且有生存周期的，其它的则是全局唯 一，并且生存周期是整个运行实例的生存周期。这样，在非view函数中想要使用request和response 对象，一种方式就是在view中传入，但是可能有些麻烦，另一种方式就是通过uliweb来导入，这样就 很方便。</p>
@@ -117,32 +93,32 @@
 <li><code>request.rule</code> 表示解析出来的Rule对象。它是Rule的实例。其中 request.rule.endpoint 为对应的view方法路径。</li>
 <li><code>request.function</code> 表示view函数名</li>
 <li><code>request.session</code> 如果安装了session App，则会自动将session对象绑定到request上。</li>
-<li><p><code>request.user</code> 如果安装了auth App，则会自动将用户对象绑定到request上。</p></li>
+<li><code>request.user</code> 如果安装了auth App，则会自动将用户对象绑定到request上。</li>
 </ul>
 <h3 id="title_1-1-5">response<a class="anchor" href="#title_1-1-5">&para;</a></h3>
 <p>和request一样是一个代理对象。</p>
 <p>特殊属性说明(非Werkzeug的属性)：</p>
 <ul>
-<li><p><code>request.template</code> 用于重新指派渲染使用的模板</p></li>
+<li><code>request.template</code> 用于重新指派渲染使用的模板</li>
 </ul>
 <h3 id="title_1-1-6">settings<a class="anchor" href="#title_1-1-6">&para;</a></h3>
 <p>配置信息对象，这个没什么好说的。</p>
 <h2 id="title_1-2">方法<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>如:</p>
-<pre class="prettyprint linenums"><code>from uliweb import (redirect, json, POST, GET,
+<pre class="prettyprint"><code>from uliweb import (redirect, json, POST, GET,
     url_for, expose, get_app_dir, get_apps, function,
     functions, decorators, NotFound
     )</code></pre>
 <h3 id="title_1-2-7">redirect<a class="anchor" href="#title_1-2-7">&para;</a></h3>
-<pre class="prettyprint linenums"><code>def redirect(location, code=302):</code></pre>
+<pre class="prettyprint"><code>def redirect(location, code=302):</code></pre>
 <p>返回一个Response对象，用于实现URL跳转.</p>
 <h3 id="title_1-2-8">Redirect(0.1.4)<a class="anchor" href="#title_1-2-8">&para;</a></h3>
-<pre class="prettyprint linenums"><code>Redirect(location)</code></pre>
+<pre class="prettyprint"><code>Redirect(location)</code></pre>
 <p>直接抛出异常，Uliweb捕获后将实现跳转。同时支持在跳转前session的保存。可以作为 redirect的替換。</p>
 <h3 id="title_1-2-9">json<a class="anchor" href="#title_1-2-9">&para;</a></h3>
-<pre class="prettyprint linenums"><code>def json(data, **json_kwargs):</code></pre>
+<pre class="prettyprint"><code>def json(data, **json_kwargs):</code></pre>
 <p>将一个data处理成json格式，并返回一个Response对象。json_kwargs目前可以允许用户传 入 <code>content_type</code> 值。这样在特殊情况下可以将生成的json数据生成:</p>
-<pre class="prettyprint linenums"><code>content_type = 'text/html; charset=utf-8'</code></pre>
+<pre class="prettyprint"><code>content_type = 'text/html; charset=utf-8'</code></pre>
 <h3 id="title_1-2-10">expose<a class="anchor" href="#title_1-2-10">&para;</a></h3>
 <p>详见 <a href="url_mapping.html" class="inner">URL映射</a></p>
 <h3 id="title_1-2-11">POST<a class="anchor" href="#title_1-2-11">&para;</a></h3>
@@ -150,40 +126,40 @@
 <h3 id="title_1-2-12">GET<a class="anchor" href="#title_1-2-12">&para;</a></h3>
 <p>和expose一样，不过限定访问方法为 GET。</p>
 <h3 id="title_1-2-13">url_for<a class="anchor" href="#title_1-2-13">&para;</a></h3>
-<pre class="prettyprint linenums"><code>def url_for(endpoint, **values):</code></pre>
+<pre class="prettyprint"><code>def url_for(endpoint, **values):</code></pre>
 <p>根据endpoint可以反向获得URL，endpoint可以是字符串格式，如: <code>Hello.view.index</code> ， 也可以 是真正的函数对象。</p>
 <h3 id="title_1-2-14">get_app_dir<a class="anchor" href="#title_1-2-14">&para;</a></h3>
-<pre class="prettyprint linenums"><code>def get_app_dir(app):</code></pre>
+<pre class="prettyprint"><code>def get_app_dir(app):</code></pre>
 <p>根据一个app名字取得它对应的目录。</p>
 <h3 id="title_1-2-15">get_apps<a class="anchor" href="#title_1-2-15">&para;</a></h3>
-<pre class="prettyprint linenums"><code>def get_apps(apps_dir, include_apps=None):</code></pre>
+<pre class="prettyprint"><code>def get_apps(apps_dir, include_apps=None):</code></pre>
 <p>根据一个apps目录，分析出所有可用的App的名字列表。</p>
 <h3 id="title_1-2-16">function(Deprecated)<a class="anchor" href="#title_1-2-16">&para;</a></h3>
 <p><em>建议使用functions</em></p>
-<pre class="prettyprint linenums"><code>func = function('function_name')</code></pre>
+<pre class="prettyprint"><code>func = function('function_name')</code></pre>
 <p>用户可以在settings.ini中配置供外部使用的函数路径，通过function可以获得这个函数 的对象。例如在settings.ini中如下配置:</p>
-<pre class="prettyprint linenums"><code>[FUNCTIONS]
+<pre class="prettyprint"><code>[FUNCTIONS]
 has_role = 'uliweb.contrib.rbac.has_role'
 has_permission = 'uliweb.contrib.rbac.has_permission'</code></pre>
 <p>这是uliweb.contrib.rbac中的定义的两个方法，key为方法名，value为方法的路径。 通过:</p>
-<pre class="prettyprint linenums"><code>has_role = function('has_role')</code></pre>
+<pre class="prettyprint"><code>has_role = function('has_role')</code></pre>
 <p>就可以导入真正的函数来使用。</p>
 <h3 id="title_1-2-17">functions<a class="anchor" href="#title_1-2-17">&para;</a></h3>
 <p>这是一个对象，它的作用类似于function，不过它是以属性引用的方式来从settings.ini 中的FUNCTIONS中导入方法，如:</p>
-<pre class="prettyprint linenums"><code>from uliweb import functions
+<pre class="prettyprint"><code>from uliweb import functions
 
 func = functions.hello</code></pre>
 <p>相当于:</p>
-<pre class="prettyprint linenums"><code>from uliweb import function
+<pre class="prettyprint"><code>from uliweb import function
 
 func = function('hello')</code></pre>
 <h3 id="title_1-2-18">decorators<a class="anchor" href="#title_1-2-18">&para;</a></h3>
 <p>它同functions类似的使用方法，但是需要在settings.ini中定义DECORATORS内容，如:</p>
-<pre class="prettyprint linenums"><code>[DECORATORS]
+<pre class="prettyprint"><code>[DECORATORS]
 check_role = 'uliweb.contrib.rbac.check_role'
 check_permission = 'uliweb.contrib.rbac.check_permission'</code></pre>
 <p>使用方法:</p>
-<pre class="prettyprint linenums"><code>from uliweb import decorators
+<pre class="prettyprint"><code>from uliweb import decorators
 
 @decorators.check_role('superuser')
 @expose('/hello')
@@ -209,25 +185,23 @@ def hello():
 <p>它主要是用在以类的方式继承另一个类时，对原有方法进行替換时使用。</p>
 <h2 id="title_1-3">全局对象配置<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>我们已经可以从 <code>from uliweb import *</code> 中获得许多的对象和方法，如果我们也想将 其它的对象可以通过 <code>from uliweb import xxx</code> 的形式来导入，要如何做呢？可以 在 <code>settings.ini</code> 中添加以下内容:</p>
-<pre class="prettyprint linenums"><code>[GLOBAL_OBJECTS]
+<pre class="prettyprint"><code>[GLOBAL_OBJECTS]
 your_object_name = 'your.object.path'</code></pre>
 <p>其中，每项中的 key 是对象的名字，值是对象的路径。</p>
 
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="./architecture.html"><i class="icon-arrow-left"></i> 体系结构和机制</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./globals.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="./update.html">Uliweb 更新日志 <i class="icon-arrow-right"></i></a>
-</div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="./globals.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -242,35 +216,56 @@ your_object_name = 'your.object.path'</code></pre>
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
 <script src="./static/comment.js"></script>
 <script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -282,6 +277,8 @@ your_object_name = 'your.object.path'</code></pre>
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>

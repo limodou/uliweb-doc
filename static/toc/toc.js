@@ -71,7 +71,7 @@ $.fn.toc = function(options) {
   return this.each(function() {
     //build TOC
     var el = $(this);
-    var ul = $('<ul/>');
+    var ul = $('<ul />');
     headings.each(function(i, heading) {
       var $h = $(heading);
       headingOffsets.push($h.offset().top - opts.offset - opts.highlightOffset);

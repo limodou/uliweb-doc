@@ -7,16 +7,10 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<!--[if lt IE 9]>
-<script type="text/javascript" src="./static/asset/html5.js"></script>
-<![endif]-->
-
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link href="./static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
 <link rel="stylesheet" href="./static/docs.css"/>
 <link href="./static/asset/prettify.css" rel="stylesheet">
 <link href="./static/toc/toc.css" rel="stylesheet">
-<link href="./static/bootheme.css" rel="stylesheet">
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
@@ -29,53 +23,35 @@
 <!-- Navbar
 ================================================== -->
 <div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="brand" href="./index.html">Uliweb-Doc</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
-          
-          <li class="active" id="menu_home"><a href="./index.html"><span>Home</span></a></li>
-          
-        </ul>
-      </div>
-    </div>
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
   </div>
 </div>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span3" id="topic">
-      <div id="toc" class="content"></div>
-    </div>
-    <div class="span9" id="article">
-      <div class="outter">
+<div class="ui divided grid">
+    <div class="four wide column">
+        <div id="toc" class="content"></div>
+    </div> 
     
-          <div class="outter-inner" id="markdown-content">
-            <div class="expander">
-              <div>&laquo;</div>
-            </div>
-            
-            <div class="chapter-prev chapter-top">
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
     <a prev-chapter href="./app_auth.html"><i class="icon-arrow-left"></i> auth(用户认证处理)</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./app_template.html">template <i class="icon-arrow-right"></i></a>
 </div>
-
-            <h1 id="title_1">rbac(权限控制)<a class="anchor" href="#title_1">&para;</a></h1>
+        
+        <h1 id="title_1">rbac(权限控制)<a class="anchor" href="#title_1">&para;</a></h1>
 <p>RBAC是基于角色控制的英文简写。在Uliweb中，提供了一个rbac的模块，它将提供一个基本的Role(角色表)和Permission(权限表)，以及它们之间的关系。Role和Permission之间是多对多的关系。同时Role有指向User表的引用。</p>
 <h2 id="title_1-1">原理<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>为了保证操作的安全性，我们通常会在某些重要的操作上设置权限来控制，比如重要的链接或按钮，重要的 URL 上，前者相当于在界面上进行控制，后者相当于在服务上进行控制。在通常情况下，我们需要在展示和后台处理上都添加权限控制，以便防止用户通过程序的方式来进行攻击。</p>
 <p>这里权限说得还是有些笼统，细分起来，我们可以通过角色或权限来控制。比如某个菜单，我们允许某个角色的用户可以访问，也可以设计成具有某种权限的角色可以访问。到底用哪个，这个取决于你的需求和设计。</p>
 <p>在Uliweb中，角色、权限和用户之间的关系如下:</p>
-<pre class="prettyprint linenums"><code>Permission m:n Role m:n User</code></pre>
+<pre class="prettyprint"><code>Permission m:n Role m:n User</code></pre>
 <p>可以看出， Permission 和 User 之间没有直接的关系。在简单情况下可以只使用角色来判断，如只区分超级用户、登录用户和匿名用户可能就足够了。因此 Permission 可能就不需要使用。在复杂情况下，使用 Permission 可能更方便，配置起来也灵活。</p>
 <h2 id="title_1-2">只使用auth app来判断基本用户角色<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>这里基本用户角色我定义为：超级用户、登录用户和匿名用户。</p>
@@ -112,20 +88,20 @@
 <p>在最简单情况下，你可能只使用auth就足够了，那么我们看看rbac会带给我们什么呢？</p>
 <h2 id="title_1-3">rbac app的安装<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>首先是在settings.ini中安装app，如:</p>
-<pre class="prettyprint linenums"><code>INSTALLED_APPS = [
+<pre class="prettyprint"><code>INSTALLED_APPS = [
 #...
 'uliweb.contrib.rbac',
 #...
 ]</code></pre>
 <p>然后需要在命令行执行:</p>
-<pre class="prettyprint linenums"><code>uliweb syncdb #用来创建相关的表
+<pre class="prettyprint"><code>uliweb syncdb #用来创建相关的表
 uliweb dbinit uliweb.contrib.rbac #初始化相应的权限数据</code></pre>
 <p>rbac 允许将初始的 Role, Permission 和相应的关系等写在 settings.ini 中，然后通过 dbinit 命令来进行数据装入。并且角色和权限的装入可以多次执行，它只会覆盖，不删除。</p>
 <h2 id="title_1-4">rbac的配置<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>用户可以把 rbac 相关的信息配置在 settings.ini 中，然后通过 <code>dbinit uliweb.contrib.rbac</code> 将相关的数据导入进数据库中，主要可以使用的配置如下：</p>
 <h3 id="title_1-4-1">ROLES<a class="anchor" href="#title_1-4-1">&para;</a></h3>
 <p>ROLES用来配置角色信息，如:</p>
-<pre class="prettyprint linenums"><code>[ROLES]
+<pre class="prettyprint"><code>[ROLES]
 superuser = _('Super User'), 'uliweb.contrib.rbac.superuser', True
 anonymous = _('Anonymous User'), 'uliweb.contrib.rbac.anonymous', True
 trusted = _('Trusted User'), 'uliweb.contrib.rbac.trusted', True</code></pre>
@@ -141,7 +117,7 @@ trusted = _('Trusted User'), 'uliweb.contrib.rbac.trusted', True</code></pre>
 <dd><p>登录用户</p>
 </dd>
 </dl><p>ROLES每项的定义格式如:</p>
-<pre class="prettyprint linenums"><code>role_name = display_name [, 'role_function_path' [, reserved_flag]]</code></pre>
+<pre class="prettyprint"><code>role_name = display_name [, 'role_function_path' [, reserved_flag]]</code></pre>
 <dl>
 <dt>role_name</dt>
 <dd><p>是角色的名字，应该为英文标识符。</p>
@@ -158,28 +134,28 @@ trusted = _('Trusted User'), 'uliweb.contrib.rbac.trusted', True</code></pre>
 </dl><p>关于如何判断一个用户是否某个角色，下面会详细解释，这里先不细说。</p>
 <h3 id="title_1-4-2">PERMISSIONS<a class="anchor" href="#title_1-4-2">&para;</a></h3>
 <p>PERMISSIONS用来定义权限信息，在rbac/settings.ini中没有缺省权限，示例如下:</p>
-<pre class="prettyprint linenums"><code>[PERMISSIONS]
+<pre class="prettyprint"><code>[PERMISSIONS]
 write = _('Write Permission')</code></pre>
 <p>它的定义很简单，就是权限名和权限名的显示文本。</p>
 <h3 id="title_1-4-3">ROLES_PERMISSIONS<a class="anchor" href="#title_1-4-3">&para;</a></h3>
 <p>ROLES_PERMISSIONS用来定义角色和权限之间的关系，如:</p>
-<pre class="prettyprint linenums"><code>[ROLES_PERMISSIONS]
+<pre class="prettyprint"><code>[ROLES_PERMISSIONS]
 permission_name = role
 permission_name = role1, role2, ...
 permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 <p>上面是一个示例，有几种定义形式， key 为权限名， value 为角色的列表，可以是单个角色名，也可以是多个角色名，值为 tuple 或 list 。也可以是 tuple 形式的列表。如果是最后一种，则第一个元素是角色名，第二个是这个角色对应权限的附加属性。</p>
-<div class="alert alert-info">
+<div class="ui info message">
 <p>什么是附加属性？通常的权限与角色关系，我们可能只关心一个角色有什么样的权限就够了。但是对于特殊的场合，如审批处理，不同的角色可能审批的额度不同，但是对于只使用角色与权限关系的定位方式就无法定义不同的额度值来，因此在 uliweb 设计 rbac 时，在关系表中还添加了一个附加的 props 字段，利用它可以定义一些特殊的值。不过，目前没有更多对它的处理， rbac 只是把它定义成为了 PICKLE 字段，用户可以存储任意的简单数据类型，如： int, str, dict, list 等。这只是留作以后扩展使用的。</p>
 
 </div>
-<div class="alert alert-info">
+<div class="ui info message">
 <p>在 settings.ini 中定义的上述内容，应该只是做为初始化数据时使用，在运行时不应直接使用 settings.ini 中的数据，而是通过 rbac 提供的方法或 Model 来处理。</p>
 
 </div>
 <h2 id="title_1-5">rbac使用的表结构说明<a class="anchor" href="#title_1-5">&para;</a></h2>
 <h3 id="title_1-5-4">Permission<a class="anchor" href="#title_1-5-4">&para;</a></h3>
 <p>权限表</p>
-<pre class="prettyprint linenums"><code>class Permission(Model):
+<pre class="prettyprint"><code>class Permission(Model):
     name = Field(str, max_length=80, required=True)
     description = Field(str, max_length=255)
     props = Field(PICKLE)</code></pre>
@@ -196,7 +172,7 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 </dd>
 </dl><h3 id="title_1-5-5">Role<a class="anchor" href="#title_1-5-5">&para;</a></h3>
 <p>角色表</p>
-<pre class="prettyprint linenums"><code>class Role(Model):
+<pre class="prettyprint"><code>class Role(Model):
     name = Field(str, max_length=80, required=True)
     description = Field(str, max_length=255)
     reserve = Field(bool)
@@ -222,7 +198,7 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 </dd>
 </dl><h3 id="title_1-5-6">Role_Perm_Rel<a class="anchor" href="#title_1-5-6">&para;</a></h3>
 <p>角色和权限的关系表</p>
-<pre class="prettyprint linenums"><code>class Role_Perm_Rel(Model):
+<pre class="prettyprint"><code>class Role_Perm_Rel(Model):
     role = Reference('role')
     permission = Reference('permission')
     props = Field(PICKLE)</code></pre>
@@ -241,7 +217,7 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 <p>对于某一个角色，rbac支持不同的判断方式，主要有:</p>
 <ol>
 <li>通过role对应的用户来判断。即通过Role表的users字段来判断。</li>
-<li><p>通过 role 判断方法来判断。即你可以提供一个方法，并将其按前面 ROLES 配置的说明中描述所讲的那样进行配置，这样在判断一个角色时，会使用这个方法对传入的用户进行判断。</p></li>
+<li>通过 role 判断方法来判断。即你可以提供一个方法，并将其按前面 ROLES 配置的说明中描述所讲的那样进行配置，这样在判断一个角色时，会使用这个方法对传入的用户进行判断。</li>
 </ol>
 <p>对于 rbac 提供的缺省的 superuser, trusted, anonymous 就是采用这种方式来判断的。如果对于一个角色，两种方法都提供了，则会先使用方法进行判断，如果不满足，再按用户进行判断，直到都不满足条件。其中只要有一个满足条件，就认为用户拥有某个用户的身份。</p>
 <h2 id="title_1-7">动态角色和静态角色<a class="anchor" href="#title_1-7">&para;</a></h2>
@@ -250,7 +226,7 @@ permission_name = (role1, role_prop1),(role2, role_prop2)</code></pre>
 <p>另一种情况就是，除了有用户信息外，还需要知道当前所访问的对象和用户之间的关系，如论坛的某个版块的版主，必须是和某个版块关联时才知道，只有用户信息是不够的，象这种只能在运行时，根据用户与访问对象的关系才能判断出来的角色， uliweb 称之为**动态角色**.</p>
 <h2 id="title_1-8">role判断函数的编写<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>写法如下:</p>
-<pre class="prettyprint linenums"><code>def superuser(user):
+<pre class="prettyprint"><code>def superuser(user):
     return user and user.is_superuser
 
 #or
@@ -268,12 +244,12 @@ def manager(user, id):
 </dd>
 <dt>has_permission(user, *permission_names, **kwargs)</dt>
 <dd><p>用户要传入 user 对象和权限的名字，权限名可以是多个。同时如果有动态角色，还要传入动态角色判断方法所需要的其它的参数。</p>
-<div class="alert alert-info">
+<div class="ui info message">
 <p>为什么判断权限有可能还需要传入动态角色所需要的参数呢？因为，在has_permission 中是根据遍历权限所对应的所有角色，检查用户是否拥有其中某个角色来处理的。</p>
 
 </div></dd>
 </dl><p>以上两个方法可以在view或模块中进行使用。简单的方法通过:</p>
-<pre class="prettyprint linenums"><code>from uliweb import functions
+<pre class="prettyprint"><code>from uliweb import functions
 
 def index():
     if functions.has_role(request.user, 'superuser'):
@@ -290,7 +266,7 @@ def index():
 <dl>
 <dt>check_role(*roles, **args_map)</dt>
 <dd><p>它需要传入角色名，可以是多个。其中 args_map 是一个将 view 函数中的参数映射为动态角色所需要的参数。当然它只是在有动态角色参数的时候才需要使用。并且它有一个限制就是：所要映射的参数需要在 view 函数的参数中存在。例如</p>
-<pre class="prettyprint linenums"><code>def topic_manager(user, tid):
+<pre class="prettyprint"><code>def topic_manager(user, tid):
     """
     topic_manager是用来判断一个用户是否是某个主题的管理员，它需要一个tid
     的参数
@@ -309,7 +285,7 @@ def topic_view(topic_id):
 <dd><p>它这decorator和check_role类似，它是用来判断当前用户是否拥有某种权限。</p>
 </dd>
 </dl><p>当使用 decorator 方法时，如果验证失败，将会自动调用 error 函数显示一个出错页面。 error 会缺省调用 error.html 模板，内容为</p>
-<pre class="prettyprint linenums"><code>{{extend "layout.html"}}
+<pre class="prettyprint"><code>{{extend "layout.html"}}
 
 {{block content}}
 &lt;div class="content"&gt;
@@ -333,24 +309,22 @@ def topic_view(topic_id):
 <li>如果有自定义的角色，权限，并且希望通过命令行导入；或者角色的判断是通过函数实现的，则要在 settings.ini 中进行配置</li>
 <li>执行uliweb dbinit uliweb.contrib.rbac来装入数据</li>
 <li>在程序中调用 has_role, has_permission, check_role, check_permission 等方法检查用户权限</li>
-<li><p>使用plugs/rbac_main或用户自行开发的角色、权限管理模块来管理角色或权限</p></li>
+<li>使用plugs/rbac_main或用户自行开发的角色、权限管理模块来管理角色或权限</li>
 </ol>
 
-            
-            <div class="chapter-prev chapter-down">
-    <a prev-chapter href="./app_auth.html"><i class="icon-arrow-left"></i> auth(用户认证处理)</a>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./app_rbac.md">View Source</a>
+        </div>
+        
+    </div>
 </div>
-<div class="chapter-next chapter-down">
-    <a next-chapter href="./app_template.html">template <i class="icon-arrow-right"></i></a>
-</div>
-            
-            <div class="source">
-                <i class="icon-download"></i><a href="./app_rbac.md">View Source</a>
-            </div>
-            
-                                     
-             <!-- disqus -->
-             <div id="disqus_thread" style="margin:20px;"></div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -365,35 +339,56 @@ def topic_view(topic_id):
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-                         
-            
-          </div>
-          
-          
-        
-          <footer class="footer">
-  <div>
-    <p>Designed by Limodou, Copyright 2013, Limodou</p>
-    <p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
-  </div>
-</footer>
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
 
       </div>
-
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic</a>
+      </addr>
     </div>
   </div>
+
+    </div>
 </div>
 
 
-<script type="text/javascript" src="./static/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
 <script src="./static/comment.js"></script>
 <script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
    var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
 
@@ -405,6 +400,8 @@ def topic_view(topic_id):
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
 
 </body>
 </html>
