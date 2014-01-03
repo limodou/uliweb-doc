@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+
+<title>svg mimetype在uliweb中的设置 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="../index.html">Home</a>
+    
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
+    <a prev-chapter href="../articles/find_option.html"><i class="icon-arrow-left"></i> 查找配置项的定义</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../articles/tornado_support.html">Tornado的支持 <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">svg mimetype在uliweb中的设置<a class="anchor" href="#title_1">&para;</a></h1>
+<p>发现 <a href="https://github.com/limodou/plugs" class="outter">plugs</a>
+ 中的wiki在python 2.6下以img方式显示svg不正确，经检查是content-type不对，正确的应该是 image/svg+xml。但是在2.7下就是正确的。于是发现2.6缺省的mime列表不全。查看了mimetypes模块源码，大概是这样处理的：</p>
+<ol>
+<li>mimetypes会有自动检查系统中可能存放mimetypes的配置文件，它们可以放在如： /etc, usr/local/etc 等目录下，还可以直接识别象apache的标准安装目录下的mime.types文件。不过nginx的mime.types的格式和标准的不同，所以还无法直接识别。</li>
+<li>mimetypes模块已经内置了一些mimetypes的类型，存放在 types_map 变量中。它作为缺省值。可以和mimetypes的配置文件合并。而types_map中，在2.7版本下其实也不存在svg的配置。不过在windows下，还可以从注册表中获取。</li>
+<li>新的类型可以通过 <code>add_type(type, ext)</code> 来注册。</li>
+</ol>
+<p>在我的环境中，python是2.6，nginx中有svg的配置，标准的 <code>/etc/mime.types</code> 下没有。我使用的是nginx作为web server提供静态文件服务。如果只是使用nginx的静态文件，其实这个和python无关了，因为可以不经过python直接提供处理。</p>
+<p>但是有些下载要经过python的处理，如 <code>uliweb.contrib.upload</code> app提供的文件下载功能。因此还是需要让python能够正确识别mimetypes的。一种方式是在某个mime.types中添加新的类型，不过这种试对于新的环境仍然要修改。于是我在upload app中増加了 <code>MIME_TYPES</code> 的配置，如：</p>
+<pre class="prettyprint"><code>[MIME_TYPES]
+.svg = 'image/svg+xml'</code></pre>
+<p>每种后缀对应一个类型。这样就可以将mimetypes配置到应用中了。通用性比较好。</p>
+<p>不过，要注意，它只对应用有效。</p>
+<p>update:</p>
+<p>其实不是因为python版本的问题，而是环境问题。2.6和2.7中的mimetypes中的types_map其实都没有对svg的类型定义。我之所以出现这样的问题是2.7是在windows环境下，它可以从注册表中读mimetypes的信息。而2.6是在linux下，的确没有定义。</p>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="../articles/svg_mimetype_config.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="../static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
+<script src="../../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+    });
+});
+</script>
+</body>
+</html>

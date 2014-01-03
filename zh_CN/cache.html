@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
+<link href="./static/asset/prettify.css" rel="stylesheet">
+<link href="./static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+
+<title>Cache使用说明 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
+    <a prev-chapter href="./session.html"><i class="icon-arrow-left"></i> Session使用说明</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="./xmlrpc.html">XMLRPC 使用说明 <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">Cache使用说明<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">cache简介<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>cache是用来临时保存数据的一种机制，在处理某些计算复杂或比较耗时的数据时，如果数 据变动不频繁，如：博客，论坛等以读为主的内容，可以考虑将处理好的数据存在缓存中， 需要时读出来，以提高性能。目前Uliweb的cache支持多种后端，它采用和session相同的 存储机制，所以在uliweb中cache也是放在weto模块中。主要的配置方式与session非常接近， 目前主要支持的后端有：文件、数据库、Redis。</p>
+<h2 id="title_1-2">cache配置说明<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>在使用前需要先定装 <code>uliweb.contrib.cache</code> app。如:</p>
+<pre class="prettyprint"><code>[GLOBAL]
+INSTALLED_APPS = [
+...
+'uliweb.contrib.cache',
+...]</code></pre>
+<p>然后根据需要可以覆盖缺省的cache选项:</p>
+<pre class="prettyprint"><code>[CACHE]
+type = 'file'
+expiretime = 3600</code></pre>
+<dl>
+<dt>type</dt>
+<dd><p>表示session存储后端的类型，目前可用的值有：</p>
+<ol>
+<li>file 文件系统</li>
+<li>database 数据库</li>
+<li>redis redis数据库</li>
+</ol>
+</dd>
+<dt>expiretime</dt>
+<dd><p>超时时间。在使用cache时，用户可以手工设置每项key的超时时间，如果没有给出， 则使用缺省值。</p>
+</dd>
+</dl><pre class="prettyprint"><code>[CACHE_STORAGE]
+data_dir = './caches'
+file_dir = './caches/cache_files'
+lock_dir = './caches/cache_files_lock'</code></pre>
+<p>针对不同的后端要设置的参数。对于不同的后端类型，需要设置的参数不同，上面为'file' 方式的后端参数。下面根据不同类型分别列出所需要的参数:</p>
+<ol>
+<li><p>file</p>
+<dl>
+<dt>data_dir</dt>
+<dd>
+</dd>
+</dl><p>是cache文件保存的目录</p>
+<dl>
+<dt>file_dir</dt>
+<dd>
+</dd>
+</dl><p>是cache数据文件保存的目录。每个cache对象将保存到一个文件中。如果没     有指定，它将是data_dir + '/session_files'目录。</p>
+<dl>
+<dt>lock_dir</dt>
+<dd>
+</dd>
+</dl><p>是读写cache文件时所使用的文件锁目录。如果没有指定，它将是data_dir + '/session_files_lock'。</p></li>
+<li><p>datebase</p>
+<dl>
+<dt>url</dt>
+<dd>
+</dd>
+</dl><p>sqlalchemy数据库连接串，和ORM一致。详情可以看ORM的文档或sqlalchemy的文档。</p>
+<dl>
+<dt>table_name</dt>
+<dd>
+</dd>
+</dl><p>cache的表名。缺省为'session'。注意，因为cache使用的是和session一样的底层存储     所以如果使用数据库后端，一定要设置新的表名。</p>
+<dl>
+<dt>auto_create</dt>
+<dd>
+</dd>
+</dl><p>是否自动创建。缺省为True。</p></li>
+<li><p>redis</p>
+<dl>
+<dt>unix_socket_path</dt>
+<dd>
+</dd>
+</dl><p>redis socket 文件名。这是使用socket方式通用时需要进行设置。</p>
+<dl>
+<dt>connection_pool</dt>
+<dd>
+</dd>
+</dl><p>使用host, port方式连接。值为一个dict，例如: {'host':'localhost', 'port':6379}</p></li>
+<li><p>memcache</p>
+<dl>
+<dt>connection</dt>
+<dd>
+</dd>
+</dl><p>格式为 ['host:port']。格式为字符串的list，每个字符串为 'host:port' 的形式。     缺省为: ['localhost:11211']</p></li>
+</ol>
+<h2 id="title_1-3">Cache使用说明<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>cache不象session有一个Middleware，使用cache就象api一样。所以一般使用流程如下:</p>
+<pre class="prettyprint"><code>from uliweb import functions
+
+cache = functions.get_cache()</code></pre>
+<p>通过 <code>get_cache()</code> 可以获得一个cache对象。然后使用这个对象可以进行相应的操作。</p>
+<p>在调用 <code>get_cache</code> 时还可以传入与配置相关的参数，以动态覆盖配置的缺省值，它们是:</p>
+<dl>
+<dt>storage_type</dt>
+<dd><p>配置项： <code>'CACHE/type'</code> ，对应存储类型。改变它，你可以根据需要来指定后端存储方式。缺省为 <code>'file'</code> 。</p>
+</dd>
+<dt>options</dt>
+<dd><p>配置项： <code>'CACHE_STORAGE'</code> ，对应 <code>CACHE_STORAGE</code> 整个section的内容，它的值应该是一个dict。</p>
+</dd>
+<dt>expiry_time</dt>
+<dd><p>配置项： <code>'CACHE/expiretime'</code> ，对应超时时间，缺省为 <code>3600</code> 。</p>
+</dd>
+<dt>serial_cls</dt>
+<dd><p>配置项： <code>'CACHE/serial_cls'</code> ，序列化数据时使用的类，缺省为 <code>'weto.cache.Serial'</code> 。</p>
+</dd>
+</dl><h2 id="title_1-4">Cache对象方法<a class="anchor" href="#title_1-4">&para;</a></h2>
+<dl>
+<dt>cache.get(key, default=None, creator=None, expire=None)</dt>
+<dd><p>从cache中读取键值</p>
+<ul>
+<li>key 为要读取的键值</li>
+<li>default 为缺省值。当key不存在时，将返回此值。</li>
+<li>creator 当key不存在时，如果给出creator则会调用creator得到一个值，并且将     此值保存到cache中。如果指定了此参数，default值将会被忽略。</li>
+<li>expire 与creator联用，用来设置超时时间。</li>
+</ul>
+<p>如果key不存时，并且没有指定default或creator，则会引发异常。</p>
+</dd>
+<dt>cache.set(key, value, expire=None)</dt>
+<dd><p>向cache设置键值</p>
+<ul>
+<li>key 为要设置的键值</li>
+<li>value 为要设置的值</li>
+<li>expire 为超时时间，如果不设，则使用配置中的缺省值</li>
+</ul>
+</dd>
+<dt>cache.delete(key)</dt>
+<dd><p>删除某一键值</p>
+</dd>
+</dl><p>cache对象也可以象字典一样使用，如:</p>
+<pre class="prettyprint"><code>cache['name'] = value
+del cache['name']</code></pre>
+<p>使用字典形式来获取key时，如果不存在，则会引发异常。</p>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./cache.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/toc/toc.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
+<script src="./../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+    });
+});
+</script>
+</body>
+</html>

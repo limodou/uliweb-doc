@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
+<link href="./static/asset/prettify.css" rel="stylesheet">
+<link href="./static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+
+<title>Hello, Uliweb - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        
+<div class="chapter-next chapter-top">
+    <a next-chapter href="./basic.html">Simple Todo (Uliweb 版本) 之 基础篇 <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">Hello, Uliweb<a class="anchor" href="#title_1">&para;</a></h1>
+<p>本教程将带你领略 Uliweb 的风采，这是一个非常简单的例子，你可以按照我的步骤来操作。我们 将生成一个空的页面，它将显示"Hello, Uliweb"信息。</p>
+<h2 id="title_1-1">准备<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>安装请看 <a href="installation.html" class="inner">安装Uliweb</a></p>
+<h2 id="title_1-2">创建新的项目<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>在安装完毕后，Uliweb 提供一个命令行工具 uliweb, 它可以执行一些命令，它会安装在 Python/Scripts 目录下，因此要想运行它，要保证 Python/Scripts 在PATH环境变量上，这样我们就可以在命令行 下使用它了。</p>
+<p>进入你的工作目录，然后执行:</p>
+<pre class="prettyprint"><code>uliweb makeproject project</code></pre>
+<p>执行成功后，在 project 目录下会是这样的:</p>
+<pre class="prettyprint"><code>|-- .gitignore
+|-- apps/
+|   |-- local_settings.ini
+|   `-- settings.ini
+|-- setup.py   
+`-- wsgi_handler.py</code></pre>
+<h2 id="title_1-3">创建Hello应用<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>然后让我们创建一个Hello的应用:</p>
+<pre class="prettyprint"><code>cd project
+uliweb makeapp Hello</code></pre>
+<p>在执行成功后，你会在apps/Hello下看到:</p>
+<pre class="prettyprint"><code>|-- __init__.py
+|-- conf.py
+|-- info.ini
+|-- static/
+|   `-- readme.txt
+|-- templates/
+|   `-- readme.txt
+`-- views.py</code></pre>
+<h2 id="title_1-4">输出"Hello, Uliweb"<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>打开 Hello/views.py，你会看到:</p>
+<pre class="prettyprint"><code>#coding=utf-8
+from uliweb import expose
+
+@expose('/')
+def index():
+    return '&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;'</code></pre>
+<p>以上几行代码是在执行 makeapp 之后自动创建的。甚至我们都不用写一行代码，已经有一个 Hello, Uliweb 的View函数了。</p>
+<p>@expose('/') 是用来处理 URL Mapping的，它表示将/映射到它下面的view方法上。这样，当用户 输入 <a href="http://localhost:8000/" class="outter">http://localhost:8000/</a> 时将访问 index() 方法。如果一个函数前没有使用expose修饰， 它将不会与任何URL对应，因此可以认为是一个局部函数。</p>
+<p>这里index()没有任何参数。如果你在expose中定义了参数，它将与之对应。但因为这个例子没有定 义参数，因此index不需要定义参数。</p>
+<p>然后我们直接返回了一行HTML代码，它将直接输出到浏览器中。</p>
+<h2 id="title_1-5">启动<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>好了，让我们启动看一下结果吧。</p>
+<p>在命令行下执行:</p>
+<pre class="prettyprint"><code>uliweb runserver</code></pre>
+<p>这样就启动了一个开发服务器。然后可以打开浏览器输入: <a href="http://localhost:8000" class="outter">http://localhost:8000</a> 看到结果。</p>
+<p>是不是很简单，但是这样不够，让我们变化一下，这次让我们加入模板。</p>
+<h2 id="title_1-6">加入模板<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>如果你的 view 方法返回一个dict对象，则 Uliweb 会自动为你应用一个模板，模板名字与你的view 方法一样，只不过后面有一个 .html。如 index() 对应的模板就是 index.html。那么这个模板文件 放在哪里呢？在前面你可以看到，当你创建完一个 app 之后，会自动创建一个 templates 目录，因 此你的模板就放在这个 templates 目录下。好，为了不影响index()方法，让我们创建一个新的方法</p>
+<pre class="prettyprint"><code>@expose('/template')
+def template():
+    return {}</code></pre>
+<p>然后在apps/Hello/templates下创建 template.html, 内容为:</p>
+<pre class="prettyprint"><code>&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;</code></pre>
+<p>在浏览器输入 <a href="http://localhost:8000/template" class="outter">http://localhost:8000/template</a> 你将看到相同的结果。</p>
+<h2 id="title_1-7">使用模板变量<a class="anchor" href="#title_1-7">&para;</a></h2>
+<p>上面的例子是将信息全部放在了模板中，但是这样通用性不好，现在再让我们修改一下，使用模板变量。 让我们再创建一个新的view方法，写入下面的代码:</p>
+<pre class="prettyprint"><code>@expose('/template1')
+def template1():
+    return {'content':'Uliweb'}</code></pre>
+<p>然后在apps/Hello/templates下创建 template1.html，内容为:</p>
+<pre class="prettyprint"><code>&lt;h1&gt;Hello, {{=content}}&lt;/h1&gt;</code></pre>
+<p>这次我在template1()中返回了一个字典，则变量content将用来表示内容。也许你对使用 {} 这样 的形式感觉不够方便，还有以下的变形的方式，如:</p>
+<pre class="prettyprint"><code>return dict(content='Uliweb')</code></pre>
+<p>或:</p>
+<pre class="prettyprint"><code>content = 'Uliweb'
+return locals()</code></pre>
+<p>前一种方法利用dict函数来构造一个dict对象。而后一种方法则直接使用了locals()内置函数来返 回一个dict对象，这样你只要定义了相应的变量就可以了。这样locals()返回的变量有可能比模板 所需要的变量要多，但是不会影响你的使用，只要在模板中认为不存在就可以了。</p>
+<div class="ui info message">
+<p>使用 Uliweb 的开发服务器具备自动重启的功能，因此一般进行程序的修改不需要重启服务器， 只要刷新浏览器就行。但有时程序出错或一些模板具备缓冲能力还是需要刷新。只要在命令行下 输入 Ctrl+C 就可以结束开发服务器，然后重启就行。</p>
+
+</div>
+<h2 id="title_1-8">结束<a class="anchor" href="#title_1-8">&para;</a></h2>
+<p>本教程只演示了最基本的 view 和模板的处理，还有其它许多的内容没有涉及，如：</p>
+<ul>
+<li>App的组织</li>
+<li>数据库的使用</li>
+<li>配置文件的使用</li>
+<li>等等</li>
+</ul>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./hello_uliweb.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/toc/toc.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
+<script src="./../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+    });
+});
+</script>
+</body>
+</html>
