@@ -12,7 +12,7 @@ plugins = []
 source_suffix = ['.md', '.markdown']
 
 #template setttings
-template_dirs = "templates"
+template_dirs = "../templates"
 templates = {'index':'index.html', '*':'default.html'}
 
 tag_class = {

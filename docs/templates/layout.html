@@ -8,7 +8,6 @@
 <meta name="author" content="">
 
 <link rel="stylesheet" href="{{=relpath}}/static/semantic/css/semantic.min.css"/>
-<link rel="stylesheet" href="{{=relpath}}/static/docs.css"/>
 <link href="{{=relpath}}/static/asset/prettify.css" rel="stylesheet">
 <link href="{{=relpath}}/static/toc/toc.css" rel="stylesheet">
 <link rel="stylesheet" href="{{=relpath}}/static/parm.css"/>
@@ -39,6 +38,15 @@ pass
     {{block menu}}
     {{menu('home')}}
     {{end}}
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -85,10 +93,21 @@ pass
 <script src="{{=relpath}}/static/comment.js"></script>
 <script src="{{=relpath}}/static/jquery.hotkeys.js"></script>
 <script src="{{=relpath}}/static/jquery.sticky-kit.min.js"></script>
+<script src="{{=relpath}}/../static/jquery.cookie.js"></script>
 
 {{if conf.disqus:}}
     {{<< conf.disqus_js}}
 {{pass}}
 
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+    });
+});
+</script>
 </body>
 </html>
