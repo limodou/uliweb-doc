@@ -1,6 +1,6 @@
 # Mini GuestBook
 
-Maybe you've learned [Hello, Uliweb](hello_uliweb) this tutorial, and have some
+Maybe you've learned [Hello, Uliweb](hello_uliweb.html) this tutorial, and have some
 sense to Uliweb, so, let's step into database world together, and see how to
 use database simply.
 
@@ -65,8 +65,8 @@ then change the `INSTALLED_APPS` to:
 
 ```
 INSTALLED_APPS = [
-    'GuestBook',
     'uliweb.contrib.orm',
+    'GuestBook',
     ]
 ```
 
@@ -83,11 +83,12 @@ So the `settings.ini` will look like:
 
 ```
 [GLOBAL]
-DEBUG = True
+DEBUG = False
+DEBUG_CONSOLE = False
 
 INSTALLED_APPS = [
-    'GuestBook',
     'uliweb.contrib.orm',
+    'GuestBook',
     ]
 
 [ORM]
@@ -139,6 +140,7 @@ def prepare_view_env(sender, env, request):
 This is a dispatch receiver function usage example, and there are some others plugin hook you can
 use. And this hook point is global availabe, so other apps can also use it.
 
+And we can also import text2html in template, so above just an example.
 
 ## Prepare Model
 
@@ -147,7 +149,6 @@ Creating a `models.py` file in GuestBook directory, and add below code:
 
 ```
 from uliweb.orm import *
-import datetime
 
 class Note(Model):
     username = Field(CHAR)
@@ -204,9 +205,27 @@ if you don't give it, the default value will be 30.
 {% alert class=info %}
 When you define Model class, Uliorm will automatically add a `id` field for
 you, it'll be a primary key.
-
 {% endalert %}
 
+## Configure Model and Create Table
+
+In Uliweb, you should configure all models in settings.ini, just like this:
+
+```
+[MODELS]
+note = 'GuestBook.models.Note'
+```
+
+So you can save above configuration in GuestBook app `settings.ini` or `apps/settings.ini`,
+but in app's settings.ini is recommended, because it's more suitable for reuse of apps.
+
+Then when can run:
+
+```
+uliweb syncdb
+```
+
+in project directly. So that uliweb will automatically create tables for you.
 
 ## Static Files Serving
 
@@ -218,12 +237,13 @@ begin with `/static/`. Now the `settings.ini` will look like:
 
 ```
 [GLOBAL]
-DEBUG = True
+DEBUG = False
+DEBUG_CONSOLE = False
 
 INSTALLED_APPS = [
-    'GuestBook',
     'uliweb.contrib.orm',
     'uliweb.contrib.staticfiles',
+    'GuestBook',
     ]
 
 [ORM]
@@ -245,16 +265,18 @@ Open `views.py` in `GuestBook` directory, and change it to:
 
 ```
 #coding=utf-8
-from uliweb import expose
-from models import Note
+from uliweb import expose, functions
 
 @expose('/')
 def index():
+    Note = functions.get_model('note')
     notes = Note.all().order_by(Note.c.datetime.desc())
     return {'notes':notes}
 ```
 
-In beginning, we import `Note` class, then get all comments in index()
+In beginning, we import `expose` and `functions` function, then we can use
+`functions.get_model()` to get real `note` Model class according the settings.ini.
+And we can get all comments in `index()`
 via `Note.all()` statement. In order to display the comments descend to datetime,
 we add `order_by()` clause. This is SqlAlchemy query expression usage.
 
@@ -284,7 +306,6 @@ apps.appname.viewmodule.functioname
 And Uliweb also provides a reversed URL creating function - url_for, you can
 use it to create a URL according view function string like above format. We
 will see its usage in template later.
-
 {% endalert %}
 
 
@@ -314,10 +335,6 @@ the view function name.
 
 Create a `index.html` file in `GuestBook/templates` directory, it'll be matched
 to index() function. And add below content to it:
-
-"System Message: WARNING/2 (D:\project\mywork\uliweb-doc\docs\en\guestbook.rst:, line 290)"
-Cannot analyze code. No Pygments lexer found for "django+html".
-
 
 ```
 1     {{extend "base.html"}}
@@ -391,12 +408,13 @@ Open the views.py file, and add below code:
 9         elif request.method == 'POST':
 10            flag = form.validate(request.params)
 11            if flag:
-12                n = Note(**form.data)
-13                n.save()
-14                return redirect(url_for(index))
-15            else:
-16                message = "There is something wrong! Please fix them."
-17                return {'form':form, 'message':message}
+12                Note = functions.get_model('note')
+13                n = Note(**form.data)
+14                n.save()
+15                return redirect(url_for(index))
+16            else:
+17                message = "There is something wrong! Please fix them."
+18                return {'form':form, 'message':message}
 ```
 
 The URL will be `/new` for `new_comment()` function.
@@ -533,6 +551,7 @@ Open `GuestBook/views.py` file, and append below code:
 ```
 @expose('/delete/<id>')
 def del_comment(id):
+    Note = functions.get_model('note')
     n = Note.get(int(id))
     if n:
         n.delete()
@@ -604,17 +623,17 @@ Let's see some screen casts, this will make more sense.
 Homepage:
 
 
-![image](/static/image01.jpg)
+![image](_static/image01.jpg)
 
 New Comment Page:
 
 
-![image](/static/image02.jpg)
+![image](_static/image02.jpg)
 
 Error Comment Page:
 
 
-![image](/static/image03.jpg)
+![image](_static/image03.jpg)
 
 
 ## Conclusion
