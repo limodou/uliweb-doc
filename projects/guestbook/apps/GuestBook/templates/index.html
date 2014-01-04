@@ -1,0 +1,12 @@
+{{extend "base.html"}}
+{{block content}}
+<h2><a href="{{=url_for('GuestBook.views.new_comment')}}">New Comment</a></h2>
+{{for n in notes:}}
+	<div class="info">
+	<h3><a href="{{= url_for('GuestBook.views.del_comment', id=n.id) }}">
+	<img src="{{= url_for_static('delete.gif') }}"/>
+	</a> {{=n.username}} at {{=n.datetime.strftime('%Y/%m/%d %H:%M:%S')}} say:</h3>
+	<p>{{<<text2html(n.message)}}</p>
+	</div>
+{{pass}}
+{{end}}
