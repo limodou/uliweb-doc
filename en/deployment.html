@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
+<link href="./static/asset/prettify.css" rel="stylesheet">
+<link href="./static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+
+<title>Deployment Guide - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
+    <a prev-chapter href="./extending.html"><i class="icon-arrow-left"></i> Extending Uliweb</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="./globals.html">Global Environment <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">Deployment Guide<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">GAE(Google Application Engine)<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>GAE is a plaform provided by Google for web applications. To use GAE in combination with ULiweb for web development, you will need a GAE account. Follow the instructions on the GAE main site to create one.</p>
+<p>You should test your project code under the GAE SDK development environment first before the final deployment.</p>
+<ol>
+<li><p>Using the <code>export</code> command, export Uliweb to your project directory. You should name     your project directory using the application name you created in     GAE. For example, say your project name is <code>myproject</code>, and you installed GAE SDK in     <code>C:\Program Files\Google\google_appengine</code>, you can use the command:</p>
+<pre class="prettyprint"><code>python manage.py export "C:\Program Files\Google\google_appengine\myproject"</code></pre>
+<p>You would notice that the target directory is quoted by double-quotes, that's because there is space character in the directory. The deployement is ready after this step.</p>
+<ol>
+<li>Modify the <code>app.yaml</code> file, change the value of <code>application</code> to your project name, for example: <code>myproject</code>.</li>
+<li>Begin your web development using the Uliweb development server first, switch to the GAE development server for further testing.</li>
+<li>Upload your project with the <code>appcfg.py</code> tool: <code>` python appcfg.py update myproject `</code></li>
+</ol></li>
+</ol>
+<h2 id="title_1-2">Apache<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-1">mod_wsgi<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<ol>
+<li><p>You should refer to the <a href="http://code.google.com/p/modwsgi/" class="outter">mod_wsgi</a> document, and     install the mod_wsgi.so module for Apache.</p>
+<ul>
+<li>Copy mod_wsgi.so to apache/modules directory.</li>
+</ul>
+<p>For Windows instructions, see:</p>
+<blockquote><p><a href="http://code.google.com/p/modwsgi/wiki/InstallationOnWindows" class="outter">http://code.google.com/p/modwsgi/wiki/InstallationOnWindows</a></p>
+</blockquote>
+<p>If you are using Linux, see:</p>
+<blockquote><p><a href="http://code.google.com/p/modwsgi/wiki/InstallationOnLinux" class="outter">http://code.google.com/p/modwsgi/wiki/InstallationOnLinux</a></p>
+</blockquote>
+<ol>
+<li>Modify Apache's httpd.conf file</li>
+</ol>
+<ul>
+<li><p>Add the code below</p>
+<pre class="prettyprint"><code>LoadModule wsgi_module modules/mod_wsgi.so
+WSGIScriptAlias / /path/to/uliweb/wsgi_handler.wsgi
+
+&lt;Directory /path/to/youruliwebproject&gt;
+Order deny,allow
+Allow from all
+&lt;/Directory&gt;</code></pre>
+<p>The code above assumes that the root URL is <code>/</code>, you can change this to suite your project, for example <code>/myproj</code>. Here is an example of a configuration on the Windows platform:</p>
+<pre class="prettyprint"><code>WSGIScriptAlias / d:/project/svn/uliweb/wsgi_handler.wsgi
+
+&lt;Directory d:/project/svn/uliweb&gt;
+Order deny,allow
+Allow from all
+&lt;/Directory&gt;</code></pre></li>
+</ul></li>
+<li>Restart apache</li>
+<li>Test it. Startup a web browser, and enter the URL <a href="http://localhost/YOURURL" class="outter">http://localhost/YOURURL</a>     to test if eveerything went well.</li>
+</ol>
+<h2 id="title_1-3">Static files<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>Uliweb can serve static files, but you may want to use Apache or any other webserver instead because they are much faster at doing it. If you decide to let a web server serve your static files, use the exportstatic command to collect all static files from all available apps to target directory, then configure target static directory in your web servers configuration file.</p>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./deployment.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/toc/toc.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
+<script src="./../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+    });
+});
+</script>
+</body>
+</html>

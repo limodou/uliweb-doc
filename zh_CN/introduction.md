@@ -3,17 +3,15 @@
 
 ## 它是什么
 
-Uliweb是一个新的Python Web Framework，它之所以会产生是因为现有的框架多少有些令人
-不满意的地方，而且许多情况下这些不满意的地方或多或少对我开发Web有影响，因此在经过对
-不少框架的学习之后，我决定开发一个新的框架，希望可以综合我认为其它框架中尽可能多的
-优点，同时使这个新的框架尽可能的简单，易于上手和使用。
+Uliweb是一个全栈式的Python Web Framework，它有三个主要设计目标：可重用性，可配
+置性和可替换性。所有的功能都是围绕着这些目标。
 
-这个项目是由Limodou <mailto:limodou@gmail.com>发起并创建的。其中得到了许多人的帮助。
+这个项目是由Limodou <mailto:limodou@gmail.com>发起并创建的。
 
 
 ## License
 
-Uliweb按照BSD进行发布。
+Uliweb按照BSD协议进行发布。
 
 
 ## 基础组件
@@ -21,22 +19,21 @@ Uliweb按照BSD进行发布。
 它并不完全是从头写的一个东西，我目前使用了一些库，如：
 
 
-* [Werkzeug](http://werkzeug.pocoo.org/) 用它来进行框架的核心处理，比如：命令行，
-    URL Mapping，Debug等。
+* [Werkzeug](http://werkzeug.pocoo.org/) 用它来进行框架的核心处理，比如：
+    URL Mapping，Debug，Request, Response 等。
 * [SqlAlchemy](http://www.sqlalchemy.org) 基于它封装了Uliorm，可以使用ORM对
     数据库进行处理。
 
 还有一些比较小的引用，如：
-
 
 * template 是从 [web2py](http://mdp.cti.depaul.edu/) 改造来的
 * 部分处理代码从 [Django](http://www.djangoproject.com/) 中借鉴
 
 另外还有一些是自已新造的，如：
 
-
 * Form处理，可以用来生成HTML代码和对上传的数据进行校验
 * i18n处理，包括对模板的处理
+* Cache 和 Session 模块
 * Uliorm，是在SqlAlchemy基础之上进行的封装，同时参考了GAE中的datastore的代码
 * 框架的处理代码，这块不可能不自已造了
 * 插件机制，从Ulipad中移植并进行了改造
@@ -45,7 +42,7 @@ Uliweb按照BSD进行发布。
 ## 功能特点
 
 
-* 组织管理
+* 项目组织管理
 
     * 采用MVT模型开发。
     * 分散开发统一管理。采用App方式的项目组织。每个App有自已的配置文件，templates目录，
@@ -114,22 +111,6 @@ Uliweb按照BSD进行发布。
 
     * 提供开发服务器，并当代码修改时自动装载修改的模块
     * 提供debug功能，可以查看出错的代码，包括模板中的错误
-
-* 其它
-
-    * 对于静态文件的支持可以处理HTTP_IF_MODIFIED_SINCE和trunk方式的静态文件处理。
-
-
-
-## 项目目标
-
-
-* 开发一个简单易用的框架
-* 框架要足够灵活，并易于扩展
-* 包含足够的示例代码
-* 编写清晰易懂的文档
-* 能够在多种环境下使用
-
 
 ## 社区
 

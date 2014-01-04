@@ -230,6 +230,7 @@ $(function(){
     });
     $('a.language').on('click', function(){
         $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "./../"+$(this).data('lang')+'/index.html';
     });
 });
 </script>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
+<link href="./static/asset/prettify.css" rel="stylesheet">
+<link href="./static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+
+<title>Template - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
+    <a prev-chapter href="./url_mapping.html"><i class="icon-arrow-left"></i> URL Mapping</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="./manage_guide.html">uliweb Command Guide <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">Template<a class="anchor" href="#title_1">&para;</a></h1>
+<p>It seems that every web framework has a template system. Uliweb also has one. The Template of Uliweb comes from web2py project originally. But I've changed it a lot. So many places are same as web2py. Ok, let's see how to use template in Uliweb.</p>
+<h2 id="title_1-1">1\ \ \ Features<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ul>
+<li>Very simple and easy to learn and use</li>
+<li>You can embed Python code in template</li>
+<li>Don't have to care about the indentation of Python code, just remember adding     <code>pass</code> after the block is over, template will automatically reindent it</li>
+<li>Python code and HTML code can be mixed</li>
+<li>Support Template multiple layers inherit</li>
+<li>Provide some builtin functions</li>
+<li>Can inject new functions or variables to template runtime environ variable</li>
+<li>Template will be compiled to Python code then run</li>
+</ul>
+<h2 id="title_1-2">2\ \ \ Syntax<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>There is only one tag mark of template, that is <code>{{}}</code>. And there are different tags according the first word of the tag text. The first word of tag content can be treated as the name of the tag, and if the name is not a reserved tag name, the content will be treated as common Python code.</p>
+<h3 id="title_1-2-1">2.1\ \ \ Reserved Tag Syntax<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<p>*      <code>{{extend parent_template_file}}</code> --     <code>extend</code> is used to derive a parent template.         <code>parent_template_file</code> is the template filename, it can be a string or a         variable. So these are all valid usages:</p>
+<pre class="prettyprint"><code>    ```
+    {{extend "base.html"}}
+    {{extend parent}}
+    ```
+
+    For the second one, the `parent` can be passed from the outside or be calculated
+    from template.</code></pre>
+<p>*      <code>{{include template_file}}</code> --     <code>include</code> is used to inclulde other template into current one.         <code>template_file</code> is the template filename, it can be a string or a variable         just like <code>extend</code> usage.</p>
+<p>*      <code>{{=variable}}</code> --     <code>=</code> is used to output HTML escaped value. So if there are something like: <code>&amp;</code>,         <code>&lt;</code>, etc will be escaped to HTML entity.         <code>variable</code> can be a real Python variable, value, function call or anything         can return a value. So these are all valid usages:</p>
+<pre class="prettyprint"><code>    ```
+    {{= 123}}
+    {{= a}}  #here a should be define in other place or pass from outside
+    {{= function(arg)}}
+    {{= obj}    #obj can be cast to a string
+    ```
+
+
+    {% alert class=info %}
+    If you don't want to escape the output, you can use `{{&lt;&lt;}}` , just like this:
+
+    ```
+    {{&lt;&lt; v}}
+    ```
+
+    {% endalert %}</code></pre>
+<p>*      <code>{{block name}}...{{end}}</code> --     <code>block</code> will define a block, and child template can replace it if there is         a same name block definition, it'll replace the previous one. So you can         define some blocks in parent template, and change the content of it in child         template when you want.</p>
+<pre class="prettyprint"><code>    * Uliweb template supports multiple block inherit, that
+        means you can define multiple blocks in parent template, and redefine one
+        or any number blocks you want to replace in child template.
+    * Block can be nested. So you can define a block in a block, even in child
+        template. Only the latest defined block will be used for a same name block.</code></pre>
+<h3 id="title_1-2-2">2.2\ \ \ Embeding Python Code<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+<p>You can easily embed Python code between <code>{{</code> and <code>}}</code>, just like this:</p>
+<pre class="prettyprint"><code>{{ import os }}</code></pre>
+<p>You can use almost all Python code in template, but I suggest that just keep simple and relationship with representation code in template, otherwise your template will become bloated and difficult to maintain.</p>
+<p>If you want to use Python block statement, just like: if, def, while, etc, you should add <code>pass</code> when the block is over. For example:</p>
+<pre class="prettyprint"><code>{{if user=='admin':}}
+    &lt;p&gt;Welcome&lt;/p&gt;
+{{else:}}
+    &lt;a href="/login"&gt;Login&lt;/a&gt;
+{{pass}}</code></pre>
+<p>The last <code>{{pass}}</code> is very important. These are some points:</p>
+<ul>
+<li>Just common Python code, so don't forget the last <code>:</code></li>
+<li>After block is over or when you want to unindent, just add <code>pass</code></li>
+<li>Python code can mix with HTML code, and all HTML code between Python code     will be directly outputed.</li>
+<li>Don't need to care about the indent, Uliweb template will automaticall     reindent it according the block and <code>pass</code>.</li>
+</ul>
+<p>More examples:</p>
+<pre class="prettyprint"><code>{{ if user=='admin':
+    out.write('&lt;p&gt;Welcome&lt;/p&gt;', escape=False)
+      else:
+    out.write('&lt;a href="/login"&gt;Login&lt;/a&gt;', escape=False)
+    pass
+}}</code></pre>
+<p>This will get the same result as above. Here <code>out</code> is also a built object you can use directly.</p>
+<h3 id="title_1-2-3">2.3\ \ \ Builtin Objects<a class="anchor" href="#title_1-2-3">&para;</a></h3>
+<p>There are several builtin objects you can use directly list below:</p>
+<p>*      <code>out</code> --     It's a object, Uliweb template use it to output the template buffer. If you         want to output unescape content you can use: <code>out.write(v, escape=False)</code> or         <code>out.noescape(v)</code>, the results are the same.</p>
+<h2 id="title_1-3">3\ \ \ How to use it standalone<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>Uliweb template module is just a single file module, you can use it in your project if you want. You can simple import it. For example:</p>
+<pre class="prettyprint"><code>&gt;&gt;&gt; import template
+&gt;&gt;&gt; print template.template("Hello, {{=name}}", {'name':'Uliweb'})
+Hello, Uliweb</code></pre>
+<p>It provides several functions:</p>
+<ul>
+<li><p><code>template(text, vars=None, env=None, dirs=None, default_template=None)</code></p>
+<dl>
+<dt><code>text</code></dt>
+<dd><pre class="prettyprint"><code>is the template string you want to process.</code></pre>
+</dd>
+<dt><code>vars</code></dt>
+<dd><pre class="prettyprint"><code>is a dict data type, it's the variables you want to use in template</code></pre>
+</dd>
+<dt><code>env</code></dt>
+<dd><pre class="prettyprint"><code>is also a dict data type, template will be executed under this environment.</code></pre>
+</dd>
+<dt><code>dirs</code></dt>
+<dd><pre class="prettyprint"><code>is the directories list, Uliweb will find the real template file path</code></pre>
+<p>according this list when it needed. If you don't pass this parameter, the defult value will be <code>[.]</code>, it means current directory.</p>
+</dd>
+<dt><code>default_template</code></dt>
+<dd><pre class="prettyprint"><code>will be also used in searching template file, if it's been set, if it can't</code></pre>
+<p>find the extend template or include template, this value will be used.</p>
+</dd>
+</dl><p>This function will return a string value, which is the result of template executing.</p>
+<ul>
+<li><code>template_file(filename, vars=None, env=None, dirs=None, default_template=None)</code> Most parameters' meaning of this function are the same as <code>template()</code>. The only different is the first parameter is <code>filename</code>. It's a template filename. So this function is mainly used to process template file but not string.</li>
+<li><code>render_text(text, vars=None, env=None, dirs=None, default_template=None)</code> All the parameters' meaning are the same as <code>template()</code>. This function will return the translated Python code.</li>
+<li><code>render_file(filename, vars=None, env=None, dirs=None, default_template=None, use_temp=False)</code> <code>use_temp</code> --         if set to True, then Uliweb template will store the translated Python code     to a temporary file, and if you render the same template file again, and if     you haven't change the original template file after last render time, Uliweb     template will use the temporary file instead, but not the real template file     and rerenders it again. So this will speed the process.</li>
+</ul>
+<p>Other parameters' meaning of this function are the same as <code>template()</code> and <code>template_file</code>.</p>
+<ul>
+<li><code>use_tempdir(dir=None)</code> By default, Uliweb template will not automatically storing trnaslated Python code to temporary directory. So if you want to use this feature, you should call this function first. <code>dir</code> will be the temporary directory, if not set, default directory will be <code>tmp/templates_temp</code>. So if you use this feature, make sure you have the write permission of temporary directory.</li>
+</ul></li>
+</ul>
+<h2 id="title_1-4">4\ \ \ How to use template in Uliweb<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>There are several ways to use template.</p>
+<h3 id="title_1-4-4">4.1\ \ \ Automatically Mapping<a class="anchor" href="#title_1-4-4">&para;</a></h3>
+<p>When you developing a view function, if the return value is a dict data type, Uliweb will automatically find a matched template and use the returned value to render it. By default, the matched template filename will be the view function name pluses <code>'.html'</code>. For example, if the view function is <code>index</code> the template filename will be <code>index.html</code>.</p>
+<h3 id="title_1-4-5">4.2\ \ \ Providing in response<a class="anchor" href="#title_1-4-5">&para;</a></h3>
+<p>You can also provide a template filename in <code>response</code> object, just like this:</p>
+<pre class="prettyprint"><code>response.template = 'another.html'</code></pre>
+<p>So this will make Uliweb use the <code>another.thml</code> as the template filename.</p>
+<h3 id="title_1-4-6">4.3\ \ \ Dealing it yourself<a class="anchor" href="#title_1-4-6">&para;</a></h3>
+<p>You can also use any template system in view function. Juse use them and get the result, then return it. If the return value is not a dict data type, Uliweb will wrap it to a Response object. And in Uliweb view functions, you can use <code>application.template</code> to access the template, for example:</p>
+<pre class="prettyprint"><code>def some_view_func():
+    response.write(application.template('show_document.html', locals()))
+    return response</code></pre>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./template.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/toc/toc.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
+<script src="./../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+    });
+});
+</script>
+</body>
+</html>

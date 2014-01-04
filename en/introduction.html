@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
+<link href="./static/asset/prettify.css" rel="stylesheet">
+<link href="./static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+
+<title>Uliweb Introduction - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        
+<div class="chapter-next chapter-top">
+    <a next-chapter href="./architecture.html">Architecture, structure and programmatical execution <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">Uliweb Introduction<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">About Uliweb<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>Uliweb is a full-stacked Python based web framework. It has three main design  goals, they are: reusability, configurability, and replaceability. All the  functionalities revolve around these goals.</p>
+<p>This project was created and lead by Limodou <a href="&#x6D;ailt&#x6F;&#x3A;l&#x69;&#x6D;&#x6F;d&#x6F;&#x75;@&#x67;m&#x61;il.c&#x6F;m" class="inner">li&#x6D;od&#x6F;u@g&#x6D;a&#x69;&#x6C;&#x2E;&#x63;om</a>.</p>
+<h2 id="title_1-2">License<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>Uliweb is released under BSD license.</p>
+<h2 id="title_1-3">Infrastructure<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>Uliweb was not created totally from scratch. It uses some modules created by other developers, for example:</p>
+<ul>
+<li><a href="http://werkzeug.pocoo.org/" class="outter">Werkzeug</a> Used to handle core processes in the framework.     For example: URL Mapping, Debug, Request, Response, etc.</li>
+<li><a href="http://www.sqlalchemy.org" class="outter">SqlAlchemy</a> The ORM based on it. Developers can access     databases, or use the module separately.</li>
+</ul>
+<p>I also referenced some code from other web frameworks, for example:</p>
+<ul>
+<li>The Templating system is styled after the one used in <a href="http://mdp.cti.depaul.edu/" class="outter">web2py</a> several     improvements were made.</li>
+<li>Some code inspired from Django.</li>
+</ul>
+<p>I also constructed a few new "wheels" myself. For example:</p>
+<ul>
+<li>Form processing module. Developers can use it to create HTML code, validate submitted data and     convert submitted data to Python data types.</li>
+<li>I18n processing including template support, language lazy process.</li>
+<li>Cache &amp; Session modules.</li>
+<li>Uliorm, which is an ORM module, was built on top of SqlAlchemy. I also referenced from     GAE datastore module.</li>
+<li>Framework runtime process.</li>
+<li>Plugin mechanism, styled after the one used in the <a href="http://code.google.com/p/ulipad" class="outter">UliPad</a> project.</li>
+</ul>
+<h2 id="title_1-4">Features<a class="anchor" href="#title_1-4">&para;</a></h2>
+<ul>
+<li><p>Project Organization</p>
+<ul>
+<li>MVT(Model View Template) development model.</li>
+<li>Distributed development but unified management. Uliweb organizes a project with     small apps. Each app can have its own configuration file(settings.ini), template     directory, and static directory. Existing apps can be easily reused, but are treated as a compound.     web application project if configured as such. Developers can also     reference static files and templates between apps, thus easing inter-application data exchange.     All apps in a project are loaded by default if INSTALLED_APPS is not configured in     the configuration file. All separate app configuration files are automatically processed at     project startup.</li>
+</ul></li>
+<li><p>URL Mapping</p>
+<ul>
+<li>Flexiable and powerful URL mapping. Uliweb uses werkzeug's routing module.     User can easily define a URL, which in turn can be easily bound with a view function.     URLs can also be created reversely according to the view function name. It supports     argument definitions in URLs and default URL mapping to a     view function.</li>
+</ul></li>
+<li><p>View and Template</p>
+<ul>
+<li>View templates can be automatically applied. If you return a dict variable from     view function, Uliweb will automatically try to match and apply a template according     to the view function name.</li>
+<li>Environment execution mode. Each view function will be run in an environment,     which eliminates the need to write many import statements. Plus there are already many     objects that can be used directly, for example: request, response, etc. This is DRY and saves a lot of coding</li>
+<li>Developers can directly use Python code in a template, the Python code does not neede to be indented     as long as a pass statement is added at the end of each code block.     Uliweb also supports child template inclusion and inheritance.</li>
+</ul></li>
+<li><p>ORM</p>
+<ul>
+<li>Uliorm is the default ORM module but not configured by default. Developers are free to use any     ORM module as preferred.</li>
+<li>Uliorm supports model creation and automatic database migiration(table creation     and table structure modification).</li>
+</ul></li>
+<li><p>I18n</p>
+<ul>
+<li>Can be used in python and template files.</li>
+<li>Browser language and cookie settings are supported including automatic language switching.</li>
+<li>Provides a command line tool that developers can use to extract .po files.     This can happen either at the app level or project level process. It can automatically merge .pot files to existing     .po files.</li>
+</ul></li>
+<li><p>Extension</p>
+<ul>
+<li>Dispatch extension. This is a dispatch processing mechanism that utilizes different     types of dispatch points. So you can write procedures to carry out     special processes and bind them to these dispatch points. For example, database     initicalization, I18n process initialization, etc.</li>
+<li>middleware extension. It's similar to Djangos. You can configure it in configuration     files. Each middleware can process the request and response objets.</li>
+<li>Special function calls in the views module initial process. If you write a special     function named __begin__, it'll be processed before any view function can be processed,     this allows developers to do some module level processing at that point, for example:     check the user authentication, etc.</li>
+</ul></li>
+<li><p>Command Line Tools</p>
+<ul>
+<li>Creates project, creates apps, and include the basic essential directory      structure, files and code.</li>
+<li>Export static files, you can export all available apps' static files to a     special directory. Also supports css and js combinition and compress process.</li>
+<li>Startup a development web server thats supports debugging and autoreload.</li>
+<li>Apps can also have its own command line tools. For example: orm, auth, etc.</li>
+</ul></li>
+<li><p>Deployment</p>
+<ul>
+<li>Supports GAE platform.</li>
+<li>Supports mod_wsgi in Apache.</li>
+<li>SUpports uwsgi.</li>
+</ul></li>
+<li><p>Development</p>
+<ul>
+<li>Provide a development server, and can be automatically reload when some     module files are modified.</li>
+<li>Enhanced debugging, you can check the error traceback, template debugging is also supported.</li>
+</ul></li>
+</ul>
+<h2 id="title_1-5">Goals<a class="anchor" href="#title_1-5">&para;</a></h2>
+<ul>
+<li>Simple and easy to use web framework.</li>
+<li>The web framework should be flexiable and easy to extend.</li>
+<li>The web framework should be able to be deployed in different platforms.</li>
+<li>Provision of enough sample code.</li>
+<li>Provision of concise and easy to understand documentation.</li>
+</ul>
+<h2 id="title_1-6">Commuity<a class="anchor" href="#title_1-6">&para;</a></h2>
+<ul>
+<li>Mailing List: <a href="http://groups.google.com/group/uliweb" class="outter">http://groups.google.com/group/uliweb</a></li>
+</ul>
+<h2 id="title_1-7">Links<a class="anchor" href="#title_1-7">&para;</a></h2>
+<ul>
+<li><strong>Uliweb</strong> Project Homepage <a href="https://github.com/limodou/uliweb" class="outter">https://github.com/limodou/uliweb</a></li>
+<li><strong>Uliweb-doc</strong> Documentation Project <a href="http://github.com/limodou/uliweb-doc" class="outter">http://github.com/limodou/uliweb-doc</a></li>
+<li><strong>Uliweb-doc Online</strong> Document <a href="http://limodou.github.com/uliweb-doc/" class="outter">http://limodou.github.com/uliweb-doc/</a></li>
+<li><strong>plugs</strong> Uliweb Apps Collection Project <a href="https://github.com/limodou/plugs" class="outter">https://github.com/limodou/plugs</a></li>
+</ul>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./introduction.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/toc/toc.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
+<script src="./../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+    });
+});
+</script>
+</body>
+</html>

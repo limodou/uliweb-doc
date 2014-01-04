@@ -10,10 +10,11 @@
 <script>
 $(function(){
     var lang = $.cookie('language');
-    if (!lang)
-        window.location.href = 'en/index.html';
-    else
-        window.location.href = lang + '/index.html';
+    if (!lang){
+        lang = navigator.language || 'en';
+        lang = lang.replace('-', '_')
+    }
+    window.location.href = lang + '/index.html';
 });
 </script>
 </body>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
+<link href="./static/asset/prettify.css" rel="stylesheet">
+<link href="./static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+
+<title>Extending Uliweb - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
+    <a prev-chapter href="./form.html"><i class="icon-arrow-left"></i> Form</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="./deployment.html">Deployment Guide <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">Extending Uliweb<a class="anchor" href="#title_1">&para;</a></h1>
+<p>A web framework might fall short to anticipate all your development needs. Although Uliweb is no exemption in this respect, it strives to provide the most possible amount of flexibility and extensibility.</p>
+<h2 id="title_1-1">1\ \ \ Dispatch System<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>Uliweb ships with a dispatch module, it's in uliweb/core folder.</p>
+<h3 id="title_1-1-1">1.1\ \ \ Dispatch units<a class="anchor" href="#title_1-1-1">&para;</a></h3>
+<p>Uliweb provides a simple Dispatch system that consists of three units:</p>
+<ul>
+<li>Dispatch point</li>
+<li>Receiver function</li>
+<li>Collection system</li>
+</ul>
+<h3 id="title_1-1-2">1.2\ \ \ Dispatch points<a class="anchor" href="#title_1-1-2">&para;</a></h3>
+<p>An Dispatch point will define the place where the dispatcher want to call its associated receiver functions, and it'll pass the auguments to those receiver functions. A dispatch point will looks like:</p>
+<pre class="prettyprint"><code>dispatch.call(sender, topic, signal=None, *args, **kwargs)</code></pre>
+<p>or</p>
+<pre class="prettyprint"><code>ret = dispatch.get(sender, topic, signal=None, *args, **kwargs)</code></pre>
+<p>You can see there are two arguments must be passed:</p>
+<ul>
+<li><code>sender</code>     It just looks like the name.</li>
+<li><code>topic</code>     Each dispatch has an topic, so that only the receiver functions which     associated with this topic will be called. So different dispatch point     can send the same topic.</li>
+</ul>
+<p>And the <code>signal</code> is optional. If this argument is not <code>None</code>, then only the receiver functions which the topic and the signal are all matched will be called. If the value of <code>signal</code> argument is <code>None</code>, then all receiver functions which as soon as the topic is matched will be called.</p>
+<p>Except for above three arguments, you can also pass other arguments, and you should ensure the receiver functions must match with them.</p>
+<p>When you run a dispatch point(It's just a common function invoding), dispatch system will find all matched receiver functions according the topic and optional signal, and call them one by one, according the order specified in definition of receiver function. Why there are two kinds of invoking functions? Because:</p>
+<ul>
+<li><code>call</code>     will invoke matched receiver functions one by one, and you can't interrupt it     inn the middle of the execution, and it won't return a value(or it'll just return     None).</li>
+<li><code>get</code>     will invoke just like <code>call</code>, but if one receiver function returns a value     is not None, the execution will not continue, and return this value immediately.</li>
+</ul>
+<p>So the execution of a dispatch point just like a chain, and you can use different methods to affect its execution.</p>
+<div class="ui info message">
+<p>There are two more functions except for <code>call</code> and <code>get</code>, they are <code>call_once</code> and <code>get_onec</code>. You can guess from their names, they could be called really only once, and if you call them more than one time, for <code>call_once</code> will not invoke again just returned, and <code>get_once</code> will only return the first returned value.</p>
+
+</div>
+<h3 id="title_1-1-3">1.3\ \ \ Receiver functions<a class="anchor" href="#title_1-1-3">&para;</a></h3>
+<p>It's a function will be used for processing special topic and optional signal. The signature of a receiver function will look like:</p>
+<pre class="prettyprint"><code>def receiver(sender, topic, *args, **kwargs)</code></pre>
+<p>So, receiver functions are very common.</p>
+<h3 id="title_1-1-4">1.4\ \ \ Collection system<a class="anchor" href="#title_1-1-4">&para;</a></h3>
+<p>Collection system is used to collect all of avaible receiver functions, so that when executing a dispatch point, it can find all associated receiver functions. So there are two things you need to do after defining the receiver functions:</p>
+<ol>
+<li><p>Call dispatch.bind to receiver functions, for example:</p>
+<pre class="prettyprint"><code>from uliweb.core.dispatch import bind
+
+@bind('test_point')
+def receiver():
+    ...</code></pre></li>
+<li>Put the code to the right place, so that uliweb can import them, and calling     the bind function. When Uliweb startup, it'll try to import all <code>start.py</code>     from every available app, so you can put the code to <code>__init__.py</code> or <code>start.py</code>     of each app folder.</li>
+</ol>
+<p>The signature of the <code>bind</code> function is:</p>
+<pre class="prettyprint"><code>def bind(topic, signal=None, kind=MIDDLE, nice=-1)</code></pre>
+<ul>
+<li><code>topic</code>     which you want to bind to</li>
+<li><p><code>signal</code>     used to match with the dispatch point signal argument. And if the receiver     function has no signal argument, this argument will be removed. On the     contrary, it'll be passed to the receiver function.</p>
+<div class="ui info message">
+<p>Here signal maybe a tuple or a list, so that one receiver function can match multiple signals.</p>
+
+</div></li>
+<li><code>kind</code>     There are two types of indicating the priority of a receiver function. And     priority is higher(the number is lower), the execution order is in front.     So 0 will highter than 100. And kind has three levels:HIGH, MIDDLE, LOW, and     they are mapping to different priority number: HIGH=100, MIDDLE=500, LOW=900.     And default is MIDDLE.</li>
+<li><code>nice</code>     You should not use kind and nice at the same time. And <code>nice</code> is used for     accurately setting the priority.</li>
+</ul>
+<p>When executing a dispatch point, it'll sort all associated receiver functions according their priority. So if your receiver functions need to run in certain order, you'll need to set <code>kind</code> or <code>nice</code> argument.</p>
+<h3 id="title_1-1-5">1.5\ \ \ Predefined dispatch points<a class="anchor" href="#title_1-1-5">&para;</a></h3>
+<h4 id="title_1-1-5-1">1.5.1\ \ \ uliweb.core.SimpleFrame<a class="anchor" href="#title_1-1-5-1">&para;</a></h4>
+<ul>
+<li><strong>dispatch.call(application, 'startup_installed')</strong>     Dispatcher class initialization, will only run once for class</li>
+<li><strong>dispatch.call(application, 'startup')</strong>     Dispatcher has already startuped, will be executed when creating every Dispatcher     instance.</li>
+<li><strong>dispatch.call(application, 'prepare_view_env', Dispatcher.env)</strong>     Used for prepare global view and template execution environment. All objects in env can     be used in any view function directly.</li>
+</ul>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./extending.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/toc/toc.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
+<script src="./../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+    });
+});
+</script>
+</body>
+</html>

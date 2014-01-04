@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
+<link href="./static/asset/prettify.css" rel="stylesheet">
+<link href="./static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+
+<title>Form - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
+    <a prev-chapter href="./orm.html"><i class="icon-arrow-left"></i> Database and ORM</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="./extending.html">Extending Uliweb <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">Form<a class="anchor" href="#title_1">&para;</a></h1>
+<p>Form creation and processing is a big problem in web development. Uliweb provides its own form processing module, but it is not bound for use by default just in case you intend to use another form processing module. This module is named <code>form</code> and can be found in the <code>uliweb</code> directory. It is basically a normal Python module, and can, as such, be imported as one for use.</p>
+<p>The features of the form module are:</p>
+<ul>
+<li>Ease of use. Just define it like a simple class and instanciate it for use.</li>
+<li>Easy HTML code generation. HTML code can be generated directly from Field or Form objects</li>
+<li>Support for custom HTML layout processes.</li>
+<li>Can validate the submitted data and convert them into Python data types</li>
+<li>Support user defined validators</li>
+<li>Support for file uploads and management.</li>
+</ul>
+<h2 id="title_1-1">1\ \ \ The Form Class<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>To get started, define a Form class first, as follows:</p>
+<pre class="prettyprint"><code>from uliweb.form import *
+
+class Form1(Form):
+    title = TextField(label='Title:', required=True, help_string='Title help string')
+    content = TextAreaField(label='Content:')</code></pre>
+<p>You can see, you should inherit from <code>Form</code> class, and you can define field directly in Form class, just like define class attributes.</p>
+<p>Then you could create Form object, just like:</p>
+<pre class="prettyprint"><code>f = Form1()</code></pre>
+<p>When creating Form instance, there are some parameters you can set:</p>
+<dl>
+<dt>action</dt>
+<dd><p>It's the <code>action</code> attribute of <form> tag, if not set it, it'll be <code>""</code>.</p>
+</dd>
+<dt>method</dt>
+<dd><p>It's the <code>method</code> attribute of <form> tag, if not set it, it'll be <code>post</code>.</p>
+</dd>
+<dt>buttons</dt>
+<dd><p>It'll be used to create button lines of a form, like submit and reset button. If you not set it, default will be submit and reset buttons. The HTML code will be:</p>
+<pre class="prettyprint"><code>&lt;input type="submit" value="Submit"&gt;&lt;/input&gt;
+&lt;input type="reset" value="Reset"&gt;&lt;/input&gt;</code></pre>
+<p>If you want other buttons, you can provide any HTML code in <code>buttons</code> parameter, Form will use it to create buttons.</p>
+</dd>
+<dt>validators</dt>
+<dd><p>User can write Form level validators, it should be a list of validators. More details about validator you can see <em>Validator</em> section below.</p>
+</dd>
+<dt>html_attrs</dt>
+<dd><p>Other attributes you can set to form tag.</p>
+</dd>
+<dt>data</dt>
+<dd><p>Data you want to set. It should be a dict, each key will be the attribute name. If you set it, it'll be replace with default value of matched field. You don't need to set it in initialization, you can use Form.binding() or when you call Form.validate() to validate the submit data, the errors will be automatically bound.</p>
+</dd>
+<dt>errors</dt>
+<dd><p>Error message of each field or the global error. It's a dict too. And if the key is <code>'_'</code> it means it's global error. You don't need to set it in initialization, you can use Form.binding() or when you call Form.validate() to validate the submit data, the errors will be automatically bound.</p>
+</dd>
+<dt>idtype</dt>
+<dd><p>idtype is used to indicate how to create <code>id</code> attribute. Default is <code>'name'</code>, that means when creating HTML code for a field, it'll use the field name as the <code>id</code> value, the format will be <code>field_&lt;fieldname&gt;</code>. If it's <code>None</code>, the created HTML code will not has <code>id</code> attribute at all. And if it's other value the id format will be <code>field_&lt;no&gt;</code>, each field will have a unique id number value when creating the instance.</p>
+</dd>
+</dl><h2 id="title_1-2">2\ \ \ Defining a Form<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>You can define any field as you want in a Form class, just define it in Form class just like abvoe example. More details about available fields you can see <em>Bultin Fields</em> section.</p>
+<p>Beside defining fields in a Form class, you can also define validators for fields or whole Form. For example:</p>
+<pre class="prettyprint"><code>from uliweb.form import *
+
+class F(Form):
+    user_name = StringField(required=True)
+    password = PasswordField(required=True)
+    enter_password_again = PasswordField(required=True)
+
+    def validate_user_name(self, value):
+        if value != 'limodou':
+            raise ValidationError, 'Username should be limodou'
+
+    def form_validate(self, all_values):
+        if all_values.password != all_values.enter_password_again:
+            raise ValidationError, 'Passwords are not matched'</code></pre>
+<p>This example demenstrates how to define a validateor for <code>user_name</code> field in the <code>F</code> form. You can define a function which name is like <code>validate_&lt;field_name&gt;</code>. And how to define a whole Form level validator, just define a function which name is <code>form_validate</code>.</p>
+<h2 id="title_1-3">3\ \ \ Form Layout<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>Form class supports layout feature. A layout can be used to create real HTML code. There are two layouts: TableLayout and CSSLayout already defined in Form module. So you can use them directly. Default is TableLayout. And if you want to change it, just define a <code>layout_class</code> attribute in Form class. For example:</p>
+<pre class="prettyprint"><code>from uliweb.form import *
+
+class F(Form):
+    layout_class = CSSLayout
+
+    title = StringField(label='Title:', required=True, help_string="This is a help string")
+    date = DateField(label='Date:', name='adate', required=True)</code></pre>
+<h2 id="title_1-4">4\ \ \ Outputing HTML Code<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>For simple cases, you may want to output Form HTML code with empty value. For example, below is view function:</p>
+<pre class="prettyprint"><code>from uliweb.form import *
+
+@expose('/form_test')
+def form_test():
+    class F(Form):
+        user_name = StringField(required=True)
+        password = PasswordField(required=True)
+        enter_password_again = PasswordField(required=True)
+
+    f = F()
+    return {'form':f}</code></pre>
+<p>So after you create the instance of <code>F</code>, you can return a dict to template. And the template is:</p>
+<pre class="prettyprint"><code>{{ if '_' in form.errors: }}
+&lt;h2&gt;Error:{{=form.errors._}}&lt;/h2&gt;
+{{pass}}
+{{&lt;&lt; form}}</code></pre>
+<p>For first 3 lines, they are the form level error display process. And <code>{&lt;&lt; form}}</code> is: outputing the form object without escaping, so characters like <code>&lt;</code> etc. will not be converted to <code>&amp;lt;</code>. That's exactly what we want.</p>
+<p>If you want the form have initial values, you have two ways. One you can pass the <code>data</code> and <code>errors</code> (if existing) parameters to Form initialization function. For example:</p>
+<pre class="prettyprint"><code>from uliweb.form import *
+
+class F(Form):
+    user_name = StringField(required=True)
+    password = PasswordField(required=True)
+    enter_password_again = PasswordField(required=True)
+
+d = {'user_name':'limodou'}
+f = F(data=d)</code></pre>
+<p>Or you can use Form.bind() function. For example:</p>
+<pre class="prettyprint"><code>f = F()
+f.bind(data=d)</code></pre>
+<div class="ui info message">
+<p>The <code>data</code> should be a dict, and the values are matched with the Fields date type.</p>
+
+</div>
+<p>You can also output Form HTML code with <code>f.html()</code> method, it the same as <code>str(f)</code>. Here <code>f</code> is the instance of a defined Form.</p>
+<p>Because f.html() will output a whole Form HTML code, but sometimes you may want to create Form HTML code yourself, and you can do it in template. form module also provides funnctions to help you to do that. For example:</p>
+<pre class="prettyprint"><code>{{&lt;&lt;form.form_begin}}
+&lt;dl&gt;
+&lt;dt&gt;{{&lt;&lt;form.title.label}}&lt;/dt&gt;
+&lt;dd&gt;{{&lt;&lt;form.title}} {{&lt;&lt;form.f.title.error}} {{&lt;&lt;form.f.title.help_string}}&lt;/dd&gt;
+&lt;dt&gt;{{&lt;&lt;form.title.label}}&lt;/dt&gt;
+&lt;dd&gt;{{&lt;&lt;form.title}}&lt;/dd&gt;
+&lt;dt&gt;{{&lt;&lt;form.date.label}}&lt;/dt&gt;
+&lt;dd&gt;{{&lt;&lt;form.date}}&lt;/dd&gt;
+
+&lt;/dl&gt;
+{{&lt;&lt;form.buttons}}
+{{&lt;&lt;form.form_end}}</code></pre>
+<p>You can see, Form has provides: <code>form.form_begin</code>, <code>form.form.buttons</code>, <code>form.form_end</code>, and <code>form.&lt;field&gt;.lable</code>, <code>form.&lt;field&gt;</code>, <code>form.&lt;field&gt;.error</code>, <code>formm.&lt;field&gt;.help_string</code> methods or properties to create a Form in a template.</p>
+<div class="ui info message">
+<p>If you've already validated submitted data, the data or errors will be bound to the form instance, so when you re-render the form instance again, just lik <code>return {'form':f}</code> and <code>{{&lt;&lt; form}}</code>, it'll output the data and errors to HTML code.</p>
+
+</div>
+<h2 id="title_1-5">5\ \ \ Validating Submitted Data<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>When you defining a Form, you may want to validate the value. And you've seen how to define validator functions in a Form. So when user submitting the data, how to validate them and what's the next step after validating?</p>
+<p>You can use Form.validate() to validate the submmited data. For example:</p>
+<pre class="prettyprint"><code>from uliweb.form import *
+
+class F(Form):
+    user_name = StringField(required=True)
+    password = PasswordField(required=True)
+    enter_password_again = PasswordField(required=True)
+
+f = F()
+if f.validate(request.params):
+    ...
+else:
+    return {'form':f}</code></pre>
+<p>Above example demonstrates how to validate the submitted data. You should pass <code>request.GET</code> or <code>request.POST</code> or <code>request.params</code> or <code>request.FILES</code> to Form.validate() function. Or you can also pass multiple vars to Form.validate(), just like:</p>
+<pre class="prettyprint"><code>f.validate(request.POST, request.FILES)</code></pre>
+<div class="ui info message">
+<p>Here the data passed to Form.validate() should be a dict-like object, and if you define <code>multiple</code> parameter in one field definition, the data should support getall() method or getlist() method.</p>
+
+</div>
+<p>If Form.validate() validate the submitted data ok, it'll return <code>True</code>. Or it'll return <code>False</code>. If the validatation result is <code>True</code>, the submitted data will be converted to Python data type, and be bound to the Form instance. You can use <code>Form.data</code> and <code>Form.errors</code> to get the data and errors. They are dict data type. You can also use <code>Form.&lt;field&gt;.data</code> and <code>Form.&lt;field&gt;.error</code> to get one field data and error.</p>
+<p>So after validating the data, you can use <code>form.data</code> or <code>form.&lt;field&gt;.data</code> to do more process.</p>
+<h2 id="title_1-6">6\ \ \ Field Definition<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>The basic field class definition will be:</p>
+<pre class="prettyprint"><code>Form.BaseField(label='', default=None, required=False, validators=None,
+    name='', html_attrs=None, help_string='', build=None, datatype=None,
+    multiple=False, idtype=None, **kwargs)</code></pre>
+<p>Let's explain these parameters one by one:</p>
+<dl>
+<dt>label</dt>
+<dd><p>Will be used to display a <code>&lt;label&gt;label&lt;/label&gt;</code> tag. If it's empty, Uliweb form will use the field name, and it'll convert a field name to camel case format, and if <code>'_'</code> is in field name, it'll be converted to space. So <code>user_name</code> will be converted to <code>User Name</code>.</p>
+</dd>
+<dt>default</dt>
+<dd><p>Default value of a field. There are many usages of defult parameter. When you render the field to HTML code, if the field data is not existed, default value will be used. Or when you validating submitted data, and the feild is not required, and there is no matched submitted data, default value will be used. default value for DateField and TimeField has other usage, you'll find it at DateField description. Different fields have differnt default value, you should validate documentan carefully.</p>
+</dd>
+<dt>required</dt>
+<dd><p>Indicate whether a field is must existed. Default is False. If it's <code>True</code>, you must enter value to the field, but not empty value. If it's <code>False</code>, you don't need to enter the field.</p>
+</dd>
+<dt>validators</dt>
+<dd><p>It's a validators list. If you want to validate whether the submitted data is correct, you can define your validator functions or just use built-in validator functions, and pass a validators list to it. More details please read <em>Validator</em> section.</p>
+</dd>
+<dt>name</dt>
+<dd><p>The name of the field. By default, you don't need to define it, because when you define a field in a form, Uliweb form will assign field name to field instance. But you can still pass <code>name</code> parameter to a field. That will result: the form will use field name to access the data, and HTML code will use <code>name</code> to access the HTML data. For example:</p>
+<pre class="prettyprint"><code>from uliweb.form import *
+
+class F(Form):
+    user_name = StringField(name='username')</code></pre>
+<p>So you can see the you defined a field with <code>user_name</code>, but it's really name is <code>username</code>.</p>
+</dd>
+<dt>help_string</dt>
+<dd><p>Just a help string of the field. And Layout class can use it to display a hint message.</p>
+</dd>
+<dt>build</dt>
+<dd><p>Every field has a defult HTML code build class, but you can change default build class by passing this parameter. But you seldom to use it.</p>
+</dd>
+<dt>datatype</dt>
+<dd><p>Every field has a default Python data type, and it'll be used when validating the submitted data, it'll convert the HTML code to defult Python data type. But you can change the default data type by passing this parameter.</p>
+</dd>
+<dt>multiple</dt>
+<dd><p>If a field can accept multiple same name values. If there are some same name fields, and you pass multiple parameter to True, the result will be a list but not a single value.</p>
+<div class="ui info message">
+<p>Uliweb Form can't corrently create HTML code for the field with multiple values, so you can't simple use <code>{{&lt;&lt; form}}</code> to render the form, but create the form code manually.</p>
+
+</div></dd>
+<dt>idtype</dt>
+<dd><p>Indicating how to create an id attribute for html code of a field. If <code>None</code>, it'll not create <code>id</code> attribute. If it's <code>name</code>, it'll use <code>field_&lt;name&gt;</code> format to create <code>id</code> attribute. Others will use <code>field_&lt;no&gt;</code>, and <code>no</code> is a unique number of a field.</p>
+</dd>
+</dl>
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./form.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/toc/toc.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
+<script src="./../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+    });
+});
+</script>
+</body>
+</html>

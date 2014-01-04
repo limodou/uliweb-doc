@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
+<link href="./static/asset/prettify.css" rel="stylesheet">
+<link href="./static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+
+<title>Hello, Uliweb - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a>
+    
+    <div class="right menu">
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        
+<div class="chapter-next chapter-top">
+    <a next-chapter href="./guestbook.html">Mini GuestBook <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">Hello, Uliweb<a class="anchor" href="#title_1">&para;</a></h1>
+<p>This tutorial will get you started with the Uliweb framework. In the following simple demo, we're going to generate a plain page which displays "Hello, Uliweb." step by step.</p>
+<h2 id="title_1-1">1\ \ \ Getting Started<a class="anchor" href="#title_1-1">&para;</a></h2>
+<dl>
+<dt>The first thing would be to read this article <a href="installation" class="inner">Installation</a>,</dt>
+<dd><p>a correct installation of Uliweb is a prerequisite.</p>
+</dd>
+</dl><h2 id="title_1-2">2\ \ \ Creating a new project<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>Uliweb provides a command line tool named <code>uliweb</code>, you can use it to execute several commands.</p>
+<p>At the command line,  change to or create a directory in which you want to create new Uliweb project,  then execute:</p>
+<pre class="prettyprint"><code>uliweb makeproject project</code></pre>
+<p>If the command execution is successful, it'll output nothing and create a directory named <code>hello_project</code>. A clean workspace is created with relevant files for the project in this directory.</p>
+<p>The project folder will be:</p>
+<pre class="prettyprint"><code>|-- app.yaml
+|-- apps/
+|   `-- settings.ini
+|-- gae_handler.py
+|-- runcgi.py
+`-- wsgi_handler.wsgi</code></pre>
+<h2 id="title_1-3">3\ \ \ Creating the 'Hello' app<a class="anchor" href="#title_1-3">&para;</a></h2>
+<pre class="prettyprint"><code>cd project
+uliweb makeapp Hello</code></pre>
+<p>Go into <code>project</code> directory, create a new app following the command as shown. You can substitute the name of the app, <code>Hello</code> with another name of your choice.</p>
+<p>After the command above is executed successfully, you can find the following files in <code>apps/Hello</code> directory:</p>
+<pre class="prettyprint"><code>|-- __init__.py
+|-- conf.py
+|-- info.ini
+|-- static/
+|   `-- readme.txt
+|-- templates/
+|   `-- readme.txt
+`-- views.py</code></pre>
+<h2 id="title_1-4">4\ \ \ Starting the server<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>After the above steps, you can start up your web project as follows:</p>
+<pre class="prettyprint"><code>uliweb runserver</code></pre>
+<p>Following the instructions and information printout to the console, you can open a browser and enter the url <a href="http://localhost:8000" class="outter">http://localhost:8000</a>.  You would see a rendered page with the message "Hello, Uliweb" . Congratulations!</p>
+<h2 id="title_1-5">5\ \ \ Modifying the "View"<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>When user requests an URL, Uliweb tries to map the URL to a view function. So in the case of our example, the request for <a href="http://localhost:8000" class="outter">http://localhost:8000</a> would map to a function thatmaps to the "/" location on our server. To see how this works, take a look in the <code>Hello/view.py</code> file. All your view functions should be declared in this file. Open it in your favourite editor, then you will see:</p>
+<pre class="prettyprint"><code>#coding=utf-8
+from uliweb import expose
+
+@expose('/')
+def index():
+    return '&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;'</code></pre>
+<p>The above code was generated automatically when you executing <code>makeapp</code>, and we even don't need write any code, the  !</p>
+<p><code>@expose('/')</code> decorator is used for URL Mapping, which means map the url <code>'/'</code> to the view function below. So when visiting <a href="http://localhost:8000" class="outter">http://localhost:8000</a>, function <code>index()</code> will be called. If a view function is not decorated by <code>expose</code>, it will not be mapped to any url and is treated as a local function.</p>
+<p>This function will return a line of HTML code that will be displayed directly in browser.</p>
+<h2 id="title_1-6">6\ \ \ Adding templates<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>If your view function returns a dict object, Uliweb will apply it to a template automatically. It means that different return value will cause a different action. The template is the same name as your view function with '.html' suffix. For example, the template of <code>index()</code> is <code>index.html</code>. Templates should be placed into the directory <code>templates</code> which will be automatically created when creating a new app. Now let's add a new function to test template process.</p>
+<pre class="prettyprint"><code>@expose('/template')
+def template():
+    return {}</code></pre>
+<p>Then create a new file <code>template.html</code> in <code>apps/Hello/templates</code> with contents like below:</p>
+<pre class="prettyprint"><code>&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;</code></pre>
+<p>Visit <a href="http://localhost:8000/template" class="outter">http://localhost:8000/template</a> in the browser, you will see the same thing as the previous one.</p>
+<h2 id="title_1-7">7\ \ \ Using template variables<a class="anchor" href="#title_1-7">&para;</a></h2>
+<p>In above two examples, all data are outputed directly, we're going to use template variables to change that. Add another view function with the following code:</p>
+<pre class="prettyprint"><code>@expose('/template1')
+def template1():
+    return {'content':'Uliweb'}</code></pre>
+<p>The function <code>template1()</code> returns a dict object with <code>content</code> which representing the content to be displayed. If you feel uncomfortable with the <code>{}</code>, try this alternative:</p>
+<pre class="prettyprint"><code>return dict(content='Uliweb')</code></pre>
+<p>or:</p>
+<pre class="prettyprint"><code>content = 'Uliweb'
+return locals()</code></pre>
+<p>The first one uses <code>dict()</code> to construct a dict object while the second one uses the builtin function <code>locals()</code> directly - as long as you define the corresponding variables in current scope. Although <code>locals()</code> may return some irrelevant variables, it is not harmful.</p>
+<p>Then create <code>template1.html</code> in <code>apps/Hello/templates</code> with contents like below:</p>
+<pre class="prettyprint"><code>&lt;h1&gt;Hello, {{=content}}&lt;/h1&gt;</code></pre>
+<p><code>{{=content}}</code> represents outputing value of <code>content</code> to template. Here you can use a variable or a function with return value between <code>{{=</code> and <code>}}</code>.</p>
+<div class="ui info message">
+<p>The development server provided by Uliweb has the ability to reload apps, you don't need to restart the server too often when making changes - refreshing you browser is enough in most situations. However, when you are struck with templates cache or something goes wrong seriously, you do need to restart it. Pressing Ctrl + C in command line can shutdown the server, and then you can restart it.</p>
+
+</div>
+<h2 id="title_1-8">8\ \ \ End<a class="anchor" href="#title_1-8">&para;</a></h2>
+<p>This tutorial only demonstrates some fundamental things like view and templates and lots of topics are not mentioned, such as:</p>
+<ul>
+<li>Organizing Apps</li>
+<li>Using Database</li>
+<li>Configurations</li>
+<li>etc.</li>
+</ul>
+<p>You can find other documentation at <a href="http://uliwebproject.appspot.com" class="outter">http://uliwebproject.appspot.com</a>.</p>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./hello_uliweb.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/toc/toc.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
+<script src="./../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+    });
+});
+</script>
+</body>
+</html>
