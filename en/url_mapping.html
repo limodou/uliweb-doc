@@ -57,7 +57,7 @@
 <p>Uliweb uses Werkzeug's routing.py module to process URLs. When you use <code>makeapp</code> command to create a new app directory, it'll automatically create a <code>views.py</code>, and it'll automatically add some code for you, for example:</p>
 <pre class="prettyprint"><code>from uliweb.core.SimpleFrame import expose</code></pre>
 <p>So that you can directly use expose in view modules. <code>expose</code> is a decorator function. Using it you can binding an URL with a view function, and create reversed URL later by <code>url_for</code> function(It's another function provided by SimpleFrame).</p>
-<h2 id="title_1-1">1\ \ \ expose Description<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">expose Description<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>For now, Uliweb doesn't support centralized URL management, so you need to add expose in front of each view function. If there is no expose, the function will not be visited by browser.</p>
 <p>Basic usage is:</p>
 <ol>
@@ -73,28 +73,24 @@ def index(arg1, arg2):
 <pre class="prettyprint"><code>@expose('/index')
 def index():
     return {}</code></pre>
-<p>You can specify any URL you want to use in expose() function, this URL will be bound to below view function.</p>
-<ol>
-<li>Argument Process If there are something can be changed in the URL, you can configure them as arguments. A basic argument format is like:</li>
-</ol>
+<p>You can specify any URL you want to use in expose() function, this URL will be bound to below view function.</p></li>
+<li><p>Argument Process</p>
+<p>If there are something can be changed in the URL, you can configure them as arguments. A basic argument format is like:</p>
 <pre class="prettyprint"><code>&lt;convertor(arguments):name&gt;</code></pre>
-<p><code>convertor</code> and <code>arguments</code> can be omitted. convertor can be set as: int, float, any, string, unicode, path now. Different convertor can accept different arguments. More details please see below section about convertor Description. The simplest format is <code>&lt;name&gt;</code>, it'll match the stuff between <code>'/'</code> and <code>'/'</code>. For <code>name</code>, it's the argument name, it needs to be matched with the arugments of view function it bounded.</p>
-<ol>
-<li>Other arguments of expose <code>expose</code> function enable other arguments except for the first URL string, for example: defaults</li>
-</ol>
-<blockquote><p>It can be used for defining the default arguments value of view function argument, for example, you can do:</p>
-<p>@expose('/all', defaults={'page': 1}) @expose('/all/page/<int:page>') def show(page):     return {}</p>
+<p><code>convertor</code> and <code>arguments</code> can be omitted. convertor can be set as: int, float, any, string, unicode, path now. Different convertor can accept different arguments. More details please see below section about convertor Description. The simplest format is <code>&lt;name&gt;</code>, it'll match the stuff between <code>'/'</code> and <code>'/'</code>. For <code>name</code>, it's the argument name, it needs to be matched with the arugments of view function it bounded.</p></li>
+<li><p>Other arguments of expose</p>
+<p><code>expose</code> function enable other arguments except for the first URL string, for example: defaults</p>
+<p>It can be used for defining the default arguments value of view function argument, for example, you can do:</p>
+<pre class="prettyprint"><code>@expose('/all', defaults={'page': 1})
+@expose('/all/page/&lt;int:page&gt;')
+def show(page):
+    return {}</code></pre>
 <p>You can see above two URLs will be bound to the same show() function, but because show() need a page argument, so for the first URL, you should define a default value of page argument.</p>
 <p>build_only</p>
 <p>If it be set as True, then it means that this binding will only be used for creating reversed URL, it'll not be used for matching URL. For now, Uliweb provide static files serving, just add static file serving view function to view modules, and bind static URL to this view function. But you may want to use web server(Like Apache) to serve static files. And you probablely have already used url_for to create reversed URL, then you can set this argument to True, so that the url_for can be still enabled, but URL matching will be disabled.</p>
-<p>There are more arguments you can use in expose function, you can see the routing.py of Werkzeug for more details.</p>
-</blockquote></li>
+<p>There are more arguments you can use in expose function, you can see the routing.py of Werkzeug for more details.</p></li>
 </ol>
-<div class="ui info message">
-<p>In non-GAE environment, you don't need to import expose explicitly, because Uliweb has already put it in __builtin__, so you can use it directly. But in GAE, it'll disable this process, so you need to import it explicitly. But if you use makeapp to create a new app, Uliweb has already put this line in views.py.</p>
-
-</div>
-<h2 id="title_1-2">2\ \ \ url_for Description<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-2">url_for Description<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>url_for can be used for creating reversed URL, it need a string format view function name, for example:</p>
 <pre class="prettyprint"><code>url_for('appname.views_module_name.function_name', **kwargs)</code></pre>
 <p>kwargs will match with the arguments of view function.</p>
@@ -111,9 +107,10 @@ def index():
 <p>For now, you can use url_for directory in both view functions and templates without import it explicitly.</p>
 
 </div>
-<h2 id="title_1-3">3\ \ \ convertor Description<a class="anchor" href="#title_1-3">&para;</a></h2>
-<ul>
-<li><p>int     Basic format is:</p>
+<h2 id="title_1-3">convertor Description<a class="anchor" href="#title_1-3">&para;</a></h2>
+<dl>
+<dt>int</dt>
+<dd><p>Basic format is:</p>
 <pre class="prettyprint"><code>&lt;int:name&gt;                      #Simple format
 &lt;int(fixed_digits=4):name&gt;      #With arguments</code></pre>
 <p>Supported arguments are:</p>
@@ -121,16 +118,20 @@ def index():
 <li>fixed_digits Fixed length</li>
 <li>min Minimum</li>
 <li>max Maximum</li>
-</ul></li>
-<li><p>float     Basic format is:</p>
+</ul>
+</dd>
+<dt>float</dt>
+<dd><p>Basic format is:</p>
 <pre class="prettyprint"><code>&lt;float:name&gt;                    #Simple format
 &lt;float(min=0.01):name&gt;          #With arguments</code></pre>
 <p>Supported arguments are:</p>
 <ul>
 <li>min Minimum</li>
 <li>max Maximum</li>
-</ul></li>
-<li><p>string and unicode     They are the same actually     Basic format is:</p>
+</ul>
+</dd>
+<dt>string and unicode</dt>
+<dd><p>They are the same actually Basic format is:</p>
 <pre class="prettyprint"><code>&lt;string:name&gt;
 &lt;unicode(length=2):name&gt;</code></pre>
 <p>Supported arguments are:</p>
@@ -138,20 +139,24 @@ def index():
 <li>minlength Minimal length</li>
 <li>maxlength Maximal length</li>
 <li>length Fixed length</li>
-</ul></li>
-<li><p>path     Just like <code>string</code> and <code>unicode</code> convertor, but has no arguments.     Used to match stuff between <code>'/'</code> and next string or the end.     Basic format is:</p>
+</ul>
+</dd>
+<dt>path</dt>
+<dd><p>Just like <code>string</code> and <code>unicode</code> convertor, but has no arguments. Used to match stuff between <code>'/'</code> and next string or the end. Basic format is:</p>
 <pre class="prettyprint"><code>&lt;path:name&gt;</code></pre>
 <p>Example:</p>
 <pre class="prettyprint"><code>'/static/&lt;path:filename&gt;'</code></pre>
 <p>can match:</p>
 <pre class="prettyprint"><code>'/static/a.css'         -&gt; filename='a.css'
 '/static/css/a.css'     -&gt; filename='css/a.css'
-'/static/image/a.gif'   -&gt; filename='image/a.gif'</code></pre></li>
-<li><p>any     Basic format is:</p>
+'/static/image/a.gif'   -&gt; filename='image/a.gif'</code></pre>
+</dd>
+<dt>any</dt>
+<dd><p>Basic format is:</p>
 <pre class="prettyprint"><code>&lt;any(about, help, imprint, u"class"):name&gt;</code></pre>
-<p>It'll match any of string listed.</p></li>
-</ul>
-
+<p>It'll match any of string listed.</p>
+</dd>
+</dl>
         
         <div class="ui blue inverted small label">
             <i class="icon download"></i><a href="./url_mapping.md">View Source</a>

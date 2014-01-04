@@ -53,23 +53,23 @@
         
         <h1 id="title_1">Mini GuestBook<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Maybe you've learned <a href="hello_uliweb" class="inner">Hello, Uliweb</a> this tutorial, and have some sense to Uliweb, so, let's step into database world together, and see how to use database simply.</p>
-<h2 id="title_1-1">1\ \ \ Prepare<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">Prepare<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>There is already the whole GuestBook source code in uliweb-tests project. So you can checkout from it:</p>
 <pre class="prettyprint"><code>svn checkout http://uliweb-tests.googlecode.com/svn/trunk/guestbook guestbook
 cd guestbook
 uliweb runserver</code></pre>
 <p>Enter <a href="http://localhost:8000/guestbook" class="outter">http://localhost:8000/guestbook</a> in the browser, then you'll find it. By default, it'll use sqlite3, so if you are using Python 2.5, you'll not need to install sqlite Python binding module. Or you need to install pysqlite2 package yourself. For now, Uliweb uses <a href="http://www.sqlalchemy.org" class="outter">SqlAlchemy</a> for underlying database driven module, it already supports many database, such as: mysql, sqlite, postgresql, etc. Before you want to use other databases, you should also install their database module first.</p>
 <p>Ok, let's begin to write code.</p>
-<h2 id="title_1-2">2\ \ \ Create Project<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-2">Create Project<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>I suggest that you begin your work in a new directory, for example:</p>
 <pre class="prettyprint"><code>uliweb makeproject guestbook</code></pre>
 <p>So it'll export all necessary Uliweb source code to outputdir directory. Then goto this directory, ready to begin.</p>
-<h2 id="title_1-3">3\ \ \ Create App<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-3">Create App<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>Goto the project directory built in previous step, and use <code>makeapp</code> to create a new app.</p>
 <pre class="prettyprint"><code>cd samples
 uliweb makeapp GuestBook</code></pre>
 <p>This will automatially create a <code>GuestBook</code> app for you in <code>apps</code> directory of your project.</p>
-<h2 id="title_1-4">4\ \ \ Configure Database<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h2 id="title_1-4">Configure Database<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>In this tutorial we'll use Uliweb orm to access database. And there is also a builtin orm app, so that you can use it directly. Just editing <code>guestbook/apps/settings.ini</code>, then change the <code>INSTALLED_APPS</code> to:</p>
 <pre class="prettyprint"><code>INSTALLED_APPS = [
     'GuestBook',
@@ -98,7 +98,7 @@ sqlite_db = create_engine('sqlite:///relative/path/to/database.txt')
 sqlite_db = create_engine('sqlite://')  # in-memory database
 sqlite_db = create_engine('sqlite://:memory:')  # the same</code></pre>
 <p>Here we use relative path format, so the <code>guestbook.db</code> will be created at guestbook folder.</p>
-<h2 id="title_1-5">5\ \ \ Template Environment Extension<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h2 id="title_1-5">Template Environment Extension<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>Because we want to enable user input plain text and output them as HTML code, so we'll use uliweb.utils.text2html function to convert text to HTML code, and we can indeed import this function in template file, but we can also bind <code>prepare_view_env</code> dispatch point, and inject a <code>text2html</code> function object to template environment, so that you can use <code>text2html</code> directly in template. Open <code>GuestBook/__init__.py</code> and adding below codes:</p>
 <pre class="prettyprint"><code>from uliweb.core.dispatch import bind
 
@@ -107,7 +107,7 @@ def prepare_view_env(sender, env, request):
     from uliweb.utils.textconvert import text2html
     env['text2html'] = text2html</code></pre>
 <p>This is a dispatch receiver function usage example, and there are some others plugin hook you can use. And this hook point is global availabe, so other apps can also use it.</p>
-<h2 id="title_1-6">6\ \ \ Prepare Model<a class="anchor" href="#title_1-6">&para;</a></h2>
+<h2 id="title_1-6">Prepare Model<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>Creating a <code>models.py</code> file in GuestBook directory, and add below code:</p>
 <pre class="prettyprint"><code>from uliweb.orm import *
 import datetime
@@ -144,7 +144,7 @@ class Note(Model):
 <p>When you define Model class, Uliorm will automatically add a <code>id</code> field for you, it'll be a primary key.</p>
 
 </div>
-<h2 id="title_1-7">7\ \ \ Static Files Serving<a class="anchor" href="#title_1-7">&para;</a></h2>
+<h2 id="title_1-7">Static Files Serving<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>We'll need to display static files later, now we can just add <code>uliweb.contrib.staticfiles</code> to <code>INSTALLE_APPS</code> of <code>settings.ini</code>. Using this app, all static directories of available apps will be processed as static folder, and the URL link will start begin with <code>/static/</code>. Now the <code>settings.ini</code> will look like:</p>
 <pre class="prettyprint"><code>[GLOBAL]
 DEBUG = True
@@ -158,8 +158,8 @@ INSTALLED_APPS = [
 [ORM]
 CONNECTION = 'sqlite:///guestbook.db'</code></pre>
 <p>As soon as you've added <code>uliweb.contrib.staticfiles</code>, you can call <code>url_for_static()</code> in views or template. This function will create url for files in static folder of each App.</p>
-<h2 id="title_1-8">8\ \ \ Display Comments<a class="anchor" href="#title_1-8">&para;</a></h2>
-<h3 id="title_1-8-1">8.1\ \ \ Change index() function in view<a class="anchor" href="#title_1-8-1">&para;</a></h3>
+<h2 id="title_1-8">Display Comments<a class="anchor" href="#title_1-8">&para;</a></h2>
+<h3 id="title_1-8-1">Change index() function in view<a class="anchor" href="#title_1-8-1">&para;</a></h3>
 <p>Open <code>views.py</code> in <code>GuestBook</code> directory, and change it to:</p>
 <pre class="prettyprint"><code>#coding=utf-8
 from uliweb import expose
@@ -181,7 +181,7 @@ note = Note.get(Note.c.username=='limodou') #Gain records with username equals '
 <p>And Uliweb also provides a reversed URL creating function - url_for, you can use it to create a URL according view function string like above format. We will see its usage in template later.</p>
 
 </div>
-<h3 id="title_1-8-2">8.2\ \ \ Create Layout Template File<a class="anchor" href="#title_1-8-2">&para;</a></h3>
+<h3 id="title_1-8-2">Create Layout Template File<a class="anchor" href="#title_1-8-2">&para;</a></h3>
 <p>I don't want to repeat myself again, because I've already made a YAML layout template file before, and it's in uliweb.contrib now, so you can also use this CSS framework to get beautiful representation.</p>
 <p>Create a <code>base.html</code> file in <code>GuestBook/templates</code> directory, the content should be:</p>
 <pre class="prettyprint"><code>{{extend "yaml_base_layout.html"}}
@@ -190,23 +190,21 @@ note = Note.get(Note.c.username=='limodou') #Gain records with username equals '
 {{block header}}&lt;h1&gt;&lt;a href="{{=url_for('GuestBook.views.index')}}"&gt;
 Uliweb Guest Book&lt;/a&gt;&lt;/h1&gt;{{end}}</code></pre>
 <p>So you can see, we extend <code>yaml_base_layout.html</code> template, and override some blocks defined in parent template. Here we use <code>url_for</code> to get reversed URL according the view function name.</p>
-<h3 id="title_1-8-3">8.3\ \ \ Create index.html Template File<a class="anchor" href="#title_1-8-3">&para;</a></h3>
+<h3 id="title_1-8-3">Create index.html Template File<a class="anchor" href="#title_1-8-3">&para;</a></h3>
 <p>Create a <code>index.html</code> file in <code>GuestBook/templates</code> directory, it'll be matched to index() function. And add below content to it:</p>
 <p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenguestbook.rst:, line 290)" Cannot analyze code. No Pygments lexer found for "django+html".</p>
-<pre class="prettyprint"><code>.. code:: django+html
-
-    1     {{extend "base.html"}}
-    2     {{block content}}
-    3     &lt;h2&gt;&lt;a href="{{=url_for('GuestBook.views.new_comment')}}"&gt;New Comment&lt;/a&gt;&lt;/h2&gt;
-    4     {{for n in notes:}}
-    5           &lt;div class="info"&gt;
-    6           &lt;h3&gt;&lt;a href="{{= url_for('GuestBook.views.del_comment', id=n.id) }}"&gt;
-    7           &lt;img src="{{= url_for_static('delete.gif') }}"/&gt;
-    8           &lt;/a&gt; {{=n.username}} at {{=n.datetime.strftime('%Y/%m/%d %H:%M:%S')}} say:&lt;/h3&gt;
-    9           &lt;p&gt;{{&lt;&lt;text2html(n.message)}}&lt;/p&gt;
-    10          &lt;/div&gt;
-    11    {{pass}}
-    12    {{end}}</code></pre>
+<pre class="prettyprint"><code>1     {{extend "base.html"}}
+2     {{block content}}
+3     &lt;h2&gt;&lt;a href="{{=url_for('GuestBook.views.new_comment')}}"&gt;New Comment&lt;/a&gt;&lt;/h2&gt;
+4     {{for n in notes:}}
+5           &lt;div class="info"&gt;
+6           &lt;h3&gt;&lt;a href="{{= url_for('GuestBook.views.del_comment', id=n.id) }}"&gt;
+7           &lt;img src="{{= url_for_static('delete.gif') }}"/&gt;
+8           &lt;/a&gt; {{=n.username}} at {{=n.datetime.strftime('%Y/%m/%d %H:%M:%S')}} say:&lt;/h3&gt;
+9           &lt;p&gt;{{&lt;&lt;text2html(n.message)}}&lt;/p&gt;
+10          &lt;/div&gt;
+11    {{pass}}
+12    {{end}}</code></pre>
 <p>The first line means this template will inherit from <code>base.html</code>.</p>
 <p>And <code>{{block content}}</code> means that we'll override the "content" block defined in parent template. But you may ask, why I haven't seen the "content" block definition in <code>base.html</code>. Because it's defined in <code>yaml_base_layout.html</code>.</p>
 <p>Line 3 will display an URL for add new comment.</p>
@@ -214,8 +212,8 @@ Uliweb Guest Book&lt;/a&gt;&lt;/h1&gt;{{end}}</code></pre>
 <p>In loop, it'll process the notes object, and then display a delete link, and then user info and user comments.</p>
 <p>Have you seen <code>{{&lt;&lt;text2html(n.message)}}</code>? It uses <code>text2html</code> function which we defined in __init__.py to convert plain text to html code.</p>
 <p>Ok, after above working, displaying comments is finished. But for now, you can't add comment yet, so let's see how to adding comment.</p>
-<h2 id="title_1-9">9\ \ \ Add comment<a class="anchor" href="#title_1-9">&para;</a></h2>
-<h3 id="title_1-9-4">9.1\ \ \ Add new_comment() function to view<a class="anchor" href="#title_1-9-4">&para;</a></h3>
+<h2 id="title_1-9">Add comment<a class="anchor" href="#title_1-9">&para;</a></h2>
+<h3 id="title_1-9-4">Add new_comment() function to view<a class="anchor" href="#title_1-9-4">&para;</a></h3>
 <p>In the index.html, we've already add some code to create <code>New Comment</code> URL:</p>
 <pre class="prettyprint"><code>&lt;a href="{{=url_for('GuestBook.views.new_comment')}}"&gt;New Comment&lt;/a&gt;</code></pre>
 <p>You can see, I use <code>url_for</code> to create reversed URL. <code>url_for</code> we've covered before, the only thing you need notice here is the function named <code>new_comment</code>, so we need to create such function in views.py.</p>
@@ -247,7 +245,7 @@ Uliweb Guest Book&lt;/a&gt;&lt;/h1&gt;{{end}}</code></pre>
 <p>Then we can invoke <code>n = Note(**data)</code> to create a new Note record, after that the new Note object is not be insert into database yet, so you need to invoke <code>n.save()</code> or <code>n.put()</code> to commit it.</p>
 <p>Then, we will invoke <code>return redirect</code> to jump another page, it's the homepage of GuestBook. Here we use <code>url_for</code> again to create reversed URL. And this time we use <code>index()</code> function object but not function string.</p>
 <p>If the validation is failed, the flag variable should be <code>False</code>. We'll assign an error message to message variable, then show the form again.</p>
-<h3 id="title_1-9-5">9.2\ \ \ Define Form<a class="anchor" href="#title_1-9-5">&para;</a></h3>
+<h3 id="title_1-9-5">Define Form<a class="anchor" href="#title_1-9-5">&para;</a></h3>
 <p>In order to interact with server, uesr can through browser to input data, so you should provide Form HTML element to receive the input data. For an experienced web developer, he can write HTML code manually, but it's difficult for newbies. And you should also think about how to deal with error, data format conversion, etc. So many frameworks provide such Form helper tool, Uliweb also provides such thing. The Form module will be used for this.</p>
 <p>Creating a <code>forms.py</code> file in <code>GuestBook</code> directory, then add below code:</p>
 <pre class="prettyprint"><code>from uliweb.form import *
@@ -268,7 +266,7 @@ class NoteForm(Form):
 <li>validators used to validate the data</li>
 </ul>
 <p>It likes the definition of Model, but they are different.</p>
-<h3 id="title_1-9-6">9.3\ \ \ Create new_comment.html Template File<a class="anchor" href="#title_1-9-6">&para;</a></h3>
+<h3 id="title_1-9-6">Create new_comment.html Template File<a class="anchor" href="#title_1-9-6">&para;</a></h3>
 <p>Creating a <code>new_comment.html</code> file in <code>GuestBook/templates</code> directory, then add beclow code:</p>
 <pre class="prettyprint"><code>{{extend "base.html"}}
 {{block content}}
@@ -285,7 +283,7 @@ class NoteForm(Form):
 <p>Next is a if statement, it'll test if the message is not empty, if not, then display it. Notice the <code>:</code> at the end of the line. And here we use <code>class="warning"</code>, this CSS class also comes from YAML.</p>
 <p>Then display form element, here I used <code>{{&lt;&lt;form}}</code>. Because we don't want the form code be escaped, so we need to use <code>{{&lt;&lt;}}</code> tag.</p>
 <p>Now, you can try current work in the browser.</p>
-<h2 id="title_1-10">10\ \ \ Delete Comment<a class="anchor" href="#title_1-10">&para;</a></h2>
+<h2 id="title_1-10">Delete Comment<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>In <code>index.html</code>, we've defined a link which will be used to delete comment, the format is:</p>
 <pre class="prettyprint"><code>&lt;h3&gt;&lt;a href="{{= url_for('GuestBook.views.del_comment', id=n.id) }}"&gt;</code></pre>
 <p>So let's implement it.</p>
@@ -299,10 +297,10 @@ def del_comment(id):
     else:
         error("No such record [%s] existed" % id)</code></pre>
 <p>Delete is simple, first get the object according the <code>id</code> parameter passwd from view function. <code>Note.get(int(id))</code> will get the object, then if the object existed, then call <code>n.delete()</code> to delete the record. Or display an error page.</p>
-<h3 id="title_1-10-7">10.1\ \ \ URL Arguments Definition<a class="anchor" href="#title_1-10-7">&para;</a></h3>
-<p>Notice, here, expose() uses an argument, i.e. <code>&lt;id&gt;</code>. Once there are something like <code>&lt;type:para&gt;</code> in the URL, that's means you defined an argument. And <code>type</code> can be optional. Uliweb provides many builtin types, such as: int, float, path, any, string, uniocde. And you can find more details in <a href="url_mapping" class="inner">URL Mapping</a> document. If you just define <code>&lt;name&gt;</code> format, it just means matching something between <code>//</code>. Once you defined some arguments in the URL, you must define the same arguments in the view function, so <code>del_comment()</code> function should be written in <code>del_command(id)</code>. There the <code>id</code> arugment is the same as the one in URL.</p>
+<h3 id="title_1-10-7">URL Arguments Definition<a class="anchor" href="#title_1-10-7">&para;</a></h3>
+<p>Notice, here, expose() uses an argument, i.e. <code>&lt;id&gt;</code>. Once there are something like <code>&lt;type:para&gt;</code> in the URL, that's means you defined an argument. And <code>type</code> can be optional. Uliweb provides many builtin types, such as: int, float, path, any, string, uniocde. And you can find more details in <a href="url_mapping.html" class="inner">URL Mapping</a> document. If you just define <code>&lt;name&gt;</code> format, it just means matching something between <code>//</code>. Once you defined some arguments in the URL, you must define the same arguments in the view function, so <code>del_comment()</code> function should be written in <code>del_command(id)</code>. There the <code>id</code> arugment is the same as the one in URL.</p>
 <p>Ok, now you can try if the delete function can be used.</p>
-<h3 id="title_1-10-8">10.2\ \ \ Error Page<a class="anchor" href="#title_1-10-8">&para;</a></h3>
+<h3 id="title_1-10-8">Error Page<a class="anchor" href="#title_1-10-8">&para;</a></h3>
 <p>When there are something wrong, you may need to show an error page to user, so you can use <code>error()</code> function to return an error page. <code>return</code> is no need in front of it, just give it an error message, that's enough.</p>
 <p>How to create error template file? Just create a file named <code>error.html</code> in your app templates directory, and add something like:</p>
 <pre class="prettyprint"><code>{{extend "base.html"}}
@@ -312,11 +310,11 @@ def del_comment(id):
 &lt;p&gt;{{=message}}&lt;/p&gt;
 {{end}}</code></pre>
 <p>It's simple right, we extend from <code>base.html</code>, then override title block, header block and content block. And this page need a <code>message</code> variable.</p>
-<h2 id="title_1-11">11\ \ \ Run<a class="anchor" href="#title_1-11">&para;</a></h2>
+<h2 id="title_1-11">Run<a class="anchor" href="#title_1-11">&para;</a></h2>
 <p>In previous developing procedure, you can also start a developing server to test your project. The command of starting a developing server is:</p>
 <pre class="prettyprint"><code>uliweb runserver</code></pre>
 <p>When it starting, you can input <code>http://localhost:8000/</code> to test this GuestBook demo.</p>
-<h2 id="title_1-12">12\ \ \ Screen Casts<a class="anchor" href="#title_1-12">&para;</a></h2>
+<h2 id="title_1-12">Screen Casts<a class="anchor" href="#title_1-12">&para;</a></h2>
 <p>Let's see some screen casts, this will make more sense.</p>
 <p>Homepage:</p>
 <p><img src="/static/image01.jpg" alt="image"/>
@@ -327,7 +325,7 @@ def del_comment(id):
 <p>Error Comment Page:</p>
 <p><img src="/static/image03.jpg" alt="image"/>
 </p>
-<h2 id="title_1-13">13\ \ \ Conclusion<a class="anchor" href="#title_1-13">&para;</a></h2>
+<h2 id="title_1-13">Conclusion<a class="anchor" href="#title_1-13">&para;</a></h2>
 <p>Wow, we've learnt so many things for now:</p>
 <ol>
 <li>ORM usage, including: ORM initilization, Model definition, simple add, delete, query.</li>

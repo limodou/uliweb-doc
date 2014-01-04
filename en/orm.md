@@ -9,7 +9,7 @@ uliorm is based on SQLAlchemy, so you can also use many features from
 SQLAlchemy.
 
 
-## 1\ \ \ Installation
+## Installation
 
 Because uliorm is built on SQLAlchemy, and it also needs pytz when you want
 to process timezone, so you should install them first before you want to use
@@ -23,7 +23,7 @@ uliweb call -a uliweb.contrib.orm install
 After executing it, it'll automatically install SQLAlchemy and pytz for you.
 
 
-## 2\ \ \ ORM Configuration
+## ORM Configuration
 
 First, you should add `uliweb.contrib.orm` to `INSTALLED_APPS` in `apps/settings.ini`.
 Then, there are several parameters you can set to control the behavior of the ORM.
@@ -94,7 +94,7 @@ uliweb runadmin
 Then in Build page of [http://localhost:8000/admin](http://localhost:8000/admin) to set the settings of ORM App.
 
 
-## 3\ \ \ Model Definition
+## Model Definition
 
 In common, you may create your model in models.py. First you should import from
 uliweb.orm, then create your own model and it should inherit from `Model` class.
@@ -114,7 +114,7 @@ class Note(Model):
 ```
 
 
-### 3.1\ \ \ Table Name
+### Table Name
 
 By default, the table name will be the lower string of model class name, so Note
 model's table name should be `note`.
@@ -130,7 +130,7 @@ class Note(Model):
 ```
 
 
-### 3.2\ \ \ Tabel Arguments
+### Tabel Arguments
 
 In SQLAlchemy, when you creating a Table, you may pass some extra arguments, just
 like: mysql_engine, etc. So you could define `__table_args__` in Model, for example:
@@ -147,16 +147,17 @@ class Todo(Model):
 uliorm also enable you do some initialization works before doing the creation
 of the table. Just write a class method OnInit, for example:
 
-<!-- code: python
-
+```
 class Todo(Model):
     @classmethod
     def OnInit(cls):
-        Index('my_indx', cls.c.title, cls.c.owner, unique=True) -->
+        Index('my_indx', cls.c.title, cls.c.owner, unique=True)
+```
+
 For now, I only test `Index`, and you can also import it from `uliweb.orm`.
 
 
-### 3.4\ \ \ Property Definition
+### Property Definition
 
 uliorm define a model field as Property, but you can also use field concept,
 it's no problem.
@@ -206,13 +207,13 @@ can use it to get and set relative table field. Every property will be an
 instance of `*Peroperty` class.
 
 
-### 3.5\ \ \ ID Property
+### ID Property
 
 By default, uliorm will automatically create an `ID` property for you, and you
 don't need to define it in model.
 
 
-### 3.6\ \ \ Property Constuctor
+### Property Constuctor
 
 Property is the Base class of all other properties. So many of its attributes and
 methods will be used in dirived class:
@@ -269,34 +270,34 @@ nullable --
 
 
 
-### 3.7\ \ \ CharProperty
+### CharProperty
 
 This property will be mapped to `CHAR` type. You should pass a `max_length` to it.
 If you pass a unicode to it, it'll be converted to default encoding(utf-8).
 
 
-### 3.8\ \ \ StringProperty
+### StringProperty
 
 This property will be mapped to `VARCHAR` type. You should pass a `max_length` to it.
 If you pass a unicode to it, it'll be converted to default encoding(utf-8).
 
 
-### 3.9\ \ \ TextProperty
+### TextProperty
 
 This property will be mapped to `TEXT` type.
 
 
-### 3.10\ \ \ UnicodeProperty
+### UnicodeProperty
 
 This property will be mapped to `VARCHAR` type.
 
 
-### 3.11\ \ \ BlobProperty
+### BlobProperty
 
 This property will be mapped to `BLOB` type.
 
 
-### 3.12\ \ \ DateProperty DateTimeProperty TimeProperty
+### DateProperty DateTimeProperty TimeProperty
 
 These properties are used for data and time type. They have three more parameters:
 
@@ -315,12 +316,12 @@ format --
 
 
 
-### 3.13\ \ \ BooleanProperty
+### BooleanProperty
 
 This property will be mapped to `Boolean` type.
 
 
-### 3.14\ \ \ DecimalProperty
+### DecimalProperty
 
 This property will be mapped to `Numric` type. It have two more parameters:
 
@@ -333,7 +334,7 @@ scale --
 
 
 
-### 3.15\ \ \ FloatProperty
+### FloatProperty
 
 This property will be mapped to `Float` type. It have one special parameter:
 
@@ -346,12 +347,12 @@ If you are passing `max_length` but no `precision`, the `precision` will be the 
 value of `max_length`.
 
 
-### 3.16\ \ \ IntegerProperty
+### IntegerProperty
 
 This property will be mapped to `Integer` type.
 
 
-### 3.17\ \ \ Common Attributes of the Model
+### Common Attributes of the Model
 
 
 table --
@@ -370,27 +371,24 @@ metadata --
 
 
 
-## 4\ \ \ Relation Definition
+## Relation Definition
 
 uliorm also supports relation definition: OneToOne, ManyToOne, ManyToMany.
 
 
-### 4.1\ \ \ One to One
+### One to One
 
 "System Message: WARNING/2 (D:\project\mywork\uliweb-doc\docs\en\orm.rst:, line 351)"
 Cannot analyze code. No Pygments lexer found for "python+console".
 
 
 ```
-.. code:: python+console
-
-    >>> class Test(Model):
-    ...     username = Field(str)
-    ...     year = Field(int)
-    >>> class Test1(Model):
-    ...     test = OneToOne(Test)
-    ...     name = Field(str)
-
+>>> class Test(Model):
+...     username = Field(str)
+...     year = Field(int)
+>>> class Test1(Model):
+...     test = OneToOne(Test)
+...     name = Field(str)
 ```
 
 You can use OneToOne to reference other model. For example:
@@ -400,55 +398,49 @@ Cannot analyze code. No Pygments lexer found for "python+console".
 
 
 ```
-.. code:: python+console
-
-    >>> a1 = Test(username='limodou')
-    >>> a1.save()
-    True
-    >>> b1 = Test1(name='user', test=a1)
-    >>> b1.save()
-    True
-    >>> a1
-    <Test {'username':'limodou','year':0,'id':1}>
-    >>> a1.test1
-    <Test1 {'test':<Test {'username':'limodou','year':0,'id':1}>,'name':'user','id':1}>
-    >>> b1.test
-    <Test {'username':'limodou','year':0,'id':1}>
-
+>>> a1 = Test(username='limodou')
+>>> a1.save()
+True
+>>> b1 = Test1(name='user', test=a1)
+>>> b1.save()
+True
+>>> a1
+<Test {'username':'limodou','year':0,'id':1}>
+>>> a1.test1
+<Test1 {'test':<Test {'username':'limodou','year':0,'id':1}>,'name':'user','id':1}>
+>>> b1.test
+<Test {'username':'limodou','year':0,'id':1}>
 ```
 
 
-### 4.2\ \ \ Many to One
+### Many to One
 
 "System Message: WARNING/2 (D:\project\mywork\uliweb-doc\docs\en\orm.rst:, line 380)"
 Cannot analyze code. No Pygments lexer found for "python+console".
 
 
 ```
-.. code:: python+console
-
-    >>> class Test(Model):
-    ...     username = Field(str)
-    ...     year = Field(int)
-    >>> class Test1(Model):
-    ...     test = Reference(Test, collection_name='tttt')
-    ...     name = Field(str)
-    >>> a1 = Test(username='limodou1')
-    >>> a1.save()
-    True
-    >>> b1 = Test1(name='user', test=a1)
-    >>> b1.save()
-    True
-    >>> b2 = Test1(name='aaaa', test=a1)
-    >>> b2.save()
-    True
-    >>> a1
-    <Test {'username':'limodou1','year':0,'id':1}>
-    >>> list(a1.tttt.all())[0]   #here we use tttt but not test1_set
-    <Test1 {'test':<Test {'username':'limodou1','year':0,'id':1}>,'name':'user','id':1}>
-    >>> a1.tttt.count()
-    2
-
+>>> class Test(Model):
+...     username = Field(str)
+...     year = Field(int)
+>>> class Test1(Model):
+...     test = Reference(Test, collection_name='tttt')
+...     name = Field(str)
+>>> a1 = Test(username='limodou1')
+>>> a1.save()
+True
+>>> b1 = Test1(name='user', test=a1)
+>>> b1.save()
+True
+>>> b2 = Test1(name='aaaa', test=a1)
+>>> b2.save()
+True
+>>> a1
+<Test {'username':'limodou1','year':0,'id':1}>
+>>> list(a1.tttt.all())[0]   #here we use tttt but not test1_set
+<Test1 {'test':<Test {'username':'limodou1','year':0,'id':1}>,'name':'user','id':1}>
+>>> a1.tttt.count()
+2
 ```
 
 You should use `Reference` to reference a many to one relation. And `Reference` has
@@ -475,42 +467,39 @@ example:
 ```
 
 
-### 4.3\ \ \ Many to Many
+### Many to Many
 
 "System Message: WARNING/2 (D:\project\mywork\uliweb-doc\docs\en\orm.rst:, line 428)"
 Cannot analyze code. No Pygments lexer found for "python+console".
 
 
 ```
-.. code:: python+console
-
-    >>> class User(Model):
-    ...     username = Field(CHAR, max_length=20)
-    ...     year = Field(int)
-    >>> class Group(Model):
-    ...     name = Field(str, max_length=20)
-    ...     users = ManyToMany(User)
-    >>> a = User(username='limodou', year=5)
-    >>> a.save()
-    True
-    >>> b = User(username='user', year=10)
-    >>> b.save()
-    True
-    >>> c = User(username='abc', year=20)
-    >>> c.save()
-    True
-    >>> g1 = Group(name='python')
-    >>> g1.save()
-    True
-    >>> g2 = Group(name='perl')
-    >>> g2.save()
-    True
-    >>> g3 = Group(name='java')
-    >>> g3.save()
-    True
-    >>> g1.users.add(a)
-    >>> g1.users.add(b)
-
+>>> class User(Model):
+...     username = Field(CHAR, max_length=20)
+...     year = Field(int)
+>>> class Group(Model):
+...     name = Field(str, max_length=20)
+...     users = ManyToMany(User)
+>>> a = User(username='limodou', year=5)
+>>> a.save()
+True
+>>> b = User(username='user', year=10)
+>>> b.save()
+True
+>>> c = User(username='abc', year=20)
+>>> c.save()
+True
+>>> g1 = Group(name='python')
+>>> g1.save()
+True
+>>> g2 = Group(name='perl')
+>>> g2.save()
+True
+>>> g3 = Group(name='java')
+>>> g3.save()
+True
+>>> g1.users.add(a)
+>>> g1.users.add(b)
 ```
 
 You can use `ManyToMany` to reference a many to many relation. uliorm will
@@ -529,7 +518,7 @@ CREATE TABLE group_user_users (
 ```
 
 
-## 5\ \ \ Operation
+## Operation
 
 There are different levels of ORM operations: instance level, model level,
 relation level.
@@ -554,33 +543,35 @@ Relation Level --
 
 
 
-### 5.1\ \ \ Instance Level
+### Instance Level
 
 
-#### 5.1.1\ \ \ Create an Instance
+#### Create an Instance
 
 Say there is a User model, the class definition is:
 
-<!-- code: python
-
+```
 class User(Model):
     username = Field(CHAR, max_length=20)
-    year = Field(int) -->
+    year = Field(int)
+```
+
 So if you want to create an instance of User model, just do like this:
 
-<!-- code: python
+```
+user = User(username='limodou', year=36)
+```
 
-user = User(username='limodou', year=36) -->
 But it'll not be saved in database, it just creates an instance, you need call
 `put` or `save` to save it:
 
-<!-- code: python
-
+```
 user.save()
 #or
-user.put() -->
+user.put()
+```
 
-#### 5.1.2\ \ \ Get an Instance
+#### Get an Instance
 
 
 ```
@@ -591,14 +582,15 @@ user = User.get(User.c.id==5)
 If you want to get an instance from a model, you should call `get` method of a model.
 You can pass a integer or a query condition. So `User.get(5)` will be exact:
 
-<!-- code: python
+```
+User.get(User.c.id==5)
+```
 
-User.get(User.c.id==5) -->
 The query condition syntax is exact SQLAlchemy query syntax, so you can see more
 detail at: [http://www.sqlalchemy.org/docs/05/sqlexpression.html](http://www.sqlalchemy.org/docs/05/sqlexpression.html)
 
 
-#### 5.1.3\ \ \ Delete an instance
+#### Delete an instance
 
 
 ```
@@ -607,7 +599,7 @@ user.delete()
 ```
 
 
-#### 5.1.4\ \ \ Update an instance
+#### Update an instance
 
 
 ```
@@ -617,25 +609,25 @@ user.save()
 ```
 
 
-#### 5.1.5\ \ \ Other APIs
+#### Other APIs
 
 
 to_dict([*fields]) --
     Dumps instance to a dict object. If there is no `fields` parameter, it'll dump
     all fields of the instance. And you can pass fields which you want to dumps,
     for example:
-<!-- code: python
 
-a = User.get(1)
-a.to_dict() #this will dump all fields
-a.to_dict('name', 'age')    #this will only dump 'name' and 'age' fields -->
-
-
-
-### 5.2\ \ \ Model Level
+    ```
+    a = User.get(1)
+    a.to_dict() #this will dump all fields
+    a.to_dict('name', 'age')    #this will only dump 'name' and 'age' fields
+    ```
 
 
-#### 5.2.1\ \ \ Query
+### Model Level
+
+
+#### Query
 
 There are two query methods: all() and filter(). all() and filter() will both
 return an `Result` object, and all() will return all records of a model, but filter()
@@ -643,12 +635,12 @@ will only return records of a model which match the condition passed to filter()
 
 For example:
 
-<!-- code: python
-
+```
 User.all()
-User.filter(User.c.year > 18) -->
+User.filter(User.c.year > 18)
+```
 
-#### 5.2.2\ \ \ Result Object
+#### Result Object
 
 When you executing all() or filter(), it'll return a Result object, and you can
 use it for further opration, just like: filter, count, delete, order_by, limit,
@@ -656,9 +648,9 @@ offset, etc. And other operation will also return Result object, for example, wh
 you access the reversed relation property. Result has many methods, and you can
 combine them one by one, for example:
 
-<!-- code: python
-
-User.all().filter(User.c.year>18).count() -->
+```
+User.all().filter(User.c.year>18).count()
+```
 
 all() --
     It'll return Result object itself.
@@ -707,7 +699,7 @@ one() --
 
 
 
-#### 5.2.3\ \ \ Delete objects
+#### Delete objects
 
 For common usage, you should use all() or filter() first, then use the returned
 Result object to delete objects. But you can still use `remove()` to delete objects
@@ -719,7 +711,7 @@ User.delete(User.c.year<18)
 ```
 
 
-#### 5.2.4\ \ \ Count objects
+#### Count objects
 
 Just like `remove()`, you can still use `count()` to count the objects without
 calling all() or filter() first.
@@ -730,7 +722,7 @@ User.count(User.c.year<18)
 ```
 
 
-#### 5.2.5\ \ \ Other APIs
+#### Other APIs
 
 
 bind(metadata=None, auto_create=False) --
@@ -742,10 +734,10 @@ create() --
 
 
 
-### 5.3\ \ \ Relation Level
+### Relation Level
 
 
-#### 5.3.1\ \ \ One to One
+#### One to One
 
 There is no magic for one to one relation, for example:
 
@@ -766,25 +758,18 @@ There is no magic for one to one relation, for example:
 So you can use `b.test` just like `a` object.
 
 
-#### 5.3.2\ \ \ Many to One
-
-"System Message: WARNING/2 (D:\project\mywork\uliweb-doc\docs\en\orm.rst:, line 694)"
-Cannot analyze code. No Pygments lexer found for "python+console".
-
+#### Many to One
 
 ```
-.. code:: python+console
-
-    >>> class Test(Model):
-    ...     username = Field(str)
-    ...     year = Field(int)
-    >>> class Test1(Model):
-    ...     test = Reference(Test, collection_name='tttt')
-    ...     name = Field(str)
-    >>> a = Test(username='limodou').save()
-    >>> b = Test1(name='user', test=a).save()
-    >>> c = Test1(name='aaaa', test=a).save()
-
+>>> class Test(Model):
+...     username = Field(str)
+...     year = Field(int)
+>>> class Test1(Model):
+...     test = Reference(Test, collection_name='tttt')
+...     name = Field(str)
+>>> a = Test(username='limodou').save()
+>>> b = Test1(name='user', test=a).save()
+>>> c = Test1(name='aaaa', test=a).save()
 ```
 
 According above code, Test:Test1 is a 1:n relation. And `b.test` will be the object
@@ -794,37 +779,30 @@ Test1 model, so the all() and filter() of the Result will return only Test1 obje
 More details you should see `Result` description previous.
 
 
-#### 5.3.3\ \ \ Many to Many
-
-"System Message: WARNING/2 (D:\project\mywork\uliweb-doc\docs\en\orm.rst:, line 715)"
-Cannot analyze code. No Pygments lexer found for "python+console".
-
+#### Many to Many
 
 ```
-.. code:: python+console
-
-    >>> class User(Model):
-    ...     username = Field(CHAR, max_length=20)
-    ...     year = Field(int)
-    >>> class Group(Model):
-    ...     name = Field(str, max_length=20)
-    ...     users = ManyToMany(User)
-    >>> a = User(username='limodou', year=5).save()
-    >>> b = User(username='user', year=10).save()
-    >>> c = User(username='abc', year=20).save()
-    >>> g1 = Group(name='python').save()
-    >>> g2 = Group(name='perl').save()
-    >>> g3 = Group(name='java').save()
-    >>> g1.users.add(a)
-    >>> g1.users.add(b)
-
+>>> class User(Model):
+...     username = Field(CHAR, max_length=20)
+...     year = Field(int)
+>>> class Group(Model):
+...     name = Field(str, max_length=20)
+...     users = ManyToMany(User)
+>>> a = User(username='limodou', year=5).save()
+>>> b = User(username='user', year=10).save()
+>>> c = User(username='abc', year=20).save()
+>>> g1 = Group(name='python').save()
+>>> g2 = Group(name='perl').save()
+>>> g3 = Group(name='java').save()
+>>> g1.users.add(a)
+>>> g1.users.add(b)
 ```
 
 So when you access `a.group_set``(because you didn't define collection_name in ManyToMany
 property) or ``g1.users` it'll return a ManyResult object.
 
 
-#### 5.3.4\ \ \ ManyResult
+#### ManyResult
 
 ManyResult is very like Result. But it has other methods:
 
@@ -840,7 +818,7 @@ delete(*objects) --
 
 
 
-## 6\ \ \ Transacation
+## Transacation
 
 If you are using uliorm, you can install `middle_transaction.TransactionMiddle`
 to `MIDDLEWARE_CLASSES` in `settings.ini`. So when the request is coming, the
@@ -865,7 +843,7 @@ db.rollback()   #rollback
 ```
 
 
-## 7\ \ \ Model Register & Reference
+## Model Register & Reference
 
 Uliweb also provides a new way to deal with model usage.
 
@@ -902,13 +880,13 @@ Of cause this appoach is optional, just when you want to make your app is more
 easy to be replaced.
 
 
-## 8\ \ \ How to use ORM in your program
+## How to use ORM in your program
 
 
-## 9\ \ \ Mysql Issues
+## Mysql Issues
 
 
-### 9.1\ \ \ Encoding Setting
+### Encoding Setting
 
 uliorm will default use utf8 encoding when creating the table in Mysql even
 if the default charset of mysql is not utf8. So that if you are using Mysql
@@ -925,7 +903,7 @@ The charset=utf8 is needed when the default charset of server is not utf8,
 otherwise you don't need to set it.
 
 
-## 10\ \ \ Module Level API
+## Module Level API
 
 
 set_auto_create(flag) --
@@ -966,7 +944,7 @@ get_model(model) --
 
 
 
-## 11\ \ \ Testing Code
+## Testing Code
 
 There are some testing code in uliweb/test/test_orm.py, so you can see some examples
 of how to use uliorm.

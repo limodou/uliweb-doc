@@ -6,7 +6,7 @@ changed it a lot. So many places are same as web2py. Ok, let's see how
 to use template in Uliweb.
 
 
-## 1\ \ \ Features
+## Features
 
 
 * Very simple and easy to learn and use
@@ -20,7 +20,7 @@ to use template in Uliweb.
 * Template will be compiled to Python code then run
 
 
-## 2\ \ \ Syntax
+## Syntax
 
 There is only one tag mark of template, that is `{{}}`. And there are different
 tags according the first word of the tag text. The first word of tag content
@@ -28,69 +28,66 @@ can be treated as the name of the tag, and if the name is not a reserved tag
 name, the content will be treated as common Python code.
 
 
-### 2.1\ \ \ Reserved Tag Syntax
+### Reserved Tag Syntax
 
 
-* 
-    `{{extend parent_template_file}}` --
+`{{extend parent_template_file}}` --
     `extend` is used to derive a parent template.
-        `parent_template_file` is the template filename, it can be a string or a
-        variable. So these are all valid usages:
+    
+    `parent_template_file` is the template filename, it can be a string or a
+    variable. So these are all valid usages:
 
-        ```
-        {{extend "base.html"}}
-        {{extend parent}}
-        ```
+    ```
+    {{extend "base.html"}}
+    {{extend parent}}
+    ```
 
-        For the second one, the `parent` can be passed from the outside or be calculated
-        from template.
+    For the second one, the `parent` can be passed from the outside or be calculated
+    from template.
 
 
-* 
-    `{{include template_file}}` --
+`{{include template_file}}` --
     `include` is used to inclulde other template into current one.
-        `template_file` is the template filename, it can be a string or a variable
-        just like `extend` usage.
+    
+    `template_file` is the template filename, it can be a string or a variable
+    just like `extend` usage.
 
 
-* 
-    `{{=variable}}` --
+`{{=variable}}` --
     `=` is used to output HTML escaped value. So if there are something like: `&`,
-        `<`, etc will be escaped to HTML entity.
-        `variable` can be a real Python variable, value, function call or anything
-        can return a value. So these are all valid usages:
+    `<`, etc will be escaped to HTML entity.
+    `variable` can be a real Python variable, value, function call or anything
+    can return a value. So these are all valid usages:
 
-        ```
-        {{= 123}}
-        {{= a}}  #here a should be define in other place or pass from outside
-        {{= function(arg)}}
-        {{= obj}    #obj can be cast to a string
-        ```
-
-
-        {% alert class=info %}
-        If you don't want to escape the output, you can use `{{<<}}` , just like this:
-
-        ```
-        {{<< v}}
-        ```
-
-        {% endalert %}
+    ```
+    {{= 123}}
+    {{= a}}  #here a should be define in other place or pass from outside
+    {{= function(arg)}}
+    {{= obj}    #obj can be cast to a string
+    ```
 
 
+    {% alert class=info %}
+    If you don't want to escape the output, you can use `{{<<}}` , just like this:
 
-* 
-    `{{block name}}...{{end}}` --
+    ```
+    {{<< v}}
+    ```
+    {% endalert %}
+
+
+
+`{{block name}}...{{end}}` --
     `block` will define a block, and child template can replace it if there is
-        a same name block definition, it'll replace the previous one. So you can
-        define some blocks in parent template, and change the content of it in child
-        template when you want.
+    a same name block definition, it'll replace the previous one. So you can
+    define some blocks in parent template, and change the content of it in child
+    template when you want.
 
-        * Uliweb template supports multiple block inherit, that
-            means you can define multiple blocks in parent template, and redefine one
-            or any number blocks you want to replace in child template.
-        * Block can be nested. So you can define a block in a block, even in child
-            template. Only the latest defined block will be used for a same name block.
+    * Uliweb template supports multiple block inherit, that
+        means you can define multiple blocks in parent template, and redefine one
+        or any number blocks you want to replace in child template.
+    * Block can be nested. So you can define a block in a block, even in child
+        template. Only the latest defined block will be used for a same name block.
 
 
 

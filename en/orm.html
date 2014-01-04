@@ -47,7 +47,7 @@
     <div class="twelve wide column" id="markdown-content">
     
         <div class="chapter-prev chapter-top">
-    <a prev-chapter href="./i18n.html"><i class="icon-arrow-left"></i> I18N Process</a>
+    <a prev-chapter href="./manage_guide.html"><i class="icon-arrow-left"></i> uliweb Command Guide</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./form.html">Form <i class="icon-arrow-right"></i></a>
@@ -55,11 +55,11 @@
         
         <h1 id="title_1">Database and ORM<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb don't bind any ORM, but you can use dispatch, app tech to encapsulate your own usage of database or ORM. Of cause Uliweb indeed has its own ORM, I call it **uliorm**, and also provide an orm App, so you can easily use it. But please remember, uliorm is not forced, and if you don't like it, you don't need to use it at all. But I want to make it suit for many simple tasks. And uliorm is based on SQLAlchemy, so you can also use many features from SQLAlchemy.</p>
-<h2 id="title_1-1">1\ \ \ Installation<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">Installation<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Because uliorm is built on SQLAlchemy, and it also needs pytz when you want to process timezone, so you should install them first before you want to use uliorm. Of cause, Uliweb has also provided such install command for you:</p>
 <pre class="prettyprint"><code>uliweb call -a uliweb.contrib.orm install</code></pre>
 <p>After executing it, it'll automatically install SQLAlchemy and pytz for you.</p>
-<h2 id="title_1-2">2\ \ \ ORM Configuration<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-2">ORM Configuration<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>First, you should add <code>uliweb.contrib.orm</code> to <code>INSTALLED_APPS</code> in <code>apps/settings.ini</code>. Then, there are several parameters you can set to control the behavior of the ORM.</p>
 <pre class="prettyprint"><code>[ORM]
 DEBUG_LOG = False
@@ -99,7 +99,7 @@ firebird_db = create_engine('firebird://scott:tiger@localhost/sometest.gdm')</co
 <p>And if you don't like to modify the apps/settings.ini manually, you can also start development sever via:</p>
 <pre class="prettyprint"><code>uliweb runadmin</code></pre>
 <p>Then in Build page of <a href="http://localhost:8000/admin" class="outter">http://localhost:8000/admin</a> to set the settings of ORM App.</p>
-<h2 id="title_1-3">3\ \ \ Model Definition<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-3">Model Definition<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>In common, you may create your model in models.py. First you should import from uliweb.orm, then create your own model and it should inherit from <code>Model</code> class. Then add any fields you want to define. For example:</p>
 <pre class="prettyprint"><code>from uliweb.orm import *
 import datetime
@@ -110,21 +110,24 @@ class Note(Model):
     homepage = Field(str, max_length=128)
     email = Field(str, max_length=128)
     datetime = Field(datetime.datetime, auto_now_add=True)</code></pre>
-<h3 id="title_1-3-1">3.1\ \ \ Table Name<a class="anchor" href="#title_1-3-1">&para;</a></h3>
+<h3 id="title_1-3-1">Table Name<a class="anchor" href="#title_1-3-1">&para;</a></h3>
 <p>By default, the table name will be the lower string of model class name, so Note model's table name should be <code>note</code>.</p>
 <p>And if you want to set it to other table name, you can define a <code>__tablename__</code> in model class. For example:</p>
 <pre class="prettyprint"><code>class Note(Model):
 
     __tableame__ = 't_note'</code></pre>
-<h3 id="title_1-3-2">3.2\ \ \ Tabel Arguments<a class="anchor" href="#title_1-3-2">&para;</a></h3>
+<h3 id="title_1-3-2">Tabel Arguments<a class="anchor" href="#title_1-3-2">&para;</a></h3>
 <p>In SQLAlchemy, when you creating a Table, you may pass some extra arguments, just like: mysql_engine, etc. So you could define <code>__table_args__</code> in Model, for example:</p>
 <pre class="prettyprint"><code>class Todo(Model):
     __table_args__ = dict(mysql_charset='utf8')</code></pre>
 <h3 id="title_1-3-3">3.3\ \ \ OnInit Method<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>uliorm also enable you do some initialization works before doing the creation of the table. Just write a class method OnInit, for example:</p>
-<p><!-- code: python</p>
-<p>class Todo(Model):     @classmethod     def OnInit(cls):         Index('my_indx', cls.c.title, cls.c.owner, unique=True) --&gt; For now, I only test <code>Index</code>, and you can also import it from <code>uliweb.orm</code>.</p>
-<h3 id="title_1-3-4">3.4\ \ \ Property Definition<a class="anchor" href="#title_1-3-4">&para;</a></h3>
+<pre class="prettyprint"><code>class Todo(Model):
+    @classmethod
+    def OnInit(cls):
+        Index('my_indx', cls.c.title, cls.c.owner, unique=True)</code></pre>
+<p>For now, I only test <code>Index</code>, and you can also import it from <code>uliweb.orm</code>.</p>
+<h3 id="title_1-3-4">Property Definition<a class="anchor" href="#title_1-3-4">&para;</a></h3>
 <p>uliorm define a model field as Property, but you can also use field concept, it's no problem.</p>
 <p>uliorm can define property of a model in two ways. One is very like GAE data store, just <code>*Property</code> class. The other is just using Field() function.</p>
 <p>Below are real properties defined in Uliewb ORM:</p>
@@ -150,9 +153,9 @@ datetime.time:TimeProperty,
 decimal.Decimal:DecimalProperty,
 DECIMAL:DecimalProperty,</code></pre>
 <p>So define a property to a model just like define a class attribute to a class. The name of property will be the attribute name of the model class, and you can use it to get and set relative table field. Every property will be an instance of <code>*Peroperty</code> class.</p>
-<h3 id="title_1-3-5">3.5\ \ \ ID Property<a class="anchor" href="#title_1-3-5">&para;</a></h3>
+<h3 id="title_1-3-5">ID Property<a class="anchor" href="#title_1-3-5">&para;</a></h3>
 <p>By default, uliorm will automatically create an <code>ID</code> property for you, and you don't need to define it in model.</p>
-<h3 id="title_1-3-6">3.6\ \ \ Property Constuctor<a class="anchor" href="#title_1-3-6">&para;</a></h3>
+<h3 id="title_1-3-6">Property Constuctor<a class="anchor" href="#title_1-3-6">&para;</a></h3>
 <p>Property is the Base class of all other properties. So many of its attributes and methods will be used in dirived class:</p>
 <pre class="prettyprint"><code>Property(verbose_name=None, name=None, default=None, required=False, validators=None, choices=None, max_length=None)</code></pre>
 <dl>
@@ -191,17 +194,17 @@ DECIMAL:DecimalProperty,</code></pre>
 <dt>nullable</dt>
 <dd><p>If this property value can be <code>NULL</code>. Default is True.</p>
 </dd>
-</dl><h3 id="title_1-3-7">3.7\ \ \ CharProperty<a class="anchor" href="#title_1-3-7">&para;</a></h3>
+</dl><h3 id="title_1-3-7">CharProperty<a class="anchor" href="#title_1-3-7">&para;</a></h3>
 <p>This property will be mapped to <code>CHAR</code> type. You should pass a <code>max_length</code> to it. If you pass a unicode to it, it'll be converted to default encoding(utf-8).</p>
-<h3 id="title_1-3-8">3.8\ \ \ StringProperty<a class="anchor" href="#title_1-3-8">&para;</a></h3>
+<h3 id="title_1-3-8">StringProperty<a class="anchor" href="#title_1-3-8">&para;</a></h3>
 <p>This property will be mapped to <code>VARCHAR</code> type. You should pass a <code>max_length</code> to it. If you pass a unicode to it, it'll be converted to default encoding(utf-8).</p>
-<h3 id="title_1-3-9">3.9\ \ \ TextProperty<a class="anchor" href="#title_1-3-9">&para;</a></h3>
+<h3 id="title_1-3-9">TextProperty<a class="anchor" href="#title_1-3-9">&para;</a></h3>
 <p>This property will be mapped to <code>TEXT</code> type.</p>
-<h3 id="title_1-3-10">3.10\ \ \ UnicodeProperty<a class="anchor" href="#title_1-3-10">&para;</a></h3>
+<h3 id="title_1-3-10">UnicodeProperty<a class="anchor" href="#title_1-3-10">&para;</a></h3>
 <p>This property will be mapped to <code>VARCHAR</code> type.</p>
-<h3 id="title_1-3-11">3.11\ \ \ BlobProperty<a class="anchor" href="#title_1-3-11">&para;</a></h3>
+<h3 id="title_1-3-11">BlobProperty<a class="anchor" href="#title_1-3-11">&para;</a></h3>
 <p>This property will be mapped to <code>BLOB</code> type.</p>
-<h3 id="title_1-3-12">3.12\ \ \ DateProperty DateTimeProperty TimeProperty<a class="anchor" href="#title_1-3-12">&para;</a></h3>
+<h3 id="title_1-3-12">DateProperty DateTimeProperty TimeProperty<a class="anchor" href="#title_1-3-12">&para;</a></h3>
 <p>These properties are used for data and time type. They have three more parameters:</p>
 <dl>
 <dt>auto_now</dt>
@@ -213,9 +216,9 @@ DECIMAL:DecimalProperty,</code></pre>
 <dt>format</dt>
 <dd><p>If you pass a string value to this property, and this parameter will be used to convert string value to datetime.</p>
 </dd>
-</dl><h3 id="title_1-3-13">3.13\ \ \ BooleanProperty<a class="anchor" href="#title_1-3-13">&para;</a></h3>
+</dl><h3 id="title_1-3-13">BooleanProperty<a class="anchor" href="#title_1-3-13">&para;</a></h3>
 <p>This property will be mapped to <code>Boolean</code> type.</p>
-<h3 id="title_1-3-14">3.14\ \ \ DecimalProperty<a class="anchor" href="#title_1-3-14">&para;</a></h3>
+<h3 id="title_1-3-14">DecimalProperty<a class="anchor" href="#title_1-3-14">&para;</a></h3>
 <p>This property will be mapped to <code>Numric</code> type. It have two more parameters:</p>
 <dl>
 <dt>precision</dt>
@@ -224,16 +227,16 @@ DECIMAL:DecimalProperty,</code></pre>
 <dt>scale</dt>
 <dd><p>Default is 2.</p>
 </dd>
-</dl><h3 id="title_1-3-15">3.15\ \ \ FloatProperty<a class="anchor" href="#title_1-3-15">&para;</a></h3>
+</dl><h3 id="title_1-3-15">FloatProperty<a class="anchor" href="#title_1-3-15">&para;</a></h3>
 <p>This property will be mapped to <code>Float</code> type. It have one special parameter:</p>
 <dl>
 <dt>precision</dt>
 <dd><p>Default is 10.</p>
 </dd>
 </dl><p>If you are passing <code>max_length</code> but no <code>precision</code>, the <code>precision</code> will be the same value of <code>max_length</code>.</p>
-<h3 id="title_1-3-16">3.16\ \ \ IntegerProperty<a class="anchor" href="#title_1-3-16">&para;</a></h3>
+<h3 id="title_1-3-16">IntegerProperty<a class="anchor" href="#title_1-3-16">&para;</a></h3>
 <p>This property will be mapped to <code>Integer</code> type.</p>
-<h3 id="title_1-3-17">3.17\ \ \ Common Attributes of the Model<a class="anchor" href="#title_1-3-17">&para;</a></h3>
+<h3 id="title_1-3-17">Common Attributes of the Model<a class="anchor" href="#title_1-3-17">&para;</a></h3>
 <dl>
 <dt>table</dt>
 <dd><p>An uliorm model will be mapped to an Table object of SQLAlchemy, and <code>table</code> will be the underlying Table instance of the model. So you can use this attribute do table level operation.</p>
@@ -247,102 +250,94 @@ DECIMAL:DecimalProperty,</code></pre>
 <dt>metadata</dt>
 <dd><p>metadata instance bound.</p>
 </dd>
-</dl><h2 id="title_1-4">4\ \ \ Relation Definition<a class="anchor" href="#title_1-4">&para;</a></h2>
+</dl><h2 id="title_1-4">Relation Definition<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>uliorm also supports relation definition: OneToOne, ManyToOne, ManyToMany.</p>
-<h3 id="title_1-4-18">4.1\ \ \ One to One<a class="anchor" href="#title_1-4-18">&para;</a></h3>
+<h3 id="title_1-4-18">One to One<a class="anchor" href="#title_1-4-18">&para;</a></h3>
 <p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 351)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>.. code:: python+console
-
-    &gt;&gt;&gt; class Test(Model):
-    ...     username = Field(str)
-    ...     year = Field(int)
-    &gt;&gt;&gt; class Test1(Model):
-    ...     test = OneToOne(Test)
-    ...     name = Field(str)</code></pre>
+<pre class="prettyprint"><code>&gt;&gt;&gt; class Test(Model):
+...     username = Field(str)
+...     year = Field(int)
+&gt;&gt;&gt; class Test1(Model):
+...     test = OneToOne(Test)
+...     name = Field(str)</code></pre>
 <p>You can use OneToOne to reference other model. For example:</p>
 <p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 362)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>.. code:: python+console
-
-    &gt;&gt;&gt; a1 = Test(username='limodou')
-    &gt;&gt;&gt; a1.save()
-    True
-    &gt;&gt;&gt; b1 = Test1(name='user', test=a1)
-    &gt;&gt;&gt; b1.save()
-    True
-    &gt;&gt;&gt; a1
-    &lt;Test {'username':'limodou','year':0,'id':1}&gt;
-    &gt;&gt;&gt; a1.test1
-    &lt;Test1 {'test':&lt;Test {'username':'limodou','year':0,'id':1}&gt;,'name':'user','id':1}&gt;
-    &gt;&gt;&gt; b1.test
-    &lt;Test {'username':'limodou','year':0,'id':1}&gt;</code></pre>
-<h3 id="title_1-4-19">4.2\ \ \ Many to One<a class="anchor" href="#title_1-4-19">&para;</a></h3>
+<pre class="prettyprint"><code>&gt;&gt;&gt; a1 = Test(username='limodou')
+&gt;&gt;&gt; a1.save()
+True
+&gt;&gt;&gt; b1 = Test1(name='user', test=a1)
+&gt;&gt;&gt; b1.save()
+True
+&gt;&gt;&gt; a1
+&lt;Test {'username':'limodou','year':0,'id':1}&gt;
+&gt;&gt;&gt; a1.test1
+&lt;Test1 {'test':&lt;Test {'username':'limodou','year':0,'id':1}&gt;,'name':'user','id':1}&gt;
+&gt;&gt;&gt; b1.test
+&lt;Test {'username':'limodou','year':0,'id':1}&gt;</code></pre>
+<h3 id="title_1-4-19">Many to One<a class="anchor" href="#title_1-4-19">&para;</a></h3>
 <p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 380)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>.. code:: python+console
-
-    &gt;&gt;&gt; class Test(Model):
-    ...     username = Field(str)
-    ...     year = Field(int)
-    &gt;&gt;&gt; class Test1(Model):
-    ...     test = Reference(Test, collection_name='tttt')
-    ...     name = Field(str)
-    &gt;&gt;&gt; a1 = Test(username='limodou1')
-    &gt;&gt;&gt; a1.save()
-    True
-    &gt;&gt;&gt; b1 = Test1(name='user', test=a1)
-    &gt;&gt;&gt; b1.save()
-    True
-    &gt;&gt;&gt; b2 = Test1(name='aaaa', test=a1)
-    &gt;&gt;&gt; b2.save()
-    True
-    &gt;&gt;&gt; a1
-    &lt;Test {'username':'limodou1','year':0,'id':1}&gt;
-    &gt;&gt;&gt; list(a1.tttt.all())[0]   #here we use tttt but not test1_set
-    &lt;Test1 {'test':&lt;Test {'username':'limodou1','year':0,'id':1}&gt;,'name':'user','id':1}&gt;
-    &gt;&gt;&gt; a1.tttt.count()
-    2</code></pre>
+<pre class="prettyprint"><code>&gt;&gt;&gt; class Test(Model):
+...     username = Field(str)
+...     year = Field(int)
+&gt;&gt;&gt; class Test1(Model):
+...     test = Reference(Test, collection_name='tttt')
+...     name = Field(str)
+&gt;&gt;&gt; a1 = Test(username='limodou1')
+&gt;&gt;&gt; a1.save()
+True
+&gt;&gt;&gt; b1 = Test1(name='user', test=a1)
+&gt;&gt;&gt; b1.save()
+True
+&gt;&gt;&gt; b2 = Test1(name='aaaa', test=a1)
+&gt;&gt;&gt; b2.save()
+True
+&gt;&gt;&gt; a1
+&lt;Test {'username':'limodou1','year':0,'id':1}&gt;
+&gt;&gt;&gt; list(a1.tttt.all())[0]   #here we use tttt but not test1_set
+&lt;Test1 {'test':&lt;Test {'username':'limodou1','year':0,'id':1}&gt;,'name':'user','id':1}&gt;
+&gt;&gt;&gt; a1.tttt.count()
+2</code></pre>
 <p>You should use <code>Reference</code> to reference a many to one relation. And <code>Reference</code> has a <code>collection_name</code> parameter, if you don't give it, the referenced model will use object_test.test1_set to get reversed data set. And if there are two and above relation on same model, you need to define different <code>collection_name</code> for each relation. So <code>a1</code> could use <code>a1.tttt</code> to get the reversed data set relation to it. For now, uliorm will not create Foreign Key constrain, because when creating a table, if there is a foreign key constrain, the foreign table should be created first, then this table. And it has some difficult for distributed apps.</p>
 <p>How to think about many to one relation? Think about Test:Test1 is 1:n relation, that means one Test object could have one or more Test1 objects. So you should define <code>Reference</code> in Test1 model.</p>
 <p>And if you want to reference one model to itself, you can use: SelfReference, for example:</p>
 <pre class="prettyprint"><code>&gt;&gt;&gt; class User(Model):
 ...     username = Field(unicode)
 ...     parent = SelfReference(collection_name='children')</code></pre>
-<h3 id="title_1-4-20">4.3\ \ \ Many to Many<a class="anchor" href="#title_1-4-20">&para;</a></h3>
+<h3 id="title_1-4-20">Many to Many<a class="anchor" href="#title_1-4-20">&para;</a></h3>
 <p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 428)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>.. code:: python+console
-
-    &gt;&gt;&gt; class User(Model):
-    ...     username = Field(CHAR, max_length=20)
-    ...     year = Field(int)
-    &gt;&gt;&gt; class Group(Model):
-    ...     name = Field(str, max_length=20)
-    ...     users = ManyToMany(User)
-    &gt;&gt;&gt; a = User(username='limodou', year=5)
-    &gt;&gt;&gt; a.save()
-    True
-    &gt;&gt;&gt; b = User(username='user', year=10)
-    &gt;&gt;&gt; b.save()
-    True
-    &gt;&gt;&gt; c = User(username='abc', year=20)
-    &gt;&gt;&gt; c.save()
-    True
-    &gt;&gt;&gt; g1 = Group(name='python')
-    &gt;&gt;&gt; g1.save()
-    True
-    &gt;&gt;&gt; g2 = Group(name='perl')
-    &gt;&gt;&gt; g2.save()
-    True
-    &gt;&gt;&gt; g3 = Group(name='java')
-    &gt;&gt;&gt; g3.save()
-    True
-    &gt;&gt;&gt; g1.users.add(a)
-    &gt;&gt;&gt; g1.users.add(b)</code></pre>
+<pre class="prettyprint"><code>&gt;&gt;&gt; class User(Model):
+...     username = Field(CHAR, max_length=20)
+...     year = Field(int)
+&gt;&gt;&gt; class Group(Model):
+...     name = Field(str, max_length=20)
+...     users = ManyToMany(User)
+&gt;&gt;&gt; a = User(username='limodou', year=5)
+&gt;&gt;&gt; a.save()
+True
+&gt;&gt;&gt; b = User(username='user', year=10)
+&gt;&gt;&gt; b.save()
+True
+&gt;&gt;&gt; c = User(username='abc', year=20)
+&gt;&gt;&gt; c.save()
+True
+&gt;&gt;&gt; g1 = Group(name='python')
+&gt;&gt;&gt; g1.save()
+True
+&gt;&gt;&gt; g2 = Group(name='perl')
+&gt;&gt;&gt; g2.save()
+True
+&gt;&gt;&gt; g3 = Group(name='java')
+&gt;&gt;&gt; g3.save()
+True
+&gt;&gt;&gt; g1.users.add(a)
+&gt;&gt;&gt; g1.users.add(b)</code></pre>
 <p>You can use <code>ManyToMany</code> to reference a many to many relation. uliorm will work like Django, it'll create the third table automatically, for example, the third table of above example will be: group_user_users, it's the two table names (user and group) and ManyToMany property name (users). The table structure of the third table will be:</p>
 <pre class="prettyprint"><code>CREATE TABLE group_user_users (
     group_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     PRIMARY KEY (group_id, user_id)
 )</code></pre>
-<h2 id="title_1-5">5\ \ \ Operation<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h2 id="title_1-5">Operation<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>There are different levels of ORM operations: instance level, model level, relation level.</p>
 <dl>
 <dt>Instance Level</dt>
@@ -354,45 +349,48 @@ DECIMAL:DecimalProperty,</code></pre>
 <dt>Relation Level</dt>
 <dd><p>Some relation property will return an <code>Result</code> sets, and these result sets work just like table level operations but with some different. The relations inludes: <code>_ReverseReferenceProperty</code>, <code>_ManyToManyReverseReferenceProperty</code>. You should not need to use these properties directly, they will be created automatically when you reference ManyToOne and ManyToMany result reversed. You'll see more details later.</p>
 </dd>
-</dl><h3 id="title_1-5-21">5.1\ \ \ Instance Level<a class="anchor" href="#title_1-5-21">&para;</a></h3>
-<h4 id="title_1-5-21-1">5.1.1\ \ \ Create an Instance<a class="anchor" href="#title_1-5-21-1">&para;</a></h4>
+</dl><h3 id="title_1-5-21">Instance Level<a class="anchor" href="#title_1-5-21">&para;</a></h3>
+<h4 id="title_1-5-21-1">Create an Instance<a class="anchor" href="#title_1-5-21-1">&para;</a></h4>
 <p>Say there is a User model, the class definition is:</p>
-<p><!-- code: python</p>
-<p>class User(Model):     username = Field(CHAR, max_length=20)     year = Field(int) --&gt; So if you want to create an instance of User model, just do like this:</p>
-<p><!-- code: python</p>
-<p>user = User(username='limodou', year=36) --&gt; But it'll not be saved in database, it just creates an instance, you need call <code>put</code> or <code>save</code> to save it:</p>
-<p><!-- code: python</p>
-<p>user.save()</p>
-<p>#or user.put() --&gt;</p>
-<h4 id="title_1-5-21-2">5.1.2\ \ \ Get an Instance<a class="anchor" href="#title_1-5-21-2">&para;</a></h4>
+<pre class="prettyprint"><code>class User(Model):
+    username = Field(CHAR, max_length=20)
+    year = Field(int)</code></pre>
+<p>So if you want to create an instance of User model, just do like this:</p>
+<pre class="prettyprint"><code>user = User(username='limodou', year=36)</code></pre>
+<p>But it'll not be saved in database, it just creates an instance, you need call <code>put</code> or <code>save</code> to save it:</p>
+<pre class="prettyprint"><code>user.save()
+#or
+user.put()</code></pre>
+<h4 id="title_1-5-21-2">Get an Instance<a class="anchor" href="#title_1-5-21-2">&para;</a></h4>
 <pre class="prettyprint"><code>user = User.get(5)
 user = User.get(User.c.id==5)</code></pre>
 <p>If you want to get an instance from a model, you should call <code>get</code> method of a model. You can pass a integer or a query condition. So <code>User.get(5)</code> will be exact:</p>
-<p><!-- code: python</p>
-<p>User.get(User.c.id==5) --&gt; The query condition syntax is exact SQLAlchemy query syntax, so you can see more detail at: <a href="http://www.sqlalchemy.org/docs/05/sqlexpression.html" class="outter">http://www.sqlalchemy.org/docs/05/sqlexpression.html</a></p>
-<h4 id="title_1-5-21-3">5.1.3\ \ \ Delete an instance<a class="anchor" href="#title_1-5-21-3">&para;</a></h4>
+<pre class="prettyprint"><code>User.get(User.c.id==5)</code></pre>
+<p>The query condition syntax is exact SQLAlchemy query syntax, so you can see more detail at: <a href="http://www.sqlalchemy.org/docs/05/sqlexpression.html" class="outter">http://www.sqlalchemy.org/docs/05/sqlexpression.html</a></p>
+<h4 id="title_1-5-21-3">Delete an instance<a class="anchor" href="#title_1-5-21-3">&para;</a></h4>
 <pre class="prettyprint"><code>user = User.get(5)
 user.delete()</code></pre>
-<h4 id="title_1-5-21-4">5.1.4\ \ \ Update an instance<a class="anchor" href="#title_1-5-21-4">&para;</a></h4>
+<h4 id="title_1-5-21-4">Update an instance<a class="anchor" href="#title_1-5-21-4">&para;</a></h4>
 <pre class="prettyprint"><code>user = User.get(5)
 user.uesrname = 'user'
 user.save()</code></pre>
-<h4 id="title_1-5-21-5">5.1.5\ \ \ Other APIs<a class="anchor" href="#title_1-5-21-5">&para;</a></h4>
+<h4 id="title_1-5-21-5">Other APIs<a class="anchor" href="#title_1-5-21-5">&para;</a></h4>
 <dl>
 <dt>to_dict([*fields])</dt>
-<dd><p>Dumps instance to a dict object. If there is no <code>fields</code> parameter, it'll dump all fields of the instance. And you can pass fields which you want to dumps, for example: <!-- code: python</p>
+<dd><p>Dumps instance to a dict object. If there is no <code>fields</code> parameter, it'll dump all fields of the instance. And you can pass fields which you want to dumps, for example:</p>
+<pre class="prettyprint"><code>a = User.get(1)
+a.to_dict() #this will dump all fields
+a.to_dict('name', 'age')    #this will only dump 'name' and 'age' fields</code></pre>
 </dd>
-</dl><p>a = User.get(1) a.to_dict() #this will dump all fields a.to_dict('name', 'age')    #this will only dump 'name' and 'age' fields --&gt;</p>
-<h3 id="title_1-5-22">5.2\ \ \ Model Level<a class="anchor" href="#title_1-5-22">&para;</a></h3>
-<h4 id="title_1-5-22-6">5.2.1\ \ \ Query<a class="anchor" href="#title_1-5-22-6">&para;</a></h4>
+</dl><h3 id="title_1-5-22">Model Level<a class="anchor" href="#title_1-5-22">&para;</a></h3>
+<h4 id="title_1-5-22-6">Query<a class="anchor" href="#title_1-5-22-6">&para;</a></h4>
 <p>There are two query methods: all() and filter(). all() and filter() will both return an <code>Result</code> object, and all() will return all records of a model, but filter() will only return records of a model which match the condition passed to filter().</p>
 <p>For example:</p>
-<p><!-- code: python</p>
-<p>User.all() User.filter(User.c.year &gt; 18) --&gt;</p>
-<h4 id="title_1-5-22-7">5.2.2\ \ \ Result Object<a class="anchor" href="#title_1-5-22-7">&para;</a></h4>
+<pre class="prettyprint"><code>User.all()
+User.filter(User.c.year &gt; 18)</code></pre>
+<h4 id="title_1-5-22-7">Result Object<a class="anchor" href="#title_1-5-22-7">&para;</a></h4>
 <p>When you executing all() or filter(), it'll return a Result object, and you can use it for further opration, just like: filter, count, delete, order_by, limit, offset, etc. And other operation will also return Result object, for example, when you access the reversed relation property. Result has many methods, and you can combine them one by one, for example:</p>
-<p><!-- code: python</p>
-<p>User.all().filter(User.c.year&gt;18).count() --&gt;</p>
+<pre class="prettyprint"><code>User.all().filter(User.c.year&gt;18).count()</code></pre>
 <dl>
 <dt>all()</dt>
 <dd><p>It'll return Result object itself.</p>
@@ -429,13 +427,13 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 <dt>one()</dt>
 <dd><p>Only return the lastest one record, if no records, then return None.</p>
 </dd>
-</dl><h4 id="title_1-5-22-8">5.2.3\ \ \ Delete objects<a class="anchor" href="#title_1-5-22-8">&para;</a></h4>
+</dl><h4 id="title_1-5-22-8">Delete objects<a class="anchor" href="#title_1-5-22-8">&para;</a></h4>
 <p>For common usage, you should use all() or filter() first, then use the returned Result object to delete objects. But you can still use <code>remove()</code> to delete objects without calling all() or filter() first.</p>
 <pre class="prettyprint"><code>User.delete(User.c.year&lt;18)</code></pre>
-<h4 id="title_1-5-22-9">5.2.4\ \ \ Count objects<a class="anchor" href="#title_1-5-22-9">&para;</a></h4>
+<h4 id="title_1-5-22-9">Count objects<a class="anchor" href="#title_1-5-22-9">&para;</a></h4>
 <p>Just like <code>remove()</code>, you can still use <code>count()</code> to count the objects without calling all() or filter() first.</p>
 <pre class="prettyprint"><code>User.count(User.c.year&lt;18)</code></pre>
-<h4 id="title_1-5-22-10">5.2.5\ \ \ Other APIs<a class="anchor" href="#title_1-5-22-10">&para;</a></h4>
+<h4 id="title_1-5-22-10">Other APIs<a class="anchor" href="#title_1-5-22-10">&para;</a></h4>
 <dl>
 <dt>bind(metadata=None, auto_create=False)</dt>
 <dd><p>Binds current class to a metadata. If <code>auto_create</code> if <code>True</code>, then it'll automatically create the table.</p>
@@ -443,8 +441,8 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 <dt>create()</dt>
 <dd><p>Create table, and will check if the table is existed first.</p>
 </dd>
-</dl><h3 id="title_1-5-23">5.3\ \ \ Relation Level<a class="anchor" href="#title_1-5-23">&para;</a></h3>
-<h4 id="title_1-5-23-11">5.3.1\ \ \ One to One<a class="anchor" href="#title_1-5-23-11">&para;</a></h4>
+</dl><h3 id="title_1-5-23">Relation Level<a class="anchor" href="#title_1-5-23">&para;</a></h3>
+<h4 id="title_1-5-23-11">One to One<a class="anchor" href="#title_1-5-23-11">&para;</a></h4>
 <p>There is no magic for one to one relation, for example:</p>
 <pre class="prettyprint"><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
@@ -457,40 +455,34 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 &gt;&gt;&gt; b.test
 &lt;Test {'username':'limodou', 'year':36}&gt;</code></pre>
 <p>So you can use <code>b.test</code> just like <code>a</code> object.</p>
-<h4 id="title_1-5-23-12">5.3.2\ \ \ Many to One<a class="anchor" href="#title_1-5-23-12">&para;</a></h4>
-<p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 694)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>.. code:: python+console
-
-    &gt;&gt;&gt; class Test(Model):
-    ...     username = Field(str)
-    ...     year = Field(int)
-    &gt;&gt;&gt; class Test1(Model):
-    ...     test = Reference(Test, collection_name='tttt')
-    ...     name = Field(str)
-    &gt;&gt;&gt; a = Test(username='limodou').save()
-    &gt;&gt;&gt; b = Test1(name='user', test=a).save()
-    &gt;&gt;&gt; c = Test1(name='aaaa', test=a).save()</code></pre>
+<h4 id="title_1-5-23-12">Many to One<a class="anchor" href="#title_1-5-23-12">&para;</a></h4>
+<pre class="prettyprint"><code>&gt;&gt;&gt; class Test(Model):
+...     username = Field(str)
+...     year = Field(int)
+&gt;&gt;&gt; class Test1(Model):
+...     test = Reference(Test, collection_name='tttt')
+...     name = Field(str)
+&gt;&gt;&gt; a = Test(username='limodou').save()
+&gt;&gt;&gt; b = Test1(name='user', test=a).save()
+&gt;&gt;&gt; c = Test1(name='aaaa', test=a).save()</code></pre>
 <p>According above code, Test:Test1 is a 1:n relation. And <code>b.test</code> will be the object <code>a</code>. But <code>a.tttt</code> will be the reversed query set, it may not be only one objects. So <code>a.tttt</code> will return a Result object. And this Result object will be bound to Test1 model, so the all() and filter() of the Result will return only Test1 objects. More details you should see <code>Result</code> description previous.</p>
-<h4 id="title_1-5-23-13">5.3.3\ \ \ Many to Many<a class="anchor" href="#title_1-5-23-13">&para;</a></h4>
-<p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 715)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>.. code:: python+console
-
-    &gt;&gt;&gt; class User(Model):
-    ...     username = Field(CHAR, max_length=20)
-    ...     year = Field(int)
-    &gt;&gt;&gt; class Group(Model):
-    ...     name = Field(str, max_length=20)
-    ...     users = ManyToMany(User)
-    &gt;&gt;&gt; a = User(username='limodou', year=5).save()
-    &gt;&gt;&gt; b = User(username='user', year=10).save()
-    &gt;&gt;&gt; c = User(username='abc', year=20).save()
-    &gt;&gt;&gt; g1 = Group(name='python').save()
-    &gt;&gt;&gt; g2 = Group(name='perl').save()
-    &gt;&gt;&gt; g3 = Group(name='java').save()
-    &gt;&gt;&gt; g1.users.add(a)
-    &gt;&gt;&gt; g1.users.add(b)</code></pre>
+<h4 id="title_1-5-23-13">Many to Many<a class="anchor" href="#title_1-5-23-13">&para;</a></h4>
+<pre class="prettyprint"><code>&gt;&gt;&gt; class User(Model):
+...     username = Field(CHAR, max_length=20)
+...     year = Field(int)
+&gt;&gt;&gt; class Group(Model):
+...     name = Field(str, max_length=20)
+...     users = ManyToMany(User)
+&gt;&gt;&gt; a = User(username='limodou', year=5).save()
+&gt;&gt;&gt; b = User(username='user', year=10).save()
+&gt;&gt;&gt; c = User(username='abc', year=20).save()
+&gt;&gt;&gt; g1 = Group(name='python').save()
+&gt;&gt;&gt; g2 = Group(name='perl').save()
+&gt;&gt;&gt; g3 = Group(name='java').save()
+&gt;&gt;&gt; g1.users.add(a)
+&gt;&gt;&gt; g1.users.add(b)</code></pre>
 <p>So when you access <code>a.group_set</code><code>(because you didn't define collection_name in ManyToMany property) or</code><code>g1.users</code> it'll return a ManyResult object.</p>
-<h4 id="title_1-5-23-14">5.3.4\ \ \ ManyResult<a class="anchor" href="#title_1-5-23-14">&para;</a></h4>
+<h4 id="title_1-5-23-14">ManyResult<a class="anchor" href="#title_1-5-23-14">&para;</a></h4>
 <p>ManyResult is very like Result. But it has other methods:</p>
 <dl>
 <dt>add(*objects)</dt>
@@ -502,7 +494,7 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 <dt>delete(*objects)</dt>
 <dd><p>Delete the relations according to objects.</p>
 </dd>
-</dl><h2 id="title_1-6">6\ \ \ Transacation<a class="anchor" href="#title_1-6">&para;</a></h2>
+</dl><h2 id="title_1-6">Transacation<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>If you are using uliorm, you can install <code>middle_transaction.TransactionMiddle</code> to <code>MIDDLEWARE_CLASSES</code> in <code>settings.ini</code>. So when the request is coming, the transaction is began, and when the response is returned, the transaction will be committed. And if there are exceptions, the transaction will be rollbacked.</p>
 <p>If you want to control the transacation manually, you could get the connection object first:</p>
 <pre class="prettyprint"><code>db = get_connection()</code></pre>
@@ -510,7 +502,7 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 <pre class="prettyprint"><code>db.begin()      #start a transacation
 db.commit()     #commit
 db.rollback()   #rollback</code></pre>
-<h2 id="title_1-7">7\ \ \ Model Register & Reference<a class="anchor" href="#title_1-7">&para;</a></h2>
+<h2 id="title_1-7">Model Register & Reference<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>Uliweb also provides a new way to deal with model usage.</p>
 <ol>
 <li>When you import a model class, it'll be automatically register to a global     variable, and you can get back the model later according the tablename.</li>
@@ -524,14 +516,14 @@ user = 'uliweb.contrib.auth.models.User'</code></pre>
 </ol>
 <p>What's the use of it? Think about you have several apps, and each app has its own models.py, and one app may need to reference some models from others. So the common situation, you may import the models from other models.py. This is no problem at all. But what will happen when you want to change the referenced models, you may think out that "I can change them directly". But if these models are not maintained by you, so change them may not be a good appoach. With referencing models by string format tablename, you can easily replace one app with a new app, and implement new models in new app. Just define MODELS mapping in new app's settings.ini, then use string tablename in Reference, ManyToMany or get the model via calling get_model(tablename).</p>
 <p>Of cause this appoach is optional, just when you want to make your app is more easy to be replaced.</p>
-<h2 id="title_1-8">8\ \ \ How to use ORM in your program<a class="anchor" href="#title_1-8">&para;</a></h2>
-<h2 id="title_1-9">9\ \ \ Mysql Issues<a class="anchor" href="#title_1-9">&para;</a></h2>
-<h3 id="title_1-9-24">9.1\ \ \ Encoding Setting<a class="anchor" href="#title_1-9-24">&para;</a></h3>
+<h2 id="title_1-8">How to use ORM in your program<a class="anchor" href="#title_1-8">&para;</a></h2>
+<h2 id="title_1-9">Mysql Issues<a class="anchor" href="#title_1-9">&para;</a></h2>
+<h3 id="title_1-9-24">Encoding Setting<a class="anchor" href="#title_1-9-24">&para;</a></h3>
 <p>uliorm will default use utf8 encoding when creating the table in Mysql even if the default charset of mysql is not utf8. So that if you are using Mysql you should check if the default charset of your sechma is utf8 encoding, if not you should add charset in connection string, just like:</p>
 <pre class="prettyprint"><code>[ORM]
 CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'</code></pre>
 <p>The charset=utf8 is needed when the default charset of server is not utf8, otherwise you don't need to set it.</p>
-<h2 id="title_1-10">10\ \ \ Module Level API<a class="anchor" href="#title_1-10">&para;</a></h2>
+<h2 id="title_1-10">Module Level API<a class="anchor" href="#title_1-10">&para;</a></h2>
 <dl>
 <dt>set_auto_create(flag)</dt>
 <dd><p>Set auto create table flag. The flag default is True.</p>
@@ -554,7 +546,7 @@ set_model('uliweb.contrib.models.User', 'users')</code></pre>
 <dt>get_model(model)</dt>
 <dd><p>Get the real model object according to the model parameter. And the model parameter could be a real model instance, in this case, the model will be directly returned. And the model parameter could be tablename, so uliorm will use it to find the registered value, and if the value is also a model instance, then just return it. But if the value is a string, then import it according the value.</p>
 </dd>
-</dl><h2 id="title_1-11">11\ \ \ Testing Code<a class="anchor" href="#title_1-11">&para;</a></h2>
+</dl><h2 id="title_1-11">Testing Code<a class="anchor" href="#title_1-11">&para;</a></h2>
 <p>There are some testing code in uliweb/test/test_orm.py, so you can see some examples of how to use uliorm.</p>
 
         

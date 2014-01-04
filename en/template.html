@@ -55,7 +55,7 @@
         
         <h1 id="title_1">Template<a class="anchor" href="#title_1">&para;</a></h1>
 <p>It seems that every web framework has a template system. Uliweb also has one. The Template of Uliweb comes from web2py project originally. But I've changed it a lot. So many places are same as web2py. Ok, let's see how to use template in Uliweb.</p>
-<h2 id="title_1-1">1\ \ \ Features<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">Features<a class="anchor" href="#title_1-1">&para;</a></h2>
 <ul>
 <li>Very simple and easy to learn and use</li>
 <li>You can embed Python code in template</li>
@@ -66,42 +66,40 @@
 <li>Can inject new functions or variables to template runtime environ variable</li>
 <li>Template will be compiled to Python code then run</li>
 </ul>
-<h2 id="title_1-2">2\ \ \ Syntax<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-2">Syntax<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>There is only one tag mark of template, that is <code>{{}}</code>. And there are different tags according the first word of the tag text. The first word of tag content can be treated as the name of the tag, and if the name is not a reserved tag name, the content will be treated as common Python code.</p>
-<h3 id="title_1-2-1">2.1\ \ \ Reserved Tag Syntax<a class="anchor" href="#title_1-2-1">&para;</a></h3>
-<p>*      <code>{{extend parent_template_file}}</code> --     <code>extend</code> is used to derive a parent template.         <code>parent_template_file</code> is the template filename, it can be a string or a         variable. So these are all valid usages:</p>
-<pre class="prettyprint"><code>    ```
-    {{extend "base.html"}}
-    {{extend parent}}
-    ```
+<h3 id="title_1-2-1">Reserved Tag Syntax<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<dl>
+<dt><code>{{extend parent_template_file}}</code></dt>
+<dd><p><code>extend</code> is used to derive a parent template.</p>
+<p><code>parent_template_file</code> is the template filename, it can be a string or a variable. So these are all valid usages:</p>
+<pre class="prettyprint"><code>{{extend "base.html"}}
+{{extend parent}}</code></pre>
+<p>For the second one, the <code>parent</code> can be passed from the outside or be calculated from template.</p>
+</dd>
+<dt><code>{{include template_file}}</code></dt>
+<dd><p><code>include</code> is used to inclulde other template into current one.</p>
+<p><code>template_file</code> is the template filename, it can be a string or a variable just like <code>extend</code> usage.</p>
+</dd>
+<dt><code>{{=variable}}</code></dt>
+<dd><p><code>=</code> is used to output HTML escaped value. So if there are something like: <code>&amp;</code>, <code>&lt;</code>, etc will be escaped to HTML entity. <code>variable</code> can be a real Python variable, value, function call or anything can return a value. So these are all valid usages:</p>
+<pre class="prettyprint"><code>{{= 123}}
+{{= a}}  #here a should be define in other place or pass from outside
+{{= function(arg)}}
+{{= obj}    #obj can be cast to a string</code></pre>
+<div class="ui info message">
+<p>If you don't want to escape the output, you can use <code>{{&lt;&lt;}}</code> , just like this:</p>
+<pre class="prettyprint"><code>{{&lt;&lt; v}}</code></pre>
 
-    For the second one, the `parent` can be passed from the outside or be calculated
-    from template.</code></pre>
-<p>*      <code>{{include template_file}}</code> --     <code>include</code> is used to inclulde other template into current one.         <code>template_file</code> is the template filename, it can be a string or a variable         just like <code>extend</code> usage.</p>
-<p>*      <code>{{=variable}}</code> --     <code>=</code> is used to output HTML escaped value. So if there are something like: <code>&amp;</code>,         <code>&lt;</code>, etc will be escaped to HTML entity.         <code>variable</code> can be a real Python variable, value, function call or anything         can return a value. So these are all valid usages:</p>
-<pre class="prettyprint"><code>    ```
-    {{= 123}}
-    {{= a}}  #here a should be define in other place or pass from outside
-    {{= function(arg)}}
-    {{= obj}    #obj can be cast to a string
-    ```
-
-
-    {% alert class=info %}
-    If you don't want to escape the output, you can use `{{&lt;&lt;}}` , just like this:
-
-    ```
-    {{&lt;&lt; v}}
-    ```
-
-    {% endalert %}</code></pre>
-<p>*      <code>{{block name}}...{{end}}</code> --     <code>block</code> will define a block, and child template can replace it if there is         a same name block definition, it'll replace the previous one. So you can         define some blocks in parent template, and change the content of it in child         template when you want.</p>
-<pre class="prettyprint"><code>    * Uliweb template supports multiple block inherit, that
-        means you can define multiple blocks in parent template, and redefine one
-        or any number blocks you want to replace in child template.
-    * Block can be nested. So you can define a block in a block, even in child
-        template. Only the latest defined block will be used for a same name block.</code></pre>
-<h3 id="title_1-2-2">2.2\ \ \ Embeding Python Code<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+</div></dd>
+<dt><code>{{block name}}...{{end}}</code></dt>
+<dd><p><code>block</code> will define a block, and child template can replace it if there is a same name block definition, it'll replace the previous one. So you can define some blocks in parent template, and change the content of it in child template when you want.</p>
+<ul>
+<li>Uliweb template supports multiple block inherit, that     means you can define multiple blocks in parent template, and redefine one     or any number blocks you want to replace in child template.</li>
+<li>Block can be nested. So you can define a block in a block, even in child     template. Only the latest defined block will be used for a same name block.</li>
+</ul>
+</dd>
+</dl><h3 id="title_1-2-2">2.2\ \ \ Embeding Python Code<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>You can easily embed Python code between <code>{{</code> and <code>}}</code>, just like this:</p>
 <pre class="prettyprint"><code>{{ import os }}</code></pre>
 <p>You can use almost all Python code in template, but I suggest that just keep simple and relationship with representation code in template, otherwise your template will become bloated and difficult to maintain.</p>

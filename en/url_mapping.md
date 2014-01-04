@@ -15,7 +15,7 @@ reversed URL later by `url_for` function(It's another function provided by
 SimpleFrame).
 
 
-## 1\ \ \ expose Description
+## expose Description
 
 For now, Uliweb doesn't support centralized URL management, so you need to add
 expose in front of each view function. If there is no expose, the function will
@@ -55,7 +55,9 @@ Basic usage is:
 
     You can specify any URL you want to use in expose() function, this URL will
     be bound to below view function.
+    
 1. Argument Process
+
     If there are something can be changed in the URL, you can configure them as
     arguments. A basic argument format is like:
 
@@ -69,47 +71,42 @@ Basic usage is:
     The simplest format is `<name>`, it'll match the stuff between `'/'` and `'/'`.
     For `name`, it's the argument name, it needs to be matched with the arugments
     of view function it bounded.
+    
 1. Other arguments of expose
+
     `expose` function enable other arguments except for the first URL string, for example:
     defaults
 
-    > It can be used for defining the default arguments value of view function
-    > argument, for example, you can do:
-    > 
-    > @expose('/all', defaults={'page': 1})
-    > @expose('/all/page/<int:page>')
-    > def show(page):
-    >     return {}
-    > 
-    > You can see above two URLs will be bound to the same show() function, but because
-    > show() need a page argument, so for the first URL, you should define
-    > a default value of page argument.
-    > 
-    > build_only
-    > 
-    > If it be set as True, then it means that this binding will only be used for
-    > creating reversed URL, it'll not be used for matching URL. For now, Uliweb
-    > provide static files serving, just add static file serving view function
-    > to view modules, and bind static URL to this view function.
-    > But you may want to use web server(Like Apache) to serve static files.
-    > And you probablely have already used url_for to create reversed URL,
-    > then you can set this argument to True, so that the url_for can be
-    > still enabled, but URL matching will be disabled.
-    > 
-    > There are more arguments you can use in expose function, you can see the
-    > routing.py of Werkzeug for more details.
+    It can be used for defining the default arguments value of view function
+    argument, for example, you can do:
+    
+    ```
+    @expose('/all', defaults={'page': 1})
+    @expose('/all/page/<int:page>')
+    def show(page):
+        return {}
+    ```
+    
+    You can see above two URLs will be bound to the same show() function, but because
+    show() need a page argument, so for the first URL, you should define
+    a default value of page argument.
+    
+    build_only
+    
+    If it be set as True, then it means that this binding will only be used for
+    creating reversed URL, it'll not be used for matching URL. For now, Uliweb
+    provide static files serving, just add static file serving view function
+    to view modules, and bind static URL to this view function.
+    But you may want to use web server(Like Apache) to serve static files.
+    And you probablely have already used url_for to create reversed URL,
+    then you can set this argument to True, so that the url_for can be
+    still enabled, but URL matching will be disabled.
+    
+    There are more arguments you can use in expose function, you can see the
+    routing.py of Werkzeug for more details.
 
 
-{% alert class=info %}
-In non-GAE environment, you don't need to import expose explicitly, because
-Uliweb has already put it in __builtin__, so you can use it directly. But in GAE,
-it'll disable this process, so you need to import it explicitly. But if you use
-makeapp to create a new app, Uliweb has already put this line in views.py.
-
-{% endalert %}
-
-
-## 2\ \ \ url_for Description
+## url_for Description
 
 url_for can be used for creating reversed URL, it need a string format view
 function name, for example:
@@ -155,10 +152,11 @@ without import it explicitly.
 {% endalert %}
 
 
-## 3\ \ \ convertor Description
+## convertor Description
 
 
-* int
+int --
+
     Basic format is:
 
     ```
@@ -172,7 +170,8 @@ without import it explicitly.
     * min Minimum
     * max Maximum
 
-* float
+float --
+
     Basic format is:
 
     ```
@@ -185,7 +184,8 @@ without import it explicitly.
     * min Minimum
     * max Maximum
 
-* string and unicode
+string and unicode --
+
     They are the same actually
     Basic format is:
 
@@ -200,7 +200,8 @@ without import it explicitly.
     * maxlength Maximal length
     * length Fixed length
 
-* path
+path --
+
     Just like `string` and `unicode` convertor, but has no arguments.
     Used to match stuff between `'/'` and next string or the end.
     Basic format is:
@@ -223,7 +224,8 @@ without import it explicitly.
     '/static/image/a.gif'   -> filename='image/a.gif'
     ```
 
-* any
+any --
+
     Basic format is:
 
     ```

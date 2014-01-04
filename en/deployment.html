@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
-<title>Deployment Guide - Uliweb-Doc</title>
+<title>Deployment - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -53,22 +53,9 @@
     <a next-chapter href="./globals.html">Global Environment <i class="icon-arrow-right"></i></a>
 </div>
         
-        <h1 id="title_1">Deployment Guide<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">GAE(Google Application Engine)<a class="anchor" href="#title_1-1">&para;</a></h2>
-<p>GAE is a plaform provided by Google for web applications. To use GAE in combination with ULiweb for web development, you will need a GAE account. Follow the instructions on the GAE main site to create one.</p>
-<p>You should test your project code under the GAE SDK development environment first before the final deployment.</p>
-<ol>
-<li><p>Using the <code>export</code> command, export Uliweb to your project directory. You should name     your project directory using the application name you created in     GAE. For example, say your project name is <code>myproject</code>, and you installed GAE SDK in     <code>C:\Program Files\Google\google_appengine</code>, you can use the command:</p>
-<pre class="prettyprint"><code>python manage.py export "C:\Program Files\Google\google_appengine\myproject"</code></pre>
-<p>You would notice that the target directory is quoted by double-quotes, that's because there is space character in the directory. The deployement is ready after this step.</p>
-<ol>
-<li>Modify the <code>app.yaml</code> file, change the value of <code>application</code> to your project name, for example: <code>myproject</code>.</li>
-<li>Begin your web development using the Uliweb development server first, switch to the GAE development server for further testing.</li>
-<li>Upload your project with the <code>appcfg.py</code> tool: <code>` python appcfg.py update myproject `</code></li>
-</ol></li>
-</ol>
-<h2 id="title_1-2">Apache<a class="anchor" href="#title_1-2">&para;</a></h2>
-<h3 id="title_1-2-1">mod_wsgi<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+        <h1 id="title_1">Deployment<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">Apache<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h3 id="title_1-1-1">mod_wsgi<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <ol>
 <li><p>You should refer to the <a href="http://code.google.com/p/modwsgi/" class="outter">mod_wsgi</a> document, and     install the mod_wsgi.so module for Apache.</p>
 <ul>
@@ -79,10 +66,8 @@
 </blockquote>
 <p>If you are using Linux, see:</p>
 <blockquote><p><a href="http://code.google.com/p/modwsgi/wiki/InstallationOnLinux" class="outter">http://code.google.com/p/modwsgi/wiki/InstallationOnLinux</a></p>
-</blockquote>
-<ol>
-<li>Modify Apache's httpd.conf file</li>
-</ol>
+</blockquote></li>
+<li><p>Modify Apache's httpd.conf file</p>
 <ul>
 <li><p>Add the code below</p>
 <pre class="prettyprint"><code>LoadModule wsgi_module modules/mod_wsgi.so
@@ -103,7 +88,7 @@ Allow from all
 <li>Restart apache</li>
 <li>Test it. Startup a web browser, and enter the URL <a href="http://localhost/YOURURL" class="outter">http://localhost/YOURURL</a>     to test if eveerything went well.</li>
 </ol>
-<h2 id="title_1-3">Static files<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-2">Static files<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>Uliweb can serve static files, but you may want to use Apache or any other webserver instead because they are much faster at doing it. If you decide to let a web server serve your static files, use the exportstatic command to collect all static files from all available apps to target directory, then configure target static directory in your web servers configuration file.</p>
 
         

@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="./static/parm.css"/>
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 
-<title>Architecture, structure and programmatical execution - Uliweb-Doc</title>
+<title>Architecture - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -51,11 +51,11 @@
 </div>
 
         
-        <h1 id="title_1">Architecture, structure and programmatical execution<a class="anchor" href="#title_1">&para;</a></h1>
+        <h1 id="title_1">Architecture<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb is a Python web application framework that utilizes a MVT architecture.</p>
 <h2 id="title_1-1">MVT Framework<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>The <strong>M</strong> or Model. A model is an object ralationship mapping of database table. Uliweb ORM is based on SQLAlchemy package(not its ORM layer, but basic SQL layer). You define your models, place them in the <code>models.py</code> file and use ORM APIs or just underlying SQLAlchemy APIs to interactive with database.</p>
-<p>The <strong>V</strong> or View process is accomplished via functions or callable classes. When view function is run, Uliweb will provide an environment for the the view to run in Uliweb uses <code>func_globals</code> inject(You can inject objects into function's <code>func_globals</code>  property, so you can directly use these injected objects without importing or declaring them.) So you can use <code>request</code>, <code>response</code>, <code>json</code>, <code>redirect</code>, etc. directly in the view function. And some special objects such as <code>request</code>, <code>response</code> will be processed to thread local related.</p>
+<p>The <strong>V</strong> or View can based functions or classes. All files which begin with <code>views</code>  will be treated view module, so <code>views.py</code> or <code>views_auth.py</code> will be the right view module filename. When view function is run, Uliweb will provide an environment for the the view to run in Uliweb uses <code>func_globals</code> inject(You can inject objects into function's <code>func_globals</code>  property, so you can directly use these injected objects without importing or declaring them.) So you can use <code>request</code>, <code>response</code>, <code>json</code>, <code>redirect</code>, etc. directly in the view function. And some special objects such as <code>request</code>, <code>response</code> will be processed to thread local related.</p>
 <p>The <strong>T</strong> stands for template. Templates don't need to be rendered explicitly, just return a dict variable from the view function, and Uliweb will automatically find a matching template to render according the function name. For example, if your view function is named <code>show_document()</code>, the default template will then be <code>show_document.html</code>. If you result other type data, Uliweb will not automatically render the result with template but convert the result to a Response object directly and returns to web server. Except template auto render mechanism, you can also provide template filename in <code>expose(url, template=template_file)</code> function or just assign <code>response.template = template_file</code> in views function.</p>
 <h2 id="title_1-2">Project Organization<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>A web application is defined as a <strong>Project</strong> in Uliweb. An Uliweb web application Project consists of any number of smaller modules. These modules can be any fucntionality unit, them called <strong>Apps</strong> in Uliweb. These modules can include: templates, static files, views, model definitions, middlewares, configuration, etc. An App can be a normal python package, so you can make it a standalone package so that it can be installed separately .</p>
@@ -72,8 +72,27 @@
             models.py           #models file
             settings.ini        #app level configuration file
         app2/                   #app2
-    wsgi_handler.py             #startup file</code></pre>
-<p>You should configure what apps should be used in your project, so you should add something like this:</p>
+    wsgi_handler.py             #startup file
+    setup.py                    #make your project installable</code></pre>
+<p>For <code>local_settings.ini</code> should not be tracked in version control system, because it can includes environment-related configure options, so different environments may have some different configure options.</p>
+<p>When uliweb startup, it'll read all settings.ini defined in apps first, according to the order of <code>INSTALLED_APPS</code>, next will be <code>apps/settings.ini</code>, the last will be <code>apps/local_settings.ini</code>. So you can overwrite existed configure options in <code>apps/settings.ini</code> or <code>apps/local_settings.ini</code> depending on your needs.</p>
+<h2 id="title_1-3">App Organization<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h3 id="title_1-3-1">App Organization Structure<a class="anchor" href="#title_1-3-1">&para;</a></h3>
+<p>Uliweb applications are placed in the <code>apps</code> folder. Uliweb also ships with many built-in apps, they are stored in the <code>uliweb/contrib</code> folder. And user can  also use third-party uliweb apps.</p>
+<p>There is a global settings file for all apps in the <code>apps</code> folder called <code>settings.ini</code> . Each app can have its own <code>settings.ini</code> file for initialisation and configuration purposes.</p>
+<p>An Uliweb <strong>app</strong> in its basic form is actually Python package, this implies the precense of an empty <code>__init__.py</code> file in its root folder. Further, an <strong>app</strong> may have the following components:</p>
+<ul>
+<li><code>settings.ini</code> file, the configuration file of the app.</li>
+<li><code>config.ini</code> file, used to define app dependencies.</li>
+<li><code>templates/</code> directory, used to store template files.</li>
+<li><code>static/</code> directory, used to store static files like images, css files, javascript files.</li>
+<li><code>views*.py</code> view function will be written in them.</li>
+<li><code>models.py</code> model class will defined in it.</li>
+<li>Other files used in the app.</li>
+</ul>
+<p>A <code>settings.ini</code> can be used to carry out some initalization work. For example, database, i18n configuration etc.</p>
+<h3 id="title_1-3-2">APPs configuration<a class="anchor" href="#title_1-3-2">&para;</a></h3>
+<p>You should configure what apps should be used in your project, so you should add something in <code>settings.ini</code> like this:</p>
 <pre class="prettyprint"><code>[GLOBAL]
 INSTALLED_APPS = [
     'uliweb.contrib.orm',
@@ -81,60 +100,43 @@ INSTALLED_APPS = [
     'app1',
     'app2',
 ]</code></pre>
-<p>So when uliweb startup the project, the apps defined in settings.ini will be automatically loaded.</p>
-<p>For <code>local_settings.ini</code> should not be tracked in version control system, because it can includes environment-related configure options, so different environments may have some different configure options.</p>
-<h2 id="title_1-3">App Organization<a class="anchor" href="#title_1-3">&para;</a></h2>
-<h3 id="title_1-3-1">Structure<a class="anchor" href="#title_1-3-1">&para;</a></h3>
-<p>Uliweb applications are placed in the <code>apps</code> folder. Uliweb also ships with many built-in apps, they are stored in the <code>uliweb/contrib</code> folder.</p>
-<p>There is a global settings file for all apps in the <code>apps</code> folder called <code>setting.ini</code> . Each app can have its own <code>setting.ini</code> file for initialisation and configuration purposes.</p>
-<p>An Uliweb <strong>app</strong> in its basic form is actually Python package, this implies the precense of an empty <code>__init__.py</code> file in its root folder. Further, an <strong>app</strong> may have the following components:</p>
-<ul>
-<li><code>settings.ini</code> file, the configuration file of the app.</li>
-<li><code>config.ini</code> file, used to define app dependencies.</li>
-<li><code>templates/</code> directory, used to store template files.</li>
-<li><code>static/</code> directory, used to store static files like images, css files, javascript files.</li>
-</ul>
-<p>A <code>settings.ini</code> can be used to carry out some initalization work. For example, database, i18n configuration etc.</p>
-<p>A example of what an <code>apps</code> folder structure in an project could look like is below:</p>
-<pre class="prettyprint"><code>apps/
-    __init__.py
-    settings.ini                #This is global settings file
-    app1/
-        __init__.py
-        views.py
-        settings.ini
-        templates/
-        static/
-    app2/
-        __init__.py
-        views.py
-        settings.ini
-        templates/
-        static/</code></pre>
-<h3 id="title_1-3-2">Application availability<a class="anchor" href="#title_1-3-2">&para;</a></h3>
-<p>By default, all apps in <code>apps</code> directory are made available to the project, all appare imported automatically. You can change this feature by defining an <code>INSTALLED_APPS</code> option in the <code>apps/settings.ini</code> file.</p>
-<p>For example:</p>
-<pre class="prettyprint"><code>INSTALLED_APPS = ['Hello', 'Documents']</code></pre>
-<p>This restricts the apps made available to the project to <code>Hello</code> and <code>Documents</code> only . If <code>INSTALLED_APPS</code> is empty, or you omit it entirely, it defaults to importing and making all the apps available automatically. A very hand feature.</p>
+<p>So when uliweb startup the project, the apps defined in <code>settings.ini</code> will be automatically loaded.</p>
+<p>If you have some testing aimed apps that you don't want to configure them in <code>settings.ini</code> yet, you can config it in <code>local_settings.ini</code>, Uliweb will merge same named options together.</p>
 <h3 id="title_1-3-3">Apps are logically complete components<a class="anchor" href="#title_1-3-3">&para;</a></h3>
-<p>Even though you can split a project( complete web application) into different apps physically, every app should be treated as a logically complete component. This is however, not a rule or restriction as Uliweb is flexible enough to allow the components in an **app**, for exmple the <code>settings.ini</code> file, the <code>static</code> and <code>templates</code> to be made available to other <strong>apps</strong> to facilitate cross-application communication. For example, if you create a template <code>layout.html</code> in an app **A**, you can directly use it in an app called **B**.</p>
+<p>Even though you can split a project( complete web application) into different apps physically, every app should be treated as a logically complete component. This is however, not a rule or restriction as Uliweb is flexible enough to allow the components in an <strong>app</strong> , for exmple the <code>settings.ini</code> file, the <code>static</code> and <code>templates</code> to be made available to other <strong>apps</strong> to facilitate cross-application communication. For example, if you create a template <code>layout.html</code> in an app <strong>A</strong> , you can directly use it in an app called <strong>B</strong> .</p>
 <p>In a deployed production project, you could, for example, have a main app that contains all the globally available static and template files. It could even take care of I18n and database initialisation processes.</p>
 <h3 id="title_1-3-4">Creating dependencies between apps<a class="anchor" href="#title_1-3-4">&para;</a></h3>
-<p>If you intend to make an app dependant on abother app or more, you can define the dependancies in a <code>config.ini</code> file and then place this file in the app that app folder, it content should looks like:</p>
+<p>If you intend to make an app dependant on another app or more, you can define the dependancies in a <code>config.ini</code> file and then place this file in the app folder, it content should looks like:</p>
 <pre class="prettyprint"><code>[DEFAULT]
 REQUIRED_APPS = ['uliweb.contrib.i18n']</code></pre>
-<p>So when Uliweb import the app, if it find <code>config.ini</code> in this app folder, it'll parse config.ini, and insert the <code>REQUIRED_APPS</code> to apps list. So with this feature will simplify the configuration.</p>
-<h2 id="title_1-4">Startup and initialisation process<a class="anchor" href="#title_1-4">&para;</a></h2>
-<p>When an Uliweb project starts up, it searches the apps folder and imports all them one by one. So if you have dispatch units or some initialization process you can write them in app's <code>__init__.py</code> module. Then it'll process all settings file, and create an ini object named <code>settings</code> and bind it to <code>application</code> object. As you've already known, there are many settings files, one is globals settings.ini which in <code>apps</code> folder, others are apps' settings file they are in their own folder. Uliweb will process the apps' settings files first, then the global settings.ini. So you can write some same name options in global settings.ini to override the apps' settings.</p>
-<p>Then Uliweb will automatically find views module in every <strong>available</strong> app directory. View modules are files which filename starts with <code>views</code>. So <code>views.py</code> and <code>views_about.py</code> are both available views module, and they'll be imported automatically at startup. Why doing this, because Uliweb need to collect all URL mapping definition from all of these view modules.</p>
-<h2 id="title_1-5">URL Mapping Process<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>So when Uliweb import the app, if it find <code>config.ini</code> in its app folder, it'll parse <code>config.ini</code>, and import dependent apps automatically.</p>
+<h2 id="title_1-4">Defined in distributed but used in centralized<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>As described above, you can define static files, template files, configuration,  views, models, etc in apps, but when Uliweb startup, you can treat them as one whole things.</p>
+<h2 id="title_1-5">Startup and initialisation process<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>When Uliweb startup, it'll do following things:</p>
+<ol>
+<li>Import and merge all settings.ini</li>
+<li>Process dispatch bindings</li>
+<li>Import apps</li>
+<li>Import views</li>
+<li>Process exposes</li>
+<li>Process middlewares</li>
+</ol>
+<h2 id="title_1-6">URL Mapping Process<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>At present, Uliweb supports two ways to define URLs in views.</p>
-<p>One way is to define a URL by using the <code>expose</code> decorator. This is the easier method. The other way is to define the URLs in each view module as normal, and then use the <code>extracturls</code> command to dump these urls to the <code>apps/urls.py</code> file. Uliweb will automatically find and import it, the <code>expose</code> will be automatically disabled.</p>
-<p>To assist in URL management, Uliweb provides an <code>url_for</code> function. This function can be used for reversed URL creation, it'll create URLs according to the correspondingview function name. For more details, see the <a href="url_mapping" class="inner">URL Mapping</a> document.b</p>
-<h2 id="title_1-6">Extending Uliweb<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>One way is to define a URL by using the <code>expose</code> decorator. This is the easier method, just like:</p>
+<pre class="prettyprint"><code>@expose('/login')
+def login():
+    return {}</code></pre>
+<p>The other way is define URL in settings, just like:</p>
+<pre class="prettyprint"><code>[EXPOSES]
+login = '/login', 'uliweb.contrib.auth.views.login'
+logout = '/logout', 'uliweb.contrib.auth.views.logout'</code></pre>
+<p>To assist in URL management, Uliweb provides an <code>url_for</code> function. This function can be used for reversed URL creation, it'll create URLs according to the correspondingview function name. For more details, see the <a href="url_mapping.html" class="inner">URL Mapping</a> document.</p>
+<h2 id="title_1-7">Extending Uliweb<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>Uliweb provides many ways to extend it:</p>
 <ul>
-<li>Dispatch extension. This is a dispatch mechanism. I created it myself, and     it's easy and simple. Uliweb has already predefined     some dispatch points, when it runs there, it'll find if there are some     associated receiver functions existed, and will call them one by one.</li>
+<li>Dispatch extension. This is a dispatch mechanism. Uliweb has already predefined     some dispatch points, when it runs there, it'll find if there are some     associated receiver functions existed, and will call them one by one.</li>
 <li>middleware extension. It's similar with Django. You can configure them in     <code>settings.ini</code>, and it can be used for processing before or after the view     process.</li>
 <li>views module initialization process. If you defined a function named as     <code>__begin__</code>, it'll be invoked before invoke the exact view function. So you can     put some module level process code there. So I suggest that you can divide     different views modules via different functionalities.</li>
 </ul>

@@ -50,21 +50,21 @@
     <a prev-chapter href="./form.html"><i class="icon-arrow-left"></i> Form</a>
 </div>
 <div class="chapter-next chapter-top">
-    <a next-chapter href="./deployment.html">Deployment Guide <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="./deployment.html">Deployment <i class="icon-arrow-right"></i></a>
 </div>
         
         <h1 id="title_1">Extending Uliweb<a class="anchor" href="#title_1">&para;</a></h1>
 <p>A web framework might fall short to anticipate all your development needs. Although Uliweb is no exemption in this respect, it strives to provide the most possible amount of flexibility and extensibility.</p>
-<h2 id="title_1-1">1\ \ \ Dispatch System<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">Dispatch System<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Uliweb ships with a dispatch module, it's in uliweb/core folder.</p>
-<h3 id="title_1-1-1">1.1\ \ \ Dispatch units<a class="anchor" href="#title_1-1-1">&para;</a></h3>
+<h3 id="title_1-1-1">Dispatch units<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>Uliweb provides a simple Dispatch system that consists of three units:</p>
 <ul>
 <li>Dispatch point</li>
 <li>Receiver function</li>
 <li>Collection system</li>
 </ul>
-<h3 id="title_1-1-2">1.2\ \ \ Dispatch points<a class="anchor" href="#title_1-1-2">&para;</a></h3>
+<h3 id="title_1-1-2">Dispatch points<a class="anchor" href="#title_1-1-2">&para;</a></h3>
 <p>An Dispatch point will define the place where the dispatcher want to call its associated receiver functions, and it'll pass the auguments to those receiver functions. A dispatch point will looks like:</p>
 <pre class="prettyprint"><code>dispatch.call(sender, topic, signal=None, *args, **kwargs)</code></pre>
 <p>or</p>
@@ -86,11 +86,11 @@
 <p>There are two more functions except for <code>call</code> and <code>get</code>, they are <code>call_once</code> and <code>get_onec</code>. You can guess from their names, they could be called really only once, and if you call them more than one time, for <code>call_once</code> will not invoke again just returned, and <code>get_once</code> will only return the first returned value.</p>
 
 </div>
-<h3 id="title_1-1-3">1.3\ \ \ Receiver functions<a class="anchor" href="#title_1-1-3">&para;</a></h3>
+<h3 id="title_1-1-3">Receiver functions<a class="anchor" href="#title_1-1-3">&para;</a></h3>
 <p>It's a function will be used for processing special topic and optional signal. The signature of a receiver function will look like:</p>
 <pre class="prettyprint"><code>def receiver(sender, topic, *args, **kwargs)</code></pre>
 <p>So, receiver functions are very common.</p>
-<h3 id="title_1-1-4">1.4\ \ \ Collection system<a class="anchor" href="#title_1-1-4">&para;</a></h3>
+<h3 id="title_1-1-4">Collection system<a class="anchor" href="#title_1-1-4">&para;</a></h3>
 <p>Collection system is used to collect all of avaible receiver functions, so that when executing a dispatch point, it can find all associated receiver functions. So there are two things you need to do after defining the receiver functions:</p>
 <ol>
 <li><p>Call dispatch.bind to receiver functions, for example:</p>
@@ -114,13 +114,16 @@ def receiver():
 <li><code>nice</code>     You should not use kind and nice at the same time. And <code>nice</code> is used for     accurately setting the priority.</li>
 </ul>
 <p>When executing a dispatch point, it'll sort all associated receiver functions according their priority. So if your receiver functions need to run in certain order, you'll need to set <code>kind</code> or <code>nice</code> argument.</p>
-<h3 id="title_1-1-5">1.5\ \ \ Predefined dispatch points<a class="anchor" href="#title_1-1-5">&para;</a></h3>
-<h4 id="title_1-1-5-1">1.5.1\ \ \ uliweb.core.SimpleFrame<a class="anchor" href="#title_1-1-5-1">&para;</a></h4>
-<ul>
-<li><strong>dispatch.call(application, 'startup_installed')</strong>     Dispatcher class initialization, will only run once for class</li>
-<li><strong>dispatch.call(application, 'startup')</strong>     Dispatcher has already startuped, will be executed when creating every Dispatcher     instance.</li>
-<li><strong>dispatch.call(application, 'prepare_view_env', Dispatcher.env)</strong>     Used for prepare global view and template execution environment. All objects in env can     be used in any view function directly.</li>
-</ul>
+<h3 id="title_1-1-5">Predefined dispatch points<a class="anchor" href="#title_1-1-5">&para;</a></h3>
+<h4 id="title_1-1-5-1">uliweb.core.SimpleFrame<a class="anchor" href="#title_1-1-5-1">&para;</a></h4>
+<dl>
+<dt>dispatch.call(application, 'startup_installed')</dt>
+<dd><p>Dispatcher class initialization, will only run once for class</p>
+</dd>
+<dt>dispatch.call(application, 'startup')</dt>
+<dd><p>Dispatcher has already startuped, will be executed when creating every Dispatcher instance.</p>
+</dd>
+</dl><p>dispatch.call(application, 'prepare_view_env', Dispatcher.env)--     Used for prepare global view and template execution environment. All objects in env can     be used in any view function directly.</p>
 
         
         <div class="ui blue inverted small label">

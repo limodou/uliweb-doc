@@ -64,7 +64,7 @@
 <li>Support user defined validators</li>
 <li>Support for file uploads and management.</li>
 </ul>
-<h2 id="title_1-1">1\ \ \ The Form Class<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">The Form Class<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>To get started, define a Form class first, as follows:</p>
 <pre class="prettyprint"><code>from uliweb.form import *
 
@@ -103,7 +103,7 @@ class Form1(Form):
 <dt>idtype</dt>
 <dd><p>idtype is used to indicate how to create <code>id</code> attribute. Default is <code>'name'</code>, that means when creating HTML code for a field, it'll use the field name as the <code>id</code> value, the format will be <code>field_&lt;fieldname&gt;</code>. If it's <code>None</code>, the created HTML code will not has <code>id</code> attribute at all. And if it's other value the id format will be <code>field_&lt;no&gt;</code>, each field will have a unique id number value when creating the instance.</p>
 </dd>
-</dl><h2 id="title_1-2">2\ \ \ Defining a Form<a class="anchor" href="#title_1-2">&para;</a></h2>
+</dl><h2 id="title_1-2">Defining a Form<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>You can define any field as you want in a Form class, just define it in Form class just like abvoe example. More details about available fields you can see <em>Bultin Fields</em> section.</p>
 <p>Beside defining fields in a Form class, you can also define validators for fields or whole Form. For example:</p>
 <pre class="prettyprint"><code>from uliweb.form import *
@@ -121,7 +121,7 @@ class F(Form):
         if all_values.password != all_values.enter_password_again:
             raise ValidationError, 'Passwords are not matched'</code></pre>
 <p>This example demenstrates how to define a validateor for <code>user_name</code> field in the <code>F</code> form. You can define a function which name is like <code>validate_&lt;field_name&gt;</code>. And how to define a whole Form level validator, just define a function which name is <code>form_validate</code>.</p>
-<h2 id="title_1-3">3\ \ \ Form Layout<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-3">Form Layout<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>Form class supports layout feature. A layout can be used to create real HTML code. There are two layouts: TableLayout and CSSLayout already defined in Form module. So you can use them directly. Default is TableLayout. And if you want to change it, just define a <code>layout_class</code> attribute in Form class. For example:</p>
 <pre class="prettyprint"><code>from uliweb.form import *
 
@@ -130,7 +130,7 @@ class F(Form):
 
     title = StringField(label='Title:', required=True, help_string="This is a help string")
     date = DateField(label='Date:', name='adate', required=True)</code></pre>
-<h2 id="title_1-4">4\ \ \ Outputing HTML Code<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h2 id="title_1-4">Outputing HTML Code<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>For simple cases, you may want to output Form HTML code with empty value. For example, below is view function:</p>
 <pre class="prettyprint"><code>from uliweb.form import *
 
@@ -185,7 +185,7 @@ f.bind(data=d)</code></pre>
 <p>If you've already validated submitted data, the data or errors will be bound to the form instance, so when you re-render the form instance again, just lik <code>return {'form':f}</code> and <code>{{&lt;&lt; form}}</code>, it'll output the data and errors to HTML code.</p>
 
 </div>
-<h2 id="title_1-5">5\ \ \ Validating Submitted Data<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h2 id="title_1-5">Validating Submitted Data<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>When you defining a Form, you may want to validate the value. And you've seen how to define validator functions in a Form. So when user submitting the data, how to validate them and what's the next step after validating?</p>
 <p>You can use Form.validate() to validate the submmited data. For example:</p>
 <pre class="prettyprint"><code>from uliweb.form import *
@@ -208,7 +208,7 @@ else:
 </div>
 <p>If Form.validate() validate the submitted data ok, it'll return <code>True</code>. Or it'll return <code>False</code>. If the validatation result is <code>True</code>, the submitted data will be converted to Python data type, and be bound to the Form instance. You can use <code>Form.data</code> and <code>Form.errors</code> to get the data and errors. They are dict data type. You can also use <code>Form.&lt;field&gt;.data</code> and <code>Form.&lt;field&gt;.error</code> to get one field data and error.</p>
 <p>So after validating the data, you can use <code>form.data</code> or <code>form.&lt;field&gt;.data</code> to do more process.</p>
-<h2 id="title_1-6">6\ \ \ Field Definition<a class="anchor" href="#title_1-6">&para;</a></h2>
+<h2 id="title_1-6">Field Definition<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>The basic field class definition will be:</p>
 <pre class="prettyprint"><code>Form.BaseField(label='', default=None, required=False, validators=None,
     name='', html_attrs=None, help_string='', build=None, datatype=None,
