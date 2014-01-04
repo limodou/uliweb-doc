@@ -4,7 +4,7 @@ Uliweb provides essential runtime environment and objects, that's I call them
 global environment.
 
 
-## 1\ \ \ Objects
+## Objects
 
 Some globally objects can be easily imported from `uliweb`, for example:
 
@@ -14,7 +14,7 @@ from uliweb import application, request, response, settings, Request, Response
 ```
 
 
-### 1.1\ \ \ application
+### application
 
 It's a unique object which is used as Uliweb project instance object. It's
 the instance of `uliweb.core.SimpleFrame.Dispatcher`, and there are several
@@ -51,7 +51,7 @@ render(filename, vars, env=None) --
 
 
 
-### 1.2\ \ \ Request
+### Request
 
 This Request class is inherit from Request of werkzeug, the different between them
 is:
@@ -62,7 +62,7 @@ is:
 > values, files, and in order to compatibily with other Request class,
 > I add GET, POST, params, FILES to it.
 
-### 1.3\ \ \ Response
+### Response
 
 This Response is also inherit from Response class of werkzeug, the different is:
 
@@ -72,7 +72,7 @@ This Response is also inherit from Response class of werkzeug, the different is:
 > it. So after extending, you can use write method directly, it'll be handy more I
 > think.
 
-### 1.4\ \ \ request
+### request
 
 request is a proxy object about the instance of Request class, so it's not a
 real Request object, response is also like that. But you can treat them as real
@@ -88,7 +88,6 @@ Request and Response objects will be saved in local.request and local.response.
 request and response have life cycle, they are created when the request is
 received, and invalided after the response is returned. So when you use them,
 please ensure they are in the life cycle.
-
 {% endalert %}
 
 When we talk about the environment of View, we said that: when writing view function,
@@ -102,17 +101,17 @@ request and response to them, but it's ugly. The other way to use them is to imp
 them from uliweb, it'll be very handy.
 
 
-### 1.5\ \ \ response
+### response
 
 It's just like request, it's a proxy object of the Response instance too.
 
 
-### 1.6\ \ \ settings
+### settings
 
 Settings configure object.
 
 
-## 2\ \ \ Methods
+## Methods
 
 For example:
 
@@ -124,7 +123,7 @@ from uliweb import (redirect, json, POST, GET, post_view,
 ```
 
 
-### 2.1\ \ \ redirect
+### redirect
 
 
 ```
@@ -134,7 +133,7 @@ def redirect(location, code=302):
 Return a Response object, cause browser redirect to a new ULR.
 
 
-### 2.2\ \ \ json
+### json
 
 
 ```
@@ -144,22 +143,22 @@ def json(data):
 Convert the data to json format, and return it as a Response object.
 
 
-### 2.3\ \ \ expose
+### expose
 
-See details in [URL映射](url_mapping)
+See details in [URL Mapping](url_mapping)
 
 
-### 2.4\ \ \ POST
+### POST
 
 Just like expose, but only matched when the request method is `POST`.
 
 
-### 2.5\ \ \ GET
+### GET
 
 Just like expose, but only matched when the request method is `GET`.
 
 
-### 2.6\ \ \ url_for
+### url_for
 
 
 ```
@@ -171,7 +170,7 @@ string format, just like: `Hello.view.index`, and you can also pass it a
 real function object.
 
 
-### 2.7\ \ \ get_app_dir
+### get_app_dir
 
 
 ```
@@ -181,7 +180,7 @@ def get_app_dir(app):
 It'll return the directory of the app.
 
 
-### 2.8\ \ \ get_apps
+### get_apps
 
 
 ```

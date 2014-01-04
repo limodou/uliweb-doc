@@ -30,7 +30,7 @@ it, then you can run `python` and `uliweb` directly in command line.
 `uliweb` tool supports many action, I'll explain them one by one below.
 
 
-## 1\ \ \ runserver
+## runserver
 
 Startup development server.
 
@@ -67,7 +67,7 @@ uliweb runserver
 ```
 
 
-## 2\ \ \ runadmin
+## runadmin
 
 Start developing server with admin app.
 
@@ -80,7 +80,7 @@ It's very like `runserver` command, but the difference is it'll automatically
 add admin app to your project.
 
 
-## 3\ \ \ makeproject
+## makeproject
 
 Create a new project directory according the given project name. If there is already
 a same name project exists, it'll prompt that if you want to overwrite it, you can
@@ -99,7 +99,7 @@ uliweb makeproject test
 ```
 
 
-## 4\ \ \ makeapp
+## makeapp
 
 Create a new app directory structure according the given app name, it'll include
 initial sub-directories and files. After you created project, you should change
@@ -128,7 +128,7 @@ It'll create a Hello app in `./test/apps` directory of `test` project folder,
 the app folder name is `Hello`.
 
 
-## 5\ \ \ makepkg
+## makepkg
 
 
 ```
@@ -139,7 +139,7 @@ Creating a directory according Python package structure, that's including a
 __init__.py in it.
 
 
-## 6\ \ \ exportstatic
+## exportstatic
 
 Export all files from availabe apps static directory to target directory.
 You can set availabe apps name in apps/settings.py via INSTALLED_APPS option, for
@@ -174,7 +174,7 @@ uliweb exportstatic ../uliweb_test
 ```
 
 
-## 7\ \ \ i18n
+## i18n
 
 I18n process tool, you can use it to extract translation catalog from
 python source files and template files, the translation function is _().
@@ -224,7 +224,7 @@ uliweb i18n -w               #Whole apps process, and using default locale ``en`
 ```
 
 
-## 8\ \ \ extracturls
+## extracturls
 
 Extract URL definition from each view modules, so you should define URL via
 expose() first. It'll output the urls to apps/urls.py file. And if there is
@@ -239,7 +239,7 @@ If there is already a urls.py file in apps directory, it'll prompte you
 to confirm you want to overwrite it.
 
 
-## 9\ \ \ call
+## call
 
 
 ```
