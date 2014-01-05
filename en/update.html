@@ -24,7 +24,7 @@
 <div class="navbar">
   <div class="ui small secondary inverted borderless menu">
     
-    <a class="active item" href="./index.html">Home</a>
+    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
       <div class="ui dropdown item">
@@ -55,10 +55,11 @@
 <h2 id="title_1-1">0.2.3 Version<a class="anchor" href="#title_1-1">&para;</a></h2>
 <ul>
 <li>Update nginx support output, add proxy_set_header</li>
-<li>Add <code>save_file()</code> function to orm, so you can save select reesult to a csv file</li>
+<li>Add <code>save_file()</code> function to orm, so you can save select result to a csv file</li>
 <li>Add <code>save_file()</code> method to Result.</li>
 <li>Fix missing <code>clear()</code> function of SortedDict.</li>
 <li>Fix i18n process, for project and apps extraction, it'll create application first, so that   user defined tag will be registered correctly. But user defined tag will be limited later.</li>
+<li>Add <code>walk_dirs()</code> to utils/common.py. This function can ignore some files and file ext,   and supports fnmatch pattern.</li>
 </ul>
 <h2 id="title_1-2">0.2.2 Version<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
@@ -76,7 +77,7 @@
 &lt;!-- END title --&gt;</code></pre>
 <p>  But this output may breaks template output, so make sure you just use it in debug mode.</p></li>
 <li>Add <code>--color</code> option to runserver, default is False. The log output will be colored by default.   And you can change it in <code>[LOG.COLORS]</code>. Color supported is: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE.</li>
-<li>Add <code>config</code> command support. It'll create config file to console. You can also   define your own config file structure to support this command in apps. Just set <code>template_files/config</code>,    and write <code>xxxxx.conf</code> and even <code>xxxxx.ini</code>, in <code>xxxxx.ini</code> you can set variables   and default values which used in <code>xxxxx.conf</code>. So <code>xxxxx.conf</code> can have template   variables.</li>
+<li>Add <code>config</code> command support. It'll create config file to console. You can also   define your own config file structure to support this command in apps. Just set <code>template_files/config</code>,   and write <code>xxxxx.conf</code> and even <code>xxxxx.ini</code>, in <code>xxxxx.ini</code> you can set variables   and default values which used in <code>xxxxx.conf</code>. So <code>xxxxx.conf</code> can have template   variables.</li>
 <li>Improve <code>support</code> command, also support file structure defined under apps.</li>
 <li>Fix template normcase bug, changed to normpath.</li>
 <li>Refactor ORM Reference, OneToOne, ManyToMany init process, it'll be lazy initialized, and   you should use get_model to get the Model. Because of lazy process, when two   Models are in same models.py, and they have relationship with them, the reversed   properties will not assigned to reference class like before, you should use   get_model to get those models.</li>

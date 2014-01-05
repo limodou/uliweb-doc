@@ -5,11 +5,13 @@ Uliweb Change Log
 -----------------
 
 * Update nginx support output, add proxy_set_header
-* Add `save_file()` function to orm, so you can save select reesult to a csv file
+* Add `save_file()` function to orm, so you can save select result to a csv file
 * Add `save_file()` method to Result.
 * Fix missing `clear()` function of SortedDict.
 * Fix i18n process, for project and apps extraction, it'll create application first, so that
-  user defined tag will be registered correctly. But user defined tag will be limited later. 
+  user defined tag will be registered correctly. But user defined tag will be limited later.
+* Add `walk_dirs()` to utils/common.py. This function can ignore some files and file ext,
+  and supports fnmatch pattern.
 
 0.2.2 Version
 -----------------
@@ -33,12 +35,12 @@ Uliweb Change Log
     <!-- BLOCK title (apps/theme/templates/theme/skeleton.html) -->
     <!-- END title -->
     ```
-    
+
   But this output may breaks template output, so make sure you just use it in debug mode.
 * Add `--color` option to runserver, default is False. The log output will be colored by default.
   And you can change it in `[LOG.COLORS]`. Color supported is: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE.
 * Add `config` command support. It'll create config file to console. You can also
-  define your own config file structure to support this command in apps. Just set `template_files/config`, 
+  define your own config file structure to support this command in apps. Just set `template_files/config`,
   and write `xxxxx.conf` and even `xxxxx.ini`, in `xxxxx.ini` you can set variables
   and default values which used in `xxxxx.conf`. So `xxxxx.conf` can have template
   variables.

@@ -116,9 +116,8 @@ I also constructed a few new "wheels" myself. For example:
 
 * Deployment
 
-    * Supports GAE platform.
     * Supports mod_wsgi in Apache.
-    * SUpports uwsgi.
+    * Supports uwsgi.
 
 * Development
 
@@ -126,14 +125,6 @@ I also constructed a few new "wheels" myself. For example:
         module files are modified.
     * Enhanced debugging, you can check the error traceback, template debugging is also supported.
 
-
-## Goals
-
-* Simple and easy to use web framework.
-* The web framework should be flexiable and easy to extend.
-* The web framework should be able to be deployed in different platforms.
-* Provision of enough sample code.
-* Provision of concise and easy to understand documentation.
 
 ## Commuity
 
