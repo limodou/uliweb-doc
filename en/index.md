@@ -3,6 +3,7 @@
 {% toc max_depth=1 %}
 introduction.md
 architecture.md
+update.md
 {% endtoc %}
 
 ## Tutorials
