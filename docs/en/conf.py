@@ -47,6 +47,7 @@ custom_css = []
 # format: ('name', 'caption', 'link')
 menus = [
     ('home', 'Home', 'index.html'),
+    ('project', 'Uliweb Project', 'https://github.com/limodou/uliweb'),
 ]
 
 # in content footer you can config comment tool just like disque
