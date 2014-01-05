@@ -17,7 +17,7 @@ The features of the form module are:
 * Support for file uploads and management.
 
 
-## 1\ \ \ The Form Class
+## The Form Class
 
 To get started, define a Form class first, as follows:
 
@@ -92,7 +92,7 @@ idtype --
 
 
 
-## 2\ \ \ Defining a Form
+## Defining a Form
 
 You can define any field as you want in a Form class, just define it in Form class
 just like abvoe example. More details about available fields you can see *Bultin
@@ -125,7 +125,7 @@ And how to define a whole Form level validator, just define a function which
 name is `form_validate`.
 
 
-## 3\ \ \ Form Layout
+## Form Layout
 
 Form class supports layout feature. A layout can be used to create real
 HTML code. There are two layouts: TableLayout and CSSLayout already defined
@@ -145,7 +145,7 @@ class F(Form):
 ```
 
 
-## 4\ \ \ Outputing HTML Code
+## Outputing HTML Code
 
 For simple cases, you may want to output Form HTML code with empty value. For
 example, below is view function:
@@ -249,7 +249,7 @@ HTML code.
 {% endalert %}
 
 
-## 5\ \ \ Validating Submitted Data
+## Validating Submitted Data
 
 When you defining a Form, you may want to validate the value. And you've seen
 how to define validator functions in a Form. So when user submitting the data,
@@ -300,7 +300,7 @@ So after validating the data, you can use `form.data` or `form.<field>.data` to 
 more process.
 
 
-## 6\ \ \ Field Definition
+## Field Definition
 
 The basic field class definition will be:
 

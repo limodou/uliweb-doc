@@ -5,7 +5,7 @@ In the following simple demo, we're going to generate a plain page
 which displays "Hello, Uliweb." step by step.
 
 
-## 1\ \ \ Getting Started
+## Getting Started
 
 
 The first thing would be to read this article [Installation](installation), --
@@ -13,7 +13,7 @@ The first thing would be to read this article [Installation](installation), --
 
 
 
-## 2\ \ \ Creating a new project
+## Creating a new project
 
 Uliweb provides a command line tool named `uliweb`, you can use
 it to execute several commands.
@@ -43,7 +43,7 @@ The project folder will be:
 ```
 
 
-## 3\ \ \ Creating the 'Hello' app
+## Creating the 'Hello' app
 
 
 ```
@@ -70,7 +70,7 @@ you can find the following files in `apps/Hello` directory:
 ```
 
 
-## 4\ \ \ Starting the server
+## Starting the server
 
 After the above steps, you can start up your web project as follows:
 
@@ -84,7 +84,7 @@ open a browser and enter the url [http://localhost:8000](http://localhost:8000).
 page with the message "Hello, Uliweb" . Congratulations!
 
 
-## 5\ \ \ Modifying the "View"
+## Modifying the "View"
 
 When user requests an URL, Uliweb tries to map the URL to a view function. So in
 the case of our example, the request for [http://localhost:8000](http://localhost:8000) would map to a function
@@ -113,7 +113,7 @@ be mapped to any url and is treated as a local function.
 This function will return a line of HTML code that will be displayed directly in browser.
 
 
-## 6\ \ \ Adding templates
+## Adding templates
 
 If your view function returns a dict object, Uliweb will apply it to a template automatically.
 It means that different return value will cause a different action.
@@ -141,7 +141,7 @@ like below:
 Visit [http://localhost:8000/template](http://localhost:8000/template) in the browser, you will see the same thing as the previous one.
 
 
-## 7\ \ \ Using template variables
+## Using template variables
 
 In above two examples, all data are outputed directly, we're going to use template
 variables to change that. Add another view function with the following code:
@@ -197,7 +197,7 @@ the server, and then you can restart it.
 {% endalert %}
 
 
-## 8\ \ \ End
+## End
 
 This tutorial only demonstrates some fundamental things like view and templates
 and lots of topics are not mentioned, such as:

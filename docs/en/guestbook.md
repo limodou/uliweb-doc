@@ -1,11 +1,11 @@
 # Mini GuestBook
 
-Maybe you've learned [Hello, Uliweb](hello_uliweb) this tutorial, and have some
+Maybe you've learned [Hello, Uliweb](hello_uliweb.html) this tutorial, and have some
 sense to Uliweb, so, let's step into database world together, and see how to
 use database simply.
 
 
-## 1\ \ \ Prepare
+## Prepare
 
 There is already the whole GuestBook source code in uliweb-tests project. So you
 can checkout from it:
@@ -28,7 +28,7 @@ other databases, you should also install their database module first.
 Ok, let's begin to write code.
 
 
-## 2\ \ \ Create Project
+## Create Project
 
 I suggest that you begin your work in a new directory, for example:
 
@@ -41,7 +41,7 @@ So it'll export all necessary Uliweb source code to outputdir directory. Then
 goto this directory, ready to begin.
 
 
-## 3\ \ \ Create App
+## Create App
 
 Goto the project directory built in previous step, and use `makeapp` to create a
 new app.
@@ -56,7 +56,7 @@ This will automatially create a `GuestBook` app for you in `apps`
 directory of your project.
 
 
-## 4\ \ \ Configure Database
+## Configure Database
 
 In this tutorial we'll use Uliweb orm to access database. And there is also
 a builtin orm app, so that you can use it directly. Just editing `guestbook/apps/settings.ini`,
@@ -65,8 +65,8 @@ then change the `INSTALLED_APPS` to:
 
 ```
 INSTALLED_APPS = [
-    'GuestBook',
     'uliweb.contrib.orm',
+    'GuestBook',
     ]
 ```
 
@@ -83,11 +83,12 @@ So the `settings.ini` will look like:
 
 ```
 [GLOBAL]
-DEBUG = True
+DEBUG = False
+DEBUG_CONSOLE = False
 
 INSTALLED_APPS = [
-    'GuestBook',
     'uliweb.contrib.orm',
+    'GuestBook',
     ]
 
 [ORM]
@@ -117,7 +118,7 @@ Here we use relative path format, so the `guestbook.db` will be created at guest
 folder.
 
 
-## 5\ \ \ Template Environment Extension
+## Template Environment Extension
 
 Because we want to enable user input plain text and output them as HTML code,
 so we'll use uliweb.utils.text2html function to convert text to HTML code, and
@@ -139,15 +140,15 @@ def prepare_view_env(sender, env, request):
 This is a dispatch receiver function usage example, and there are some others plugin hook you can
 use. And this hook point is global availabe, so other apps can also use it.
 
+And we can also import text2html in template, so above just an example.
 
-## 6\ \ \ Prepare Model
+## Prepare Model
 
 Creating a `models.py` file in GuestBook directory, and add below code:
 
 
 ```
 from uliweb.orm import *
-import datetime
 
 class Note(Model):
     username = Field(CHAR)
@@ -204,11 +205,29 @@ if you don't give it, the default value will be 30.
 {% alert class=info %}
 When you define Model class, Uliorm will automatically add a `id` field for
 you, it'll be a primary key.
-
 {% endalert %}
 
+## Configure Model and Create Table
 
-## 7\ \ \ Static Files Serving
+In Uliweb, you should configure all models in settings.ini, just like this:
+
+```
+[MODELS]
+note = 'GuestBook.models.Note'
+```
+
+So you can save above configuration in GuestBook app `settings.ini` or `apps/settings.ini`,
+but in app's settings.ini is recommended, because it's more suitable for reuse of apps.
+
+Then when can run:
+
+```
+uliweb syncdb
+```
+
+in project directly. So that uliweb will automatically create tables for you.
+
+## Static Files Serving
 
 We'll need to display static files later, now we can just add `uliweb.contrib.staticfiles`
 to `INSTALLE_APPS` of `settings.ini`. Using this app, all static directories of
@@ -218,12 +237,13 @@ begin with `/static/`. Now the `settings.ini` will look like:
 
 ```
 [GLOBAL]
-DEBUG = True
+DEBUG = False
+DEBUG_CONSOLE = False
 
 INSTALLED_APPS = [
-    'GuestBook',
     'uliweb.contrib.orm',
     'uliweb.contrib.staticfiles',
+    'GuestBook',
     ]
 
 [ORM]
@@ -235,26 +255,28 @@ in views or template. This function will create url for files in static folder o
 each App.
 
 
-## 8\ \ \ Display Comments
+## Display Comments
 
 
-### 8.1\ \ \ Change index() function in view
+### Change index() function in view
 
 Open `views.py` in `GuestBook` directory, and change it to:
 
 
 ```
 #coding=utf-8
-from uliweb import expose
-from models import Note
+from uliweb import expose, functions
 
 @expose('/')
 def index():
+    Note = functions.get_model('note')
     notes = Note.all().order_by(Note.c.datetime.desc())
     return {'notes':notes}
 ```
 
-In beginning, we import `Note` class, then get all comments in index()
+In beginning, we import `expose` and `functions` function, then we can use
+`functions.get_model()` to get real `note` Model class according the settings.ini.
+And we can get all comments in `index()`
 via `Note.all()` statement. In order to display the comments descend to datetime,
 we add `order_by()` clause. This is SqlAlchemy query expression usage.
 
@@ -284,11 +306,10 @@ apps.appname.viewmodule.functioname
 And Uliweb also provides a reversed URL creating function - url_for, you can
 use it to create a URL according view function string like above format. We
 will see its usage in template later.
-
 {% endalert %}
 
 
-### 8.2\ \ \ Create Layout Template File
+### Create Layout Template File
 
 I don't want to repeat myself again, because I've already made a YAML layout template
 file before, and it's in uliweb.contrib now, so you can also use this CSS framework
@@ -310,31 +331,24 @@ defined in parent template. Here we use `url_for` to get reversed URL according
 the view function name.
 
 
-### 8.3\ \ \ Create index.html Template File
+### Create index.html Template File
 
 Create a `index.html` file in `GuestBook/templates` directory, it'll be matched
 to index() function. And add below content to it:
 
-"System Message: WARNING/2 (D:\project\mywork\uliweb-doc\docs\en\guestbook.rst:, line 290)"
-Cannot analyze code. No Pygments lexer found for "django+html".
-
-
 ```
-.. code:: django+html
-
-    1     {{extend "base.html"}}
-    2     {{block content}}
-    3     <h2><a href="{{=url_for('GuestBook.views.new_comment')}}">New Comment</a></h2>
-    4     {{for n in notes:}}
-    5           <div class="info">
-    6           <h3><a href="{{= url_for('GuestBook.views.del_comment', id=n.id) }}">
-    7           <img src="{{= url_for_static('delete.gif') }}"/>
-    8           </a> {{=n.username}} at {{=n.datetime.strftime('%Y/%m/%d %H:%M:%S')}} say:</h3>
-    9           <p>{{<<text2html(n.message)}}</p>
-    10          </div>
-    11    {{pass}}
-    12    {{end}}
-
+1     {{extend "base.html"}}
+2     {{block content}}
+3     <h2><a href="{{=url_for('GuestBook.views.new_comment')}}">New Comment</a></h2>
+4     {{for n in notes:}}
+5           <div class="info">
+6           <h3><a href="{{= url_for('GuestBook.views.del_comment', id=n.id) }}">
+7           <img src="{{= url_for_static('delete.gif') }}"/>
+8           </a> {{=n.username}} at {{=n.datetime.strftime('%Y/%m/%d %H:%M:%S')}} say:</h3>
+9           <p>{{<<text2html(n.message)}}</p>
+10          </div>
+11    {{pass}}
+12    {{end}}
 ```
 
 The first line means this template will inherit from `base.html`.
@@ -363,10 +377,10 @@ Ok, after above working, displaying comments is finished. But for now, you can't
 add comment yet, so let's see how to adding comment.
 
 
-## 9\ \ \ Add comment
+## Add comment
 
 
-### 9.1\ \ \ Add new_comment() function to view
+### Add new_comment() function to view
 
 In the index.html, we've already add some code to create `New Comment` URL:
 
@@ -394,12 +408,13 @@ Open the views.py file, and add below code:
 9         elif request.method == 'POST':
 10            flag = form.validate(request.params)
 11            if flag:
-12                n = Note(**form.data)
-13                n.save()
-14                return redirect(url_for(index))
-15            else:
-16                message = "There is something wrong! Please fix them."
-17                return {'form':form, 'message':message}
+12                Note = functions.get_model('note')
+13                n = Note(**form.data)
+14                n.save()
+15                return redirect(url_for(index))
+16            else:
+17                message = "There is something wrong! Please fix them."
+18                return {'form':form, 'message':message}
 ```
 
 The URL will be `/new` for `new_comment()` function.
@@ -438,7 +453,7 @@ If the validation is failed, the flag variable should be `False`. We'll assign
 an error message to message variable, then show the form again.
 
 
-### 9.2\ \ \ Define Form
+### Define Form
 
 In order to interact with server, uesr can through browser to input data,
 so you should provide Form HTML element to receive the input data. For an experienced
@@ -485,7 +500,7 @@ Each field may has some arguments, for example:
 It likes the definition of Model, but they are different.
 
 
-### 9.3\ \ \ Create new_comment.html Template File
+### Create new_comment.html Template File
 
 Creating a `new_comment.html` file in `GuestBook/templates` directory, then add beclow code:
 
@@ -518,7 +533,7 @@ form code be escaped, so we need to use `{{<<}}` tag.
 Now, you can try current work in the browser.
 
 
-## 10\ \ \ Delete Comment
+## Delete Comment
 
 In `index.html`, we've defined a link which will be used to delete comment, the format
 is:
@@ -536,6 +551,7 @@ Open `GuestBook/views.py` file, and append below code:
 ```
 @expose('/delete/<id>')
 def del_comment(id):
+    Note = functions.get_model('note')
     n = Note.get(int(id))
     if n:
         n.delete()
@@ -549,12 +565,12 @@ view function. `Note.get(int(id))` will get the object, then if the object
 existed, then call `n.delete()` to delete the record. Or display an error page.
 
 
-### 10.1\ \ \ URL Arguments Definition
+### URL Arguments Definition
 
 Notice, here, expose() uses an argument, i.e. `<id>`. Once there are something
 like `<type:para>` in the URL, that's means you defined an argument. And `type`
 can be optional. Uliweb provides many builtin types, such as: int, float, path,
-any, string, uniocde. And you can find more details in [URL Mapping](url_mapping)
+any, string, uniocde. And you can find more details in [URL Mapping](url_mapping.html)
 document. If you just define `<name>` format, it just means matching something
 between `//`. Once you defined some arguments in the URL, you must define the
 same arguments in the view function, so `del_comment()` function should be written
@@ -563,7 +579,7 @@ in `del_command(id)`. There the `id` arugment is the same as the one in URL.
 Ok, now you can try if the delete function can be used.
 
 
-### 10.2\ \ \ Error Page
+### Error Page
 
 When there are something wrong, you may need to show an error page to user, so
 you can use `error()` function to return an error page. `return` is no need in front
@@ -586,7 +602,7 @@ It's simple right, we extend from `base.html`, then override title block, header
 block and content block. And this page need a `message` variable.
 
 
-## 11\ \ \ Run
+## Run
 
 In previous developing procedure, you can also start a developing server to test
 your project. The command of starting a developing server is:
@@ -600,27 +616,27 @@ When it starting, you can input `http://localhost:8000/` to test this
 GuestBook demo.
 
 
-## 12\ \ \ Screen Casts
+## Screen Casts
 
 Let's see some screen casts, this will make more sense.
 
 Homepage:
 
 
-![image](/static/image01.jpg)
+![image](_static/image01.jpg)
 
 New Comment Page:
 
 
-![image](/static/image02.jpg)
+![image](_static/image02.jpg)
 
 Error Comment Page:
 
 
-![image](/static/image03.jpg)
+![image](_static/image03.jpg)
 
 
-## 13\ \ \ Conclusion
+## Conclusion
 
 Wow, we've learnt so many things for now:
 

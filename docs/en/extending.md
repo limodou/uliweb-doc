@@ -5,12 +5,12 @@ Although Uliweb is no exemption in this respect, it strives to provide the most
 possible amount of flexibility and extensibility.
 
 
-## 1\ \ \ Dispatch System
+## Dispatch System
 
 Uliweb ships with a dispatch module, it's in uliweb/core folder.
 
 
-### 1.1\ \ \ Dispatch units
+### Dispatch units
 
 Uliweb provides a simple Dispatch system that consists of three units:
 
@@ -20,7 +20,7 @@ Uliweb provides a simple Dispatch system that consists of three units:
 * Collection system
 
 
-### 1.2\ \ \ Dispatch points
+### Dispatch points
 
 An Dispatch point will define the place where the dispatcher want to call
 its associated receiver functions, and it'll pass the auguments to those
@@ -80,11 +80,10 @@ and `get_onec`. You can guess from their names, they could be called really
 only once, and if you call them more than one time, for `call_once` will not
 invoke again just returned, and `get_once` will only return the first returned
 value.
-
 {% endalert %}
 
 
-### 1.3\ \ \ Receiver functions
+### Receiver functions
 
 It's a function will be used for processing special topic and optional signal.
 The signature of a receiver function will look like:
@@ -97,7 +96,7 @@ def receiver(sender, topic, *args, **kwargs)
 So, receiver functions are very common.
 
 
-### 1.4\ \ \ Collection system
+### Collection system
 
 Collection system is used to collect all of avaible receiver functions, so that
 when executing a dispatch point, it can find all associated receiver functions.
@@ -154,18 +153,20 @@ according their priority. So if your receiver functions need to run in certain
 order, you'll need to set `kind` or `nice` argument.
 
 
-### 1.5\ \ \ Predefined dispatch points
+### Predefined dispatch points
 
 
-#### 1.5.1\ \ \ uliweb.core.SimpleFrame
+#### uliweb.core.SimpleFrame
 
 
-* **dispatch.call(application, 'startup_installed')**
+dispatch.call(application, 'startup_installed') --
     Dispatcher class initialization, will only run once for class
-* **dispatch.call(application, 'startup')**
+    
+dispatch.call(application, 'startup') --
     Dispatcher has already startuped, will be executed when creating every Dispatcher
     instance.
-* **dispatch.call(application, 'prepare_view_env', Dispatcher.env)**
+    
+dispatch.call(application, 'prepare_view_env', Dispatcher.env)--
     Used for prepare global view and template execution environment. All objects in env can
     be used in any view function directly.
 

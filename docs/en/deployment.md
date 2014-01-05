@@ -1,37 +1,4 @@
-# Deployment Guide
-
-
-## GAE(Google Application Engine)
-
-GAE is a plaform provided by Google for web applications. To use GAE in combination
-with ULiweb for web development, you will need a GAE account. Follow the instructions
-on the GAE main site to create one.
-
-You should test your project code under the GAE SDK development environment first
-before the final deployment.
-
-
-1. Using the `export` command, export Uliweb to your project directory. You should name
-    your project directory using the application name you created in
-    GAE. For example, say your project name is `myproject`, and you installed GAE SDK in
-    `C:\Program Files\Google\google_appengine`, you can use the command:
-
-    ```
-    python manage.py export "C:\Program Files\Google\google_appengine\myproject"
-    ```
-
-    You would notice that the target directory is quoted by double-quotes,
-    that's because there is space character in the directory. The deployement is ready after this step.
-1. Modify the `app.yaml` file, change the value of `application` to your project name,
-    for example: `myproject`.
-1. Begin your web development using the Uliweb development server
-    first, switch to the GAE development server for further testing.
-1. Upload your project with the `appcfg.py` tool:
-
-    ```
-    python appcfg.py update myproject
-    ```
-
+# Deployment
 
 
 ## Apache
@@ -48,9 +15,11 @@ before the final deployment.
     For Windows instructions, see:
 
     > http://code.google.com/p/modwsgi/wiki/InstallationOnWindows
+    
     If you are using Linux, see:
 
     > http://code.google.com/p/modwsgi/wiki/InstallationOnLinux
+    
 1. Modify Apache's httpd.conf file
 
     * Add the code below
