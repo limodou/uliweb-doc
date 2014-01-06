@@ -20,6 +20,13 @@ guestbook.md
 * [uliweb入门教程--blog(1天体验版本)](http://uliweb.clkg.org/tutorial/read/3)
 * [uliweb中级篇--CMS](http://uliweb.clkg.org/tutorial/read/19)
 
+## 多人博客教程
+
+{% toc max_depth=1 %}
+blogs/introduction.md
+blogs/create_project.md
+{% endtoc %}
+
 ## 视频
 
 * Codepark-day1 github项目建立 [wmv下载](http://pan.baidu.com/share/link?shareid=3130751943&uk=889513934) [在线视频](http://www.tudou.com/programs/view/MsZYfchhWyw/?bid=03&pid=02&resourceId=22909963_03_05_02)

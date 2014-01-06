@@ -12,8 +12,9 @@ $(function(){
     var lang = $.cookie('language');
     if (!lang){
         lang = navigator.language || 'en';
-        lang = lang.replace('-', '_')
     }
+    if (lang.substr(0, 2) == 'zh') lang = 'zh_CN';
+    else lang = 'en';
     window.location.href = lang + '/index.html';
 });
 </script>
