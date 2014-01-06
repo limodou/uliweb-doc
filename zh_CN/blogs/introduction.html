@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="../static/parm.css"/>
 <link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
 
-<title>导入一个Model时都做了些什么？ - Uliweb-Doc</title>
+<title>介绍 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -47,28 +47,69 @@
     <div class="twelve wide column" id="markdown-content">
     
         
-
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../blogs/create_project.html">创建项目 <i class="icon-arrow-right"></i></a>
+</div>
         
-        <h1 id="title_1">导入一个Model时都做了些什么？<a class="anchor" href="#title_1">&para;</a></h1>
-<p>当使用get_model(model_name, engine_name=None)时，都做了哪些事呢？</p>
-<ol>
-<li>从engine中的models属性里，查找model_name，找到后，如果model_path为字符串，则    开始导入对应的模块</li>
-<li><p>导入模块，则开始对Model类进行初始化</p>
-<ol>
-<li>创建Property对象，对于Reference等会对引用的Model执行get_model，所以这里可能循环</li>
-<li>执行Model元类初始化，执行 <code>__property_config__</code> 方法</li>
-</ol></li>
-<li><p>对类执行bind操作，关联metadata</p>
-<ol>
-<li>根据所有Property来创建Column,执行Property的create方法</li>
-<li>创建Table对象</li>
-<li>处理Model的OnInit方法，如进行索引的处理</li>
-</ol></li>
-</ol>
+        <h1 id="title_1">介绍<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">目的<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>Web开发需要大量知识的汇集，Uliweb框架本身也提供了非常多的实现手段。单纯地看文档 可能未必能够了解某些功能的使用场景，因此我开始写这个教程，希望把一些新的、方便的 用法介绍给大家，并且尽量展示更多框架如何与其它的功能结合的一些示例。</p>
+<ul>
+<li>常见命令行的使用</li>
+<li>原始的Form交互处理</li>
+<li>使用Generic交互处理</li>
+<li>使用generic命令行自动生成代码框架</li>
+<li>如何处理文件上传及下载</li>
+<li>Ajax的使用示例</li>
+<li>如何将常用的一些js,css库封装为app</li>
+<li>邮件处理、守护及异步调用框架示例</li>
+<li>如何部署</li>
+</ul>
+<h2 id="title_1-2">准备uliweb环境<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>在开始项目前，需要安装: uliweb, plugs, sqlalchemy, alembic等模块：</p>
+<pre class="prettyprint"><code>pip install uliweb
+pip install plugs</code></pre>
+<p>至于sqlalchemy, alembic可以在后面再安装。</p>
+<h2 id="title_1-3">准备git环境<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>这里假设你将要使用git作为你的版本管理工具，并且会将代码放在github上。所以你需要 安装git环境。git工具有很多，这里我使用的是git官网上的命令行工具，github本身还提 供了GUI的工具。在安装好git命令行之后，在windows环境下确认可以进入git bash。在linux 下可以启动git。</p>
+<p>本项目的代码已经放在github上，地址是： <a href="https://github.com/limodou/uliweb-blogs-demo" class="outter">https://github.com/limodou/uliweb-blogs-demo</a> 所以你可以clone这个仓库来查看源码。</p>
+<p>欢迎大家在阅读中提出问题，一起完善这个教程。</p>
+<p>这个教程本身是放在 <a href="https://github.com/limodou/uliweb-doc" class="outter">https://github.com/limodou/uliweb-doc</a> 项目中的。</p>
+<h2 id="title_1-4">功能需求<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>下面把本教程打算实现的功能列在下面，希望我能够全部完成。也希望大家一起来添加内容， 让这个教程更完善。</p>
+<p>简要说明一下：我打算实现一个多人共同编写的博客，所以整体上还是一个博客，但是可以 一起展示，也可以按人来分别展示。评论则采用第三方的功能。页面功能尽量考虑实现静态 化。实现基本的用户管理功能。可以记录用户操作。实现邮件异步发送。博客将采用Markdown 语法来写作，可以支持图片上传。</p>
+<ul>
+<li><p>blog功能</p>
+<ul>
+<li>blog首页展示</li>
+<li>blog分页</li>
+<li>单个blog文章展示</li>
+<li>disqus评论集成</li>
+<li>blog创建</li>
+<li>blog编辑</li>
+<li>分类创建</li>
+<li>分类管理</li>
+<li>Tag管理</li>
+<li>RSS生成</li>
+</ul></li>
+<li><p>后台管理</p>
+<ul>
+<li><p>用户管理</p>
+<ul>
+<li>用户注册</li>
+<li>用户审批(超级用户)</li>
+</ul></li>
+<li>操作日志</li>
+</ul></li>
+<li><p>守护</p>
+<ul>
+<li>邮件发送</li>
+</ul></li>
+</ul>
 
         
         <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="../articles/what_does_model_init_does.md">View Source</a>
+            <i class="icon download"></i><a href="../blogs/introduction.md">View Source</a>
         </div>
         
     </div>

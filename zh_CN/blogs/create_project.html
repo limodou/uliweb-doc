@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="../static/parm.css"/>
 <link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
 
-<title>导入一个Model时都做了些什么？ - Uliweb-Doc</title>
+<title>创建项目 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -46,29 +46,45 @@
     
     <div class="twelve wide column" id="markdown-content">
     
-        
+        <div class="chapter-prev chapter-top">
+    <a prev-chapter href="../blogs/introduction.html"><i class="icon-arrow-left"></i> 介绍</a>
+</div>
 
         
-        <h1 id="title_1">导入一个Model时都做了些什么？<a class="anchor" href="#title_1">&para;</a></h1>
-<p>当使用get_model(model_name, engine_name=None)时，都做了哪些事呢？</p>
-<ol>
-<li>从engine中的models属性里，查找model_name，找到后，如果model_path为字符串，则    开始导入对应的模块</li>
-<li><p>导入模块，则开始对Model类进行初始化</p>
-<ol>
-<li>创建Property对象，对于Reference等会对引用的Model执行get_model，所以这里可能循环</li>
-<li>执行Model元类初始化，执行 <code>__property_config__</code> 方法</li>
-</ol></li>
-<li><p>对类执行bind操作，关联metadata</p>
-<ol>
-<li>根据所有Property来创建Column,执行Property的create方法</li>
-<li>创建Table对象</li>
-<li>处理Model的OnInit方法，如进行索引的处理</li>
-</ol></li>
-</ol>
+        <h1 id="title_1">创建项目<a class="anchor" href="#title_1">&para;</a></h1>
+<p>请注意，我们很多操作是通过命令行完成的，所以请确认你可以在命令行上执行python和uliweb 命令。如果不行，需要将Python的安装目录，以及它下面的Scripts子目录添加到PATH环境中。</p>
+<h2 id="title_1-1">clone仓库<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>如果我们已经在github上创建了一个仓库，因此第一步就是将仓库clone到本地。</p>
+<pre class="prettyprint"><code>git clone git@github.com:limodou/uliweb-blogs-demo.git</code></pre>
+<p>这里你应该換成你所创建的仓库地址。这时，仓库还是空的。我们可以向仓库中添加常见 的一些文件，如：LICENSE, README.md等。具体如何使用git进行版本管理，本教程就不涉及 了，请大家自已查看git相关的一些书和教程。</p>
+<p>clone完成之后，将会在当前目录下生成一个名为 uliweb-blogs-demo 的子目录（目录名 应该換成你真正的项目名）。</p>
+<h2 id="title_1-2">创建项目<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>我们将在项目目录下创建一个uliweb_blogs子目录，作为存放uliweb项目源代码的地方， 这个目录才是真正的uliweb项目的目录，因为可以在这个目录下启动我们的项目。</p>
+<pre class="prettyprint"><code>uliweb makeproject uliweb_globs</code></pre>
+<p>生成的目录结构如下：</p>
+<pre class="prettyprint"><code>|-- .gitignore
+|-- apps/
+|   |-- __init__.py
+|   |-- local_settings.ini
+|   `-- settings.ini
+|-- setup.py
+`-- wsgi_handler.py</code></pre>
+<p>如果是一个git仓库，它已经自动生成了一个.gitignore，所以你可以修改它，添加你不想放 在git中的文件。如果你打开它你会看到：</p>
+<pre class="prettyprint"><code>*.pyc
+*.bak
+local_settings.ini</code></pre>
+<p>因此local_settings.ini缺省是不会添加到git中去的，这样保证不同的环境下local_settings.ini 不会被覆盖。</p>
+<p>apps是一个标准的Python包结构，所以在引用它下面的模块时，其实可以使用 <code>apps.xxx</code>, 不过，Uliweb在启动时，会自动将Uliweb 项目目录以及apps目录添加到 <code>sys.path</code> 中， 因此可以在当前项目下直接使用apps下的模块，这一点在后面配置app时我们会看到。</p>
+<p>Uliweb的项目是由若干个app组成的，所以它们都将放在apps目录下。</p>
+<p>在 apps 下的两个 settings 文件，它们都是全局性的，一个是 local_settings.ini ，由于它不会被添加到 git 仓库中，所以不同的环境上， local_settings.ini 可以 不同，因此可以用来放置与环境相关的参数，比如数据库连接串等。</p>
+<p>这里为什么会有setup.py？这是为了实现项目之间想要复用app时，可以把当前项目通过执行 setup.py来安装，这样别的项目就可以方便引用本项目的app了。Uliweb在安装时做了处理， 因为app一般都在apps目录下，但是安装之后，只需要通过 <code>project.app</code> 就可以使用了，不 需要添加apps。</p>
+<p>wsgi_handler.py 是启动文件，在开发时不需要使用它。它是用在部署上，比如部署到 uwsgi下。</p>
+<h2 id="title_1-3">目录规划<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>与uliweb_blogs平级，我们还可以创建如 docs, test等目录，用来存放文档和测试代码。</p>
 
         
         <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="../articles/what_does_model_init_does.md">View Source</a>
+            <i class="icon download"></i><a href="../blogs/create_project.md">View Source</a>
         </div>
         
     </div>

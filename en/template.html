@@ -153,16 +153,17 @@ Hello, Uliweb</code></pre>
 <dd><pre class="prettyprint"><code>will be also used in searching template file, if it's been set, if it can't</code></pre>
 <p>find the extend template or include template, this value will be used.</p>
 </dd>
-</dl><p>This function will return a string value, which is the result of template executing.</p>
-<ul>
-<li><code>template_file(filename, vars=None, env=None, dirs=None, default_template=None)</code> Most parameters' meaning of this function are the same as <code>template()</code>. The only different is the first parameter is <code>filename</code>. It's a template filename. So this function is mainly used to process template file but not string.</li>
-<li><code>render_text(text, vars=None, env=None, dirs=None, default_template=None)</code> All the parameters' meaning are the same as <code>template()</code>. This function will return the translated Python code.</li>
-<li><code>render_file(filename, vars=None, env=None, dirs=None, default_template=None, use_temp=False)</code> <code>use_temp</code> --         if set to True, then Uliweb template will store the translated Python code     to a temporary file, and if you render the same template file again, and if     you haven't change the original template file after last render time, Uliweb     template will use the temporary file instead, but not the real template file     and rerenders it again. So this will speed the process.</li>
-</ul>
-<p>Other parameters' meaning of this function are the same as <code>template()</code> and <code>template_file</code>.</p>
-<ul>
-<li><code>use_tempdir(dir=None)</code> By default, Uliweb template will not automatically storing trnaslated Python code to temporary directory. So if you want to use this feature, you should call this function first. <code>dir</code> will be the temporary directory, if not set, default directory will be <code>tmp/templates_temp</code>. So if you use this feature, make sure you have the write permission of temporary directory.</li>
-</ul></li>
+</dl><p>This function will return a string value, which is the result of template executing.</p></li>
+<li><code>template_file(filename, vars=None, env=None, dirs=None, default_template=None)</code>     Most parameters' meaning of this function are the same as <code>template()</code>. The only different     is the first parameter is <code>filename</code>. It's a template filename. So this function     is mainly used to process template file but not string.</li>
+<li><code>render_text(text, vars=None, env=None, dirs=None, default_template=None)</code>     All the parameters' meaning are the same as <code>template()</code>. This function will     return the translated Python code.</li>
+<li><p><code>render_file(filename, vars=None, env=None, dirs=None, default_template=None, use_temp=False)</code></p>
+<dl>
+<dt><code>use_temp</code></dt>
+<dd><pre class="prettyprint"><code>if set to True, then Uliweb template will store the translated Python code</code></pre>
+<p>to a temporary file, and if you render the same template file again, and if you haven't change the original template file after last render time, Uliweb template will use the temporary file instead, but not the real template file and rerenders it again. So this will speed the process.</p>
+</dd>
+</dl><p>Other parameters' meaning of this function are the same as <code>template()</code> and <code>template_file</code>.</p></li>
+<li><code>use_tempdir(dir=None)</code>     By default, Uliweb template will not automatically storing trnaslated Python code     to temporary directory. So if you want to use this feature, you should call this     function first. <code>dir</code> will be the temporary directory, if not set, default     directory will be <code>tmp/templates_temp</code>. So if you use this feature, make sure     you have the write permission of temporary directory.</li>
 </ul>
 <h2 id="title_1-4">4\ \ \ How to use template in Uliweb<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>There are several ways to use template.</p>

@@ -106,7 +106,7 @@ uliweb makeapp Hello</code></pre>
 <p>It'll create a Hello app in <code>./test/apps</code> directory of <code>test</code> project folder, the app folder name is <code>Hello</code>.</p>
 <h2 id="title_1-5">makepkg<a class="anchor" href="#title_1-5">&para;</a></h2>
 <pre class="prettyprint"><code>Usage: uliweb makepkg pkgname</code></pre>
-<p>Creating a directory according Python package structure, that's including a __init__.py in it.</p>
+<p>Creating a directory according Python package structure, that's including a <strong>init</strong>.py in it.</p>
 <h2 id="title_1-6">exportstatic<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>Export all files from availabe apps static directory to target directory. You can set availabe apps name in apps/settings.py via INSTALLED_APPS option, for example: INSTALLED_APPS=['Hello', 'Documents']. If you didn't set it, all folders in apps will be treated as an available app. When exporting static files, if there are some files with same name, it'll be checked if the content is the same by default, and give you some messages in the console, and skip this file. But you can disable this check of cause.</p>
 <pre class="prettyprint"><code>Usage: uliweb exportstatic [options] outputdir

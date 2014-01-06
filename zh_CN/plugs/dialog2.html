@@ -120,11 +120,15 @@ message_type:'bootstrap'
 <dl>
 <dt>begin</dt>
 <dd><pre class="prettyprint"><code>&lt;form class=xxxx&gt;</code></pre>
-<dl>
-<dt>body</dt>
-<dd>
 </dd>
-</dl><p>Form的内容 buttons_line -- Form的按钮行 end -- <code>` &lt;/form&gt; `</code></p>
+<dt>body</dt>
+<dd><p>Form的内容</p>
+</dd>
+<dt>buttons_line</dt>
+<dd><p>Form的按钮行</p>
+</dd>
+<dt>end</dt>
+<dd><pre class="prettyprint"><code>&lt;/form&gt;</code></pre>
 </dd>
 </dl><p>其中，每一部分都可以单独运行。这样我们就可以保留需要的内容，将其它的内容进 行替換。举例如下：</p>
 <pre class="prettyprint"><code>&lt;form class="ajax {{=defined('form_class') or 'form-horizontal'}}" 

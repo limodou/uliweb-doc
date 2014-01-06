@@ -159,10 +159,8 @@ def index():
 <li><p>某个app定义了一串配置项，如：</p>
 <pre class="prettyprint"><code>[PARA]
 domain = 'http://localhost:8000'
-login_url = domain + '/login'</code></pre>
-<ul>
-<li>然后当部署到某个环境中时，用户希望在local_settings.ini中覆盖上面的domain的值 为实际的地址。</li>
-</ul></li>
+login_url = domain + '/login'</code></pre></li>
+<li>然后当部署到某个环境中时，用户希望在local_settings.ini中覆盖上面的domain的值     为实际的地址。</li>
 </ul>
 <p>这时会有这样的问题：在解析app的settings.ini文件时，domain的值已经解析出来了，因 此在处理login_url时，它的值也就固定下来了。等local_settings.ini再覆盖domain， login_url已经不会再重新计算了。</p>
 <p>所以为了解决因为多个settings.ini按顺序导入，但是变量提前计算的问题，在0.2版本中 引入了Lazy的处理方式。即，在读取多个settings.ini时，并不计算配置项的值，只是放 到这个配置项对应的数组中，等全部读取完毕，由uliweb主动调用settings的freeze()方法 开始对所有未计算的值进行求值。通过这样的方法就延迟了求值的时间，保证了最终想到的 结果。</p>

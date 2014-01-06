@@ -219,7 +219,7 @@ Uliweb Guest Book&lt;/a&gt;&lt;/h1&gt;{{end}}</code></pre>
 <p>Line 3 will display an URL for add new comment.</p>
 <p>Line 4 tills line 11 are a loop. Remember Uliweb uses web2py template module, but makes some improvements. The code between {{}} can be any Python code, so they should follow the Python syntax. Thus, the <code>:</code> at the end of block statement can't be omitted. You can also put html code in {{}}, but can't use them directly, you should output them using <code>out.write(htmlcode)</code>. When the block is ended, don't forget to add a <code>{{pass}}</code> statement. And you don't need to worry about the indent, Uliweb will reindent for you, as long as you add the correct pass statement.</p>
 <p>In loop, it'll process the notes object, and then display a delete link, and then user info and user comments.</p>
-<p>Have you seen <code>{{&lt;&lt;text2html(n.message)}}</code>? It uses <code>text2html</code> function which we defined in __init__.py to convert plain text to html code.</p>
+<p>Have you seen <code>{{&lt;&lt;text2html(n.message)}}</code>? It uses <code>text2html</code> function which we defined in <strong>init</strong>.py to convert plain text to html code.</p>
 <p>Ok, after above working, displaying comments is finished. But for now, you can't add comment yet, so let's see how to adding comment.</p>
 <h2 id="title_1-10">Add comment<a class="anchor" href="#title_1-10">&para;</a></h2>
 <h3 id="title_1-10-4">Add new_comment() function to view<a class="anchor" href="#title_1-10-4">&para;</a></h3>
