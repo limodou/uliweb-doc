@@ -79,10 +79,10 @@ I also constructed a few new "wheels" myself. For example:
 
 * ORM
 
-    * Uliorm is the default ORM module but not configured by default. Developers are free to use any
-        ORM module as preferred.
-    * Uliorm supports model creation and automatic database migiration(table creation
-        and table structure modification).
+    * Uliorm is based on SQLAlchemy package, so you can use Model layer and SQL
+        expression layer both.
+    * Uliorm integrates with alembic package, you can use it to migirate database
+        automatically.
 
 * I18n
 
@@ -128,7 +128,7 @@ I also constructed a few new "wheels" myself. For example:
 
 ## Commuity
 
-* Mailing List: http://groups.google.com/group/uliweb
+* Mailing List: https://groups.google.com/forum/#!forum/uliweb
 
 ## Links
 
