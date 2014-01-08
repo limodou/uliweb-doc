@@ -18,19 +18,42 @@ Web开发需要大量知识的汇集，Uliweb框架本身也提供了非常多�
 
 ## 准备uliweb环境
 
-在开始项目前，需要安装: uliweb, plugs, sqlalchemy, alembic等模块：
+在开始项目前，需要安装: python环境，以及 setuptools, pip, uliweb, plugs, 
+sqlalchemy, alembic等模块。
+
+其中python版本目前只支持2.6和2.7。3.3+还在准备中。
+
+[setuptools](http://pypi.python.org/pypi/setuptools) 和 
+[pip](http://pypi.python.org/pypi/pip) 可以去 pypi 上下载最新的版本进行安装。
+
+安装Uliweb和Plugs可以：
 
 ```
 pip install uliweb
 pip install plugs
 ```
 
+因为Uliweb和plugs会经常变化，所以最好的方式是使用源码。你可以使用git将Uliweb和
+plugs的仓库clone到本地，然后通过：
+
+```
+python setup.py develop
+```
+
+来进行安装。这样以后如果要保持代码是最新的，只要执行：
+
+```
+git pull
+```
+
+就可以了。
+
 至于sqlalchemy, alembic可以在后面再安装。
 
 ## 准备git环境
 
 这里假设你将要使用git作为你的版本管理工具，并且会将代码放在github上。所以你需要
-安装git环境。git工具有很多，这里我使用的是git官网上的命令行工具，github本身还提
+安装git环境。git工具有很多，这里我使用的是 [git官网](http://git-scm.com/downloads) 上的命令行工具，github本身还提
 供了GUI的工具。在安装好git命令行之后，在windows环境下确认可以进入git bash。在linux
 下可以启动git。
 
