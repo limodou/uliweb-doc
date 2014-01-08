@@ -9,11 +9,8 @@ select, update, join等。
 
 ## 使用要求
 
-需要安装sqlalchemy 0.6+以上的版本。如果你使用sqlite，则python 2.5+就自带了。如果
+需要安装sqlalchemy 0.7+以上的版本。如果你使用sqlite，则python 2.6+就自带了。如果
 使用其它的数据库，则还需要安装相应的包。sqlalchemy本身是不带的。
-
-建议使用0.7+以上的版本。
-
 
 ## 配置
 
@@ -46,18 +43,17 @@ transaction = 'uliweb.orm.middle_transaction.TransactionMiddle'
 义完一个Model，那么就可以直接使用它了。Uliorm会自动在数据库中创建表。如果设置为
 False，则需要手工建表。要么，你可以直接手工写Create语句，然后到数据库中去创建表，
 但是我们一般不会使用这种方法。要么，你可以通过uliweb sql <appname>来生成建表的
-SQL语句，然后再到数据库中执行这些语句。但是这种做法，不会将Model中定义的索引也
-自动创建（因为SQLAlchemy目前显示建表的SQL功能不能简单地显示索引创建的SQL代码）。
-所以还不是完全的。而采用uliweb syncdb就可以自动将没有创建过的表进行创建。注意：
-它只会创建没有创建过的表。对于已经创建，但是修改过的表应该如何重建呢？答案是使用
-uliweb reset命令。
+SQL语句，然后再到数据库中执行这些语句。另外采用uliweb syncdb就可以自动将没有创
+建过的表进行创建。注意：它只会创建没有创建过的表。还有一种方式就是使用alembic工具，
+它可以实现对Model和数据库表的比较，从而创建新表，修改表结构，修改索引等工作。
+
+对于已经创建，但是修改过的表应该如何重建呢？答案是使用uliweb reset命令。
 
 
 {% alert class=info %}
 自动建表对于sqlite有一个问题。如果在你执行一个事务时，非查询和更新类的语句
 会引发事务的自动提交。而自动建表就是会先查找表是否存在，因此会破坏事务的处理。
 所以建议对于sqlite禁止自动建表，而是手工建表。其它的暂时还没有发现。
-
 {% endalert %}
 
 `AUTO_DOTRANSACTION` 用于指示是否在执行 `do_` 时自动根据环境来创建新的共享
@@ -235,7 +231,7 @@ __table_args__ = {'mysql_engine':'MyISAM'} #'InnoDB'
 ```
 {% endalert %}
 
-### 表的映射
+### 表的映射(0.1.7新増)
 
 什么叫表的映射，就是它只是现有表的一个映射，在执行syncdb, reset, alembic相关命令
 时，不会在数据库中执行create table或drop table的操作。因此，它只是用来映射。
@@ -252,6 +248,13 @@ __table_args__ = {'mysql_engine':'MyISAM'} #'InnoDB'
 ```
 class User(Model):
     __mapping_only__ = True
+```
+
+不过以上的方式是直接配置到代码中，为了更灵活，也可以在settings.ini中进行配置：
+
+```
+[MODELS_CONFIG]
+user = {'__mapping_only__':True}
 ```
 
 ### 连接引擎设置
@@ -428,7 +431,23 @@ type_class, type_attrs --
     可以用来设置指定的SQLAlchemy的字段类型并设置要传入的字段属性。如果有长度值，
     则是在max_length中指定。
 
+server_default --
+    数据库缺省值，它会影响创建表时的Create语句，它会生成 `DEFAULT` 子句。它的取
+    值按SQLAlchemy的写法应该使用text来封装，如 `text(0)` 。
 
+{% alert class=info %}
+关于nullable和server_default在settings.ini中有配置项可以进行全局缺省值的设置：
+
+```
+[ORM]
+NULLABLE = True
+SERVER_DEFAULT = False
+```
+
+所以在缺省情况下，当没有给字段值的时候，如果default为None并且server_default也为
+None，则存入数据库时会是NULL。如果你可以根据需要来修改这个全局配置，或针对每张表
+通过参数来调整。
+{% endalert %}
 
 ### 字段列表
 

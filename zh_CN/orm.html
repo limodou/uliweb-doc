@@ -56,8 +56,7 @@
         <h1 id="title_1">数据库和ORM<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb内置了一个ORM，不过它是通过orm这个app来安装的，所以缺省情况下，ORM不是自 动生效的。因此，你可以自已使用其它的ORM或数据相关的模块。当然，Uliweb的orm(以下 简称uliorm)也提供了不错的功能，欢迎使用和提改进意见。uliorm是基于sqlalchemy开 发的，并且目前没有使用session机制，而且你可以直接使用一些sqlalchemy底层的功能，如: select, update, join等。</p>
 <h2 id="title_1-1">使用要求<a class="anchor" href="#title_1-1">&para;</a></h2>
-<p>需要安装sqlalchemy 0.6+以上的版本。如果你使用sqlite，则python 2.5+就自带了。如果 使用其它的数据库，则还需要安装相应的包。sqlalchemy本身是不带的。</p>
-<p>建议使用0.7+以上的版本。</p>
+<p>需要安装sqlalchemy 0.7+以上的版本。如果你使用sqlite，则python 2.6+就自带了。如果 使用其它的数据库，则还需要安装相应的包。sqlalchemy本身是不带的。</p>
 <h2 id="title_1-2">配置<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>首先将 <code>uliweb.contrib.orm</code> 添加到 <code>apps/settings.ini</code> 的 <code>INSTALLED_APPS</code> 中去。 <code>uliweb.contrib.orm</code> 的settings.ini中已经提供了几个缺省的配置项，用来控制ORM 的行为:</p>
 <pre class="prettyprint"><code>[ORM]
@@ -74,7 +73,8 @@ CONNECTIONS = {}
 transaction = 'uliweb.orm.middle_transaction.TransactionMiddle'</code></pre>
 <p>你可以在apps/settings.ini中覆盖它们。</p>
 <p><code>DEBUG_LOG</code> 用来切换是否显示SQLAlchemy的日志。如果设置为True，则SQL语句会输出 到日志中。缺省为False。</p>
-<p><code>AUTO_CREATE</code> 用于切换是否可以自动建表。在开发的时候，最简单的情况就是当你定 义完一个Model，那么就可以直接使用它了。Uliorm会自动在数据库中创建表。如果设置为 False，则需要手工建表。要么，你可以直接手工写Create语句，然后到数据库中去创建表， 但是我们一般不会使用这种方法。要么，你可以通过uliweb sql <appname>来生成建表的 SQL语句，然后再到数据库中执行这些语句。但是这种做法，不会将Model中定义的索引也 自动创建（因为SQLAlchemy目前显示建表的SQL功能不能简单地显示索引创建的SQL代码）。 所以还不是完全的。而采用uliweb syncdb就可以自动将没有创建过的表进行创建。注意： 它只会创建没有创建过的表。对于已经创建，但是修改过的表应该如何重建呢？答案是使用 uliweb reset命令。</p>
+<p><code>AUTO_CREATE</code> 用于切换是否可以自动建表。在开发的时候，最简单的情况就是当你定 义完一个Model，那么就可以直接使用它了。Uliorm会自动在数据库中创建表。如果设置为 False，则需要手工建表。要么，你可以直接手工写Create语句，然后到数据库中去创建表， 但是我们一般不会使用这种方法。要么，你可以通过uliweb sql <appname>来生成建表的 SQL语句，然后再到数据库中执行这些语句。另外采用uliweb syncdb就可以自动将没有创 建过的表进行创建。注意：它只会创建没有创建过的表。还有一种方式就是使用alembic工具， 它可以实现对Model和数据库表的比较，从而创建新表，修改表结构，修改索引等工作。</p>
+<p>对于已经创建，但是修改过的表应该如何重建呢？答案是使用uliweb reset命令。</p>
 <div class="ui info message">
 <p>自动建表对于sqlite有一个问题。如果在你执行一个事务时，非查询和更新类的语句 会引发事务的自动提交。而自动建表就是会先查找表是否存在，因此会破坏事务的处理。 所以建议对于sqlite禁止自动建表，而是手工建表。其它的暂时还没有发现。</p>
 
@@ -164,12 +164,15 @@ class Note(Model):
 <pre class="prettyprint"><code>__table_args__ = {'mysql_engine':'MyISAM'} #'InnoDB'</code></pre>
 
 </div>
-<h3 id="title_1-3-4">表的映射<a class="anchor" href="#title_1-3-4">&para;</a></h3>
+<h3 id="title_1-3-4">表的映射(0.1.7新増)<a class="anchor" href="#title_1-3-4">&para;</a></h3>
 <p>什么叫表的映射，就是它只是现有表的一个映射，在执行syncdb, reset, alembic相关命令 时，不会在数据库中执行create table或drop table的操作。因此，它只是用来映射。</p>
 <p>这里，映射的表，可以是真正的表，或者是视图(View)。</p>
 <p>它的作用？比如有两个项目，其中一个项目功能比较简单，它将使用另一个项目的表，因此 它本身并不需要建表，只要映射就可以了。因此它只需要把另一个项目的App添加到项目中。 另外，在使用alembic时，因为数据库的表是 由两个项目组成的，所以需要某种方式来区分：哪些表要真正创建，哪些表是已经存在直接 映射即可。因此Uliweb 0.1.7就引入了 <code>__mapping_only__</code> 属性。需要时，在Model的类 属性中定义即可，如：</p>
 <pre class="prettyprint"><code>class User(Model):
     __mapping_only__ = True</code></pre>
+<p>不过以上的方式是直接配置到代码中，为了更灵活，也可以在settings.ini中进行配置：</p>
+<pre class="prettyprint"><code>[MODELS_CONFIG]
+user = {'__mapping_only__':True}</code></pre>
 <h3 id="title_1-3-5">连接引擎设置<a class="anchor" href="#title_1-3-5">&para;</a></h3>
 <p>uliweb支持多种数据库连接的设置，其中可以在Model中设置 <code>__engine_name__</code> 为指定 的某个连接名，如:</p>
 <pre class="prettyprint"><code>class Todo(Model):
@@ -284,7 +287,18 @@ class Note(Model):
 <dt>type_class, type_attrs</dt>
 <dd><p>可以用来设置指定的SQLAlchemy的字段类型并设置要传入的字段属性。如果有长度值， 则是在max_length中指定。</p>
 </dd>
-</dl><h3 id="title_1-3-11">字段列表<a class="anchor" href="#title_1-3-11">&para;</a></h3>
+<dt>server_default</dt>
+<dd><p>数据库缺省值，它会影响创建表时的Create语句，它会生成 <code>DEFAULT</code> 子句。它的取 值按SQLAlchemy的写法应该使用text来封装，如 <code>text(0)</code> 。</p>
+</dd>
+</dl><div class="ui info message">
+<p>关于nullable和server_default在settings.ini中有配置项可以进行全局缺省值的设置：</p>
+<pre class="prettyprint"><code>[ORM]
+NULLABLE = True
+SERVER_DEFAULT = False</code></pre>
+<p>所以在缺省情况下，当没有给字段值的时候，如果default为None并且server_default也为 None，则存入数据库时会是NULL。如果你可以根据需要来修改这个全局配置，或针对每张表 通过参数来调整。</p>
+
+</div>
+<h3 id="title_1-3-11">字段列表<a class="anchor" href="#title_1-3-11">&para;</a></h3>
 <h4 id="title_1-3-11-1">CharProperty<a class="anchor" href="#title_1-3-11-1">&para;</a></h4>
 <p>与 <code>CHAR</code> 相对应。你应该传入一个 <code>max_length</code> 。如果传入一个Unicode字符串它 将转换为缺省编码(utf-8)。</p>
 <h4 id="title_1-3-11-2">StringProperty<a class="anchor" href="#title_1-3-11-2">&para;</a></h4>
