@@ -2095,3 +2095,24 @@ ALTER TABLE human MODIFY COLUMN `login_name` VARCHAR(40)
 对A的反向获取对象将无法生成，因此可能不能直接使用B到A的反向获取。在这种情况下，你
 可以再使用get_model或导入A，这样就可以生成反向获取对象了。
 
+### None 条件在0.9.X中的变化
+
+None在0.9以前的版本中，如果进行 & 操作，会自动丢弃。但是在 0.9.X 中却会变成 NULL，
+所以以前这样的写法：
+
+```
+cond = None
+for c in conditions:
+    cond = c & cond
+```
+
+就不再正确了，要改为：
+
+```
+from uliweb.orm import true
+cond = true()
+for c in conditions:
+    cond = c & cond
+```
+
+`true` 也可以从 sqlalchemy.sql 中导出。

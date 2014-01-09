@@ -7,13 +7,18 @@
   <script src="static/jquery.cookie.js"></script>
 </head>
 <body>
+<div class="links">
+<a href="en/index.html">English Version</a>
+<a href="zh_CN/index.html">中文版本</a>
+</div>
 <script>
 $(function(){
     var lang = $.cookie('language');
     if (!lang){
         lang = navigator.language || 'en';
-        lang = lang.replace('-', '_')
     }
+    if (lang.substr(0, 2) == 'zh') lang = 'zh_CN';
+    else lang = 'en';
     window.location.href = lang + '/index.html';
 });
 </script>

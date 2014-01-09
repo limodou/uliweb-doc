@@ -27,6 +27,17 @@
     <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
+      
+        
+<div class="item">
+  <div class="ui icon input">
+    <form id="searchform">
+    <input name="q" type="text" placeholder="Search...">
+    </form>
+  </div>
+</div>
+
+      
       <div class="ui dropdown item">
         Select Languages <i class="icon dropdown"></i>
         <div class="menu">
@@ -1149,6 +1160,17 @@ ALTER TABLE human MODIFY COLUMN `login_name` VARCHAR(40)
 <p>在Uliweb下使用uliorm，要求将所有的Model都定义在settings.ini中，一旦出现某个Model 没有在settings.ini中定义，就有可能出现上面的问题。</p>
 <h3 id="title_1-14-39">反向获取ManyToMany关系时，找不到对应属性<a class="anchor" href="#title_1-14-39">&para;</a></h3>
 <p>在Uliweb中，如果两个表存在ManyToMany关系，则关系一般只会定义在其中一个Model类上 被定义。例如有两个Model: A和B。在A上定义了一个到B的ManyToMany的关系。在导入A类 时(或通过get_model来获取)会自动向B类绑定一个反向获取的对象，用于从B的对象获得A对 象时使用。因此，有时候，你直接导入B类，但是因为B类中没有定义与A的任何关系，所以 对A的反向获取对象将无法生成，因此可能不能直接使用B到A的反向获取。在这种情况下，你 可以再使用get_model或导入A，这样就可以生成反向获取对象了。</p>
+<h3 id="title_1-14-40">None 条件在0.9.X中的变化<a class="anchor" href="#title_1-14-40">&para;</a></h3>
+<p>None在0.9以前的版本中，如果进行 &amp; 操作，会自动丢弃。但是在 0.9.X 中却会变成 NULL， 所以以前这样的写法：</p>
+<pre class="prettyprint"><code>cond = None
+for c in conditions:
+    cond = c &amp; cond</code></pre>
+<p>就不再正确了，要改为：</p>
+<pre class="prettyprint"><code>from uliweb.orm import true
+cond = true()
+for c in conditions:
+    cond = c &amp; cond</code></pre>
+<p><code>true</code> 也可以从 sqlalchemy.sql 中导出。</p>
 
         
         <div class="ui blue inverted small label">
@@ -1239,6 +1261,23 @@ ALTER TABLE human MODIFY COLUMN `login_name` VARCHAR(40)
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
 
 
 

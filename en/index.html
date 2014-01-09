@@ -27,6 +27,17 @@
     <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
+      
+        
+<div class="item">
+  <div class="ui icon input">
+    <form id="searchform">
+    <input name="q" type="text" placeholder="Search...">
+    </form>
+  </div>
+</div>
+
+      
       <div class="ui dropdown item">
         Select Languages <i class="icon dropdown"></i>
         <div class="menu">
@@ -44,8 +55,8 @@
         <div><img src="_static/uliweb_media.png"/></div>
 <h2 class="ui header">Unlimited Python Web Framework</h2>
 <div>
-<a class="ui red large labeled icon button" href="https://pypi.python.org/packages/source/U/Uliweb/Uliweb-0.2.3.tar.gz">
-<i class="awesome download cloud icon"></i> Download (0.2.3)</a>
+<a class="ui red large labeled icon button" href="https://pypi.python.org/packages/source/U/Uliweb/Uliweb-0.2.4.tar.gz">
+<i class="awesome download cloud icon"></i> Download (0.2.4)</a>
 </div>
 
     </div>
@@ -134,6 +145,23 @@
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/en "+wq;
+        window.open(link);
+
+    });
+});
+</script>
 
 
 

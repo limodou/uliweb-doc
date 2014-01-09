@@ -27,6 +27,17 @@
     <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
+      
+        
+<div class="item">
+  <div class="ui icon input">
+    <form id="searchform">
+    <input name="q" type="text" placeholder="Search...">
+    </form>
+  </div>
+</div>
+
+      
       <div class="ui dropdown item">
         Select Languages <i class="icon dropdown"></i>
         <div class="menu">
@@ -54,7 +65,7 @@
         <h1 id="title_1">Uliweb Introduction<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">About Uliweb<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Uliweb is a full-stacked Python based web framework. It has three main design  goals, they are: reusability, configurability, and replaceability. All the  functionalities revolve around these goals.</p>
-<p>This project was created and lead by Limodou <a href="m&#x61;ilt&#x6F;&#x3A;&#x6C;&#x69;&#x6D;&#x6F;&#x64;ou&#x40;g&#x6D;&#x61;il&#x2E;&#x63;om" class="inner">li&#x6D;odou&#x40;&#x67;m&#x61;i&#x6C;.&#x63;om</a>.</p>
+<p>This project was created and lead by Limodou <a href="ma&#x69;&#x6C;&#x74;&#x6F;&#x3A;&#x6C;&#x69;mod&#x6F;u&#x40;gma&#x69;l&#x2E;co&#x6D;" class="inner">&#x6C;&#x69;mo&#x64;ou@&#x67;m&#x61;&#x69;&#x6C;.&#x63;&#x6F;m</a>.</p>
 <h2 id="title_1-2">License<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>Uliweb is released under BSD license.</p>
 <h2 id="title_1-3">Infrastructure<a class="anchor" href="#title_1-3">&para;</a></h2>
@@ -230,6 +241,23 @@
        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
    }());
    </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/en "+wq;
+        window.open(link);
+
+    });
+});
+</script>
 
 
 
