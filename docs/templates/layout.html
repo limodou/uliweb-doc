@@ -42,6 +42,9 @@ pass
     {{menu('home')}}
     {{end}}
     <div class="right menu">
+      {{if search:}}
+        {{<< search_html}}
+      {{pass}}
       <div class="ui dropdown item">
         Select Languages <i class="icon dropdown"></i>
         <div class="menu">
@@ -100,6 +103,10 @@ pass
 
 {{if conf.disqus:}}
     {{<< conf.disqus_js}}
+{{pass}}
+
+{{if conf.search:}}
+    {{<< search_js}}
 {{pass}}
 
 <script>

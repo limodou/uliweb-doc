@@ -25,7 +25,7 @@ tag_class = {
 pre_css = 'sons-of-obsidian'
 
 # The short X.Y version.
-version = '0.2.3'
+version = '0.2.4'
 
 # General information about the project.
 project = u'Uliweb-Doc'
@@ -133,3 +133,29 @@ disqus_js = '''<script type="text/javascript">
 
 theme = 'semantic'
 
+search = True
+domain = 'limodou.github.io/uliweb-doc/en'
+search_html = """
+<div class="item">
+  <div class="ui icon input">
+    <form id="searchform">
+    <input name="q" type="text" placeholder="Search...">
+    </form>
+  </div>
+</div>
+"""
+
+search_js = """
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:%s "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+""" % domain

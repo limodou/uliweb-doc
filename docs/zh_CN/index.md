@@ -25,6 +25,7 @@ guestbook.md
 {% toc max_depth=1 %}
 blogs/introduction.md
 blogs/create_project.md
+blogs/globle_design.md
 {% endtoc %}
 
 ## 视频
