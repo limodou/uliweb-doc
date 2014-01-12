@@ -65,7 +65,7 @@
         <h1 id="title_1">Settings说明<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">加载顺序<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在Uliweb中，配置信息一般是放在settings.ini文件中的，目前有以下几个级别的settings.ini 信息:</p>
-<pre class="prettyprint"><code>default_settings.ini
+<pre class="prettyprint "><code>default_settings.ini
 apps/
     app/settings.ini
     settings.ini
@@ -77,14 +77,14 @@ apps/
 <li>如果值为list, dict, set，则进行合并处理，即对于list，执行extend()，对于dict    执行update，同时如果dict的值为dict或list，则会进行递归合并处理。</li>
 <li>如果是其它的值，则进行替換，即后面定义的值覆盖前面定义的值</li>
 <li><p>如果写法为:</p>
-<pre class="prettyprint"><code>name &lt;= value</code></pre></li>
+<pre class="prettyprint "><code>name &lt;= value</code></pre></li>
 </ol>
 <p>则不管value是什么都将进行替換。</p>
 <h2 id="title_1-3">基本格式<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>settings.ini的写法是类ini格式，但是和标准的ini有所区别:</p>
 <ol>
 <li><p>基本写法是:</p>
-<pre class="prettyprint"><code>[section]
+<pre class="prettyprint "><code>[section]
 name = value</code></pre></li>
 </ol>
 <dl>
@@ -114,19 +114,19 @@ name = value</code></pre></li>
 <p>这些是可以直接使用的。</p>
 <h2 id="title_1-4">国际化支持<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>可以直接在settings中使用 <code>_</code> 进行语言的翻译。注意应使用在value部分。例如：</p>
-<pre class="prettyprint"><code>[DEFAULT]
+<pre class="prettyprint "><code>[DEFAULT]
 Project = _('Project')</code></pre>
 <p>在需要进行翻译时，使用 <code>i18n</code> 命令可以自将settings.ini中的翻译串提取出来。</p>
 <h2 id="title_1-5">配置项引用<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>在定义 value ，我们可以直接引入前面已经定义好的配置项，有两种类型：</p>
 <ol>
 <li><p>section内部引用，即引用的配置项是在同一节中当前配置项之前定义的其它的项，如：</p>
-<pre class="prettyprint"><code>[DEFAULT]
+<pre class="prettyprint "><code>[DEFAULT]
 a = 'http://abc.com'
 b = a + '/index'</code></pre>
 <p>一个section内部引用，直接在value部分写对应的配置项名称即可。但是要注意，因为 key并不要求一定是标识符，所以，如果key的定义不是标识符，则直接引用的话，可能 会因为eval执行时出错。这样就要使用第二种方法。</p></li>
 <li><p>跨section引用。它需要在配置项前面添加所在的section的名称，如：</p>
-<pre class="prettyprint"><code>[DEFAULT]
+<pre class="prettyprint "><code>[DEFAULT]
 a = 'http://abc.com'
 [OTHER]
 b = DEFAULT.a + '/index'
@@ -136,7 +136,7 @@ d = OTHER.b + '/test'</code></pre>
 </ol>
 <h2 id="title_1-6">字符串引用扩展<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>引用方式一般是为了解决某个值在多个配置项中重复出现，而采用的减化手段。一般可以 使用表达式的方法进行值的加工。如果是字符串，还可以直接在字符串中定义如 <code>{{expr}}</code> 这样的格式串来引用配置项的值。如：</p>
-<pre class="prettyprint"><code>[DEFAULT]
+<pre class="prettyprint "><code>[DEFAULT]
 a = 'http://abc.com'
 b = '{{DEFAULT.a}}/index'</code></pre>
 <p>在 <code>{{}}</code> 内的值会自动被替換为相应的配置项的值。这样有时写起来比表达式可能更方便。</p>
@@ -144,13 +144,13 @@ b = '{{DEFAULT.a}}/index'</code></pre>
 <p>settings在读取后会生成一个对象，要先获得这个对象再使用它。获取settings对象可以 根据不同的场景，使用不同的方法：</p>
 <ol>
 <li><p>web环境中，如果是在view函数中进行处理，则直接可以使用settings对象。如：</p>
-<pre class="prettyprint"><code>@expose('/index')
+<pre class="prettyprint "><code>@expose('/index')
 def index():
     return str(settings)</code></pre>
 <p>因为uliweb会自动向所有的view函数注入settings对象，所以可以直接使用。</p></li>
 <li><p>命令行或web环境中非view函数</p>
 <p>最通用的做法，可以在需要使用settings的代码中通过导入来使用settings对象，如：</p>
-<pre class="prettyprint"><code>from uliweb import settings</code></pre>
+<pre class="prettyprint "><code>from uliweb import settings</code></pre>
 <p>那么建议是在函数内部导入，不要写在模板顶层。这样确保settings在使用时一定被 创建好了。uliweb会保证settings在创建时，是线程安全的。</p></li>
 </ol>
 <p>有了settings对象，我们就可以调用它的方法和属性来引用配置文件中的各个值了。settings 对象，你可以理解为一个二级的字典或二级的对象树。如果key或section名都是标识符，通 常情况下使用 <code>.</code> 的属性引用方式就可以了，不然可以象字典一样使用下标或 <code>get()</code> 等 方法来使用。常见的使用方式有:</p>
@@ -168,7 +168,7 @@ def index():
 <p>Lazy的处理是在0.2版本中加入的，它是与配置项的引用有关。考虑以下场景：</p>
 <ul>
 <li><p>某个app定义了一串配置项，如：</p>
-<pre class="prettyprint"><code>[PARA]
+<pre class="prettyprint "><code>[PARA]
 domain = 'http://localhost:8000'
 login_url = domain + '/login'</code></pre></li>
 <li>然后当部署到某个环境中时，用户希望在local_settings.ini中覆盖上面的domain的值     为实际的地址。</li>
@@ -178,7 +178,7 @@ login_url = domain + '/login'</code></pre></li>
 <h2 id="title_1-10">重要配置参数说明<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>以下按不同的节(section)来区分</p>
 <h3 id="title_1-10-1">GLOBAL<a class="anchor" href="#title_1-10-1">&para;</a></h3>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 DEBUG = False               #是否当有异常时，输出调试页面
 DEBUG_CONSOLE = False       #是否在调试页面上显示console窗，用来输入代码
 TEMPLATE_SUFFIX = '.html'   #模板文件后缀
@@ -199,10 +199,10 @@ TEMPLATE_DIRS = []          #全局的模板路径，当所有app中都找不到
 <p>详情参见 <a href="log.html" class="inner">日志处理说明</a> 。</p>
 <h3 id="title_1-10-3">FUNCTIONS<a class="anchor" href="#title_1-10-3">&para;</a></h3>
 <p>用于定义公共的一些函数，例如:</p>
-<pre class="prettyprint"><code>[FUNCTIONS]
+<pre class="prettyprint "><code>[FUNCTIONS]
 flash = 'uliweb.contrib.flashmessage.flash'</code></pre>
 <p>在此定义之后，可以有以下两种引用形式:</p>
-<pre class="prettyprint"><code>from uliweb import function
+<pre class="prettyprint "><code>from uliweb import function
 flash = function('flash')
 flash(message)
 
@@ -213,40 +213,40 @@ functions.flash(message)</code></pre>
 <h3 id="title_1-10-4">DECORATORS<a class="anchor" href="#title_1-10-4">&para;</a></h3>
 <p>用于定义公共的一些decorator函数，类似于FUNCTIONS的使用方式，但是区分为全部是decorator。</p>
 <p>使用形式为:</p>
-<pre class="prettyprint"><code>from uliweb import decorators
+<pre class="prettyprint "><code>from uliweb import decorators
 @decorators.check_role('superuser')
 def index():
     pass</code></pre>
 <h3 id="title_1-10-5">BINDS<a class="anchor" href="#title_1-10-5">&para;</a></h3>
 <p>用于绑定某个信号的配置，例如:</p>
-<pre class="prettyprint"><code>[BINDS]
+<pre class="prettyprint "><code>[BINDS]
 audit.post_save = 'post_save'</code></pre>
 <p>在配置中，每个绑定的函数应有一个名字，在最简单的情况下，可以省略名字，函数名就 与绑定名相同。</p>
 <p>BINDS有三种定义形式:</p>
-<pre class="prettyprint"><code>function = topic            #最简单情况，函数名与绑定名相同，topic是对应的信号
+<pre class="prettyprint "><code>function = topic            #最简单情况，函数名与绑定名相同，topic是对应的信号
 bind_name = topic, function #给出信号和函数路径
 bind_name = topic, function, {kwargs} #给出信号，函数路径和参数(字典形式)</code></pre>
 <p>其中function中是函数路径，比如 <code>appname.model.function_name</code> ，例用这种形式，uliweb 可以根据 <code>appname.model</code> 来导入函数。</p>
 <p>上面的 <code>bind_name</code> 没有特别的作用，只是要求唯一，一方面利用它可以实现：一个函数 可以同时处理多个 topic 的情况，只要定义不同的 <code>bind_name</code> 即可。另一方面，可以 起到替換的作用，如果某个绑定不想再继续使用或替换为其它的配置，可以写一个同名的 <code>bind_name</code> 让后面的替換前面的。</p>
 <h3 id="title_1-10-6">EXPOSES<a class="anchor" href="#title_1-10-6">&para;</a></h3>
 <p>用于配置URL，在一般情况下，你只要在views.py中定义 <code>@expose(url)</code> 即可，但是在复杂情况 下，特别是可以允许URL被替换的情况下，考虑把URL定义在settings.ini中，如:</p>
-<pre class="prettyprint"><code>[EXPOSES]
+<pre class="prettyprint "><code>[EXPOSES]
 login = '/login', 'uliweb.contrib.auth.views.login'
 logout = '/logout', 'uliweb.contrib.auth.views.logout'</code></pre>
 <p>URL在Uliweb中是可以给每个URL起个名字的，以便在反向获取时只使用这个名字，同时它也可以用来方便进行替換。</p>
 <p>它也有三种定义方式，类似于BINDS的定义:</p>
-<pre class="prettyprint"><code>function = url            #最简单情况，函数名与url名相同
+<pre class="prettyprint "><code>function = url            #最简单情况，函数名与url名相同
 url_name = url, function  #给出url, 函数路径和url名
 url_name = url, function, {kwargs} #给出url，函数路径，url名和参数(字典形式)</code></pre>
 <h2 id="title_1-11">pyini模块<a class="anchor" href="#title_1-11">&para;</a></h2>
 <p>整个settings的处理都是由pyini模块来处理的。它存在于uliweb/utils目录下，在程序中 的使用如:</p>
-<pre class="prettyprint"><code>from uliweb.utils import pyini
+<pre class="prettyprint "><code>from uliweb.utils import pyini
 
 x = pyini.Ini('inifile')</code></pre>
 <p>这样就可以打开一个ini文件。如果有多个ini文件要进行合并处理，则使用 <code>read()</code> 继续处理即可，如:</p>
-<pre class="prettyprint"><code>x.read('another.ini')</code></pre>
+<pre class="prettyprint "><code>x.read('another.ini')</code></pre>
 <p>settings.ini文件可以保存，如:</p>
-<pre class="prettyprint"><code>x.save()</code></pre>
+<pre class="prettyprint "><code>x.save()</code></pre>
 
         
         <div class="ui blue inverted small label">

@@ -328,6 +328,8 @@ def index():
 
 然后模板中还使用了 `use` 和 `link` ，关于 use 和 link 的使用，前面已经说过了。
 
+我把 layout.html 中相关的自定义 CSS 都写在了 `home.css` 中，就不再细说了。
+
 ```
 <!-- Header -->
 <div class="ui page grid" id="introduction">

@@ -76,14 +76,14 @@
 <li>向 <code>SortedDict</code> 添加 <code>clear()</code> 函数</li>
 <li>向 AddView, EditView 添加提交保护，缺省为不启动。它可以用来防止多次提交。但对于   前端建议再増加相关的措施，比如在提交时将按钮禁掉。如果想要其生效，需要传入 <code>protect=True</code> 参数。</li>
 <li><p>向 uliweb find -t 命令添加 <code>--blocks</code> 和 <code>--with-filename</code> 参数，前者用来显示在   模板中定义的块信息，后者用来列出定义相应块所在的模板文件名。同时向settings.ini   中添加 GLOBAL/DEBUG_TEMPLATE 配置项，用来控制模板是否显示调试用的注释，用来区分   不同的块的开始和结束。但是这种输出具有一定的破坏性，比如非HTML的结果等。所以只   能用于调试，正式使用一定要关闭。比如，打开之后，在输出的模板中可能有：</p>
-<pre class="prettyprint"><code>&lt;!-- BLOCK title (apps/theme/templates/theme/skeleton.html) --&gt;
+<pre class="prettyprint "><code>&lt;!-- BLOCK title (apps/theme/templates/theme/skeleton.html) --&gt;
 &lt;!-- END title --&gt;</code></pre></li>
 <li>増加filedown.py在下载时对 <code>content-range</code> 的处理，感谢 zhangchunlin 提供代码。</li>
 <li>改进 <code>import_attr()</code> 的处理，増加对 pkg_resource 入口字符串格式的支持，比如：    <code>x.y.z</code> 原来是根据从左向右逐层导入时，动态来判断后面的是模块还是属性，如果是   模块，则继续导入，如果是属性则使用 <code>getattr()</code> 来处理。现在则可以定义为： <code>x.y:z.c</code>,   这样可以更清晰表示 <code>:</code> 号前是模块，后面是属性。</li>
 <li>向 <code>uliweb.contrib.orm</code> 上添加 requirements.txt，可以直接用 uliweb install   来安装: SQLAlchemy, MySQL-python, alembic(这个是我修改的版本)。注意，要在你的应   中用先配置 <code>uliweb.contrib.orm</code> 才可以。因为这个requirements.txt是在app上定义的。</li>
 <li>添加　LOGO 文件，可以用这里面的图片来展示 uliweb。</li>
 <li><p>向 runserver 命令増加 <code>--color</code> 参数，可以输出彩色日志。输省是不输出。同时，你   可以根据需要，在settings.ini中对颜色进行配置，如缺省的为：</p>
-<pre class="prettyprint"><code>[LOG.COLORS]
+<pre class="prettyprint "><code>[LOG.COLORS]
 DEBUG = 'white'
 INFO = 'green'
 WARNING = 'yellow'
@@ -92,7 +92,7 @@ CRITICAL = 'red'</code></pre>
 <p>支持的颜色为: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE.</p></li>
 <li><p>増加 <code>config</code> 命令。它可以用来向控制台输出配置文件的模板。目前可以生成 nginx, supervisor   相关的配置。你也可以在自已的app中定义这样的输出。只要在app下创建 <code>template_files/config</code>   的目录结构，然后创建 <code>xxxx.conf</code> 和 <code>xxxx.ini</code> 文件。在 <code>xxxx.ini</code> 中用来定义一些   变量，这些变量将用于 <code>xxxx.conf</code> 中。</p>
 <p>ini格式定义示例为：</p>
-<pre class="prettyprint"><code>[INPUT]
+<pre class="prettyprint "><code>[INPUT]
 port = '', 80
 path =</code></pre>
 <p>port为变量名，值为一个tuple或者不定义，第一个值为提示用的文本，如果为空则表示没有额外 说明。第二个表示缺省值。</p>
@@ -178,7 +178,7 @@ path =</code></pre>
 <li>修复 --version 命令参数的bug</li>
 <li>优化 import_mod_attr 函数，使其可以接受对象参数（原来只支持字符串路径形式）</li>
 <li><p>向 Dispatcher 増加 handler() 方法，可以用它返回的对象来执行：get(), post(), delete()等模拟客户端的RESTFul请求，例如：</p>
-<pre class="prettyprint"><code>from uliweb import application
+<pre class="prettyprint "><code>from uliweb import application
 
 handler = application.handler()
 r = handler.get('/index')
@@ -202,12 +202,12 @@ r = handler.get('/index')
 <li>修改模板中在处理Python代码缩近时，对return, continue, break的反缩近处理，全部采用判断pass</li>
 <li>向html.py中添加一个Builder类，使用它可以直接生成包含不同部分的对象，可以对这些部分分别进行处理，最终合成统一的字符串，也可以根据需要分开使用。主要用在HTML代码的生成，允许用户根据需要结合使用或分拆使用</li>
 <li><p>向ORM中的get(), filter()等处理添加额外的不定关键字参数，这些参数将在执行select时传递给select方法。目前可以使用它来实现for_update的处理，如：</p>
-<pre class="prettyprint"><code>Model.get(Model.c.id==id, for_update=True)
+<pre class="prettyprint "><code>Model.get(Model.c.id==id, for_update=True)
 Model.filter(condition).for_update().filter(condition)</code></pre></li>
 <li>关于for_update可以参考sqlalchemy相关的文档</li>
 <li>优化generic.py中的ListView和SimpleListView的处理，可以自动识别request中的page和rows值，当调用时没有传入pageno或rows_per_page参数时生效。</li>
 <li><p>添加 secretkey APP，可以用它进行加解密的处理。加密类可以由用户进行配置。纯Python的DES算法实现，可以考虑使用pyDes库。同时提供 uliweb makekey命令，可以自动生成key文件。key文件的路径可以配置到settings.ini中。加解密示例如下：</p>
-<pre class="prettyprint"><code>from uliweb import functions
+<pre class="prettyprint "><code>from uliweb import functions
 des = functions.get_cipher()
 d = des.encrypt('hello')
 des.descrypt(d)</code></pre></li>
@@ -215,7 +215,7 @@ des.descrypt(d)</code></pre></li>
 <li>优化 safe_unicode 和 safe_str 函数，可以支持 i18n 的LazyString对象</li>
 <li>向 commands.py 模块中添加 get_input() 方法 ，可以用来当参数值不存时从命令行获得一个值</li>
 <li><p>删除0.1.4中提供的APPS_LAYOUT的机制，但是可以在模板中替換为:</p>
-<pre class="prettyprint"><code>{{extend settings.APP_LAYOUTS.get('messages', 'layout.html')}}</code></pre>
+<pre class="prettyprint "><code>{{extend settings.APP_LAYOUTS.get('messages', 'layout.html')}}</code></pre>
 <p>因此仍然可以把要替換的模板配置到settings.ini中。另一种办法是在新的app中直接定义一个要替換的同名模板，以实现新的要求。</p></li>
 </ul>
 <h2 id="title_1-7">0.1.5<a class="anchor" href="#title_1-7">&para;</a></h2>

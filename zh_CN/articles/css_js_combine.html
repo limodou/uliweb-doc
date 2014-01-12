@@ -68,7 +68,7 @@
 <p>Uliweb的静态文件合并压缩只能处理css和js的压缩。使用它的前提是我们在模板中要使用 <code>{{use}}</code> 和 <code>{{link}}</code> 来引用静态文件。这样在后续的处理中，才可以自动对资源链接进行 替换。</p>
 <p>在我们使用 <code>{{use}}</code> 或 <code>{{link}}</code> 来引入资源时，uliweb会自动将对应的静态文件保 存到一个全局数组中。</p>
 <p>然后我们需要在settings中定义:</p>
-<pre class="prettyprint"><code>[STATIC_COMBINE]
+<pre class="prettyprint "><code>[STATIC_COMBINE]
 1 = ['jquery/jquery-1.7.2.min.js', 'jsutils/json2.js']
 
 #jquitls
@@ -92,7 +92,7 @@
 <p>这样用户可以根据需要，将不同的资源文件进行分组，进行压缩和替換，从而减少页面中 的资源引用的数量。</p>
 <h2 id="title_1-2">生成压缩文件<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>上面只完成了定义和替換工作，我们还需要通过某种方式将组件的资源文件真正合成我们 需要的结果文件。在命令行下使用：</p>
-<pre class="prettyprint"><code>uliweb exportstatic --auto static</code></pre>
+<pre class="prettyprint "><code>uliweb exportstatic --auto static</code></pre>
 <p>这里 <code>--auto</code> 表示自动进行css和js的压缩。在uliweb中自动压缩模块，它们是使用 rminjs和rmincss来实现的。 <code>exportstatic</code> 命令会根据settings中的分组定义的信息 来生成不同的md5值，然后添加对应的 <code>_cmb_</code> 前缀和对应的 <code>.css</code> 或 <code>.js</code> 后缀， 这样就和 <code>{{use}}</code> 中使用 的是一致的。在执行时，命令首先会将以前生成的所有 <code>_cmb_</code> 开头的文件全部清除，再 生成新的结果文件。同时会以相同的文件主名生成 <code>.txt</code> 后缀的文本文件，将用来记录 哪些css或js文件合并到了这个文件中。这样如果有什么问题，可以查看内容来了解都合并 了哪些文件。</p>
 <h2 id="title_1-3">特别说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>一般 uliweb在定义静态文件时，会在每个app下的static下创建与app名字相同的子目录， 然后将静态文件放在这个目录，其目的是为了避免可能存在的同名冲突。但是压缩后， 原本可能在不同的目录下的文件会合并到一个文件中，并且输出到新的目录下，所以，原 来子目录的关系到了新的静态文件中可能就有存在问题。所以对于css中引入了其它的静态 资源的情况，如 <code>url(xxxxx)</code> ，uliweb会自动修改路径。但是如果js中也存在路径的问 题，则需要用户自已来解决。解决的方法：如使用绝对路径。这种方法也可以用在css文件中，即不 使用相对路径。但是这种做法，会修改引入的源文件，一旦升级还要再次修改，不是特别方便。 所以请用户自行选择。简单情况下，uliweb的处理应该可以满足要求。</p>

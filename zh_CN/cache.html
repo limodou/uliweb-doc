@@ -69,13 +69,13 @@
 <p>cache是用来临时保存数据的一种机制，在处理某些计算复杂或比较耗时的数据时，如果数 据变动不频繁，如：博客，论坛等以读为主的内容，可以考虑将处理好的数据存在缓存中， 需要时读出来，以提高性能。目前Uliweb的cache支持多种后端，它采用和session相同的 存储机制，所以在uliweb中cache也是放在weto模块中。主要的配置方式与session非常接近， 目前主要支持的后端有：文件、数据库、Redis。</p>
 <h2 id="title_1-2">cache配置说明<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>在使用前需要先定装 <code>uliweb.contrib.cache</code> app。如:</p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 INSTALLED_APPS = [
 ...
 'uliweb.contrib.cache',
 ...]</code></pre>
 <p>然后根据需要可以覆盖缺省的cache选项:</p>
-<pre class="prettyprint"><code>[CACHE]
+<pre class="prettyprint "><code>[CACHE]
 type = 'file'
 expiretime = 3600</code></pre>
 <dl>
@@ -90,7 +90,7 @@ expiretime = 3600</code></pre>
 <dt>expiretime</dt>
 <dd><p>超时时间。在使用cache时，用户可以手工设置每项key的超时时间，如果没有给出， 则使用缺省值。</p>
 </dd>
-</dl><pre class="prettyprint"><code>[CACHE_STORAGE]
+</dl><pre class="prettyprint "><code>[CACHE_STORAGE]
 data_dir = './caches'
 file_dir = './caches/cache_files'
 lock_dir = './caches/cache_files_lock'</code></pre>
@@ -148,7 +148,7 @@ lock_dir = './caches/cache_files_lock'</code></pre>
 </ol>
 <h2 id="title_1-3">Cache使用说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>cache不象session有一个Middleware，使用cache就象api一样。所以一般使用流程如下:</p>
-<pre class="prettyprint"><code>from uliweb import functions
+<pre class="prettyprint "><code>from uliweb import functions
 
 cache = functions.get_cache()</code></pre>
 <p>通过 <code>get_cache()</code> 可以获得一个cache对象。然后使用这个对象可以进行相应的操作。</p>
@@ -190,7 +190,7 @@ cache = functions.get_cache()</code></pre>
 <dd><p>删除某一键值</p>
 </dd>
 </dl><p>cache对象也可以象字典一样使用，如:</p>
-<pre class="prettyprint"><code>cache['name'] = value
+<pre class="prettyprint "><code>cache['name'] = value
 del cache['name']</code></pre>
 <p>使用字典形式来获取key时，如果不存在，则会引发异常。</p>
 

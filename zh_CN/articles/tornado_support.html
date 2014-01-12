@@ -67,14 +67,14 @@
         <h1 id="title_1">Tornado的支持<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">开发服务器的tornado支持<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>目前uliweb在启动开发服务器时，可以通过：</p>
-<pre class="prettyprint"><code>uliweb runserver --tornado</code></pre>
+<pre class="prettyprint "><code>uliweb runserver --tornado</code></pre>
 <p>来启动tornado，并用它来跑uliweb应用。同时还支持reload和ssl。</p>
 <p>那么我是如何实现的，在这里描述一下：</p>
 <p>修改 manage.py 下的 RunserverCommand 类：</p>
 <ol>
 <li>増加 <code>--tornado</code> 选项支持</li>
 <li><p>増加对 tornado 模式的支持</p>
-<pre class="prettyprint"><code>if options.tornado:
+<pre class="prettyprint "><code>if options.tornado:
     try:
         import tornado
         import tornado.wsgi
@@ -112,7 +112,7 @@
 <p>经过上面的努力，在开发时，可以直接使用tornado来启动uliweb应用了。</p>
 <h2 id="title_1-2">生产部署对tornado的支持<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>如果在生产上想使用tornado来跑uliweb，那可以执行：</p>
-<pre class="prettyprint"><code>uliweb support tornado</code></pre>
+<pre class="prettyprint "><code>uliweb support tornado</code></pre>
 <p>这样会在当前的项目目录下拷贝一个叫tornado_handler.py的文件，可以直接用它来运行。它支持 <code>-p port</code> 和 <code>-h host</code> 参数。缺省为 8000 和 127.0.0.1。</p>
 
         

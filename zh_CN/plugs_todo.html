@@ -72,12 +72,12 @@
 <h2 id="title_1-1">构建流程<a class="anchor" href="#title_1-1">&para;</a></h2>
 <h3 id="title_1-1-1">构建初始环境<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>在基础篇中讲过的内容，这里不再缀述。假定目前初始为$project，操作如下:</p>
-<pre class="prettyprint"><code>uliweb makeproject plugs_todo
+<pre class="prettyprint "><code>uliweb makeproject plugs_todo
 cd plugs_todo
 uliweb makeapp todo</code></pre>
 <h2 id="title_1-2">settings.ini配置<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>修改apps/settings.ini为以下内容:</p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 DEBUG = True
 
 INSTALLED_APPS = [
@@ -97,7 +97,7 @@ SUPPORT_LANGUAGES = ['en', 'zh_CN']</code></pre>
 <p>ORM段中我使用了sqlite数据库，同时关闭自动创建表的选项。在 <code>INSTALLED_APPS</code> 中加入 了'plugs.layout'和'todo'这两个app。由于使用了plugs，它是支持i18n的处理，因此上面 I18N一段就是相关的配置。在这个小网站，我们可以使用英文和中文。</p>
 <h2 id="title_1-3">基本布局<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>前面我们看到了，已经加入了 <code>plugs.generic</code> 和 <code>plugs.layout</code> 这两个app，其中 <code>plugs.generic</code> 提供了通用的Model的CRUD(Create Read Update Delete)的处理展示。在非常简单的情况下 可以直接使用它来生成相应的界面。而 <code>plugs.layout</code> 提供了基本的布局。在layout中 的settings.ini中有几个参数可以设置，缺省值为:</p>
-<pre class="prettyprint"><code>[LAYOUT]
+<pre class="prettyprint "><code>[LAYOUT]
 COPYRIGHT = _('All rights reversed!')
 TITLE = _('Uliweb Plugs Demo')
 MENUS = [
@@ -106,7 +106,7 @@ MENUS = [
     ('about', _('About'), '/about'),
 ]</code></pre>
 <p>让我们修改一下，添加到apps/settings.ini中去:</p>
-<pre class="prettyprint"><code>[LAYOUT]
+<pre class="prettyprint "><code>[LAYOUT]
 COPYRIGHT = 'Copyright&amp;copy; 任务跟踪 作者： limodou@gmail.com'
 TITLE = '任务跟踪'
 MENUS &lt;= [
@@ -114,25 +114,25 @@ MENUS &lt;= [
 ]</code></pre>
 <p>这里有一个特别的地方，那就是MENUS <= 它的作用是替换原来的值。因为pyini在处理时， 如果遇到相同名字的两个变量，如果变量是不可变对象，则直接替换，如：str, int等。但 如果值是可变对象，如：list, dict，则会进行合并。因为上面的MENUS是list，所以缺省 情况下会进行合并，而我们的目的是想替换，所以使用 <code>&lt;=</code> 就可以替换了。</p>
 <p>为了运行，我们首先要修改一下plugs_todo/apps/todo/views.py，改 为:</p>
-<pre class="prettyprint"><code>#coding=utf-8
+<pre class="prettyprint "><code>#coding=utf-8
 from uliweb import expose
 
 @expose('/')
 def index():
     return {}</code></pre>
 <p>然后我们在plugs的layout.html的基础上，来创建一个通用的基础模板，如命名为basel.html, 内容如下:</p>
-<pre class="prettyprint"><code>{{extend "layout.html"}}
+<pre class="prettyprint "><code>{{extend "layout.html"}}
 
 {{block userinfo}}{{end}}</code></pre>
 <p>因为layout.html中还有用户的信息，但是我们这里并不使用，因此，我们将block userinfo 置为空。</p>
 <p>然后在todo/templates下创建index.html，内容为:</p>
-<pre class="prettyprint"><code>{{extend "base.html"}}</code></pre>
+<pre class="prettyprint "><code>{{extend "base.html"}}</code></pre>
 <p>好，目前差不多了，让我们回到命令行，在plugs_todo目录下运行:</p>
-<pre class="prettyprint"><code>uliweb runserver</code></pre>
+<pre class="prettyprint "><code>uliweb runserver</code></pre>
 <p>如果没有错误，可以通过访问 <a href="http://localhost:8000" class="outter">http://localhost:8000</a> 看到如下界面:</p>
 <h2 id="title_1-4">创建Todo的Model<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>下面就是创建Todo表的结构。在todo下创建models.py文件，写入以下内容:</p>
-<pre class="prettyprint"><code>#coding=utf-8
+<pre class="prettyprint "><code>#coding=utf-8
 from uliweb.orm import *
 
 class Todo(Model):
@@ -140,15 +140,15 @@ class Todo(Model):
     post_date = Field(datetime.datetime, verbose_name='提交时间', auto_now_add=True)
     finished = Field(bool, verbose_name='是否完成')</code></pre>
 <p>在todo下创建settings.ini，然后输入以下内容:</p>
-<pre class="prettyprint"><code>[MODELS]
+<pre class="prettyprint "><code>[MODELS]
 todo = 'todo.models.Todo'</code></pre>
 <p>这样我们就将todo表做成配置化的了。关于配置化，详情可以查看 <a href="http://limodou.github.com/uliweb-doc/orm.html" class="outter">Uliweb ORM</a> 的文档。</p>
 <p>在命令行下运行:</p>
-<pre class="prettyprint"><code>uliweb syncdb</code></pre>
+<pre class="prettyprint "><code>uliweb syncdb</code></pre>
 <p>来创建表。</p>
 <h2 id="title_1-5">处理Todo<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>下面开始写展示Todo列表的代码了，让我们看一下如何使用plugs.generic中的View Class。 编辑 todo/views.py 如下:</p>
-<pre class="prettyprint"><code>#coding=utf-8
+<pre class="prettyprint "><code>#coding=utf-8
 from uliweb import expose
 from plugs.generic.views import View
 from uliweb.i18n import ugettext as _

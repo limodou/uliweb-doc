@@ -69,9 +69,9 @@
 <h2 id="title_1-2">创建新的项目<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>在安装完毕后，Uliweb 提供一个命令行工具 uliweb, 它可以执行一些命令，它会安装在 Python/Scripts 目录下，因此要想运行它，要保证 Python/Scripts 在PATH环境变量上，这样我们就可以在命令行 下使用它了。</p>
 <p>进入你的工作目录，然后执行:</p>
-<pre class="prettyprint"><code>uliweb makeproject project</code></pre>
+<pre class="prettyprint "><code>uliweb makeproject project</code></pre>
 <p>执行成功后，在 project 目录下会是这样的:</p>
-<pre class="prettyprint"><code>|-- .gitignore
+<pre class="prettyprint "><code>|-- .gitignore
 |-- apps/
 |   |-- local_settings.ini
 |   `-- settings.ini
@@ -79,10 +79,10 @@
 `-- wsgi_handler.py</code></pre>
 <h2 id="title_1-3">创建Hello应用<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>然后让我们创建一个Hello的应用:</p>
-<pre class="prettyprint"><code>cd project
+<pre class="prettyprint "><code>cd project
 uliweb makeapp Hello</code></pre>
 <p>在执行成功后，你会在apps/Hello下看到:</p>
-<pre class="prettyprint"><code>|-- __init__.py
+<pre class="prettyprint "><code>|-- __init__.py
 |-- conf.py
 |-- info.ini
 |-- static/
@@ -92,7 +92,7 @@ uliweb makeapp Hello</code></pre>
 `-- views.py</code></pre>
 <h2 id="title_1-4">输出"Hello, Uliweb"<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>打开 Hello/views.py，你会看到:</p>
-<pre class="prettyprint"><code>#coding=utf-8
+<pre class="prettyprint "><code>#coding=utf-8
 from uliweb import expose
 
 @expose('/')
@@ -105,28 +105,28 @@ def index():
 <h2 id="title_1-5">启动<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>好了，让我们启动看一下结果吧。</p>
 <p>在命令行下执行:</p>
-<pre class="prettyprint"><code>uliweb runserver</code></pre>
+<pre class="prettyprint "><code>uliweb runserver</code></pre>
 <p>这样就启动了一个开发服务器。然后可以打开浏览器输入: <a href="http://localhost:8000" class="outter">http://localhost:8000</a> 看到结果。</p>
 <p>是不是很简单，但是这样不够，让我们变化一下，这次让我们加入模板。</p>
 <h2 id="title_1-6">加入模板<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>如果你的 view 方法返回一个dict对象，则 Uliweb 会自动为你应用一个模板，模板名字与你的view 方法一样，只不过后面有一个 .html。如 index() 对应的模板就是 index.html。那么这个模板文件 放在哪里呢？在前面你可以看到，当你创建完一个 app 之后，会自动创建一个 templates 目录，因 此你的模板就放在这个 templates 目录下。好，为了不影响index()方法，让我们创建一个新的方法</p>
-<pre class="prettyprint"><code>@expose('/template')
+<pre class="prettyprint "><code>@expose('/template')
 def template():
     return {}</code></pre>
 <p>然后在apps/Hello/templates下创建 template.html, 内容为:</p>
-<pre class="prettyprint"><code>&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;</code></pre>
+<pre class="prettyprint "><code>&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;</code></pre>
 <p>在浏览器输入 <a href="http://localhost:8000/template" class="outter">http://localhost:8000/template</a> 你将看到相同的结果。</p>
 <h2 id="title_1-7">使用模板变量<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>上面的例子是将信息全部放在了模板中，但是这样通用性不好，现在再让我们修改一下，使用模板变量。 让我们再创建一个新的view方法，写入下面的代码:</p>
-<pre class="prettyprint"><code>@expose('/template1')
+<pre class="prettyprint "><code>@expose('/template1')
 def template1():
     return {'content':'Uliweb'}</code></pre>
 <p>然后在apps/Hello/templates下创建 template1.html，内容为:</p>
-<pre class="prettyprint"><code>&lt;h1&gt;Hello, {{=content}}&lt;/h1&gt;</code></pre>
+<pre class="prettyprint "><code>&lt;h1&gt;Hello, {{=content}}&lt;/h1&gt;</code></pre>
 <p>这次我在template1()中返回了一个字典，则变量content将用来表示内容。也许你对使用 {} 这样 的形式感觉不够方便，还有以下的变形的方式，如:</p>
-<pre class="prettyprint"><code>return dict(content='Uliweb')</code></pre>
+<pre class="prettyprint "><code>return dict(content='Uliweb')</code></pre>
 <p>或:</p>
-<pre class="prettyprint"><code>content = 'Uliweb'
+<pre class="prettyprint "><code>content = 'Uliweb'
 return locals()</code></pre>
 <p>前一种方法利用dict函数来构造一个dict对象。而后一种方法则直接使用了locals()内置函数来返 回一个dict对象，这样你只要定义了相应的变量就可以了。这样locals()返回的变量有可能比模板 所需要的变量要多，但是不会影响你的使用，只要在模板中认为不存在就可以了。</p>
 <div class="ui info message">

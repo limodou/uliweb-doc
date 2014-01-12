@@ -72,19 +72,19 @@
 <h3 id="title_1-2-1">后台处理<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <p>后台在遇到ajax请求时，不再返回redirect信息，而是返回一个json信息。为了区别于正 常结果，使用了500的返回码。</p>
 <p>目前这块在uliweb 0.2版本中已经自动支持。它会根据请求是否为ajax方式来返回普通的 重定向结果，或json结果。返回的json结果为：</p>
-<pre class="prettyprint"><code>{'success':False, 'redirect':'xxxxxxx'}</code></pre>
+<pre class="prettyprint "><code>{'success':False, 'redirect':'xxxxxxx'}</code></pre>
 <p>响应码为500。</p>
 <p>在缺省情况下，这种处理是自动的。如果你不想使用这种机制，则需要在启动代码时，在 创建application实例时传入 <code>xhr_redirect_json=False</code> 的参数。如修改wsgi_handler.py 中的：</p>
-<pre class="prettyprint"><code>application = make_application(apps_dir=apps_dir)</code></pre>
+<pre class="prettyprint "><code>application = make_application(apps_dir=apps_dir)</code></pre>
 <p>为：</p>
-<pre class="prettyprint"><code>application = make_application(apps_dir=apps_dir, dispatcher_kwargs={'xhr_redirect_json':False})</code></pre>
+<pre class="prettyprint "><code>application = make_application(apps_dir=apps_dir, dispatcher_kwargs={'xhr_redirect_json':False})</code></pre>
 <h3 id="title_1-2-2">前台处理<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>前台可以考虑每个请求都去判断出错的情况。但是因为我主要是使用jquery，所以给出jquery 中更通用的做法。</p>
 <p>一般在uliweb项目中，引用jquery时会使用 <code>{{use "jquery"}}</code> ，那么它会在生成页面时 查找settings.ini中的 <code>[UI_CONFIG]</code> 中是否有 <code>jquery_bootstrap</code> 的定义。如果有， 会把settings.ini中的值写到模板中。所以，这个配置就是在引入jquery后，可以由用户 来进行必要的初始化的一个配置。缺省情况下它是：</p>
-<pre class="prettyprint"><code>jquery_bootstrap = "&lt;script&gt;$.ajaxSetup({cache:false, traditional:true});&lt;/script&gt;"</code></pre>
+<pre class="prettyprint "><code>jquery_bootstrap = "&lt;script&gt;$.ajaxSetup({cache:false, traditional:true});&lt;/script&gt;"</code></pre>
 <p>然后我们可以根据需要修改这个配置。</p>
 <p>为了方便，我把处理写在一个js文件中，比如叫jsinit.js。然后你可以放在某个app的static 目录下。它的内容是：</p>
-<pre class="prettyprint"><code>function updateURLParameter(url, param, paramVal)
+<pre class="prettyprint "><code>function updateURLParameter(url, param, paramVal)
 {
     var TheAnchor = null;
     var newAdditionalURL = "";
@@ -146,7 +146,7 @@ $.ajaxSetup({
     }
 });</code></pre>
 <p>其中 <code>updateURLParameter</code> 是一个函数，它的作用是替換URL中的某个参数。为什么需要 这个？这个和uliweb的机制有关。如果你使用 <code>uliweb.contrib.auth</code> 的 <code>require_login</code>  进行登录检查，那么它会在跳转到登录页面时使用：</p>
-<pre class="prettyprint"><code>/login?next=/path/to/origin/path</code></pre>
+<pre class="prettyprint "><code>/login?next=/path/to/origin/path</code></pre>
 <p>因此，当登录成功，可以根据 <code>next</code> 的值再跳回原来的地址上。</p>
 <p>但是这里存在一个问题。因为这个next的值 <strong>是ajax请求的URL</strong> 。可能你要说，这有什 么关系？问题就是，登录成功，你返回的页面将只是ajax请求处理后的结果，而不是原始 的操作页面。ajax的URL只是这个页面中的某个操作，它并不是原来的访问页面。所以，我 们要获得原始的可访问的页面URL，然后把next替換成这个地址。这样，我们并不是实现了 在登录后，再次执行原始的ajax请求，而是跳到合适的页面，让用户再操作一遍。</p>
 <p>了解这个处理很重要，因为跳转多次后，原来的ajax请求有可能根本不能直接运行的，比如 使用了POST发送数据，跳转之后数据已经丢失，再提交也是错误。更何况，跳转的页面不 是希望的HTML的页面，只是某个处理后的结果。</p>
@@ -156,7 +156,7 @@ $.ajaxSetup({
 <p>为了确保是登录URL，我们还对重向定的URL进行了检查，看是否包含 <code>/login</code> 这样的串。 如果有，则替換 next 参数。参数值，我们使用了 <code>window.location.href</code> 。这里我们 假设了ajax请求没有修改URL，所以得到的URL应该就是还没有进行ajax处理的URL，正是 我们想要跳回来的地址。</p>
 <p>我们把上面的处理放在了 <code>$.ajaxSetup</code> 这样做为一个缺省的处理。</p>
 <p>我们把jsinit.js的引入加到settings.ini中去：</p>
-<pre class="prettyprint"><code>[UI_CONFIG]
+<pre class="prettyprint "><code>[UI_CONFIG]
 jquery_bootstrap = """&lt;script src="/static/jqinit.js"&gt;&lt;/script&gt;"""</code></pre>
 <p>经过前后台的处理之后，前后的处理基本上是透明的。</p>
 <p>因为有许多的假设，所以上述的处理仅供参考。</p>

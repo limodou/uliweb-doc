@@ -72,7 +72,7 @@
 </ol>
 <h2 id="title_1-1">Form的定义<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在使用Form时，我们做的第一件事就是定义一个Form类，定义之后，我们会创建它的实例， 然后使用这个实例来展示或进行数据的校验处理。一个简单的Form类定义代码如下:</p>
-<pre class="prettyprint"><code>from uliweb.form import *
+<pre class="prettyprint "><code>from uliweb.form import *
 
 class F(Form):
     title = StringField(label='中文:', required=True, help_string='Title help string')
@@ -88,7 +88,7 @@ class F(Form):
     file = FileField(label='file')</code></pre>
 <p>上面的代码定义了一个Form类，里面有很多的字段，类似于Model的定义。在uliewb/form/uliform.py 中定义了许多Form字段类，分别代表不同类型的字段。所有的字段都继承自 <code>BaseField</code> 类，对 于BaseField类的详细说明见下面。</p>
 <h2 id="title_1-2">BaseField<a class="anchor" href="#title_1-2">&para;</a></h2>
-<pre class="prettyprint"><code>class BaseField(object):
+<pre class="prettyprint "><code>class BaseField(object):
     default_build = Text
     field_css_class = 'field'
     default_validators = []
@@ -100,7 +100,7 @@ class F(Form):
         multiple=False, idtype=None, static=False, **kwargs):</code></pre>
 <h2 id="title_1-3">Form的布局<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>Form本身只是用来定义用来接受用户输入的数据项，当我们需要将Form转为HTML代码展示在 页面上时，我们可以使用Layout类进行处理。一个Layout类用来处理Form的展示。Layout是基类， 真正使用的是它的子类。在Uliweb中已经缺省实现了若干Layout，分别为：</p>
-<pre class="prettyprint"><code>Layout  (基类)
+<pre class="prettyprint "><code>Layout  (基类)
 CSSLayout   (使用Div来布局)
 TableLayout   (使用Table来布局)
 BootstrapLayout  (基于Bootstrap, 以div来布局)
@@ -110,12 +110,12 @@ QueryLayout (查询条件使用的Layout)</code></pre>
 <p>如果你使用Bootstrap作为前端可以考虑使用BoostrapLayout或BootstrapTableLayout。因为 Layout的处理要结合CSS，所以当不满足你的需要时，可以考虑自已来写Layout类。</p>
 <h3 id="title_1-3-1">如何使用某个Layout<a class="anchor" href="#title_1-3-1">&para;</a></h3>
 <p>在定义Form时，通过设置Form类的 <code>layout_class</code> 来指明用哪个Layout类。目前缺省是使用 BootstrapLayout。你可以通过:</p>
-<pre class="prettyprint"><code>from uliweb.form import Form
+<pre class="prettyprint "><code>from uliweb.form import Form
 Form.layout_class = NewLayout</code></pre>
 <p>来统一修改所有Form的缺省Layout类，也可以只针对某个Form的子类来修改 <code>layout_class</code> 属性。</p>
 <h3 id="title_1-3-2">Layout说明<a class="anchor" href="#title_1-3-2">&para;</a></h3>
 <p>Layout是基类，它定义了实际使用的Layout的基本属性和要实现的方法。在实际中，你不应该 直接使用它。</p>
-<pre class="prettyprint"><code>class Layout(object):
+<pre class="prettyprint "><code>class Layout(object):
     form_class = ''
     
     def __init__(self, form, layout=None, **kwargs):
@@ -157,7 +157,7 @@ Form.layout_class = NewLayout</code></pre>
 <h2 id="title_1-4">get_form (0.1.5 new)<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>可以方便替换contrib中对于Form的定义，也可以替换一些不同模块下的form，同时也可以增加一些复用。 使用get_form，首先需要向apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.form'， 安装完毕后，在配置文件的FUNCTIONS就引用了get_form这个函数</p>
 <p>因此如果想要使用get_form，可以采用下面的方式</p>
-<pre class="prettyprint"><code>from uliweb.core.SimpleFrame import functions
+<pre class="prettyprint "><code>from uliweb.core.SimpleFrame import functions
 
 Form = functions.get_form('form_name')
 ...</code></pre>

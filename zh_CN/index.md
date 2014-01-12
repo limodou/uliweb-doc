@@ -26,6 +26,7 @@ guestbook.md
 blogs/introduction.md
 blogs/create_project.md
 blogs/globle_design.md
+blogs/blog_design.md
 {% endtoc %}
 
 ## 视频

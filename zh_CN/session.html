@@ -98,13 +98,13 @@
 </dd>
 </dl><h2 id="title_1-5">session配置说明<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>在apps/settings.ini中安装session app:</p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 INSTALLED_APPS = [
 ...
 'uliweb.contrib.session',
 ...]</code></pre>
 <p>在uliweb.contrib.session的settings.ini中已经预设了一些值，简单介绍一下，这些值 你都可以在apps/settings.ini中进行重定义:</p>
-<pre class="prettyprint"><code>[SESSION]
+<pre class="prettyprint "><code>[SESSION]
 type = 'file'
 #if set session.remember, then use remember_me_timeout timeout(second)
 remember_me_timeout = 30*24*3600
@@ -129,7 +129,7 @@ force = False</code></pre>
 <dt>force</dt>
 <dd><p>session保存时的模式。如果为True，则只要session有修改，有值就会保存。适合于 每次访问都保存，这样，失效期会向后推迟。如果为False，则只有当有修改时才保存， 因此，在用户频繁访问的情况下，如果session没有变化，有效期不会向后推迟。</p>
 </dd>
-</dl><pre class="prettyprint"><code>[SESSION_STORAGE]
+</dl><pre class="prettyprint "><code>[SESSION_STORAGE]
 data_dir = './sessions'</code></pre>
 <p>针对不同的后端要设置的参数。对于不同的后端类型，需要设置的参数不同，上面为'file' 方式的后端参数。下面根据不同类型分别列出所需要的参数:</p>
 <ol>
@@ -177,7 +177,7 @@ data_dir = './sessions'</code></pre>
 </dd>
 </dl><p>使用host, port方式连接。值为一个dict，例如: {'host':'localhost', 'port':6379}</p></li>
 </ol>
-<pre class="prettyprint"><code>[SESSION_COOKIE]
+<pre class="prettyprint "><code>[SESSION_COOKIE]
 cookie_id = 'uliweb_session_id'
 #only enabled when user not set session.cookie.expiry_time and session.remember is False
 #so if the value is None, then is means browser session
@@ -187,7 +187,7 @@ path = '/'
 secure = None</code></pre>
 <p>这个配置是针对session对应的cookie来设的。大部分参数不用太关心，只有timeout。它 可以为None或一个单位为秒的超时时间。timeout缺省为None。</p>
 <p>当session.remember=True时，这个timeout将失效，uliweb会使用SESSION下的remember_me_timeout 来替換。当session.remember=False时，如果timeout为None时，表示浏览器会话方式，即 当浏览器关闭时，cookie才会失效。注意，cookie失效并不表示后台的session对象也失效 了，但是由于cookie失效，再访问时，session仍然是失效的。如果timeout为一个整数，则 将按这个时间来设置cookie的失效时间。这个时间一般与SESSION.timeout的时间一致。</p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 MIDDLEWARE_CLASSES = [
  'uliweb.contrib.session.middle_session.SessionMiddle',
 ]</code></pre>
@@ -199,24 +199,24 @@ MIDDLEWARE_CLASSES = [
 <li>view的处理</li>
 </ol>
 <p>界面很简单，就是添加一个remember之类的checkbox。在views.py的代码如:</p>
-<pre class="prettyprint"><code>flag = form.validate(request.params)
+<pre class="prettyprint "><code>flag = form.validate(request.params)
 if flag:
     request.session.remember = form.rememberme.data</code></pre>
 <p>先对上传数据进行校验，然后根据form的rememberme的值来设置request.session.remember即可。 上面的代码是用户登录的处理，不过省略了登录相关的代码，大家可以参考使用。</p>
 <h2 id="title_1-7">session的使用<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>在安装完uliweb.contrib.session之后，在views中的request对象上会附带有一个session 对象，它是由session的middleware创建session后加上去的。用户可以直接通过request.session 来访问。使用时，session对象就是一个dict，因此你可以使用所有字典的方法，如:</p>
-<pre class="prettyprint"><code>request.session['a'] = 'b' #向session中添加key为'a'的值'b'
+<pre class="prettyprint "><code>request.session['a'] = 'b' #向session中添加key为'a'的值'b'
 del request.session['a']   #删除key为'a'的内容
 request.session.delete()   #删除整个session</code></pre>
 <p>session中的值一般为普通数据类型，因为当保存session时，会将值进行序列化处理。缺省 是使用cPickle来处理的。</p>
 <p>session的保存是由session middleware来完成的，用户一般不用考虑。</p>
 <p>通过request.session.cookie可以访问每个session对应的cookie对象，你可以修改它的值 以便保存到浏览器中。</p>
 <p>{% alert class=success %} 当使用 <code>session[key]</code> 时，如果 key 不存在，则会抛出异常。如果不想抛出异常，可以 使用get方法并指定缺省值。如：</p>
-<pre class="prettyprint"><code>session.get(key, default)</code></pre>
+<pre class="prettyprint "><code>session.get(key, default)</code></pre>
 <p>{% end %}</p>
 <h2 id="title_1-8">session的key超时处理<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>简单情况下，一个session的超时是整体来设置的。但是有时我们也需要针对session中的个 别key来设置超时，这里可以通过 <code>set()</code> 来设置：</p>
-<pre class="prettyprint"><code>session.set(key, value, timeout)</code></pre>
+<pre class="prettyprint "><code>session.set(key, value, timeout)</code></pre>
 <p>注意，如果timeout超过了session本身的超时时间将无较。</p>
 
         

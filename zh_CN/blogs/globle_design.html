@@ -60,7 +60,9 @@
         <div class="chapter-prev chapter-top">
     <a prev-chapter href="../blogs/create_project.html"><i class="icon-arrow-left"></i> 创建项目</a>
 </div>
-
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../blogs/blog_design.html">设计Blog表结构 <i class="icon-arrow-right"></i></a>
+</div>
         
         <h1 id="title_1">全局设计<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">界面布局<a class="anchor" href="#title_1-1">&para;</a></h2>
@@ -70,7 +72,7 @@
 <h3 id="title_1-2-1">创建 home, admin 和 semantic APP<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <p>让我们分别创建 home 和 admin 这两个app，其中 home 用来存放普通用户使用的全局性的 内容，包括整站的CSS，JS和模板。而 admin 用来存放后台管理使用的全局性的内容。</p>
 <p>为了存放semantic的静态资源，同时创建semantic app。</p>
-<pre class="prettyprint"><code>cd uliweb_blogs
+<pre class="prettyprint "><code>cd uliweb_blogs
 uliweb makeapp home
 uliweb makeapp admin
 uliweb make semantic</code></pre>
@@ -80,7 +82,7 @@ uliweb make semantic</code></pre>
 </div>
 <h3 id="title_1-2-2">配置 APP<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>App创建之后，需要在 <code>apps/settings.ini</code> 中进行配置，如现在的 settings.ini 内容是：</p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 DEBUG = False
 DEBUG_CONSOLE = False
 DEBUG_TEMPLATE = False
@@ -99,7 +101,7 @@ DEBUG_TEMPLATE = False
 <p>前三个 <code>DEBUG*</code> 是与调试相关，在 <code>local_settings.ini</code> 又重新定义为了 <code>True</code> (DEBUG_TEMPLATE) 除外。其目的就是：当部署时，这些开关项不生效。但是在本地调试时生效。</p>
 <p><code>INSTALLED_APPS</code> 是最重要的用来设置哪些 App 生效的配置。在Uliweb中，App可以是任何 合法的python包，因此可以引入第三方的App。在配置的时候，需要使用字符串的表示形式， 它表示这个App的导入路径。例如 <code>uliweb.contrib.orm</code> 表示，在启动应用时，Uliweb可以 直接导入 <code>uliweb.contrib.orm</code> 这个包。</p>
 <p>上面这个是自动生成，已经列出了常见的一些App，只不过全部注释掉了，因此我们根据需要 去掉一些注释，并且将我们新建的App添加在后面。因此上面的代码改为：</p>
-<pre class="prettyprint"><code>INSTALLED_APPS = [
+<pre class="prettyprint "><code>INSTALLED_APPS = [
     'uliweb.contrib.staticfiles',
     'uliweb.contrib.template',
     'uliweb.contrib.upload',
@@ -144,29 +146,29 @@ DEBUG_TEMPLATE = False
 <h3 id="title_1-3-5">创建 use 配置<a class="anchor" href="#title_1-3-5">&para;</a></h3>
 <p>uliweb.contrib.template app提供了在模板中可以使用的use标签，可以方便引用静态文件。 具体的详情可以参见 <a href="../app_template.html" class="inner">template app</a>。use 内容的定义可以使用 .py 文件和配置文件两种方式。这里我们简单使用配置文件的方式。</p>
 <p>在 semantic app下创建 settings.ini ，然后输入：</p>
-<pre class="prettyprint"><code>[TEMPLATE_USE]
+<pre class="prettyprint "><code>[TEMPLATE_USE]
 semantic = {
     'toplinks':[
         'semantic/css/semantic.min.css', 
         'semantic/javascript/semantic.min.js']
 }</code></pre>
 <p>那么，当我们在模板中使用 <code>{{use semantic}}</code> 时，Uliweb在渲染模板时，会将它替換 成：</p>
-<pre class="prettyprint"><code>&lt;link rel="stylesheet" type="text/css" href="/static/semantic/css/semantic.min.css"/&gt;
+<pre class="prettyprint "><code>&lt;link rel="stylesheet" type="text/css" href="/static/semantic/css/semantic.min.css"/&gt;
 &lt;script type="text/javascript" src="/static/semantic/javascript/semantic.min.js"&gt;&lt;/script&gt;</code></pre>
 <p>可以看到， css 和 js都生成了正确的链接形式。同时它会自动添加到Html页面中的 <code>&lt;/head&gt;</code> 之前。而不是定义的地方。</p>
 <div class="ui info message">
 <p>理解这一点很重要，这样你就可以在模板中的任何地方使用 <code>{{use}}</code> 。use的使用顺序 也是要注意的，因为有些静态文件是有依赖如，如 jquery 的一些插件。所以要先引用 jquery ，然后才是其它的插件。所以 jquery 这样的就要写在前面。</p>
 <p>除了 use 还有一个只能引用一个文件的标签 <code>link</code> 。它可以引入 static 下的一个静态 文件并正确处理 css 和 js。如：</p>
-<pre class="prettyprint"><code>{{link "home.css"}}</code></pre>
+<pre class="prettyprint "><code>{{link "home.css"}}</code></pre>
 <p>将生成：</p>
-<pre class="prettyprint"><code>&lt;link rel="stylesheet" type="text/css" href="/static/home.css"/&gt;</code></pre>
+<pre class="prettyprint "><code>&lt;link rel="stylesheet" type="text/css" href="/static/home.css"/&gt;</code></pre>
 
 </div>
 <p>link 也会将生成的链接自动插入到 <code>&lt;/head&gt;</code> 之前。</p>
 <h3 id="title_1-3-6">静态URL的生成<a class="anchor" href="#title_1-3-6">&para;</a></h3>
 <p>从上面生成的链接可以看出，静态文件前面都是以 <code>/static/</code> 开始的，这主要是为了后 面部署到web server时更方便，并且可以规范项目结构，所以在app下的模板文件要放在 <code>templates</code> 目录下，也是一个道理。</p>
 <p>如果你希望将链接插入到当前位置，而不是自动插入到 <code>&lt;/head&gt;</code> 之前，那么可以这样处理：</p>
-<pre class="prettyprint"><code>&lt;link rel="stylesheet" type="text/css" href="{{=url_for_static('home.css')}}"/&gt;</code></pre>
+<pre class="prettyprint "><code>&lt;link rel="stylesheet" type="text/css" href="{{=url_for_static('home.css')}}"/&gt;</code></pre>
 <p>通过调用 <code>{{=url_for_static(filename)}}</code> 来生成路径，不过这里 filename 是一个相对 路径。同时你要手工生成完整的链接。</p>
 <div class="ui info message">
 <p><code>url_for_static()</code> 是在配置了 <code>uliweb.contrib.staticfiles</code> 这个app之后自动注入到 模板中的，所以可以直接使用。</p>
@@ -176,13 +178,13 @@ semantic = {
 <p>不过 semantic 还需要 jquery 才可以使用，因此我们还需要配置 jquery。在plugs项目 中已经包含了 jquery ，所以我们可以直接使用它。</p>
 <p>使用第三方包其实有两种办法，一种是在 <code>apps/settings.ini</code> 中的 <code>INSTALLED_APPS</code>  中进行配置，另一种是通过Uliweb提供的App依赖。第一种当别人复用你的app时，也要同 样对 settings.ini 进行配置。第二种则会在复用你的app时，自动引入依赖的app。所以 这里为了以后方便使用semantic app，使用第二种定义方法。</p>
 <p>在 semantic app下定义 <code>config.ini</code>，内容如下：</p>
-<pre class="prettyprint"><code>[DEPENDS]
+<pre class="prettyprint "><code>[DEPENDS]
 REQUIRED_APPS = [
     'plugs.ui.jquery.jquery', 
 ]</code></pre>
 <p>有了这个依赖，我们就不需要去修改 <code>apps/settings.ini</code> 了。</p>
 <p>但是在模板中使用 jquery 还不够。在 <code>plugs.ui.jquery.jquery</code> 中也提供了 <code>{{use jquery}}</code>, 不过，我们要显示地调用才可以。如果想省事，我们可以修改 <code>TEMPLATE_USE/semantic</code> 的 定义，改为：</p>
-<pre class="prettyprint"><code>[TEMPLATE_USE]
+<pre class="prettyprint "><code>[TEMPLATE_USE]
 semantic = {
     'toplinks':[
         'semantic/css/semantic.min.css',
@@ -192,16 +194,16 @@ semantic = {
 <p>这里用到了 use 定义中的依赖处理，意味着，我们在 <code>{{use semantic}}</code> 时，会自动加 入 jquery 的链接。</p>
 <h3 id="title_1-3-8">修改jquery的版本<a class="anchor" href="#title_1-3-8">&para;</a></h3>
 <p>有些plugs中与UI相关的app，因为版本比较多，所以提供了对版本的设置支持。象jquery 就是一例。在plugs中缺省的jquery版本号是 <code>1.7.2</code>, 所以，如果你想使用其它的版本， 如 <code>1.9.1</code> 可以在 <code>semantic/settings.ini</code> 中定义：</p>
-<pre class="prettyprint"><code>[UI_CONFIG]
+<pre class="prettyprint "><code>[UI_CONFIG]
 jquery_version = '1.9.1'</code></pre>
 <h2 id="title_1-4">创建 layout.html<a class="anchor" href="#title_1-4">&para;</a></h2>
 <h3 id="title_1-4-9">修改 home, admin 的views.py<a class="anchor" href="#title_1-4-9">&para;</a></h3>
 <p>因为使用 <code>makeapp</code> 创建app时，会自动生成一个 views.py，它会缺省生成 <code>/</code> 的view函数, 所以会产生冲突，因为有两个 <code>/</code>。让我们把 <code>admin/views.py</code> 中的代码先注释掉，不让 它生效，如：</p>
-<pre class="prettyprint"><code>#@expose('/')
+<pre class="prettyprint "><code>#@expose('/')
 #def index():
 #    return '&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;'</code></pre>
 <p>然后把 <code>home/views.py</code> 中的views.py改为：</p>
-<pre class="prettyprint"><code>@expose('/')
+<pre class="prettyprint "><code>@expose('/')
 def index():
     return {}</code></pre>
 <p>让它返回一个 dict 数据，这样就可以自动套用模板了。</p>
@@ -211,7 +213,7 @@ def index():
 </div>
 <h3 id="title_1-4-10">创建 index.html<a class="anchor" href="#title_1-4-10">&para;</a></h3>
 <p><code>index()</code> 对应的模板文件是 <code>index.html</code> ，所以先让我们创建 <code>home/templates/index.html</code>  文件，内容为：</p>
-<pre class="prettyprint"><code>{{extend "layout.html"}}</code></pre>
+<pre class="prettyprint "><code>{{extend "layout.html"}}</code></pre>
 <p><code>extend</code> 说明 index.html 模板将从 <code>layout.html</code> 进行继承。</p>
 <p>首页和具体的blog展示页面可能有所不同，首页一般是信息的聚合，而每个blog只会展示 单篇文章。并且首页会有banner，可能设计得更好看。这里我们先留成空的，等后面细化时 再进行修改。</p>
 <h3 id="title_1-4-11">创建 layout.html<a class="anchor" href="#title_1-4-11">&para;</a></h3>
@@ -222,7 +224,7 @@ def index():
 </p>
 <p>其中，最上面的头，菜单以及最下面的页脚可以看成是比较通用的，因此我们的layout就 可以主要包含这里内容，而其它的内部只留出空间，让子模板来继承并覆盖即可。</p>
 <p>内容比较长，所以让我们一段段看：</p>
-<pre class="prettyprint"><code>&lt;!DOCTYPE html&gt;
+<pre class="prettyprint "><code>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
 &lt;meta http-equiv="Content-type" content="text/html; charset=utf-8" /&gt;
@@ -235,7 +237,8 @@ def index():
 <p>这是Html的头部分，其中 title 的值使用了模板语法, <code>{{=settings.HOME.title}}</code> 表示 从settings中获取 <code>HOME</code> 下的 <code>title</code> 值。</p>
 <p>在模板中可以直接使用settings中定义的配置项。为了方便修改，有些值是写到settings中 去了，如： title, name, site, description。</p>
 <p>然后模板中还使用了 <code>use</code> 和 <code>link</code> ，关于 use 和 link 的使用，前面已经说过了。</p>
-<pre class="prettyprint"><code>&lt;!-- Header --&gt;
+<p>我把 layout.html 中相关的自定义 CSS 都写在了 <code>home.css</code> 中，就不再细说了。</p>
+<pre class="prettyprint "><code>&lt;!-- Header --&gt;
 &lt;div class="ui page grid" id="introduction"&gt;
     &lt;div class="column"&gt;
         &lt;h1 class="ui header"&gt;{{=settings.HOME.name}}
@@ -248,7 +251,7 @@ def index():
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 <p>这是Banner的定义，使用了 settings 中定义的 <code>name</code> (即应用名称) 和 <code>description</code> (应 用描述)。同时还添加了一个搜索框，使用google来搜索。为了限制在当前网站，所以还 使用了 settings 中的 <code>site</code> 。所以你要在settings中定义这些值。</p>
-<pre class="prettyprint"><code>&lt;!-- Menus --&gt;
+<pre class="prettyprint "><code>&lt;!-- Menus --&gt;
 &lt;div class="ui page grid" id="menus"&gt;
     &lt;div class="ui blue inverted menu"&gt;
         &lt;a href="/" class="item"&gt;Home&lt;/a&gt;
@@ -256,7 +259,7 @@ def index():
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 <p>这里定义了一个菜单，目前只有两项，并且没处理活动菜单的高亮。</p>
-<pre class="prettyprint"><code>&lt;!-- CONTENT --&gt;
+<pre class="prettyprint "><code>&lt;!-- CONTENT --&gt;
 {{block content_container}}
 &lt;div class="ui page grid"&gt;
     &lt;div class="ui divided grid" id="blogs"&gt;
@@ -290,7 +293,7 @@ def index():
 &lt;/div&gt;
 {{end}}</code></pre>
 <p>这里定义了三个block(块)： <code>content_container</code>, <code>content</code> 和 <code>sidebar</code> 因此你可以在子模 板中覆盖它们的内容，并且 <code>content_container</code> 包含了其它两个block。</p>
-<pre class="prettyprint"><code>&lt;!-- FOOTER --&gt;
+<pre class="prettyprint "><code>&lt;!-- FOOTER --&gt;
 &lt;div class="ui page grid" id="footer"&gt;
     &lt;div class="column"&gt;
         &lt;div class="ui two column stackable grid"&gt;
@@ -317,7 +320,7 @@ def index():
 <p>上面元素中使用的是semantic的定义方式，具体的涵义不是本教程的重点，所以不细说了。</p>
 <h2 id="title_1-5">添加配置信息<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>前面在模板中用到了 <code>settings.HOME</code> 中的一些值，所以让我们在 <code>apps/settings.ini</code> 中定义它。你也可以定义在 <code>home/settings.ini</code> 中，不过它更多是关于应用本身，所以 一般就放在了 <code>apps/settings.ini</code> 下了。在文件最后添加：</p>
-<pre class="prettyprint"><code>[HOME]
+<pre class="prettyprint "><code>[HOME]
 title = 'uliweb blog demo'
 name = 'Uliweb Blog Demo'
 description = 'This is a demo project.'
@@ -326,9 +329,9 @@ site = 'http://limodou.github.com/uliweb-doc'</code></pre>
 <h2 id="title_1-6">测试效果<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>到这里，我们可以先看一下我们已经实现的成果。</p>
 <p>在 <code>uliweb_blogs</code> 目录下运行 :</p>
-<pre class="prettyprint"><code>uliweb runserver --color</code></pre>
+<pre class="prettyprint "><code>uliweb runserver --color</code></pre>
 <p>这样就启动了开发服务器，并且可以看到日志输出是带有颜色的。不加 <code>--color</code> 的话， 颜色都是一样的。输出结果大概是这个样子：</p>
-<pre class="prettyprint"><code>[INFO]  * Loading DebuggedApplication...
+<pre class="prettyprint "><code>[INFO]  * Loading DebuggedApplication...
 [INFO]  * Running on http://localhost:8000/
 [INFO]  * Restarting with reloader
 [INFO]  * Loading DebuggedApplication...</code></pre>
@@ -344,7 +347,7 @@ site = 'http://limodou.github.com/uliweb-doc'</code></pre>
 <h2 id="title_1-8">关于命令行<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>Uliweb的命令行在只输入 <code>uliweb</code> 时会显示可用命令及全局的参数，并且会根据配置的 app来显示app下可用的使用。所以，配置不同的app，可能可以使用的命令是不同的。</p>
 <p>如果想查看详细的命令，可以输入：</p>
-<pre class="prettyprint"><code>uliweb help command</code></pre>
+<pre class="prettyprint "><code>uliweb help command</code></pre>
 
         
         <div class="ui blue inverted small label">

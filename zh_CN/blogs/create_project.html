@@ -68,14 +68,14 @@
 <p>请注意，我们很多操作是通过命令行完成的，所以请确认你可以在命令行上执行python和uliweb 命令。如果不行，需要将Python的安装目录，以及它下面的Scripts子目录添加到PATH环境中。</p>
 <h2 id="title_1-1">clone仓库<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>如果我们已经在github上创建了一个仓库，因此第一步就是将仓库clone到本地。</p>
-<pre class="prettyprint"><code>git clone git@github.com:limodou/uliweb-blogs-demo.git</code></pre>
+<pre class="prettyprint "><code>git clone git@github.com:limodou/uliweb-blogs-demo.git</code></pre>
 <p>这里你应该換成你所创建的仓库地址。这时，仓库还是空的。我们可以向仓库中添加常见 的一些文件，如：LICENSE, README.md等。具体如何使用git进行版本管理，本教程就不涉及 了，请大家自已查看git相关的一些书和教程。</p>
 <p>clone完成之后，将会在当前目录下生成一个名为 uliweb-blogs-demo 的子目录（目录名 应该換成你真正的项目名）。</p>
 <h2 id="title_1-2">创建项目<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>我们将在项目目录下创建一个uliweb_blogs子目录，作为存放uliweb项目源代码的地方， 这个目录才是真正的uliweb项目的目录，因为可以在这个目录下启动我们的项目。</p>
-<pre class="prettyprint"><code>uliweb makeproject uliweb_globs</code></pre>
+<pre class="prettyprint "><code>uliweb makeproject uliweb_globs</code></pre>
 <p>生成的目录结构如下：</p>
-<pre class="prettyprint"><code>|-- .gitignore
+<pre class="prettyprint "><code>|-- .gitignore
 |-- apps/
 |   |-- __init__.py
 |   |-- local_settings.ini
@@ -83,7 +83,7 @@
 |-- setup.py
 `-- wsgi_handler.py</code></pre>
 <p>如果是一个git仓库，它已经自动生成了一个.gitignore，所以你可以修改它，添加你不想放 在git中的文件。如果你打开它你会看到：</p>
-<pre class="prettyprint"><code>*.pyc
+<pre class="prettyprint "><code>*.pyc
 *.bak
 local_settings.ini</code></pre>
 <p>因此local_settings.ini缺省是不会添加到git中去的，这样保证不同的环境下local_settings.ini 不会被覆盖。</p>

@@ -91,7 +91,7 @@
 </div>
 <ol>
 <li><p>缺省情况下，刚checkout出来的代码只有3个文件:</p>
-<pre class="prettyprint"><code>app.conf
+<pre class="prettyprint "><code>app.conf
 favicon.ico
 index.py</code></pre></li>
 </ol>
@@ -103,14 +103,14 @@ index.py</code></pre></li>
 <p>这里我不会演示一个 Hello, Uliweb 如何做，太简单了。我会使用 uliwebdoc 下的 SimpleTodo 的例子来做。它的代码你可以从 <a href="https://github.com/limodou/uliweb-doc" class="outter">uliweb-doc</a> 项目 中的 projects中找到，不过这个版本还不能直接运行到 bae 上去，所以需要进行必要的修改。</p>
 <p>目前uliweb最新版本是0.1，在发布时还没有对bae作特殊的支持处理。所以你要从svn或github 上下载最新的 <a href="https://github.com/limodou/uliweb" class="outter">uliweb</a> 的源码。点击上面的zip图标 就可以下载了。</p>
 <p>然后为了方便在uliweb的解压目录下执行:</p>
-<pre class="prettyprint"><code>python setup.py develop</code></pre>
+<pre class="prettyprint "><code>python setup.py develop</code></pre>
 <p>来安装uliweb。这步是为了在你的机器上创建uliweb环境。</p>
 <h3 id="title_1-2-2">执行bae的支持<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>在git中的最新uliweb版本已经包含了对bae的支持。所以先进入你的项目的某个版本，比如 我的版本目录是: <code>bae/0</code></p>
 <p>然后进入命令行，执行:</p>
-<pre class="prettyprint"><code>uliweb support bae</code></pre>
+<pre class="prettyprint "><code>uliweb support bae</code></pre>
 <p>它会在当前目录下创建 lib 目录。同时会使用uliweb提供的 <code>index.py</code> 覆盖原来的 <code>index.py</code> 文件。同时会覆盖app.conf。让我们分别看一下:</p>
-<pre class="prettyprint"><code>#index.py
+<pre class="prettyprint "><code>#index.py
 
 import sys, os
 
@@ -140,7 +140,7 @@ application = make_application(project_dir=project_path)</code></pre>
 </dl></dd>
 </dl><p>这是 <code>app.conf</code> 内容。原来 url 那行就是 '/' ，这里会替換为 <code>/?(.*)</code> 。上面的 格式是yaml的，所以和GAE很象。这个文件也可以直接在界面上进行修改。同时所有的文件 都可以在界面上直接修改。修改后会自动保存到svn中，你可以 update 与本地文件进行合并 处理。这点还是很方便的。</p>
 <p>经过上面的处理，我们在 0 目录下已经有了:</p>
-<pre class="prettyprint"><code>lib/
+<pre class="prettyprint "><code>lib/
 app.conf
 index.py
 favicon.ico</code></pre>
@@ -157,7 +157,7 @@ favicon.ico</code></pre>
 <p>这里名称我们一会要使用。</p>
 <h3 id="title_1-3-4">simple_todo settings.ini修改<a class="anchor" href="#title_1-3-4">&para;</a></h3>
 <p>将simple to do的代码拷过来后，首先要修改 <code>project/apps/settings.ini</code></p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 DEBUG = False
 
 INSTALLED_APPS = [
@@ -175,10 +175,10 @@ EMAIL = 'limodou@gmail.com'
 DATABASE = '数据库名'</code></pre>
 <p>这里在 <code>uliweb.contrib.orm</code> 后面添加了一行 <code>'uliweb.contrib.bae'</code> ，目的是 可以从 <code>bae.core.const</code> 中获得mysql相关的信息。</p>
 <p>我是如何得知 bae.core.const 的呢？是在看到关于常量的描述时提到的，于是我通过:</p>
-<pre class="prettyprint"><code>import bae.core.const
+<pre class="prettyprint "><code>import bae.core.const
 raise Exception(dir(bae.core.ocnst))</code></pre>
 <p>来显示，看到有关于 MySQL 的配置项，包括:</p>
-<pre class="prettyprint"><code>MYSQL_HOST
+<pre class="prettyprint "><code>MYSQL_HOST
 MYSQL_PORT
 MYSQL_USER
 MYSQL_PASS
@@ -187,7 +187,7 @@ MYSQL_DB #不可用</code></pre>
 <p>这里， <code>uliweb.contrib.bae</code> 会自动依赖 <code>uliweb.contrib.orm</code> ，就是说你不配置 <code>uliweb.contrib.orm</code> 也是可以的，它会自动配置上。 <code>uliweb.contrib.bae</code> 的作用是在执行 <code>uliweb.contrib.orm</code> 之前得到正常的 <code>CONNECTION</code> 串，将放到 <code>settings.ORM.CONNECTION</code> 中，这样 <code>uliweb.contrib.orm</code> 就可以正确处理了。</p>
 <h3 id="title_1-3-5">todo表创建<a class="anchor" href="#title_1-3-5">&para;</a></h3>
 <p>因为 bae 无法使用ssh来 telnet ，所以 uliweb 提供的命令行就无用了。原本启动前的 第一步就是执行 <code>syncdb</code> 来创建相关的表。但是执行不了，所以只能使用 phpadmin 来处理 了。所以首先在命令行下执行:</p>
-<pre class="prettyprint"><code>uliweb sql</code></pre>
+<pre class="prettyprint "><code>uliweb sql</code></pre>
 <p>它会打印出建表的SQL语句，拷贝下来到phpadmin中执行它吧。不过 uliweb sql 无法打印 含有创建 Index 的语句。所以如果存在索引创建，要自已手工去使用 phpadmin 来建。</p>
 <h3 id="title_1-3-6">启动<a class="anchor" href="#title_1-3-6">&para;</a></h3>
 <p>将修改后的代码每次一提交，bae 会自动启动应用。使用预览的话可以看到每个版本的情况。 如果执行正确，在应用面板中，对于相要生效的版本点击前面的 radio button。bae会提 示你生效，一旦生效。你就可以通过域名来访问了。</p>

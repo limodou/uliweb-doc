@@ -76,25 +76,25 @@
 <dd><p>pass</p>
 </dd>
 </dl><p>可以看到，它就是一个普通的函数。目前对于view函数，你只能使用普通的函数，而不能使用类。 每个view函数都应与一个或多个URL定义相匹配，一个完整的view定义如下:</p>
-<pre class="prettyprint"><code>@expose('/index')
+<pre class="prettyprint "><code>@expose('/index')
 def index():
     pass</code></pre>
 <p>如果一个view函数没有使用expose来修饰的话，它将不会被用户所访问。</p>
 <p>expose后面是可以没有参数的，如:</p>
-<pre class="prettyprint"><code>@expose
+<pre class="prettyprint "><code>@expose
 def index():
     pass</code></pre>
 <p>那么这个时候，一个view函数的URL将被定义为:</p>
-<pre class="prettyprint"><code>/Appname/view_module_name/view_function_name</code></pre>
+<pre class="prettyprint "><code>/Appname/view_module_name/view_function_name</code></pre>
 <p>它是由app的名字，view模块名和view函数名组成的。这就是缺省的URL映射，已经很象是MVC的缺 省映射了。</p>
 <h3 id="title_1-2-2">view函数的参数<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>view函数是可以有参数的，但首先你需要先在它的URL中定义参数，如果URL中有参数，则view中就 要定义参数，如果没有则view中一般也没有。带参数的例子:</p>
-<pre class="prettyprint"><code>@expose('/documents/&lt;lang&gt;/&lt;path:filename&gt;')
+<pre class="prettyprint "><code>@expose('/documents/&lt;lang&gt;/&lt;path:filename&gt;')
 def show_document(filename, lang):
     return _show(request, response, filename, env, lang, False)</code></pre>
 <p>关于URL的参数定义，参见 <a href="url_mapping.html" class="inner">URL映射</a> 的文档。这里可以看出，定义了两个参数： lang和filename，所以在下面的view函数中也定义了两个参数。</p>
 <p>但如果你的URL中没有那么多的参数怎么办？这个可以在URL的定义中解决，如:</p>
-<pre class="prettyprint"><code>@expose('/documents/&lt;path:filename&gt;', defaults={'lang':''})
+<pre class="prettyprint "><code>@expose('/documents/&lt;path:filename&gt;', defaults={'lang':''})
 @expose('/documents/&lt;lang&gt;/&lt;path:filename&gt;')
 def show_document(filename, lang):
     return _show(request, response, filename, env, lang, False)</code></pre>
@@ -117,7 +117,7 @@ def show_document(filename, lang):
 </div>
 <h3 id="title_1-2-4">view环境的扩展<a class="anchor" href="#title_1-2-4">&para;</a></h3>
 <p>如果你认为上面的环境还不够，那么你可以直接向env中增加新的对象，然后在view方法中可以通过 env.object的方式来使用它。你需要在某个app的settings.py文件中增加相应的插件处理。如:</p>
-<pre class="prettyprint"><code>from uliweb.core.dispatch import bind
+<pre class="prettyprint "><code>from uliweb.core.dispatch import bind
 @bind('prepare_default_env')
 def prepare_default_env(sender, env):
     from uliweb.utils.textconvert import text2html
@@ -136,14 +136,14 @@ def prepare_default_env(sender, env):
 <h3 id="title_1-2-6">view模块的入口处理<a class="anchor" href="#title_1-2-6">&para;</a></h3>
 <p>我建议将不同的view函数按照功能和处理分为不同的文件来存放。</p>
 <p>Uliweb支持一种view模块的入口和出口的处理。即你可以在view模块中定义名为 <code>__begin__</code> 和 <code>__end__</code> 的特殊的方法，它没有参数，但是就象普通的view函数一样，也是在view环境中运行的。 一旦view模块中存在这个特殊的方法，在执行每个view函数之前都会先调用这个函数。因此你可以 把它理解为初始化处理，比如给一些对象赋值。举例如下:</p>
-<pre class="prettyprint"><code>def __begin__():
+<pre class="prettyprint "><code>def __begin__():
     from uliweb.contrib.auth.views import login
 
     if not request.user:
         return redirect(url_for(login) + '?next=%s' % url_for(doto_index))</code></pre>
 <h2 id="title_1-3">基于类的View方法<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>目前Uliweb也支持类的方式来定义view，这样可以有更好的封装性。举个例子:</p>
-<pre class="prettyprint"><code>@expose('/user')
+<pre class="prettyprint "><code>@expose('/user')
 class UserView(object):
     def __begin__(self):
         if not request.user:

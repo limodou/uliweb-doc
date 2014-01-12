@@ -65,7 +65,7 @@
         <h1 id="title_1">staticfiles<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">功能说明<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>用于向uliweb中提供静态文件的服务。通常来说，静态文件服务分两种场景，一种是开发 环境，一种是生产环境。而staticfiles主要是使用在开发环境，在生产环境中，一般先 通过:</p>
-<pre class="prettyprint"><code>uliweb exportstatic static</code></pre>
+<pre class="prettyprint "><code>uliweb exportstatic static</code></pre>
 <p>将所有静态文件导出到一个统一的静态目录下，然后通过web server的静态文件处理来统 一进行服务。但是在开发环境下，一般是使用开发服务器，因此，静态文件的处理需要使 用这个app来进行。</p>
 <p>主要功能介绍:</p>
 <ol>
@@ -78,7 +78,7 @@
 
 </div>
 <h2 id="title_1-2">配置项说明<a class="anchor" href="#title_1-2">&para;</a></h2>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 WSGI_MIDDLEWARES = ['wsgi_middleware_staticfiles']
 STATIC_VER = None
 
@@ -98,11 +98,11 @@ STATIC_FOLDER = ''</code></pre>
 </dl><p>其它的为内部使用。</p>
 <h2 id="title_1-3">静态域名输出<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>目前在uliweb的default_settings.ini中増加了:</p>
-<pre class="prettyprint"><code>[DOMAINS]
+<pre class="prettyprint "><code>[DOMAINS]
 default = {'domain':'', 'display':False}
 static = {'domain':'', 'display':False}</code></pre>
 <p>它定义了不同名字的域名信息。只要在你的settings中定义成:</p>
-<pre class="prettyprint"><code>[DOMAINS]
+<pre class="prettyprint "><code>[DOMAINS]
 static = {'domain':'http://static.com', 'display':True}</code></pre>
 <p>这样，当使用url_for_static时，静态URL将自动添加静态域名。如果display为False，则 缺省不输出。但是如果向 url_for_static 中传入 _external=True 时，则也会输出域名 信息。</p>
 

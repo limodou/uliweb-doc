@@ -68,7 +68,7 @@
 <p>Uliweb提供了必要的运行环境和运行对象，因此我称之为全局环境。</p>
 <h2 id="title_1-1">对象<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>有一些全局性的对象可以方便地从 uliweb 中导入，如:</p>
-<pre class="prettyprint"><code>from uliweb import (application, request, response,
+<pre class="prettyprint "><code>from uliweb import (application, request, response,
     settings, Request, Response)</code></pre>
 <h3 id="title_1-1-1">application<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>它是用来记录整个Uliweb项目的运行实例，全局唯一。application是 <code>uliweb.core.SimpleFrame.Dispatcher</code> 的实例，它有一些属性和方法可以让你使用，例如：</p>
@@ -124,20 +124,20 @@
 <p>配置信息对象，这个没什么好说的。</p>
 <h2 id="title_1-2">方法<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>如:</p>
-<pre class="prettyprint"><code>from uliweb import (redirect, json, POST, GET,
+<pre class="prettyprint "><code>from uliweb import (redirect, json, POST, GET,
     url_for, expose, get_app_dir, get_apps, function,
     functions, decorators, NotFound
     )</code></pre>
 <h3 id="title_1-2-7">redirect<a class="anchor" href="#title_1-2-7">&para;</a></h3>
-<pre class="prettyprint"><code>def redirect(location, code=302):</code></pre>
+<pre class="prettyprint "><code>def redirect(location, code=302):</code></pre>
 <p>返回一个Response对象，用于实现URL跳转.</p>
 <h3 id="title_1-2-8">Redirect(0.1.4)<a class="anchor" href="#title_1-2-8">&para;</a></h3>
-<pre class="prettyprint"><code>Redirect(location)</code></pre>
+<pre class="prettyprint "><code>Redirect(location)</code></pre>
 <p>直接抛出异常，Uliweb捕获后将实现跳转。同时支持在跳转前session的保存。可以作为 redirect的替換。</p>
 <h3 id="title_1-2-9">json<a class="anchor" href="#title_1-2-9">&para;</a></h3>
-<pre class="prettyprint"><code>def json(data, **json_kwargs):</code></pre>
+<pre class="prettyprint "><code>def json(data, **json_kwargs):</code></pre>
 <p>将一个data处理成json格式，并返回一个Response对象。json_kwargs目前可以允许用户传 入 <code>content_type</code> 值。这样在特殊情况下可以将生成的json数据生成:</p>
-<pre class="prettyprint"><code>content_type = 'text/html; charset=utf-8'</code></pre>
+<pre class="prettyprint "><code>content_type = 'text/html; charset=utf-8'</code></pre>
 <h3 id="title_1-2-10">expose<a class="anchor" href="#title_1-2-10">&para;</a></h3>
 <p>详见 <a href="url_mapping.html" class="inner">URL映射</a></p>
 <h3 id="title_1-2-11">POST<a class="anchor" href="#title_1-2-11">&para;</a></h3>
@@ -145,40 +145,40 @@
 <h3 id="title_1-2-12">GET<a class="anchor" href="#title_1-2-12">&para;</a></h3>
 <p>和expose一样，不过限定访问方法为 GET。</p>
 <h3 id="title_1-2-13">url_for<a class="anchor" href="#title_1-2-13">&para;</a></h3>
-<pre class="prettyprint"><code>def url_for(endpoint, **values):</code></pre>
+<pre class="prettyprint "><code>def url_for(endpoint, **values):</code></pre>
 <p>根据endpoint可以反向获得URL，endpoint可以是字符串格式，如: <code>Hello.view.index</code> ， 也可以 是真正的函数对象。</p>
 <h3 id="title_1-2-14">get_app_dir<a class="anchor" href="#title_1-2-14">&para;</a></h3>
-<pre class="prettyprint"><code>def get_app_dir(app):</code></pre>
+<pre class="prettyprint "><code>def get_app_dir(app):</code></pre>
 <p>根据一个app名字取得它对应的目录。</p>
 <h3 id="title_1-2-15">get_apps<a class="anchor" href="#title_1-2-15">&para;</a></h3>
-<pre class="prettyprint"><code>def get_apps(apps_dir, include_apps=None):</code></pre>
+<pre class="prettyprint "><code>def get_apps(apps_dir, include_apps=None):</code></pre>
 <p>根据一个apps目录，分析出所有可用的App的名字列表。</p>
 <h3 id="title_1-2-16">function(Deprecated)<a class="anchor" href="#title_1-2-16">&para;</a></h3>
 <p><em>建议使用functions</em></p>
-<pre class="prettyprint"><code>func = function('function_name')</code></pre>
+<pre class="prettyprint "><code>func = function('function_name')</code></pre>
 <p>用户可以在settings.ini中配置供外部使用的函数路径，通过function可以获得这个函数 的对象。例如在settings.ini中如下配置:</p>
-<pre class="prettyprint"><code>[FUNCTIONS]
+<pre class="prettyprint "><code>[FUNCTIONS]
 has_role = 'uliweb.contrib.rbac.has_role'
 has_permission = 'uliweb.contrib.rbac.has_permission'</code></pre>
 <p>这是uliweb.contrib.rbac中的定义的两个方法，key为方法名，value为方法的路径。 通过:</p>
-<pre class="prettyprint"><code>has_role = function('has_role')</code></pre>
+<pre class="prettyprint "><code>has_role = function('has_role')</code></pre>
 <p>就可以导入真正的函数来使用。</p>
 <h3 id="title_1-2-17">functions<a class="anchor" href="#title_1-2-17">&para;</a></h3>
 <p>这是一个对象，它的作用类似于function，不过它是以属性引用的方式来从settings.ini 中的FUNCTIONS中导入方法，如:</p>
-<pre class="prettyprint"><code>from uliweb import functions
+<pre class="prettyprint "><code>from uliweb import functions
 
 func = functions.hello</code></pre>
 <p>相当于:</p>
-<pre class="prettyprint"><code>from uliweb import function
+<pre class="prettyprint "><code>from uliweb import function
 
 func = function('hello')</code></pre>
 <h3 id="title_1-2-18">decorators<a class="anchor" href="#title_1-2-18">&para;</a></h3>
 <p>它同functions类似的使用方法，但是需要在settings.ini中定义DECORATORS内容，如:</p>
-<pre class="prettyprint"><code>[DECORATORS]
+<pre class="prettyprint "><code>[DECORATORS]
 check_role = 'uliweb.contrib.rbac.check_role'
 check_permission = 'uliweb.contrib.rbac.check_permission'</code></pre>
 <p>使用方法:</p>
-<pre class="prettyprint"><code>from uliweb import decorators
+<pre class="prettyprint "><code>from uliweb import decorators
 
 @decorators.check_role('superuser')
 @expose('/hello')
@@ -204,7 +204,7 @@ def hello():
 <p>它主要是用在以类的方式继承另一个类时，对原有方法进行替換时使用。</p>
 <h2 id="title_1-3">全局对象配置<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>我们已经可以从 <code>from uliweb import *</code> 中获得许多的对象和方法，如果我们也想将 其它的对象可以通过 <code>from uliweb import xxx</code> 的形式来导入，要如何做呢？可以 在 <code>settings.ini</code> 中添加以下内容:</p>
-<pre class="prettyprint"><code>[GLOBAL_OBJECTS]
+<pre class="prettyprint "><code>[GLOBAL_OBJECTS]
 your_object_name = 'your.object.path'</code></pre>
 <p>其中，每项中的 key 是对象的名字，值是对象的路径。</p>
 

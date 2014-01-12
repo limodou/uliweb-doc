@@ -72,7 +72,7 @@
 </dd>
 <dt>suds</dt>
 <dd><p>这个可以用来做为客户端的使用。不过uliweb中并没有内置它，需要自行安装。也可 以使用pysimplesoap带的client类。通过导入:</p>
-<pre class="prettyprint"><code>from uliweb.lib.pysimplesoap.client import SoapClient</code></pre>
+<pre class="prettyprint "><code>from uliweb.lib.pysimplesoap.client import SoapClient</code></pre>
 <p>不过目前感觉还有一些问题。</p>
 </dd>
 <dt>httplib2 或 pycurl</dt>
@@ -80,14 +80,14 @@
 </dd>
 </dl><h2 id="title_1-1">配置说明<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>使用soap服务，首先要在settings.ini中安装uliweb.contrib.soap。例如:</p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 INSTALLED_APPS = [
 ...
 'uliweb.contrib.soap',
 ...
 ]</code></pre>
 <p>同时 uliweb.contrib.soap 的settings.ini下已经预设了一些配置项，用户可以根据需要 进行覆盖，如:</p>
-<pre class="prettyprint"><code>[DECORATORS]
+<pre class="prettyprint "><code>[DECORATORS]
 soap = 'uliweb.contrib.soap.soap'
 
 [EXPOSES]
@@ -117,14 +117,14 @@ prefix = 'pys'</code></pre>
 </dl><h2 id="title_1-2">View的定义<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>服务已经安装好了，下面是定义相关的处理函数。通常你仍然可以定义在views.py中。但是 要注意，这里我们并不使用@expose来处理，而是使用@soap来处理，但是它仍然有view一样 的特性。不过，返回的内容不是HTML而是XML。</p>
 <p>举例如下:</p>
-<pre class="prettyprint"><code>from uliweb import decorators
+<pre class="prettyprint "><code>from uliweb import decorators
 from uliweb.contrib.soap import Date, DateTime, Decimal
 
 @decorators.soap('hello', returns={'a':str}, args={'a':str})
 def hello(a):
     return 'Hello:' + a</code></pre>
 <p>在pysimplesoap中定义了一些类型，用来描述数据类型的，uliweb已经将其导到 uliweb.contrib.soap 中，因此可以直接从这里导入。pysimplesoap采用内置类型和自定义类型相结合的方式， 比如常见的有:</p>
-<pre class="prettyprint"><code>int, str, float, unicode, bool, short, byte, long,
+<pre class="prettyprint "><code>int, str, float, unicode, bool, short, byte, long,
 integer, decimal, dateTime, date</code></pre>
 <p>因此，对于服务描述使用的wsdl，采用自动生成的方式。</p>
 <p>在上面的例子中，使用@decorators.soap来定义一个soap服务。其中soap方法接受以下参 数:</p>
@@ -142,7 +142,7 @@ integer, decimal, dateTime, date</code></pre>
 <dd><p>方法描述说明。缺省为None。</p>
 </dd>
 </dl><p>因此在上例中，在soap中定义了三个参数:</p>
-<pre class="prettyprint"><code>name = 'hello'
+<pre class="prettyprint "><code>name = 'hello'
 returns = {'a':str}
 args = {'a':str}</code></pre>
 <p>所以这个soap方法的名字叫 'hello'。</p>
@@ -151,22 +151,22 @@ args = {'a':str}</code></pre>
 <h2 id="title_1-3">类型描述说明<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>类型描述就是针对returns和args的声明使用的。它支持简单类型手复杂类型。复杂类型 一般指：数组和字典。</p>
 <p>当只有一个返回值时，一般定义为:</p>
-<pre class="prettyprint"><code>{'name':type}</code></pre>
+<pre class="prettyprint "><code>{'name':type}</code></pre>
 <p>这里type可以是前面说过的对象，如: int, str等。如果只有一个值，一般soap函数直接 返回就可以了，不必是一个字典的形式。</p>
 <p>如果是多个值，一般定义为:</p>
-<pre class="prettyprint"><code>{'name1':type1, 'name2':type2}</code></pre>
+<pre class="prettyprint "><code>{'name1':type1, 'name2':type2}</code></pre>
 <p>定义为字典的形式。返回时应按说明返回一个字典。</p>
 <p>如果是一个数组，一般定义为:</p>
-<pre class="prettyprint"><code>{'name':[type]}
+<pre class="prettyprint "><code>{'name':[type]}
 {'name':{'sub_name':type}}</code></pre>
 <p>有两种定义方式。第一种会自动转換为第二种形式。但是sub_name的名字是根据type的名 字自动生成的。所以:</p>
-<pre class="prettyprint"><code>{'name':[int]}</code></pre>
+<pre class="prettyprint "><code>{'name':[int]}</code></pre>
 <p>其实就是:</p>
-<pre class="prettyprint"><code>{'name':{'int':int}}</code></pre>
+<pre class="prettyprint "><code>{'name':{'int':int}}</code></pre>
 <p>以上几种数据定义方式可以嵌套使用，从而形成更复杂的数据格式定义。</p>
 <h2 id="title_1-4">更复杂的一些示例<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>这个例子实现将上传的整数数组相加后返回:</p>
-<pre class="prettyprint"><code>@decorators.soap(returns={'a':int}, args={'a':[int]})
+<pre class="prettyprint "><code>@decorators.soap(returns={'a':int}, args={'a':[int]})
 def add(a):
     t = 0
     for x in a:
@@ -174,7 +174,7 @@ def add(a):
     return t</code></pre>
 <p>这里a其实形式为: [{'int':v1}, {'int':v2}]</p>
 <p>这个示例实现将上传字符串数组统一在后面添加 '中文' 信息:</p>
-<pre class="prettyprint"><code>@decorators.soap(returns={'a':[str]}, args={'a':[str]})
+<pre class="prettyprint "><code>@decorators.soap(returns={'a':[str]}, args={'a':[str]})
 def string(a):
     t = []
     for i, x in enumerate(a):
@@ -183,7 +183,7 @@ def string(a):
 <p>建议使用unicode进行中文处理。返回仍是一个数组。</p>
 <h2 id="title_1-5">客户端示例<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>以下以suds作为客户端来演示如何访问soap服务。以hello为例，首先准备一个服务端代码。 在某个app中的views.py中添加如下代码:</p>
-<pre class="prettyprint"><code>from uliweb import decorators
+<pre class="prettyprint "><code>from uliweb import decorators
 from uliweb.contrib.soap import Date, DateTime, Decimal
 
 @decorators.soap('hello', returns={'a':str}, args={'a':str})
@@ -191,7 +191,7 @@ def hello(a):
     return 'Hello:' + a</code></pre>
 <p>然后启动服务器，等待测试。</p>
 <p>创建一个客户端的测试文件，写入如下代码:</p>
-<pre class="prettyprint"><code>#coding=utf8
+<pre class="prettyprint "><code>#coding=utf8
 #import logging
 #logging.basicConfig()
 #logging.getLogger('suds.client').setLevel(logging.DEBUG)
@@ -205,7 +205,7 @@ print 'test1:', result</code></pre>
 <p>前几行是用来控制日志输出的。suds提供debug状态，可以根据程序处理的中间结果。这里 我已经注释掉了，你可以根据需要来使用。</p>
 <p>首先是创建一个Client，只要传入一个wsdl的地址。这个地址就是前面的soap_url加上 <code>?wsdl</code> 。</p>
 <p>然后我们可以打印看一下这个client是什么东西:</p>
-<pre class="prettyprint"><code>Suds ( https://fedorahosted.org/suds/ )  version: 0.4 GA  build: R699-20100913
+<pre class="prettyprint "><code>Suds ( https://fedorahosted.org/suds/ )  version: 0.4 GA  build: R699-20100913
 
 Service ( UliwebSoapService ) tns="http://localhost:8000/SOAP"
    Prefixes (0)
@@ -216,7 +216,7 @@ Service ( UliwebSoapService ) tns="http://localhost:8000/SOAP"
          Types (0):</code></pre>
 <p>可以看到我们定义的web service的一些信息，如有什么方法，需要什么参数等。</p>
 <p>然后通过 client.service.hello('limodou') 来调用服务，结果会是:</p>
-<pre class="prettyprint"><code>test1: Hello:limodou</code></pre>
+<pre class="prettyprint "><code>test1: Hello:limodou</code></pre>
 <p>更详细的示例，可以参考 <a href="https://github.com/limodou/uliweb-doc" class="outter">uliweb-doc/projects/soap_test</a> 中的代码。</p>
 <p>另，通过设置apps/settings.ini:</p>
 <blockquote><p>[LOG] level = 'debug'</p>

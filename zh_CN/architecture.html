@@ -75,7 +75,7 @@
 </ul>
 <p>这种组织方式使得Uliweb的App重用更为方便。</p>
 <p>apps的结构为：</p>
-<pre class="prettyprint"><code>apps/
+<pre class="prettyprint "><code>apps/
     .gitignore
     __init__.py
     settings.ini
@@ -138,7 +138,7 @@
 </dd>
 <dt>View</dt>
 <dd><p>则采函数或类的方式。当 Uliweb 在调用 view 函数时，会自动向函数注入一些对象， 这一点有些象 web2py 。不过 web2py 是基于 exec ，而 Uliweb 是通过向函数注入 变量 (func_globals) 来实现的。这种方式会在某种程序上减少一些导入代码，非常 方便。不过，它只对直接的 view 方法有效，对于 view 函数中又调用的函数无效。 因此你还可以直接通过</p>
-<pre class="prettyprint"><code>from uliweb import request, response</code></pre>
+<pre class="prettyprint "><code>from uliweb import request, response</code></pre>
 <p>这样的方式来导入一些全局性的对象。</p>
 </dd>
 <dt>Template</dt>

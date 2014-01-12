@@ -68,7 +68,7 @@
 <p>Uliweb支持标准的gettext的i18n的处理。在程序中和在模板中都可以使用，甚至在ini文件 中也可以使用。</p>
 <h2 id="title_1-1">I18N的配置<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>为了使用i18n，需要在settings.ini中的INSTALLED_APPS中添加 <code>'uliweb.contrib.i18n'</code> ， 同时uliweb.contrib.i18n下的settings.ini还定义了一些配置项，如:</p>
-<pre class="prettyprint"><code>[I18N]
+<pre class="prettyprint "><code>[I18N]
 LANGUAGE_COOKIE_NAME = 'uliweb_language'
 LANGUAGE_CODE = 'en'
 LOCALE_DIRS = []
@@ -86,7 +86,7 @@ SUPPORT_LANGUAGES = []</code></pre>
 <li><p>如果url的Query_String上有 <code>lang=xxx</code> 的信息，则这个值为要使用的语言。 (<code>0.0.1増加</code>)</p>
 <div class="ui info message">
 <p><code>lang</code> 的名字是可以在settings.ini中配置的，缺省为空，需要设置此功能才会启动。 配置选项如下:</p>
-<pre class="prettyprint"><code>[I18N]
+<pre class="prettyprint "><code>[I18N]
 URL_LANG_KEY = 'lang'</code></pre>
 
 </div></li>
@@ -96,7 +96,7 @@ URL_LANG_KEY = 'lang'</code></pre>
 <li>最后选择settings.ini中定义的 <code>LANGUAGE_CODE</code></li>
 </ol>
 <p>所以如果你的网站支持多种语言，可以按照上面的说明来选择不同的模式。简单情况下只 要定义 <code>LANGUAGE_CODE='zh_CN'</code> 就可以支持中文了。如果想支持浏览器自动识别，可以定义 settings.ini为:</p>
-<pre class="prettyprint"><code>[I18N]
+<pre class="prettyprint "><code>[I18N]
 LANGUAGE_CODE = 'en'
 SUPPORT_LANGUAGES = ['en', 'zh_CN']</code></pre>
 <p>上面的定义说明当前网站支持两种语言，缺省为 <code>'en'</code> 。</p>
@@ -104,7 +104,7 @@ SUPPORT_LANGUAGES = ['en', 'zh_CN']</code></pre>
 <p>为了使用i18n，首先要在程序中进行i18n的定义，根据文件格式的不同，使用略有不同。</p>
 <h3 id="title_1-3-1">程序文件<a class="anchor" href="#title_1-3-1">&para;</a></h3>
 <p>这里是指.py文件。示例如下:</p>
-<pre class="prettyprint"><code>from uliweb.orm import *
+<pre class="prettyprint "><code>from uliweb.orm import *
 from uliweb.i18n import ugettext_lazy as _
 
 class User(Model):
@@ -118,7 +118,7 @@ class User(Model):
 </div>
 <h3 id="title_1-3-2">模板<a class="anchor" href="#title_1-3-2">&para;</a></h3>
 <p>因为uliweb的模板会编译为.py文件，所以除了不用导入gettext函数外，和在程序中无差别。 一旦你配置了i18n的app，会自动向模板环境中添加 <code>_()</code> 函数。示例:</p>
-<pre class="prettyprint"><code>&lt;div&gt;hi, {{=_('name')}}&lt;/div&gt;</code></pre>
+<pre class="prettyprint "><code>&lt;div&gt;hi, {{=_('name')}}&lt;/div&gt;</code></pre>
 <p>所以要编辑的串，都要放在 <code>{{}}</code> 中，并且使用 <code>_()</code> 进行处理。</p>
 <div class="ui warning message">
 <p>在模板中 <code>_()</code> 中的字符串不要使用 <code>u''</code> 的形式，并且整个模板以utf-8来保存。</p>
@@ -126,7 +126,7 @@ class User(Model):
 </div>
 <h3 id="title_1-3-3">settings.ini<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>在settings.ini中也可以使用翻译函数，如:</p>
-<pre class="prettyprint"><code>[DEFAULT]
+<pre class="prettyprint "><code>[DEFAULT]
 NAME = _('username')</code></pre>
 <h2 id="title_1-4">I18N字符串的提取<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>uliweb.contrib.i18n App提供了一个i18n的命令它提供以下参数:</p>
@@ -157,7 +157,7 @@ NAME = _('username')</code></pre>
 <li><code>-d</code> 按指定目录进行处理。比如plugs它只是一个app的集合，并不是一个完整的项目，所以     上述参数无法使用，但是可以使用这个-d参数进行处理</li>
 <li><code>--uliweb</code> 对uliweb本身进行处理。因为uliweb中有些文件中也有i18n的翻译串，所以     可以使用这个命令来处理</li>
 <li><p><code>-t</code> 它允许你写一个po的模板文件，在uliweb.i18n下已经提供了一个示例，名为: <code>po_template.ini</code>     其内容为:</p>
-<pre class="prettyprint"><code>[I18N]
+<pre class="prettyprint "><code>[I18N]
 First_Author = 'FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;'
 Project_Id_Version = 'PACKAGE VERSION'
 Last_Translator = 'FULL NAME &lt;EMAIL@ADDRESS&gt;'
@@ -168,7 +168,7 @@ Plural_Forms = 'nplurals=1; plural=0;'</code></pre></li>
 </ol>
 <p>你可以修改其中的内容，它们将自动填充到生成的pot和po文件中。</p>
 <p>使用示例:</p>
-<pre class="prettyprint"><code>uliweb i18n -p -l zh_CN</code></pre>
+<pre class="prettyprint "><code>uliweb i18n -p -l zh_CN</code></pre>
 <p>注意， <code>-l</code> 参数如果不提供则自动为 <code>'en'</code> 。因此，如果要翻译中文一定要加上 <code>-l zh_CN</code> 。</p>
 <h2 id="title_1-5">编码注意事项<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>在i18n中提供gettext和ugettext，它们的区别是：前者返回字符串，后者返回unicode。 为了正确处理中文编码，建议：程序、模板包括ini文件都使用utf-8编码来处理。</p>

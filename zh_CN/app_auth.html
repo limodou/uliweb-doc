@@ -143,7 +143,7 @@
 <li><p>settings.ini配置内容：</p>
 <ul>
 <li><p>提供以下内容:</p>
-<pre class="prettyprint"><code>[EXPOSES]
+<pre class="prettyprint "><code>[EXPOSES]
 login = '/login', 'uliweb.contrib.auth.views.login'
 logout = '/logout', 'uliweb.contrib.auth.views.logout'
 
@@ -159,12 +159,12 @@ require_login = 'uliweb.contrib.auth.require_login'</code></pre></li>
 <p>当安装完毕后，你已经可以使用/login, /logout。但是你需要在首页或某个地方将相应的链接添加进去。同时auth的中间件已经生效，它依赖于session app，用户本身还需要orm的支持。不过这两个app都已经在config.ini中写好了，会自动依赖。</p>
 <h3 id="title_1-2-2">用户创建<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>有了相应的链接，你需要先创建几个用户。auth本身提供了一个命令，通过:</p>
-<pre class="prettyprint"><code>uliweb createsuperuser</code></pre>
+<pre class="prettyprint "><code>uliweb createsuperuser</code></pre>
 <p>可以创建超级用户。</p>
 <p>非超级用户，要么通过添加register相关的功能（如添加/register到页面和在views.py或settings.ini中添加相应的链接）让用户自行创建用户。要么开发相应的用户管理app来管理用户。在plugs中有类似的例子，但是已经超出auth本身的功能了。auth不提供复杂的用户管理的功能，它只是完成基本的用户认证、注销、识别等功能。</p>
 <h3 id="title_1-2-3">判断用户是否登录的方法<a class="anchor" href="#title_1-2-3">&para;</a></h3>
 <p>auth向settings.ini中注册了require_login的方法和decorator。因此，用户可以通过:</p>
-<pre class="prettyprint"><code>from uliweb import function
+<pre class="prettyprint "><code>from uliweb import function
 require_login = function('require_login')
 
 if require_login():
@@ -193,7 +193,7 @@ def user_admin():
 <li>uliweb提供的功能可以作为参考，用户可以基于原auth进行扩展，如：替換template，Forms, Views等</li>
 <li>auth提供的许多功能都是配置化的，因此用户可以考虑在自已的app中进行部分或全部替換</li>
 <li><p>(0.1.5)增加了一个FORMS配置选项，用来替换auth定义的form，以方便不同的Model对应不同的Form。配置项为:</p>
-<pre class="prettyprint"><code>[FORMS]
+<pre class="prettyprint "><code>[FORMS]
 auth.LoginForm = 'uliweb.contrib.auth.forms.LoginForm'
 auth.RegisterForm = 'uliweb.contrib.auth.forms.RegisterForm'
 auth.ChangePasswordForm = 'uliweb.contrib.auth.forms.ChangePasswordForm'</code></pre></li>

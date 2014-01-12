@@ -69,19 +69,19 @@
 <h2 id="title_1-1">配置<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>向$project/apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.xmlrpc'。</p>
 <p>配置完毕后，你的应用就已经有一个/XMLRPC的url可以使用了。比如可以通过:</p>
-<pre class="prettyprint"><code>http://localhost:8000/XMLRPC</code></pre>
+<pre class="prettyprint "><code>http://localhost:8000/XMLRPC</code></pre>
 <p>来访问XMLRPC服务。如果你想要修改这个URL，可以在settings.ini中添加:</p>
-<pre class="prettyprint"><code>[EXPOSES]
+<pre class="prettyprint "><code>[EXPOSES]
 /XMLRPC = 'uliweb.contrib.xmlrpc.views.xmlrpc'</code></pre>
 <p>在uliweb.contrib.xmlrpc的settings.ini中已经定义上述内容。</p>
 <h2 id="title_1-2">使用<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>下面我使用一个示例的方式来展示如何使用xmlrpc。</p>
 <p>先让我们创建一个xmlrpc_test的项目和一个Hello的app，操作如下:</p>
-<pre class="prettyprint"><code>uliweb makeproject xmlrpc_test
+<pre class="prettyprint "><code>uliweb makeproject xmlrpc_test
 cd xmlrpc_test
 uliweb makeapp Hello</code></pre>
 <p>修改settings.ini添加uliweb.contrib.xmlrpc:</p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 DEBUG = True
 
 INSTALLED_APPS = [
@@ -90,7 +90,7 @@ INSTALLED_APPS = [
     'Hello',
     ]</code></pre>
 <p>然后修改Hello/views.py，修改的内容如下:</p>
-<pre class="prettyprint"><code>#coding=utf-8
+<pre class="prettyprint "><code>#coding=utf-8
 from uliweb import function
 xmlrpc = function('xmlrpc')
 
@@ -113,7 +113,7 @@ class Hello(object):
 <p>说明如下:</p>
 <ol>
 <li><p>xmlrpc提供了一个同名的decorator函数，可以用来修饰普通的函数和类，以便将其转     为XMLRPC的服务。而这个decorator是定义在xmlrpc的settings.ini中的，例如:</p>
-<pre class="prettyprint"><code>[FUNCTIONS]
+<pre class="prettyprint "><code>[FUNCTIONS]
 xmlrpc = 'uliweb.contrib.xmlrpc.xmlrpc'</code></pre></li>
 </ol>
 <p>为了获取真正的函数对象，uliweb提供了一个内部函数叫function。使用它就可以从     settings.ini的FUNCTIONS中获取一个形如'module.function'的函数对象。</p>
@@ -126,7 +126,7 @@ xmlrpc = 'uliweb.contrib.xmlrpc.xmlrpc'</code></pre></li>
 </ol>
 <h2 id="title_1-3">测试<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>下面创建一个测试程序，如test_xmlrpc.py:</p>
-<pre class="prettyprint"><code>#coding=utf-8
+<pre class="prettyprint "><code>#coding=utf-8
 from xmlrpclib import ServerProxy
 
 server = ServerProxy("http://localhost:8000/XMLRPC")
@@ -136,7 +136,7 @@ print server.func()
 print server.Hello.test('limodou')</code></pre>
 <p>可以看到，如果是类的方式，可以使用 <code>server.Hello.test('limodou')</code> 很方便。</p>
 <p>如果执行正确，运行结果为:</p>
-<pre class="prettyprint"><code>hello
+<pre class="prettyprint "><code>hello
 new_func
 {'user': 'limodou'}</code></pre>
 

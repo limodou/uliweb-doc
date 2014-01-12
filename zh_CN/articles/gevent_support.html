@@ -72,7 +72,7 @@
 ，其中有人分析是DebugApplication的 <code>__call__</code> 返回的是Generator，造成了问题，但是答案还没来得及给出。我又在stackoverflow上找到一个回答，上面也提到了前面的issue，并给出了一个<a href="http://stackoverflow.com/questions/18319345/gevent-socketio-not-using-my-app-route-endpoint-for-socketio" class="outter">解决方案</a>
 ，就是派生一个新的DebugApplication子类，然后情况来返回不同的内容。避免了总了返回generator的情况。不过，它是判断如果是socket.io请求，就直接跳过DebugApplication的处理，如果有异常也不会象一般的页面一样显示异常页面。现在想想这个不太好解决，所以只能凑合了。</p>
 <p>现在uliweb和支持tornado一样，可以在开发时启动开发服务器，使用 <code>--gevent</code> 和 <code>-gevent-socketio</code> 来分别使用不同的服务模式。如果是要部署，可以运行：</p>
-<pre class="prettyprint"><code>uliweb support gevent-socketio</code></pre>
+<pre class="prettyprint "><code>uliweb support gevent-socketio</code></pre>
 <p>这样会在当前的项目目录下生成 <code>gevent_socketio_handler.py</code> 文件，可以直接运行。可以使用 <code>-h</code> 和 <code>-p</code> 来传入IP和端口号。</p>
 
         

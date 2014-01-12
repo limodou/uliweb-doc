@@ -90,13 +90,13 @@
 <li><code>{{super}}</code> 引用父模板。这是当存在扩展父模板的情况下，扩展的块可以通过 <code>{{super}}</code> 来引用父模板对应块的内容。</li>
 <li><code>{{# ... }}</code> 单行注释</li>
 <li><p><code>{{## ... ##}}</code> 片段注释。其中可以包含模板标签。(0.1.6増加) 如:</p>
-<pre class="prettyprint"><code>{{##
+<pre class="prettyprint "><code>{{##
 {{=name}}
 ##}}</code></pre></li>
 </ul>
 <h2 id="title_1-3">模板环境<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>Uliweb的模板在运行时也象view一样会运行在一个环境中，在这个环境中，有一些对象和方法是在内置环境中定义的，也有一些是在Uliweb的框架环境中定义的对象或方法。内置的环境你无法扩展，但是框架环境允许你扩展，方法很象view的扩展方式，如在任何一个有效的app的settings.py中可以定义:</p>
-<pre class="prettyprint"><code>from uliweb.core.dispatch import bind
+<pre class="prettyprint "><code>from uliweb.core.dispatch import bind
 
 @bind('prepare_view_env')
 def prepare_template_env(sender, env):
@@ -106,7 +106,7 @@ def prepare_template_env(sender, env):
 <p>目前已经有一些缺省的对象和方法可以直接用在模板中，它们目前与view是一样的，因此你可以参考 <a href="views.html" class="inner">视图</a> 文档进行了解。</p>
 <h3 id="title_1-3-1">环境配置化<a class="anchor" href="#title_1-3-1">&para;</a></h3>
 <p>不过，直接在 <code>__init__.py</code> 中使用 <code>@bind</code> 不利于配置化，所以更多是采用写入 <code>settings.ini</code> 的 <code>BINDS</code> 的方法:</p>
-<pre class="prettyprint"><code>[BINDS]
+<pre class="prettyprint "><code>[BINDS]
 template.prepare_view_env = 'prepare_view_env', 'uliweb.contrib.template.prepare_view_env'</code></pre>
 <p>其中，key是唯一标识绑定函数的名字，一般的写法是 appname.topic_name 。value是一个 tuple，第一项是 topic 的名字，它一般是在框架中预定义的。这里 <code>prepare_view_env</code> 表示view和模板环境初始化处理。第二项是方法路径，它是由：方法对应的模块名.方法名 组成。</p>
 <p>同时将程序中的 <code>@bind('prepare_view_env')</code> 去掉。</p>
@@ -126,20 +126,20 @@ template.prepare_view_env = 'prepare_view_env', 'uliweb.contrib.template.prepare
 <p>模板缺省是使用utf-8编码进行处理。如果你传入unicode字符串，将自动转为utf-8编码。如果不 是unicode，则不做处理。建议全部使用utf-8编码。</p>
 <h2 id="title_1-7">用法<a class="anchor" href="#title_1-7">&para;</a></h2>
 <h3 id="title_1-7-2">简单地变量输出<a class="anchor" href="#title_1-7-2">&para;</a></h3>
-<pre class="prettyprint"><code>{{= "hello"}}
+<pre class="prettyprint "><code>{{= "hello"}}
 {{= title}}</code></pre>
 <p>如果使用了变量，则要么由view进行传入，要么在模板的其它地方进行定义，如：</p>
-<pre class="prettyprint"><code>{{title="hello"}}
+<pre class="prettyprint "><code>{{title="hello"}}
 {{= title}}</code></pre>
 <h3 id="title_1-7-3">HTML代码直接输出<a class="anchor" href="#title_1-7-3">&para;</a></h3>
-<pre class="prettyprint"><code>{{&lt;&lt; html}}</code></pre>
+<pre class="prettyprint "><code>{{&lt;&lt; html}}</code></pre>
 <h3 id="title_1-7-4">Python代码示例<a class="anchor" href="#title_1-7-4">&para;</a></h3>
-<pre class="prettyprint"><code>{{import os
+<pre class="prettyprint "><code>{{import os
 out.write("&lt;h1&gt;Hello&lt;/h1&gt;")
 }}</code></pre>
 <h3 id="title_1-7-5">模板继承<a class="anchor" href="#title_1-7-5">&para;</a></h3>
 <p>父模板 (layout.html)</p>
-<pre class="prettyprint"><code>&lt;html&gt;
+<pre class="prettyprint "><code>&lt;html&gt;
 &lt;head&gt;
 &lt;title&gt;Title&lt;/title&gt;
 &lt;/head&gt;
@@ -148,29 +148,29 @@ out.write("&lt;h1&gt;Hello&lt;/h1&gt;")
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
 <p>子模板 (index.html)</p>
-<pre class="prettyprint"><code>{{extend "layout.html"}}
+<pre class="prettyprint "><code>{{extend "layout.html"}}
 {{block main}}
 &lt;p&gt;This is child template.&lt;/p&gt;
 {{end}}</code></pre>
 <p>同时 extend 支持后面的模板文件名是一个变量，如:</p>
-<pre class="prettyprint"><code>{{extend layout}}</code></pre>
+<pre class="prettyprint "><code>{{extend layout}}</code></pre>
 <p>这样，你可以在渲染模板时，传入一个layout的变量。</p>
 <p>另外，在复杂的情况下，可以是多级的模板继承关系，如:</p>
-<pre class="prettyprint"><code>           / extend C1
+<pre class="prettyprint "><code>           / extend C1
 A extend B - extend C2
            \ extend C3</code></pre>
 <p>也就是说，C1, C2, C3作为父模板，可能有一些相同的block的定义可以扩展，如果它们可重定义的block一样，并且在你的应用中希望统一进行预处理，然后其它的模板再使用这个预处理后的模板。那么可以采用一个新的方法，首先B模板定义为:</p>
-<pre class="prettyprint"><code>{{extend layout}}</code></pre>
+<pre class="prettyprint "><code>{{extend layout}}</code></pre>
 <p>即，它要继承的模板名是一个变量。然后在A中根据需要传入layout的值，如:</p>
-<pre class="prettyprint"><code>{{extend "B", layout="C1"}}</code></pre>
+<pre class="prettyprint "><code>{{extend "B", layout="C1"}}</code></pre>
 <p>这样，在扩展B模板时，动态传入了layout变量的值，因此B中的layout将使用C1模板。</p>
 <p><strong>下面的include也有类似的功能</strong> 。</p>
 <h3 id="title_1-7-6">引用父模板块内容<a class="anchor" href="#title_1-7-6">&para;</a></h3>
 <p>假设 B 扩展了 A 模板，重定义了 title 块，如果在 B 中想要引用 A 的内容，则可以使用 <code>{{super}}</code> 语法，如:</p>
-<pre class="prettyprint"><code>{{extend "A"}}
+<pre class="prettyprint "><code>{{extend "A"}}
 {{block title}}{{super}} - B{{end}}</code></pre>
 <h3 id="title_1-7-7">包括其它的模板<a class="anchor" href="#title_1-7-7">&para;</a></h3>
-<pre class="prettyprint"><code>&lt;html&gt;
+<pre class="prettyprint "><code>&lt;html&gt;
 &lt;head&gt;
 &lt;title&gt;Title&lt;/title&gt;
 &lt;/head&gt;
@@ -179,27 +179,27 @@ A extend B - extend C2
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
 <h3 id="title_1-7-8">模板注释<a class="anchor" href="#title_1-7-8">&para;</a></h3>
-<pre class="prettyprint"><code>{{# This is a comment line}}
+<pre class="prettyprint "><code>{{# This is a comment line}}
 {{# This is another comment line}}</code></pre>
 <p>可以在每行模板代码前使用 <code>#</code> 标识当前行为注释行，其用法同 Python 的注释行</p>
-<pre class="prettyprint"><code>{{##
+<pre class="prettyprint "><code>{{##
 {{=name}}
 ##}}</code></pre>
 <p>使用 <code>{{##</code> 和 <code>##}}</code> 可以注释一个片段，其中可以含有模板标签，这些标签将被 忽略。</p>
 <h3 id="title_1-7-9">模板自引用(0.1.4)<a class="anchor" href="#title_1-7-9">&para;</a></h3>
 <p>假设我们有一个全局性的 layout.html 模板，许多模板都要从它继承以获得最基础的布局信 息等。如果，我们有一个优化要在全局生效，那么我们可能直接想到去修改 layout.html 模板，这的确是一个办法。但是如果这个 layout.html 是一个可以复用的公共模板，它可 能不由你来维护或者它的实现比较通用，如果对其修改会造成不通用，那么直接修改这个 模板可能不是一个好办法。在0.1.4版本中提供了对同名模板的自引用处理机制，它可以用 在 <code>extend</code> 和 <code>include</code> 中。Uliweb 在处理模板时会根据App的定义顺序来查找模 板。因为模板是定义在不同的app中，因此会有同名模板出现。同时这也正是Uliweb中模板 替換的机制。因此，针对上面的问题，我们可能想在自已的App中定义一个同名的模板，但是 这样只会替換原来的模板。因此我们其实需要的是可以从同名模板的上一个模板继承的机制。 例如：A, B两个App，B定义在A之后，它们都有一个同名的layout.html模板，所以在模板 搜索时，会先找到B/layout.html。在0.1.4中，如果我们在B的layout.html中输入:</p>
-<pre class="prettyprint"><code>{{extend "layout.html"}}</code></pre>
+<pre class="prettyprint "><code>{{extend "layout.html"}}</code></pre>
 <p>即和自身的名字相同，在这种情况下，Uliweb会使用A/layout.html作为父模板来继承。这 样，我们就可以象正确的模板继承一样对同名的模板实现继承的处理了。</p>
 <p><code>{{include}}</code> 模板时，对应的模板也可以有类似的处理机制。</p>
 <h3 id="title_1-7-10">模板的块调试(0.2.2)<a class="anchor" href="#title_1-7-10">&para;</a></h3>
 <p>Uliweb的模板在结构变得复杂时，了解哪些块是在哪里定义的就变成比较困难的问题。uliweb 提供命令行和运行时对块信息的调试输出。在命令行可以：</p>
-<pre class="prettyprint"><code>uliweb find -t index.html --tree --blocks --with-filename</code></pre>
+<pre class="prettyprint "><code>uliweb find -t index.html --tree --blocks --with-filename</code></pre>
 <p>可以输出指定模板的继承和包含使用情况。还可以输出其中使用到的block定义，包括每个block 所在的模板文件名。</p>
 <p>在运行时，可以打开：</p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre class="prettyprint "><code>[GLOBAL]
 DEBUG_TEMPLATE = True</code></pre>
 <p>这样输出的页面就会有类似：</p>
-<pre class="prettyprint"><code>&lt;!-- BLOCK title (apps/theme/templates/theme/skeleton.html) --&gt;
+<pre class="prettyprint "><code>&lt;!-- BLOCK title (apps/theme/templates/theme/skeleton.html) --&gt;
 &lt;!-- END title --&gt;</code></pre>
 <p>这样的输出。不过要注意只用它来进行调试，不然有些地方可能会破块页面或其它非HTML 输出的正确性。</p>
 <p>如果要使用动态输出，要注意需要配置 <code>uliweb.contrib.template</code> 这个APP，它会在启动 时进行必要的初始化。</p>
@@ -208,7 +208,7 @@ DEBUG_TEMPLATE = True</code></pre>
 <h2 id="title_1-9">问题描述<a class="anchor" href="#title_1-9">&para;</a></h2>
 <h3 id="title_1-9-11">在模板中定义多行文本的限制<a class="anchor" href="#title_1-9-11">&para;</a></h3>
 <p>目前模板中不特别支持定义多行的字符串，因为它是按行来处理，并且不作特殊的语法判断的。 比如:</p>
-<pre class="prettyprint"><code>{{t = """
+<pre class="prettyprint "><code>{{t = """
 &lt;html&gt;
 &lt;head&gt;
 &lt;script&gt;

@@ -74,7 +74,7 @@
 </ol>
 <p>在我的环境中，python是2.6，nginx中有svg的配置，标准的 <code>/etc/mime.types</code> 下没有。我使用的是nginx作为web server提供静态文件服务。如果只是使用nginx的静态文件，其实这个和python无关了，因为可以不经过python直接提供处理。</p>
 <p>但是有些下载要经过python的处理，如 <code>uliweb.contrib.upload</code> app提供的文件下载功能。因此还是需要让python能够正确识别mimetypes的。一种方式是在某个mime.types中添加新的类型，不过这种试对于新的环境仍然要修改。于是我在upload app中増加了 <code>MIME_TYPES</code> 的配置，如：</p>
-<pre class="prettyprint"><code>[MIME_TYPES]
+<pre class="prettyprint "><code>[MIME_TYPES]
 .svg = 'image/svg+xml'</code></pre>
 <p>每种后缀对应一个类型。这样就可以将mimetypes配置到应用中了。通用性比较好。</p>
 <p>不过，要注意，它只对应用有效。</p>

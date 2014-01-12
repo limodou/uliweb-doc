@@ -65,7 +65,7 @@
         <h1 id="title_1">menus - 菜单管理<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">以前的实现<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在uliweb设计中，许多内容都是分布式可配置的。但是菜单却不是这样。一般的uliweb网站有两类的菜单，一种是导航菜单，比如首页上用来区分不同的大的功能，一般只有一层；另一种是侧边栏菜单，用来显示每个大功能对应的详细功能，可以是多级，一般组织为树型。为了简单，以前对于第一类菜单就是在settings.ini中写一个配置，如：</p>
-<pre class="prettyprint"><code>[LAYOUT]
+<pre class="prettyprint "><code>[LAYOUT]
 TITLE = _('Red Breast Demo')
 PROJECT = _('Red Breast')
 MENUS &lt;= [
@@ -73,9 +73,9 @@ MENUS &lt;= [
     ('admin', _('Admin'), '/user/view'),
 ]</code></pre>
 <p>其中MENUS就是菜单的定义。然后在模板中可以定义一个menu函数，需要传入一个参数current用来指示当前高亮的是哪个。如：</p>
-<pre class="prettyprint"><code>{{menu('home')}}</code></pre>
+<pre class="prettyprint "><code>{{menu('home')}}</code></pre>
 <p>对于第二类菜单，会在某个功能的 func_layout.html 模板中定义这个功能下的所有菜单，如：</p>
-<pre class="prettyprint"><code>{{
+<pre class="prettyprint "><code>{{
 menu_items = []
 if request.user:
     menu_items.append(
@@ -104,7 +104,7 @@ pass
 <li>启动处理。定义了初始化处理 (<code>after_init_apps</code>)，它将会收集所有定义在settings.ini中的MENUS中的菜单项。然后根据菜单定义的结构，重新组合为树型结构。</li>
 <li>菜单结构。菜单定义支持多棵树，每模树都是一个完整的菜单结构。每模树的根结点都有一个名字，以进行区分。每个菜单项也都有自已的名字。同一个结点的子结点不允许重名，但是不同结点的子结点可以重名。整个菜单数据将保存到一个有序字典变量中。所以第一层就是不同的菜单树的根结点。根结点本身不用来显示。通过 <code>get_menu(name)</code> 可以得到某个菜单树。同时 name 是用 <code>/</code> 分隔的，如： <code>a/b</code> 表示返回根为 <code>a</code> 的菜单树中的 <code>name</code> 为 <code>b</code> 的菜单项。</li>
 <li><p>菜单的定义。菜单要定义在 settings.ini 中的MENUS中。基本格式为：</p>
-<pre class="prettyprint"><code>[MENUS]
+<pre class="prettyprint "><code>[MENUS]
 name1 = {'title':'title', 'subs':[
      {'title':'title', 'link':'link'},
      {'title':'title', 'link':'link'},
@@ -127,10 +127,10 @@ name2 = {'parent':'name1', 'title':'title', 'link':'link'}</code></pre>
 </ol>
 <h2 id="title_1-3">命令行显示<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>为了方便查看菜单结构，menus提供了menu命令，如：</p>
-<pre class="prettyprint"><code>uliweb menu
+<pre class="prettyprint "><code>uliweb menu
 uliweb menu main</code></pre>
 <p>第一个命令将显示全部菜单树，第二个只显示指定的菜单树。显示结果如：</p>
-<pre class="prettyprint"><code>MAIN [MAIN]
+<pre class="prettyprint "><code>MAIN [MAIN]
     home [Home]
     admin [Admin]</code></pre>
 <p>每项的前面是名字，后面是标题。如果有中文，它是按settings.ini的编码，有可能控制台上看到的是乱码。</p>
@@ -138,7 +138,7 @@ uliweb menu main</code></pre>
 <ol>
 <li>在 <code>INSTALLED_APPS</code> 中配置 <code>plugs.menus</code></li>
 <li><p>在对应的app下配置MENUS，如：</p>
-<pre class="prettyprint"><code>[MENUS]
+<pre class="prettyprint "><code>[MENUS]
 main = {'subs':[
         {'name':'request', 'title':'我发起的审批', 'subs':[
             {'name':'request_all', 'title':'全部'},

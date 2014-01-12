@@ -69,7 +69,7 @@
 <p>正确使用日志处理的前提是先要对logging模块有一个清楚的认识，为此我专门写了关于 logging使用的博文，因为和uliweb本身没有直接的关系，因此这里只放一个 <a href="http://hi.baidu.com/limodou/blog/item/5092c99529b7de50d0135ed5.html" class="outter">链接</a> 。</p>
 <h2 id="title_1-2">uliweb中日志配置<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>目前uliweb在default_settings.ini中已经有如下配置:</p>
-<pre class="prettyprint"><code>[LOG]
+<pre class="prettyprint "><code>[LOG]
 #level, filename, filemode, datefmt, format can be used in logging.basicConfig
 level = 'info'
 #filename = None
@@ -124,7 +124,7 @@ format_package = "[%(levelname)s %(name)] %(message)s"</code></pre>
 </div>
 <h3 id="title_1-2-2">logger定义<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>针对不同的logger，可以定义不同的日志配置。所有logger都定义在  中。 它可以定义logger的level, 还可以定义多个handler，在缺省情况下，当不定义handler时 会使用logging.StreamHandler类来处理。每个logger的配置形如:</p>
-<pre class="prettyprint"><code>[LOG.Loggers]
+<pre class="prettyprint "><code>[LOG.Loggers]
 key = value</code></pre>
 <p>其中key就是logger的名字，如上面的'uliweb.app', 'uliweb.console', 'werkzeug'等。 如果logger的名字为 'ROOT'，则表示root logger。而root logger就是执行basicConfig() 后的日志对象。可能你要问：为什么还要可以单独处理root logger呢？因为  无法 定义新的handler，它要么使用文件要么使用stream。因此通过单独配置root logger，可以 定义新的handler。</p>
 <p>value是一个字典，可以使用的参数说明为:</p>
@@ -151,7 +151,7 @@ key = value</code></pre>
 </div>
 <h3 id="title_1-2-3">handler的定义<a class="anchor" href="#title_1-2-3">&para;</a></h3>
 <p>所有的handler都定义在  中，形式为:</p>
-<pre class="prettyprint"><code>[LOG.Handlers]
+<pre class="prettyprint "><code>[LOG.Handlers]
 key = value</code></pre>
 <p>其中key为handler的名字。</p>
 <p>value为handler要使用的参数，可以为:</p>
@@ -181,7 +181,7 @@ key = value</code></pre>
 <h2 id="title_1-3">应用介绍<a class="anchor" href="#title_1-3">&para;</a></h2>
 <h3 id="title_1-3-5">配置<a class="anchor" href="#title_1-3-5">&para;</a></h3>
 <p>在最简单的情况下，我们可以使用缺省的定义。这样你会得到:</p>
-<pre class="prettyprint"><code>[LOG]
+<pre class="prettyprint "><code>[LOG]
 level = 'info'
 format = "[%(levelname)s %(name)s %(asctime)-15s] %(message)s"
 
@@ -193,13 +193,13 @@ uliweb.console = {'propagate':0, 'format':'format_simple'}</code></pre>
 <p>定义自已的logger，主要是在[LOG.Loggers]中添加新的logger的入口，然后根据需要创建 [LOG.Handlers]和[LOG.Formatters]。</p>
 <h3 id="title_1-3-6">使用<a class="anchor" href="#title_1-3-6">&para;</a></h3>
 <p>使用简单的日志可以直接使用root logger，方法为:</p>
-<pre class="prettyprint"><code>import logging
+<pre class="prettyprint "><code>import logging
 logging.info()</code></pre>
 <p>可以直接调用logging模块提供的相关的api进行输出。这是最简单的情况。也可以主动获 得root logger对象，如:</p>
-<pre class="prettyprint"><code>import logging
+<pre class="prettyprint "><code>import logging
 mylog = logging.getLogger('')</code></pre>
 <p>使用某个命名logger对象，如:</p>
-<pre class="prettyprint"><code>import logging
+<pre class="prettyprint "><code>import logging
 mylog = logging.getLogger('uliweb.app')</code></pre>
 <p>如果，指定的日志名已经在settings.ini中配置了，则可以直接使用它的配置项。如果没 有配置，则全部使用缺省的，比如日志级别将是NOTSET，并且不会有handler创建(因为不 会有format和handlers的定义)。</p>
 <p>如果你使用了其它的组件，它们需要对日志进行配置，也可以在settings.ini中设置，一 样可以生效。</p>
@@ -211,7 +211,7 @@ mylog = logging.getLogger('uliweb.app')</code></pre>
 <h2 id="title_1-4">问题与技巧<a class="anchor" href="#title_1-4">&para;</a></h2>
 <h3 id="title_1-4-9">如何设置sqlalchemy的日志，让它只显示一次<a class="anchor" href="#title_1-4-9">&para;</a></h3>
 <p>在处理中发现如果在创建引擎时显示日志信息时，在uliweb运行时会显示两条日志，比如 设置 <code>DEBUG_LOG=True</code> 。你可以这样设置:</p>
-<pre class="prettyprint"><code>[LOG.Loggers]
+<pre class="prettyprint "><code>[LOG.Loggers]
 sqlalchemy = {'propagate':0}
 sqlalchemy.engine = {'propagate':0}</code></pre>
 <p>有关sqlalchemy的logger信息可以参考 <a href="http://docs.sqlalchemy.org/en/latest/core/engines.html#configuring-logging" class="outter">Configuring Logging</a> 文档。</p>

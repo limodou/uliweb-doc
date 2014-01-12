@@ -84,7 +84,7 @@
 <li>POST 数据，检查token是否正确</li>
 </ul>
 <p>以上的处理主要是通过Middleware的机制完成的:</p>
-<pre class="prettyprint"><code>def process_request(self, request):
+<pre class="prettyprint "><code>def process_request(self, request):
     # process each request
     if self.settings.get_var('CSRF/enable', False):
         if request.method in ('POST', 'DELETE') or (request.method == 'GET' and request.GET.get(self.settings.CSRF.form_token_name)):
@@ -129,13 +129,13 @@ def process_response(self, request, response):
 <p>如果你采用Form来交互，其实在安装好 csrf App 之后不需要做特殊的处理，token的生 成，插入到Form中，token的校验都由Middleware完成了。你需要注意的是Form的method 一定要是 POST。</p>
 <h3 id="title_1-2-2">Ajax<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>Ajax比较特殊，它一般不用 Form ，直接通过ajax请求向后端发送数据。这里参考了django 针对jquery写的一个javascript片段，你需要在使用时将其 include 到你的模板中。例如:</p>
-<pre class="prettyprint"><code>{{include "inc_jquery_csrf.html"}}</code></pre>
+<pre class="prettyprint "><code>{{include "inc_jquery_csrf.html"}}</code></pre>
 <p>这个片段完全参考了Django的代码，除了cookie的token名是改为配置化的。它的主要作用是 先判断请求的类型，如果是修改类的，如:POST或DELETE则会将token从cookie中取出，然后插 入到http的头中，这一点和Form的方式不同。Form是作为数据提交的。</p>
 <h3 id="title_1-2-3">GET方法<a class="anchor" href="#title_1-2-3">&para;</a></h3>
 <p>前面主要是针对修改数据的操作，但是有时ajax的操作就是通过GET来完成的。所以我们 可以在相应的URL上包含token信息，这样Middleware一样会进行校验。例如:</p>
-<pre class="prettyprint"><code>&lt;a href="/remove/{{=object.id}}?csrf_token={{=functions.get_token()}}"&gt;remove&lt;/a&gt;</code></pre>
+<pre class="prettyprint "><code>&lt;a href="/remove/{{=object.id}}?csrf_token={{=functions.get_token()}}"&gt;remove&lt;/a&gt;</code></pre>
 <h2 id="title_1-3">配置说明<a class="anchor" href="#title_1-3">&para;</a></h2>
-<pre class="prettyprint"><code>[MIDDLEWARES]
+<pre class="prettyprint "><code>[MIDDLEWARES]
 csrf = 'uliweb.contrib.csrf.middleware.CSRFMiddleware', 150
 
 [CSRF]
