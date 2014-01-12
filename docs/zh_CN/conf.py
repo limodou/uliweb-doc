@@ -17,7 +17,7 @@ templates = {'index':'index.html', '*':'default.html'}
 
 tag_class = {
     'table':'ui collapsing celled table segment',
-    'pre':'prettyprint',
+    'pre':'+prettyprint',
 }
 
 # pre code theme css only : sons-of-obsidian, sunburst
