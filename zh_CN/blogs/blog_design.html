@@ -229,7 +229,7 @@ blog = 'blog.models.Blog'</code></pre>
 [default] Creating [3/5, uliweb.contrib.auth] user...CREATED
 [default] Creating [4/5, uliweb.contrib.auth] usergroup_user_users...CREATED
 [default] Creating [5/5, uliweb.contrib.auth] usergroup...CREATED</code></pre>
-<p>我们可以看到数据库是 mysql ，密码使用星号隐藏了。一共有5张表，因为都不存在所以 最后都是 <code>CREATED</code> 的状态。</p>
+<p>我们可以看到数据库是 mysql ，密码使用星号隐藏了。一共有5张表，因为都不存在所以 最后都是 <code>CREATED</code> 的状态。这里 blog 有两张表，其它三张是因为配置了 uliweb.contrib.auth  所带的表。</p>
 <div class="footnotes"><ol>
 <li id="fn-1">
 <p> 这里向大家推荐 <a href="http://www.heidisql.com/" class="outter">heidisql</a> 这个工具，体积小，     有绿色版，功能强大。</p>

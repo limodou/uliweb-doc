@@ -63,7 +63,57 @@
 
         
         <h1 id="title_1">Uliweb Change Log<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">0.2.3 Version<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">0.2.4 Version<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ul>
+<li><p>Fix ORM is not compatible with SQLAlchemy 0.9.1. Old style:</p>
+<pre class="prettyprint"><code>cond = None
+cond = (Blog.c.id==5) &amp; None</code></pre>
+<p>will not right in 0.9.1, because None will not be skipped, so you can change above code <code>cond = None</code> to :</p>
+<pre class="prettyprint"><code>from sqlalchemy.sql import true
+cond = true()</code></pre>
+<p>or</p>
+<pre class="prettyprint"><code>from uliweb.orm import true
+cond = true()</code></pre></li>
+<li><p>add <code>__contains__</code> to functions, so you can test if an API is already defined, just   use:</p>
+<pre class="prettyprint"><code>'flash' in functions</code></pre></li>
+<li>Refact generic.py, remove <code>functions.flash</code> and <code>functions.get_fileserving</code> dependencies by default.</li>
+<li><p>Fix <code>yield</code> support in view function, you can also used in gevent environment, for example:</p>
+<pre class="prettyprint"><code>@expose('/test')
+def test():
+    yield "&lt;ul&gt;"
+    for i in range(10):
+        yield "&lt;li&gt;%d&lt;/li&gt;" % (i + 1)
+        sleep(1)
+    yield "&lt;/ul&gt;"</code></pre></li>
+<li>Fix <code>rawsql()</code> bug for different database engine</li>
+<li>Fix <code>jsonp()</code> dumps Chinese characters bug</li>
+<li><p>Add <code>trim_path()</code> function to <code>utils/common.py</code>, it can trim a file path to    limited length, for example:</p>
+<pre class="prettyprint"><code>&gt;&gt;&gt; a = '/project/apps/default/settings.ini'
+&gt;&gt;&gt; trim_path(a, 30)
+'.../apps/default/settings.ini'</code></pre>
+<p>Default limited length is 30.</p></li>
+<li><p>Add ORM connection information output when given <code>-v</code> option in command line. And   the password will be replace with <code>'*'</code>. For example:</p>
+<pre class="prettyprint"><code>$&gt;uliweb syncdb -v
+Connection : mysql://blog:***@localhost/blog?charset=utf8
+
+[default] Creating [1/1, blog] blog...EXISTED</code></pre></li>
+<li><p>Add multiple apps support for <code>makeapp</code> command, so you can use :</p>
+<pre class="prettyprint"><code>uliweb makeapp a b c</code></pre>
+<p>to create <code>a</code>, <code>b</code>, <code>c</code> apps at once time.</p></li>
+<li><p>Refactor <code>save_file()</code> process, add <code>headers</code> and <code>convertors</code> parameter.</p>
+<p><code>headers</code> used to create csv header instead of using column name, but you can create alias name like this:</p>
+<pre class="prettyprint"><code>User.c.username.label(u"Name")</code></pre>
+<p>and <code>convertors</code> used to convert column value, for example:</p>
+<pre class="prettyprint"><code>def name(value, data):
+    """
+    value is the column value
+    data is the current record object
+    """
+    return value + 'test'
+save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</code></pre></li>
+<li>Fix <code>call_view()</code> invoke <code>wrap_result</code> bug. Missing pass <code>handler</code> parameter to wrap_result.</li>
+</ul>
+<h2 id="title_1-2">0.2.3 Version<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
 <li>Update nginx support output, add proxy_set_header</li>
 <li>Add <code>save_file()</code> function to orm, so you can save select result to a csv file</li>
@@ -72,7 +122,7 @@
 <li>Fix i18n process, for project and apps extraction, it'll create application first, so that   user defined tag will be registered correctly. But user defined tag will be limited later.</li>
 <li>Add <code>walk_dirs()</code> to utils/common.py. This function can ignore some files and file ext,   and supports fnmatch pattern.</li>
 </ul>
-<h2 id="title_1-2">0.2.2 Version<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-3">0.2.2 Version<a class="anchor" href="#title_1-3">&para;</a></h2>
 <ul>
 <li>Add <code>clear()</code> to SortedDict</li>
 <li>Add protect for form to generic AddView and EditView, default is enabled, so   user can't submit a form multiple times.</li>
@@ -99,13 +149,13 @@
 <li>Fix rule process, add expose(replace, template) support</li>
 <li>Revert ORM.NULLABLE = True</li>
 </ul>
-<h2 id="title_1-3">0.2.1 Version<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-4">0.2.1 Version<a class="anchor" href="#title_1-4">&para;</a></h2>
 <ul>
 <li>Add <code>uliweb.utils.timeit</code> module, use can use @timeit(prompt) to calcalate the   time used about a code block</li>
 <li>change default file_serving action parameter value to <code>None</code></li>
 <li>Fix Reference validate bug</li>
 </ul>
-<h2 id="title_1-4">0.2 Version<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h2 id="title_1-5">0.2 Version<a class="anchor" href="#title_1-5">&para;</a></h2>
 <ul>
 <li>Fix auth.models <code>get_href</code> bug</li>
 <li>Change ORM <code>save()</code> process, it'll keep the manytomany data, before will   remove them from data</li>
@@ -135,7 +185,7 @@
 <li><code>make_application()</code> can reenter</li>
 <li>Add <code>ORM/MODELS_CONFIG</code> support</li>
 </ul>
-<h2 id="title_1-5">0.1.7 Version<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h2 id="title_1-6">0.1.7 Version<a class="anchor" href="#title_1-6">&para;</a></h2>
 <ul>
 <li>Fix <code>uliweb.contrib.tables</code> dbinit.py bug</li>
 <li>Improve generic command can process <code>camel_view</code> to <code>CamelView</code></li>
@@ -189,7 +239,7 @@
 <li>Upgrade werkzeug to 0.9.1</li>
 <li>Improve ssl options</li>
 </ul>
-<h2 id="title_1-6">0.1.6 Version<a class="anchor" href="#title_1-6">&para;</a></h2>
+<h2 id="title_1-7">0.1.6 Version<a class="anchor" href="#title_1-7">&para;</a></h2>
 <ul>
 <li>Add CSRF support thanks for Damon</li>
 <li>Add multiple lines comment tag <code>{{## ##}}</code> support to template</li>
@@ -251,7 +301,7 @@ table.end</code></pre></li>
 <pre class="prettyprint"><code>settings.APP_LAYOUTS.get('messages', 'layout.html')</code></pre>
 <p>  so you can still config app's layout template in settings.ini. Another way is   to replace app's layout template in a new app with the same filename, and then   install it after the original app in <code>INSTALLED_APPS</code>.</p></li>
 </ul>
-<h2 id="title_1-7">0.1.5 Version<a class="anchor" href="#title_1-7">&para;</a></h2>
+<h2 id="title_1-8">0.1.5 Version<a class="anchor" href="#title_1-8">&para;</a></h2>
 <ul>
 <li>Change cache settings, remove file_dir and lock_dir as 0.1.3 before</li>
 <li>Add more info about dispatch call exception output</li>
@@ -287,7 +337,7 @@ TABLENAME_CONVERTER = 'uliweb.utils.common.camel_to_'</code></pre>
 <li>Add alembic init command will drop <code>alembic_version</code> table</li>
 <li>Add DEBUG_CONSOLE config to seperate DebugApplication evalex parameter from DEBUG</li>
 </ul>
-<h2 id="title_1-8">0.1.4 Version<a class="anchor" href="#title_1-8">&para;</a></h2>
+<h2 id="title_1-9">0.1.4 Version<a class="anchor" href="#title_1-9">&para;</a></h2>
 <ul>
 <li>Fix utils/date.to_datetime() support %f(misrosecond) format</li>
 <li>Add microsecond format support in utils/date.py</li>
@@ -319,7 +369,7 @@ appname = 'layout.html'</code></pre>
 <li>Fix log format bug</li>
 <li>Fix pysimplesoap bool type bug <a href="http://code.google.com/p/pysimplesoap/issues/attachmentText?id=69&aid=690001000&name=simplexml.py.patch&token=F8TXcyAoCDS5vScp5MiFEccN6J4%3A1345507177742" class="outter">http://code.google.com/p/pysimplesoap/issues/attachmentText?id=69&aid=690001000&name=simplexml.py.patch&token=F8TXcyAoCDS5vScp5MiFEccN6J4%3A1345507177742</a></li>
 </ul>
-<h2 id="title_1-9">0.1.3 Version<a class="anchor" href="#title_1-9">&para;</a></h2>
+<h2 id="title_1-10">0.1.3 Version<a class="anchor" href="#title_1-10">&para;</a></h2>
 <ul>
 <li>Fix loadtable bug for PickleType type, using inspecttable instead, so    PickleyType will be BLOB type.</li>
 <li><p>Improve template process:</p>
@@ -348,7 +398,7 @@ appname = 'layout.html'</code></pre>
 <li>Add object() to ListView</li>
 <li>Upgrade pysimplesoap to 1.05a</li>
 </ul>
-<h2 id="title_1-10">0.1.2 Version<a class="anchor" href="#title_1-10">&para;</a></h2>
+<h2 id="title_1-11">0.1.2 Version<a class="anchor" href="#title_1-11">&para;</a></h2>
 <ul>
 <li><p>Fix permission tag, and change PERMISSION definitions in settings.ini, now the    PERMISSION definition can use dict datatype, just like:</p>
 <pre class="prettyprint"><code>[PERMISSION]
@@ -372,11 +422,11 @@ PERM = {'name':'PERM', 'roles':['a', 'b'], 'description':'PERM}</code></pre>
 <li>Add _class and id parameter to Form, and fix form_class process</li>
 <li>Refactor template, add BaseBlockNode class, and add end() process for block type node.</li>
 </ul>
-<h2 id="title_1-11">0.1.1 Version<a class="anchor" href="#title_1-11">&para;</a></h2>
+<h2 id="title_1-12">0.1.1 Version<a class="anchor" href="#title_1-12">&para;</a></h2>
 <ul>
 <li>Add BAE(Baidu Application Engine) and Heroku support</li>
 </ul>
-<h2 id="title_1-12">0.0.1 Version<a class="anchor" href="#title_1-12">&para;</a></h2>
+<h2 id="title_1-13">0.0.1 Version<a class="anchor" href="#title_1-13">&para;</a></h2>
 <ul>
 <li>Support i18n language setting key in query_string, and you can also configure    keyword in settings.ini.</li>
 </ul>

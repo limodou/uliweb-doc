@@ -272,4 +272,5 @@ Connection : mysql://blog:***@localhost/blog?charset=utf8
 ```
 
 我们可以看到数据库是 mysql ，密码使用星号隐藏了。一共有5张表，因为都不存在所以
-最后都是 `CREATED` 的状态。
+最后都是 `CREATED` 的状态。这里 blog 有两张表，其它三张是因为配置了 uliweb.contrib.auth 
+所带的表。

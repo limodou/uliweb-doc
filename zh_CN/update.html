@@ -63,7 +63,57 @@
 
         
         <h1 id="title_1">Uliweb 更新日志<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">0.2.3<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">0.2.4<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ul>
+<li><p>修正 ORM 与 SQLAlchemy 0.9.1 不兼容的Bug. 旧的写法:</p>
+<pre class="prettyprint "><code>cond = None
+cond = (Blog.c.id==5) &amp; None</code></pre>
+<p>在 0.9.1 中将不是正确的，因为 None 不会被忽略掉（0.8.x 只在 and 时会这样）， 所以你可以将 <code>cond = None</code> 改为：</p>
+<pre class="prettyprint "><code>from sqlalchemy.sql import true
+cond = true()</code></pre>
+<p>或者</p>
+<pre class="prettyprint "><code>from uliweb.orm import true
+cond = true()</code></pre></li>
+<li><p>向 functions 中添加 <code>__contains__</code> , 这样如果要检查一个 API 是否在 functions   中存在，只要:</p>
+<pre class="prettyprint "><code>'flash' in functions</code></pre></li>
+<li>重构 generic.py, 删除对 <code>functions.flash</code> 和 <code>functions.get_fileserving</code>    的缺省依赖。</li>
+<li><p>修复在 view 函数中对 <code>yield</code> 的支持， 你还可以在 gevent 环境中使用，例如：</p>
+<pre class="prettyprint "><code>@expose('/test')
+def test():
+    yield "&lt;ul&gt;"
+    for i in range(10):
+        yield "&lt;li&gt;%d&lt;/li&gt;" % (i + 1)
+        sleep(1)
+    yield "&lt;/ul&gt;"</code></pre></li>
+<li>修复 <code>rawsql()</code> 在不同数据库引擎中出错的 bug</li>
+<li>修复 <code>jsonp()</code> 在处理中文时的 bug</li>
+<li><p>添加 <code>trim_path()</code> 函数向 <code>utils/common.py</code>这，可以用它将一个路径处理为指定长   度，过长的部分会转为 <code>...</code></p>
+<pre class="prettyprint "><code>&gt;&gt;&gt; a = '/project/apps/default/settings.ini'
+&gt;&gt;&gt; trim_path(a, 30)
+'.../apps/default/settings.ini'</code></pre>
+<p>缺省的限制长度是 30。</p></li>
+<li><p>在命令行使用了 <code>-v</code> 参数时，将输出 ORM 连接信息。并且口令将会替換为 <code>'*'</code> ，例如：</p>
+<pre class="prettyprint "><code>$&gt;uliweb syncdb -v
+Connection : mysql://blog:***@localhost/blog?charset=utf8
+
+[default] Creating [1/1, blog] blog...EXISTED</code></pre></li>
+<li><p>添加 <code>makeapp</code> 命令可以一次创建多个 app 的支持，如使用：</p>
+<pre class="prettyprint "><code>uliweb makeapp a b c</code></pre>
+<p>一次创建 <code>a</code>, <code>b</code>, <code>c</code> app。</p></li>
+<li><p>重构 <code>save_file()</code> 的处理, 添加 <code>headers</code> 和 <code>convertors</code> 参数。</p>
+<p><code>headers</code> 用于创建 csv 的头时，以替換原来字段的名字，但是你也可以象下面来 创建别名：</p>
+<pre class="prettyprint "><code>User.c.username.label(u"Name")</code></pre>
+<p>而 <code>convertors</code> 用于转換字段的值，例如：</p>
+<pre class="prettyprint "><code>def name(value, data):
+    """
+    value is the column value
+    data is the current record object
+    """
+    return value + 'test'
+save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</code></pre></li>
+<li>修复 <code>call_view()</code> 调用 <code>wrap_result</code> bug。</li>
+</ul>
+<h2 id="title_1-2">0.2.3<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
 <li>更新nginx配置文件的输出模板，添加 proxy_set_header 指令</li>
 <li>向 ORM 添加 save_file() 方法，你可以用它保存select之后的结果集到一个csv文件中</li>
@@ -71,7 +121,7 @@
 <li>修改i18n处理，对于项目和apps方式的抽取，它将首先启动应用，这样是为了让自定义tag可以起作用。但是建议用户尽量不用自定义tag，因为模板中可以直接写python代码。</li>
 <li>向utils/common.py中添加walk_dirs()方法，这个函数可以用来遍历目录，同时可以支持对文件名和后缀的过滤功能。</li>
 </ul>
-<h2 id="title_1-2">0.2.2<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-3">0.2.2<a class="anchor" href="#title_1-3">&para;</a></h2>
 <ul>
 <li>向 <code>SortedDict</code> 添加 <code>clear()</code> 函数</li>
 <li>向 AddView, EditView 添加提交保护，缺省为不启动。它可以用来防止多次提交。但对于   前端建议再増加相关的措施，比如在提交时将按钮禁掉。如果想要其生效，需要传入 <code>protect=True</code> 参数。</li>
@@ -108,13 +158,13 @@ path =</code></pre>
 <li>向expose()増加template参数，这样除了可以在view函数中指定 <code>response.tmplate = 'xxxx.html</code> 外   还可以直接在expose上指定。执行优先级，以response.template最高。</li>
 <li>恢复 ORM 配置中关于 <code>NULLABLE = False</code> 的配置。这样字段缺省允许为 null。</li>
 </ul>
-<h2 id="title_1-3">0.2.1<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-4">0.2.1<a class="anchor" href="#title_1-4">&para;</a></h2>
 <ul>
 <li>添加 <code>uliweb.utils.timeit</code> 模块，用户可以使用 <code>with timeit(prompt):</code> 来计算下面   代码的执行时间</li>
 <li>修改 <code>file_serving()</code> 处理的 <code>action</code> 缺省值为 <code>None</code>. 这样缺省的 <code>/uploads</code> 文件   服务不再是默认为下载。</li>
 <li>修复ORM的Reference的validate问题。它影响Reference的默认缺省值。</li>
 </ul>
-<h2 id="title_1-4">0.2<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h2 id="title_1-5">0.2<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>修复 auth.models <code>get_href</code> 错误</li>
@@ -145,7 +195,7 @@ path =</code></pre>
 <li><code>make_application()</code> 可以重入。</li>
 <li>添加 <code>ORM/MODELS_CONFIG</code> 配置支持。</li>
 </ul>
-<h2 id="title_1-5">0.1.7<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h2 id="title_1-6">0.1.7<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>増加 pretty_dict 函数，可以以缩近的形式打印dict数据结构，主要是为了输出。</li>
@@ -166,7 +216,7 @@ path =</code></pre>
 <li>升级werkzeug的版本到0.9.1</li>
 <li>増加一个colorloged.py模块，可以用它来输出带颜色的日志信息。</li>
 </ul>
-<h2 id="title_1-6">0.1.6<a class="anchor" href="#title_1-6">&para;</a></h2>
+<h2 id="title_1-7">0.1.6<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>添加CSRF APP，可以支持CSRF的保护</li>
@@ -218,7 +268,7 @@ des.descrypt(d)</code></pre></li>
 <pre class="prettyprint "><code>{{extend settings.APP_LAYOUTS.get('messages', 'layout.html')}}</code></pre>
 <p>因此仍然可以把要替換的模板配置到settings.ini中。另一种办法是在新的app中直接定义一个要替換的同名模板，以实现新的要求。</p></li>
 </ul>
-<h2 id="title_1-7">0.1.5<a class="anchor" href="#title_1-7">&para;</a></h2>
+<h2 id="title_1-8">0.1.5<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>修改cache设置，移除file_dir和lock_dir</li>
@@ -241,7 +291,7 @@ des.descrypt(d)</code></pre></li>
 <li>在uliweb中添加validator，使用[VALIDATORS]机制</li>
 <li>在generic.py中添加IS_LENGTH_LESSTHAN，如果max_length存在。</li>
 </ul>
-<h2 id="title_1-8">0.1.4<a class="anchor" href="#title_1-8">&para;</a></h2>
+<h2 id="title_1-9">0.1.4<a class="anchor" href="#title_1-9">&para;</a></h2>
 <p>功能优化</p>
 <ul>
 <li>向utils/date増加毫秒格式的支持</li>
