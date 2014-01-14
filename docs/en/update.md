@@ -1,6 +1,101 @@
 Uliweb Change Log
 =====================
 
+0.2.4 Version
+-----------------
+
+* Fix ORM is not compatible with SQLAlchemy 0.9.1. Old style:
+
+    ```
+    cond = None
+    cond = (Blog.c.id==5) & None
+    ```
+    
+    will not right in 0.9.1, because None will not be skipped, so you can change
+    above code `cond = None` to :
+    
+    ```
+    from sqlalchemy.sql import true
+    cond = true()
+    ``` 
+    
+    or
+    
+    ```
+    from uliweb.orm import true
+    cond = true()
+    ```
+    
+* add `__contains__` to functions, so you can test if an API is already defined, just
+  use:
+
+    ```
+    'flash' in functions
+    ```
+* Refact generic.py, remove `functions.flash` and `functions.get_fileserving` dependencies by default. 
+
+* Fix `yield` support in view function, you can also used in gevent environment, for example:
+
+    ```
+    @expose('/test')
+    def test():
+        yield "<ul>"
+        for i in range(10):
+            yield "<li>%d</li>" % (i + 1)
+            sleep(1)
+        yield "</ul>"
+    ```
+
+* Fix `rawsql()` bug for different database engine
+* Fix `jsonp()` dumps Chinese characters bug
+* Add `trim_path()` function to `utils/common.py`, it can trim a file path to 
+  limited length, for example:
+
+    ```
+    >>> a = '/project/apps/default/settings.ini'
+    >>> trim_path(a, 30)
+    '.../apps/default/settings.ini'
+    ```
+    
+    Default limited length is 30.
+* Add ORM connection information output when given `-v` option in command line. And
+  the password will be replace with `'*'`. For example:
+
+    ```
+    $>uliweb syncdb -v
+    Connection : mysql://blog:***@localhost/blog?charset=utf8
+    
+    [default] Creating [1/1, blog] blog...EXISTED
+    ```
+* Add multiple apps support for `makeapp` command, so you can use :
+
+    ```
+    uliweb makeapp a b c
+    ```
+    
+    to create `a`, `b`, `c` apps at once time.
+* Refactor `save_file()` process, add `headers` and `convertors` parameter.
+
+    `headers` used to create csv header instead of using column name, but you can
+    create alias name like this:
+    
+    ```
+    User.c.username.label(u"Name")
+    ```
+    
+    and `convertors` used to convert column value, for example:
+    
+    ```
+    def name(value, data):
+        """
+        value is the column value
+        data is the current record object
+        """
+        return value + 'test'
+    save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})
+    ```
+* Fix `call_view()` invoke `wrap_result` bug. Missing pass `handler` parameter to wrap_result.
+
 0.2.3 Version
 -----------------
 
