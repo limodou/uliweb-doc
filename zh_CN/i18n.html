@@ -76,7 +76,12 @@ SUPPORT_LANGUAGES = []</code></pre>
 <ul>
 <li><code>LANGUAGE_COOKIE_NAME</code> 是用来将语言的选择存在cookie中使用的，一般不需要修改。</li>
 <li><code>LANGUAGE_CODE</code> 是表示缺省的语言，缺省为英文。</li>
-<li><code>LOCALE_DIRS</code> 可以用来设置语言文件所在的目录，可以是多个。同时在其中还可以定     义一些特殊的变量，如: <code>${PROJECT}</code> 表示项目目录， <code>${plugs}</code> 表示plugs模块所在的目录。     所以通过这些变量可以引用一些与项目有关的相对路径。</li>
+<li><p><code>LOCALE_DIRS</code> 可以用来设置语言文件所在的目录，可以是多个。同时在其中还可以定     义一些特殊的变量，如: <code>$[ROJECT]</code> 表示项目目录， <code>$[plugs]</code> 表示plugs模块所在的目录。     所以通过这些变量可以引用一些与项目有关的相对路径。</p>
+<div class="ui warning message">
+<p>在 <code>0.2.5版本</code> 之前，上面变量的写法是 <code>${PROJECT}</code> 。请注意Uliweb的版本和写法的变化。</p>
+
+</div>
+<p>语言文件目录结构应该为： <code>path/locale/LC_MESSAGES/xxxx</code> ，你只要把path设置 上就可以了。</p></li>
 <li><code>SUPPORT_LANGUAGES</code> 表示网站所支持的语言种类。除原本开发所使用的语言外，如果浏     览器自动希望某种语言，并且这种语言在 <code>SUPPORT_LANGUAGES</code> 所支持的范围之内时，才会     生效。</li>
 </ul>
 <p>一旦配置了I18N，则会自动应用 <code>'uliweb.i18n.middle_i18n.I18nMiddle'</code> 这个middleware， 这个可以在uliweb.contrib.i18n/settings.ini中看到。</p>

@@ -75,6 +75,10 @@ pip install MySQL-python</code></pre>
 <p>如果觉得上面的安装比较麻烦，还可以在命令行执行：</p>
 <pre class="prettyprint "><code>uliweb install uliweb.contrib.orm</code></pre>
 <p>这样，会自动根据 uliweb.contrib.orm 下的 <code>requirements.txt</code> 来安装以上三个包。</p>
+<div class="ui info message">
+<p>如果是在Linux下安装MySQL-python，需要安装python-devel和mysql-devel的包，因为有 一些C模块需要编译。</p>
+
+</div>
 <h2 id="title_1-2">使用Mysql数据库<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>在安装了 <code>uliweb.contrib.orm</code> 之后，缺省已经有了数据库的设置，缺省使用 sqlite 。不过 如果数据库发生变化，sqlite不支持 <code>alert table</code> 这样的命令，所以不能很方便使用 alembic来进行表结构迁移。所以我们把数据库换成 Mysql 的。我们可以在 local_settings.ini 中进行配置，这样不影响别人使用你的代码。</p>
 <p>在local_settings.ini中添加以下内容：</p>
