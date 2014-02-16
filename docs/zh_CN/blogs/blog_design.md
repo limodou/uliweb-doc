@@ -29,6 +29,11 @@ uliweb install uliweb.contrib.orm
 
 这样，会自动根据 uliweb.contrib.orm 下的 `requirements.txt` 来安装以上三个包。
 
+{% alert class=info %}
+如果是在Linux下安装MySQL-python，需要安装python-devel和mysql-devel的包，因为有
+一些C模块需要编译。
+{% endalert %}
+
 ## 使用Mysql数据库
 
 在安装了 `uliweb.contrib.orm` 之后，缺省已经有了数据库的设置，缺省使用 sqlite 。不过

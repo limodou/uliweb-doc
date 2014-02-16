@@ -87,6 +87,7 @@ app_template.md
 app_upload.md
 app_csrf.md
 app_secretkey.md
+app/objcache.md
 {% endtoc %}
 
 ### Plugs使用
