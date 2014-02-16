@@ -96,7 +96,7 @@ fetch_obj
     def get_object(table, id, cache=False, fields=None, use_local=False, engine_name=None)
 ```
 
-`get_object()` 有几下几个功能：
+`get_object()` 有以下几个功能：
 
 1. 从cache中读取某条记录，如果不存在，则直接从数据库中读取
 2. 不使用cache, 直接从数据库中读取记录的功能

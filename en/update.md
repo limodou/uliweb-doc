@@ -1,6 +1,65 @@
 Uliweb Change Log
 =====================
 
+## 0.2.5
+
+* Fix config template and add `uwsgi` shell support
+* Add environment variables support in `settings.ini`. For example, there is a 
+  `MYSQL_PORT` defined in environment, so you can defined something in settings.ini:
+
+    ```
+    [DEFAULT]
+    port = $MYSQL_PORT
+    port_str = '${MYSQL_PORT}'
+    ```
+    
+    `$MYSQL_PORT` is the same as `${MYSQL_PORT}`. Just when the variable follows
+    identifier, so `${}` can easily separate between them.
+* Add `STATIC_COMBINE_CONFIG` configuration, you can toggle static combination with it.
+  Default is False. The configuration is:
+
+    ```
+    [STATIC_COMBINE_CONFIG]
+    enabled = False
+    ```
+* Fix objcache app bug, if not fields defined in settings, it'll use all columns of table
+* Add `get_table` function to `functions`, you can use it to get table object. Used
+  in `uliweb.contrib.tables` app.
+* Add `local_cache` to local in SimpleFrame, and it can be used to store require relative
+  cache values, and it'll be empty after each require process.
+* Improve `get_object()` function in ORM, add `use_local` parameter, so the cached
+  value will be checked in `local_cache` first, and also save it in local_cache when 
+  get a value from cache or database.
+* Improve objcache config format, you can also define table like this:
+
+    ```
+    user = {'fields':['username'], 'expire':expire_time, 'key':callable(instance)|key_field}
+    #or
+    user = ['username', 'nickname']
+    #or
+    user = 
+    ```
+    
+    If no fields defined, it'll use all fields of Model. And if expire is 0 or
+    not defined, it'll not expired at all.
+    
+    `key` will be used to replace `id`, if you want another key value, and it
+    can be also a callable object, it'll receive an instance of Model parameter,
+    so you can create any key value as you want.
+* Add Optimistic Concurrency Control support for ORM, so you should defined `version`
+  Field first in Model, then when you save the object, you should use:
+
+    ```
+    obj.save(occ=True)
+    ```
+    
+    If there is already other operation saved the record, it'll raise an `SaveError`
+    Exception by default, because the version has been changed. You can also pass:
+    
+    * `occ_fieldname` used to defined the version fieldname, default is `version`
+    * `occ_exception` used to enabled Exception raised, default is `True`, if you 
+      set it `False` it'll return False, but not raise an Exception.
+
 0.2.4 Version
 -----------------
 

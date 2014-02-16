@@ -118,7 +118,7 @@ tablename = {'fields':[field1, field2, ...], 'expire':xxx,
 </dl><h2 id="title_1-2">使用示例<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>目前uliweb还没有提供自动cache的功能，所以需要显示地使用API来进行处理。</p>
 <pre class="prettyprint "><code>    def get_object(table, id, cache=False, fields=None, use_local=False, engine_name=None)</code></pre>
-<p><code>get_object()</code> 有几下几个功能：</p>
+<p><code>get_object()</code> 有以下几个功能：</p>
 <ol>
 <li>从cache中读取某条记录，如果不存在，则直接从数据库中读取</li>
 <li>不使用cache, 直接从数据库中读取记录的功能</li>
