@@ -66,7 +66,7 @@
         
         <h1 id="title_1">Simple Todo (Uliweb 版本) 之 高级篇<a class="anchor" href="#title_1">&para;</a></h1>
 <p>本版本是从 <a href="http://simple-is-better.com/news/detail-309" class="outter">http://simple-is-better.com/news/detail-309</a> 来的，并且已经使用Uliweb 实现了一个 <a href="http://limodou.github.com/uliweb-doc/basic.html" class="outter">基础版本</a> ，不过 这个基础版本讲述的是最基本的Uliweb的用法，因此叫基础篇。 在这个高级篇中，我希望向大家介绍更加高级一些的内容。其中有些功能要依赖于plugs和 generic的一些功能。</p>
-<p>plugs是我在开发时把认为可以复用的一些app发布出来，供大家使用。它收集了象基本的 页面布局，通用的view函数，jquery相关的一些界面代码和控件，以及其它的一些配套 功能。但是在这个教程中只会使用部分功能。plugs本身是需要安装，你可以直接下载源码 进行安装，也可以通过  或  来安装。不过因 为目前plugs还在不断优化中，因此建议直接通过下载源码来安装。现在plugs可以在 <a href="http://code.google.com/p/plugs" class="outter">http://code.google.com/p/plugs</a> 和 <a href="https://github.com/limodou/plugs" class="outter">https://github.com/limodou/plugs</a> 都可以找到。</p>
+<p>plugs是我在开发时把认为可以复用的一些app发布出来，供大家使用。它收集了象基本的 页面布局，通用的view函数，jquery相关的一些界面代码和控件，以及其它的一些配套 功能。但是在这个教程中只会使用部分功能。plugs本身是需要安装，你可以直接下载源码 进行安装，也可以通过 <code>easy_install plugs</code> 或 <code>pip install plugs</code> 来安装。不过因 为目前plugs还在不断优化中，因此建议直接通过下载源码来安装。现在plugs可以在 <a href="http://code.google.com/p/plugs" class="outter">http://code.google.com/p/plugs</a> 和 <a href="https://github.com/limodou/plugs" class="outter">https://github.com/limodou/plugs</a> 都可以找到。</p>
 <p>generic在plugs中存在一个app，它提供了封装好的view函数，可以直接使用。类似于django 的generic_view的功能。它提供了class-based的view和function-based的view方法，你可 以根据需要来使用。</p>
 <p>同时在uliweb中还提供了generic.py模块，它提供了更底层的view的调用，分别对应于: list, add, edit, view, delete。而plugs中的generic又是使用了generic.py模块的功能 来实现。generic.py的功能我认为非常强大，我会用专门的文档来进行介绍。</p>
 <h2 id="title_1-1">构建流程<a class="anchor" href="#title_1-1">&para;</a></h2>

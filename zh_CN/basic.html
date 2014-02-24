@@ -167,7 +167,7 @@ def index():
     return {}</code></pre>
 <p>上面的代码，将定义一个views函数。使用@expose来定义它对应的url。这是与web.py和django 不同的地方。在uliweb中，url一般是定义在views.py文件中的，通过decorator与view函数 进行绑定。</p>
 <p>上面index()将返回一个{}。那么表示它将使用缺省的模板，模板名就和view函数名一样， 在这里是index。所以我们还需要在todo/templates中定义一个index.html。</p>
-<p>本来，index.html中需要定义如果展示todo的内容，但是因为目前数据库等内容还没有创建， 所以我们只想显示空的内容。</p>
+<p>本来，index.html中需要定义如何展示todo的内容，但是因为目前数据库等内容还没有创建， 所以我们只想显示空的内容。</p>
 <p>在todo/templates下创建index.html，内容为:</p>
 <pre class="prettyprint "><code>{{extend "layout.html"}}</code></pre>
 <p>的确，目前只有这一行代码。它表示从layout.html这个父模板中进行继承。</p>
