@@ -205,7 +205,7 @@ def index():
 上面index()将返回一个{}。那么表示它将使用缺省的模板，模板名就和view函数名一样，
 在这里是index。所以我们还需要在todo/templates中定义一个index.html。
 
-本来，index.html中需要定义如果展示todo的内容，但是因为目前数据库等内容还没有创建，
+本来，index.html中需要定义如何展示todo的内容，但是因为目前数据库等内容还没有创建，
 所以我们只想显示空的内容。
 
 在todo/templates下创建index.html，内容为:
