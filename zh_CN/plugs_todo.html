@@ -120,7 +120,7 @@ from uliweb import expose
 @expose('/')
 def index():
     return {}</code></pre>
-<p>然后我们在plugs的layout.html的基础上，来创建一个通用的基础模板，如命名为basel.html, 内容如下:</p>
+<p>然后我们在plugs的layout.html的基础上，来创建一个通用的基础模板，如命名为base.html, 内容如下:</p>
 <pre class="prettyprint "><code>{{extend "layout.html"}}
 
 {{block userinfo}}{{end}}</code></pre>
