@@ -116,7 +116,7 @@ def index():
     return {}
 ```
 
-然后我们在plugs的layout.html的基础上，来创建一个通用的基础模板，如命名为basel.html,
+然后我们在plugs的layout.html的基础上，来创建一个通用的基础模板，如命名为base.html,
 内容如下:
 
 
