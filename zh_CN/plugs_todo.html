@@ -92,7 +92,7 @@ CONNECTION = 'sqlite:///database.db'
 AUTO_CREATE = False
 
 [I18N]
-LOCALE_DIRS = ['${plugs}']
+LOCALE_DIRS = ['$[plugs]']
 SUPPORT_LANGUAGES = ['en', 'zh_CN']</code></pre>
 <p>ORM段中我使用了sqlite数据库，同时关闭自动创建表的选项。在 <code>INSTALLED_APPS</code> 中加入 了'plugs.layout'和'todo'这两个app。由于使用了plugs，它是支持i18n的处理，因此上面 I18N一段就是相关的配置。在这个小网站，我们可以使用英文和中文。</p>
 <h2 id="title_1-3">基本布局<a class="anchor" href="#title_1-3">&para;</a></h2>

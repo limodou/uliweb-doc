@@ -58,7 +58,7 @@ CONNECTION = 'sqlite:///database.db'
 AUTO_CREATE = False
 
 [I18N]
-LOCALE_DIRS = ['${plugs}']
+LOCALE_DIRS = ['$[plugs]']
 SUPPORT_LANGUAGES = ['en', 'zh_CN']
 ```
 
