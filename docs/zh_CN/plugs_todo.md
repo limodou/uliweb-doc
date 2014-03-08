@@ -58,7 +58,7 @@ CONNECTION = 'sqlite:///database.db'
 AUTO_CREATE = False
 
 [I18N]
-LOCALE_DIRS = ['${plugs}']
+LOCALE_DIRS = ['$[plugs]']
 SUPPORT_LANGUAGES = ['en', 'zh_CN']
 ```
 
@@ -145,8 +145,7 @@ uliweb runserver
 
 如果没有错误，可以通过访问 [http://localhost:8000](http://localhost:8000) 看到如下界面:
 
-
-
+![image](_static/plugs_todo_first.png)
 
 ## 创建Todo的Model
 

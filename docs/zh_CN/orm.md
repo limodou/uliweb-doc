@@ -350,6 +350,13 @@ Python type和字段类的对应关系为:
 
 缺省情况下，uliorm会自动为你添加一个 `id` 字段，而你并不需要在Model中进行定义。
 
+如果你不想自动定义ID，则可以在Model添加一个类属性 `__without_id__` 则 uliorm
+将不会自动创建 id 属性。并且，当你自行定义了一个主键，id也将不自动定义。如：
+
+```
+user_id = Field(int, primary_key=True, autoincream=True)
+```
+
 
 ### Property 构造函数
 
