@@ -63,7 +63,24 @@
 
         
         <h1 id="title_1">Uliweb 更新日志<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">0.2.5<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">0.2.6<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ul>
+<li>増加在定义关系字段时，当引用Model不是字符串而是Model类时发出警告的提示。需   使用字符串名称。</li>
+<li>修复在 ListView 和 SelectListView 中对 <code>manual</code> 和 <code>total</code> 处理的Bug。</li>
+<li>修复 <code>rawsql</code> bug。</li>
+<li>向 Generic ListView 中増加使用 <code>get_object</code> 的调用，使用缓存机制来处理引用对象。</li>
+<li>修复 <code>get_cached()</code> Bug。</li>
+<li>修复在 Generic 中 AddView 和 EditView 中处理 <code>process_files()</code> 的Bug。</li>
+<li>在进入 Shell 环境前増加对调用 <code>readline</code> 的支持。</li>
+<li>将乐观锁相关的参数由 <code>occ</code> 改为 <code>version</code> 。</li>
+<li>修复 ManyToMany 缓存值在保存时没有正确使用的Bug（由于没有存入 <code>_old_values</code> ）。</li>
+<li><p>当在 Model 中定义了主键时，将不再自动创建 <code>id</code> 字段，如：</p>
+<pre class="prettyprint "><code>user_id = Field(int, primary_key=True, autoincrement=True)</code></pre></li>
+<li>修复 <code>sqldot</code> 命令在处理 settings.ini 中定义的 Model 名称与 <code>__tablename__</code> 不一致   时的Bug。</li>
+<li>优化 <code>sqlhtml</code> 文档输出，増加 Model 描述及索引的输出。</li>
+<li>将 <code>runserver</code> 的日志输出改为缺省是彩色输出，可以使用 <code>--nocolor</code> 关闭。</li>
+</ul>
+<h2 id="title_1-2">0.2.5<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
 <li>修复 config 的模板，添加 <code>uwsgi</code> 的shell方式支持</li>
 <li><p>向 <code>settings.ini</code> 中添加对环境变量的支持。例如，在环境变量中定义了 <code>MYSQL_PORT</code>,   你可以在 settings.ini 中定义：</p>
@@ -94,7 +111,7 @@ user =</code></pre>
 <li><code>occ_exception</code> 用来控制是否允许引发异常，缺省为 <code>True</code>.</li>
 </ul></li>
 </ul>
-<h2 id="title_1-2">0.2.4<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-3">0.2.4<a class="anchor" href="#title_1-3">&para;</a></h2>
 <ul>
 <li><p>修正 ORM 与 SQLAlchemy 0.9.1 不兼容的Bug. 旧的写法:</p>
 <pre class="prettyprint "><code>cond = None
@@ -144,7 +161,7 @@ Connection : mysql://blog:***@localhost/blog?charset=utf8
 save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</code></pre></li>
 <li>修复 <code>call_view()</code> 调用 <code>wrap_result</code> bug。</li>
 </ul>
-<h2 id="title_1-3">0.2.3<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-4">0.2.3<a class="anchor" href="#title_1-4">&para;</a></h2>
 <ul>
 <li>更新nginx配置文件的输出模板，添加 proxy_set_header 指令</li>
 <li>向 ORM 添加 save_file() 方法，你可以用它保存select之后的结果集到一个csv文件中</li>
@@ -152,7 +169,7 @@ save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</cod
 <li>修改i18n处理，对于项目和apps方式的抽取，它将首先启动应用，这样是为了让自定义tag可以起作用。但是建议用户尽量不用自定义tag，因为模板中可以直接写python代码。</li>
 <li>向utils/common.py中添加walk_dirs()方法，这个函数可以用来遍历目录，同时可以支持对文件名和后缀的过滤功能。</li>
 </ul>
-<h2 id="title_1-4">0.2.2<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h2 id="title_1-5">0.2.2<a class="anchor" href="#title_1-5">&para;</a></h2>
 <ul>
 <li>向 <code>SortedDict</code> 添加 <code>clear()</code> 函数</li>
 <li>向 AddView, EditView 添加提交保护，缺省为不启动。它可以用来防止多次提交。但对于   前端建议再増加相关的措施，比如在提交时将按钮禁掉。如果想要其生效，需要传入 <code>protect=True</code> 参数。</li>
@@ -189,13 +206,13 @@ path =</code></pre>
 <li>向expose()増加template参数，这样除了可以在view函数中指定 <code>response.tmplate = 'xxxx.html</code> 外   还可以直接在expose上指定。执行优先级，以response.template最高。</li>
 <li>恢复 ORM 配置中关于 <code>NULLABLE = False</code> 的配置。这样字段缺省允许为 null。</li>
 </ul>
-<h2 id="title_1-5">0.2.1<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h2 id="title_1-6">0.2.1<a class="anchor" href="#title_1-6">&para;</a></h2>
 <ul>
 <li>添加 <code>uliweb.utils.timeit</code> 模块，用户可以使用 <code>with timeit(prompt):</code> 来计算下面   代码的执行时间</li>
 <li>修改 <code>file_serving()</code> 处理的 <code>action</code> 缺省值为 <code>None</code>. 这样缺省的 <code>/uploads</code> 文件   服务不再是默认为下载。</li>
 <li>修复ORM的Reference的validate问题。它影响Reference的默认缺省值。</li>
 </ul>
-<h2 id="title_1-6">0.2<a class="anchor" href="#title_1-6">&para;</a></h2>
+<h2 id="title_1-7">0.2<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>修复 auth.models <code>get_href</code> 错误</li>
@@ -226,7 +243,7 @@ path =</code></pre>
 <li><code>make_application()</code> 可以重入。</li>
 <li>添加 <code>ORM/MODELS_CONFIG</code> 配置支持。</li>
 </ul>
-<h2 id="title_1-7">0.1.7<a class="anchor" href="#title_1-7">&para;</a></h2>
+<h2 id="title_1-8">0.1.7<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>増加 pretty_dict 函数，可以以缩近的形式打印dict数据结构，主要是为了输出。</li>
@@ -247,7 +264,7 @@ path =</code></pre>
 <li>升级werkzeug的版本到0.9.1</li>
 <li>増加一个colorloged.py模块，可以用它来输出带颜色的日志信息。</li>
 </ul>
-<h2 id="title_1-8">0.1.6<a class="anchor" href="#title_1-8">&para;</a></h2>
+<h2 id="title_1-9">0.1.6<a class="anchor" href="#title_1-9">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>添加CSRF APP，可以支持CSRF的保护</li>
@@ -299,7 +316,7 @@ des.descrypt(d)</code></pre></li>
 <pre class="prettyprint "><code>{{extend settings.APP_LAYOUTS.get('messages', 'layout.html')}}</code></pre>
 <p>因此仍然可以把要替換的模板配置到settings.ini中。另一种办法是在新的app中直接定义一个要替換的同名模板，以实现新的要求。</p></li>
 </ul>
-<h2 id="title_1-9">0.1.5<a class="anchor" href="#title_1-9">&para;</a></h2>
+<h2 id="title_1-10">0.1.5<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>更新内容</p>
 <ul>
 <li>修改cache设置，移除file_dir和lock_dir</li>
@@ -322,7 +339,7 @@ des.descrypt(d)</code></pre></li>
 <li>在uliweb中添加validator，使用[VALIDATORS]机制</li>
 <li>在generic.py中添加IS_LENGTH_LESSTHAN，如果max_length存在。</li>
 </ul>
-<h2 id="title_1-10">0.1.4<a class="anchor" href="#title_1-10">&para;</a></h2>
+<h2 id="title_1-11">0.1.4<a class="anchor" href="#title_1-11">&para;</a></h2>
 <p>功能优化</p>
 <ul>
 <li>向utils/date増加毫秒格式的支持</li>

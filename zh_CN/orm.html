@@ -250,6 +250,8 @@ user = {'__mapping_only__':True}</code></pre>
 <p>小写的，都是Python内置的类型或类。大写的都是uliorm为了方便记忆而创建的。而上面 看到的关于Node的示例就是使用Field来定义字段的。</p>
 <h3 id="title_1-3-9">ID 属性<a class="anchor" href="#title_1-3-9">&para;</a></h3>
 <p>缺省情况下，uliorm会自动为你添加一个 <code>id</code> 字段，而你并不需要在Model中进行定义。</p>
+<p>如果你不想自动定义ID，则可以在Model添加一个类属性 <code>__without_id__</code> 则 uliorm 将不会自动创建 id 属性。并且，当你自行定义了一个主键，id也将不自动定义。如：</p>
+<pre class="prettyprint "><code>user_id = Field(int, primary_key=True, autoincream=True)</code></pre>
 <h3 id="title_1-3-10">Property 构造函数<a class="anchor" href="#title_1-3-10">&para;</a></h3>
 <p>Property 其它所有字段类的基类。所以它的一些属性和方法将会被派生类使用到，它的定 义为:</p>
 <pre class="prettyprint "><code>Property(verbose_name=None, name=None, default=None, required=False,

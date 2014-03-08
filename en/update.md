@@ -1,6 +1,28 @@
 Uliweb Change Log
 =====================
 
+## 0.2.6
+
+* Add warning output for Reference class parameter of relation properties definition.
+* Fix manual and total process bug in ListView and SelectListView
+* Fix rawsql bug
+* Add `get_object()` support in Generic ListView
+* Fix `get_cached()` bug
+* Fix process_files in generic add and edit functions bug
+* Add `import readline` before enter shell environment
+* change occ name to version
+* Improve autocomplete in shell command
+* Fix manytomany cached value is not used when do the save, because of not stored
+  in `_old_values`
+* If you've already define primary key in Model, then it'll not create id property
+  for you, just like:
+
+    ```
+    user_id = Field(int, primary_key=True, autoincrement=True)
+    ```
+* Fix sqldot bug and improve sqlhtml generation
+* Eanble colored log output by default.
+
 ## 0.2.5
 
 * Fix config template and add `uwsgi` shell support

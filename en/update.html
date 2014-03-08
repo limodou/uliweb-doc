@@ -63,7 +63,24 @@
 
         
         <h1 id="title_1">Uliweb Change Log<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">0.2.5<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">0.2.6<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ul>
+<li>Add warning output for Reference class parameter of relation properties definition.</li>
+<li>Fix manual and total process bug in ListView and SelectListView</li>
+<li>Fix rawsql bug</li>
+<li>Add <code>get_object()</code> support in Generic ListView</li>
+<li>Fix <code>get_cached()</code> bug</li>
+<li>Fix process_files in generic add and edit functions bug</li>
+<li>Add <code>import readline</code> before enter shell environment</li>
+<li>change occ name to version</li>
+<li>Improve autocomplete in shell command</li>
+<li>Fix manytomany cached value is not used when do the save, because of not stored   in <code>_old_values</code></li>
+<li><p>If you've already define primary key in Model, then it'll not create id property   for you, just like:</p>
+<pre class="prettyprint"><code>user_id = Field(int, primary_key=True, autoincrement=True)</code></pre></li>
+<li>Fix sqldot bug and improve sqlhtml generation</li>
+<li>Eanble colored log output by default.</li>
+</ul>
+<h2 id="title_1-2">0.2.5<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
 <li>Fix config template and add <code>uwsgi</code> shell support</li>
 <li><p>Add environment variables support in <code>settings.ini</code>. For example, there is a    <code>MYSQL_PORT</code> defined in environment, so you can defined something in settings.ini:</p>
@@ -94,7 +111,7 @@ user =</code></pre>
 <li><code>occ_exception</code> used to enabled Exception raised, default is <code>True</code>, if you    set it <code>False</code> it'll return False, but not raise an Exception.</li>
 </ul></li>
 </ul>
-<h2 id="title_1-2">0.2.4 Version<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-3">0.2.4 Version<a class="anchor" href="#title_1-3">&para;</a></h2>
 <ul>
 <li><p>Fix ORM is not compatible with SQLAlchemy 0.9.1. Old style:</p>
 <pre class="prettyprint"><code>cond = None
@@ -144,7 +161,7 @@ Connection : mysql://blog:***@localhost/blog?charset=utf8
 save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</code></pre></li>
 <li>Fix <code>call_view()</code> invoke <code>wrap_result</code> bug. Missing pass <code>handler</code> parameter to wrap_result.</li>
 </ul>
-<h2 id="title_1-3">0.2.3 Version<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-4">0.2.3 Version<a class="anchor" href="#title_1-4">&para;</a></h2>
 <ul>
 <li>Update nginx support output, add proxy_set_header</li>
 <li>Add <code>save_file()</code> function to orm, so you can save select result to a csv file</li>
@@ -153,7 +170,7 @@ save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</cod
 <li>Fix i18n process, for project and apps extraction, it'll create application first, so that   user defined tag will be registered correctly. But user defined tag will be limited later.</li>
 <li>Add <code>walk_dirs()</code> to utils/common.py. This function can ignore some files and file ext,   and supports fnmatch pattern.</li>
 </ul>
-<h2 id="title_1-4">0.2.2 Version<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h2 id="title_1-5">0.2.2 Version<a class="anchor" href="#title_1-5">&para;</a></h2>
 <ul>
 <li>Add <code>clear()</code> to SortedDict</li>
 <li>Add protect for form to generic AddView and EditView, default is enabled, so   user can't submit a form multiple times.</li>
@@ -180,13 +197,13 @@ save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</cod
 <li>Fix rule process, add expose(replace, template) support</li>
 <li>Revert ORM.NULLABLE = True</li>
 </ul>
-<h2 id="title_1-5">0.2.1 Version<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h2 id="title_1-6">0.2.1 Version<a class="anchor" href="#title_1-6">&para;</a></h2>
 <ul>
 <li>Add <code>uliweb.utils.timeit</code> module, use can use @timeit(prompt) to calcalate the   time used about a code block</li>
 <li>change default file_serving action parameter value to <code>None</code></li>
 <li>Fix Reference validate bug</li>
 </ul>
-<h2 id="title_1-6">0.2 Version<a class="anchor" href="#title_1-6">&para;</a></h2>
+<h2 id="title_1-7">0.2 Version<a class="anchor" href="#title_1-7">&para;</a></h2>
 <ul>
 <li>Fix auth.models <code>get_href</code> bug</li>
 <li>Change ORM <code>save()</code> process, it'll keep the manytomany data, before will   remove them from data</li>
@@ -216,7 +233,7 @@ save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</cod
 <li><code>make_application()</code> can reenter</li>
 <li>Add <code>ORM/MODELS_CONFIG</code> support</li>
 </ul>
-<h2 id="title_1-7">0.1.7 Version<a class="anchor" href="#title_1-7">&para;</a></h2>
+<h2 id="title_1-8">0.1.7 Version<a class="anchor" href="#title_1-8">&para;</a></h2>
 <ul>
 <li>Fix <code>uliweb.contrib.tables</code> dbinit.py bug</li>
 <li>Improve generic command can process <code>camel_view</code> to <code>CamelView</code></li>
@@ -270,7 +287,7 @@ save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</cod
 <li>Upgrade werkzeug to 0.9.1</li>
 <li>Improve ssl options</li>
 </ul>
-<h2 id="title_1-8">0.1.6 Version<a class="anchor" href="#title_1-8">&para;</a></h2>
+<h2 id="title_1-9">0.1.6 Version<a class="anchor" href="#title_1-9">&para;</a></h2>
 <ul>
 <li>Add CSRF support thanks for Damon</li>
 <li>Add multiple lines comment tag <code>{{## ##}}</code> support to template</li>
@@ -332,7 +349,7 @@ table.end</code></pre></li>
 <pre class="prettyprint"><code>settings.APP_LAYOUTS.get('messages', 'layout.html')</code></pre>
 <p>  so you can still config app's layout template in settings.ini. Another way is   to replace app's layout template in a new app with the same filename, and then   install it after the original app in <code>INSTALLED_APPS</code>.</p></li>
 </ul>
-<h2 id="title_1-9">0.1.5 Version<a class="anchor" href="#title_1-9">&para;</a></h2>
+<h2 id="title_1-10">0.1.5 Version<a class="anchor" href="#title_1-10">&para;</a></h2>
 <ul>
 <li>Change cache settings, remove file_dir and lock_dir as 0.1.3 before</li>
 <li>Add more info about dispatch call exception output</li>
@@ -368,7 +385,7 @@ TABLENAME_CONVERTER = 'uliweb.utils.common.camel_to_'</code></pre>
 <li>Add alembic init command will drop <code>alembic_version</code> table</li>
 <li>Add DEBUG_CONSOLE config to seperate DebugApplication evalex parameter from DEBUG</li>
 </ul>
-<h2 id="title_1-10">0.1.4 Version<a class="anchor" href="#title_1-10">&para;</a></h2>
+<h2 id="title_1-11">0.1.4 Version<a class="anchor" href="#title_1-11">&para;</a></h2>
 <ul>
 <li>Fix utils/date.to_datetime() support %f(misrosecond) format</li>
 <li>Add microsecond format support in utils/date.py</li>
@@ -400,7 +417,7 @@ appname = 'layout.html'</code></pre>
 <li>Fix log format bug</li>
 <li>Fix pysimplesoap bool type bug <a href="http://code.google.com/p/pysimplesoap/issues/attachmentText?id=69&aid=690001000&name=simplexml.py.patch&token=F8TXcyAoCDS5vScp5MiFEccN6J4%3A1345507177742" class="outter">http://code.google.com/p/pysimplesoap/issues/attachmentText?id=69&aid=690001000&name=simplexml.py.patch&token=F8TXcyAoCDS5vScp5MiFEccN6J4%3A1345507177742</a></li>
 </ul>
-<h2 id="title_1-11">0.1.3 Version<a class="anchor" href="#title_1-11">&para;</a></h2>
+<h2 id="title_1-12">0.1.3 Version<a class="anchor" href="#title_1-12">&para;</a></h2>
 <ul>
 <li>Fix loadtable bug for PickleType type, using inspecttable instead, so    PickleyType will be BLOB type.</li>
 <li><p>Improve template process:</p>
@@ -429,7 +446,7 @@ appname = 'layout.html'</code></pre>
 <li>Add object() to ListView</li>
 <li>Upgrade pysimplesoap to 1.05a</li>
 </ul>
-<h2 id="title_1-12">0.1.2 Version<a class="anchor" href="#title_1-12">&para;</a></h2>
+<h2 id="title_1-13">0.1.2 Version<a class="anchor" href="#title_1-13">&para;</a></h2>
 <ul>
 <li><p>Fix permission tag, and change PERMISSION definitions in settings.ini, now the    PERMISSION definition can use dict datatype, just like:</p>
 <pre class="prettyprint"><code>[PERMISSION]
@@ -453,11 +470,11 @@ PERM = {'name':'PERM', 'roles':['a', 'b'], 'description':'PERM}</code></pre>
 <li>Add _class and id parameter to Form, and fix form_class process</li>
 <li>Refactor template, add BaseBlockNode class, and add end() process for block type node.</li>
 </ul>
-<h2 id="title_1-13">0.1.1 Version<a class="anchor" href="#title_1-13">&para;</a></h2>
+<h2 id="title_1-14">0.1.1 Version<a class="anchor" href="#title_1-14">&para;</a></h2>
 <ul>
 <li>Add BAE(Baidu Application Engine) and Heroku support</li>
 </ul>
-<h2 id="title_1-14">0.0.1 Version<a class="anchor" href="#title_1-14">&para;</a></h2>
+<h2 id="title_1-15">0.0.1 Version<a class="anchor" href="#title_1-15">&para;</a></h2>
 <ul>
 <li>Support i18n language setting key in query_string, and you can also configure    keyword in settings.ini.</li>
 </ul>
