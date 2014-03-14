@@ -6,6 +6,7 @@ installation.md
 architecture.md
 globals.md
 update.md
+whouse.md
 {% endtoc %}
 
 ## 教程
