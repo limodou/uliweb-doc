@@ -66,33 +66,33 @@
         
         <h1 id="title_1">URL Mapping<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb uses Werkzeug's routing.py module to process URLs. When you use <code>makeapp</code> command to create a new app directory, it'll automatically create a <code>views.py</code>, and it'll automatically add some code for you, for example:</p>
-<pre class="prettyprint"><code>from uliweb.core.SimpleFrame import expose</code></pre>
+<pre><code>from uliweb.core.SimpleFrame import expose</code></pre>
 <p>So that you can directly use expose in view modules. <code>expose</code> is a decorator function. Using it you can binding an URL with a view function, and create reversed URL later by <code>url_for</code> function(It's another function provided by SimpleFrame).</p>
 <h2 id="title_1-1">expose Description<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>For now, Uliweb doesn't support centralized URL management, so you need to add expose in front of each view function. If there is no expose, the function will not be visited by browser.</p>
 <p>Basic usage is:</p>
 <ol>
 <li><p>Default Mapping</p>
-<pre class="prettyprint"><code>@expose
+<pre><code>@expose
 def index(arg1, arg2):
     return {}</code></pre>
 <p>When there is no arguments in expose(), it'll execute default mapping process. So the URL would be mapped to:</p>
-<pre class="prettyprint"><code>/appname/view_function_name/&lt;arg1&gt;/&lt;arg2&gt;</code></pre>
+<pre><code>/appname/view_function_name/&lt;arg1&gt;/&lt;arg2&gt;</code></pre>
 <p>And if there is no arugments in view function, the URL would be mapped to:</p>
-<pre class="prettyprint"><code>/appname/view_function_name</code></pre></li>
+<pre><code>/appname/view_function_name</code></pre></li>
 <li><p>Specified Mapping</p>
-<pre class="prettyprint"><code>@expose('/index')
+<pre><code>@expose('/index')
 def index():
     return {}</code></pre>
 <p>You can specify any URL you want to use in expose() function, this URL will be bound to below view function.</p></li>
 <li><p>Argument Process</p>
 <p>If there are something can be changed in the URL, you can configure them as arguments. A basic argument format is like:</p>
-<pre class="prettyprint"><code>&lt;convertor(arguments):name&gt;</code></pre>
+<pre><code>&lt;convertor(arguments):name&gt;</code></pre>
 <p><code>convertor</code> and <code>arguments</code> can be omitted. convertor can be set as: int, float, any, string, unicode, path now. Different convertor can accept different arguments. More details please see below section about convertor Description. The simplest format is <code>&lt;name&gt;</code>, it'll match the stuff between <code>'/'</code> and <code>'/'</code>. For <code>name</code>, it's the argument name, it needs to be matched with the arugments of view function it bounded.</p></li>
 <li><p>Other arguments of expose</p>
 <p><code>expose</code> function enable other arguments except for the first URL string, for example: defaults</p>
 <p>It can be used for defining the default arguments value of view function argument, for example, you can do:</p>
-<pre class="prettyprint"><code>@expose('/all', defaults={'page': 1})
+<pre><code>@expose('/all', defaults={'page': 1})
 @expose('/all/page/&lt;int:page&gt;')
 def show(page):
     return {}</code></pre>
@@ -103,16 +103,16 @@ def show(page):
 </ol>
 <h2 id="title_1-2">url_for Description<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>url_for can be used for creating reversed URL, it need a string format view function name, for example:</p>
-<pre class="prettyprint"><code>url_for('appname.views_module_name.function_name', **kwargs)</code></pre>
+<pre><code>url_for('appname.views_module_name.function_name', **kwargs)</code></pre>
 <p>kwargs will match with the arguments of view function.</p>
 <p>Let's see an example. Say you define an URL in <code>Hello</code> app:</p>
-<pre class="prettyprint"><code>@expose('/index')
+<pre><code>@expose('/index')
 def index():
     pass</code></pre>
 <p>Then when you want to get reversed URL, you can do:</p>
-<pre class="prettyprint"><code>url_for('Hello.views.index') #Result will be '/index'</code></pre>
+<pre><code>url_for('Hello.views.index') #Result will be '/index'</code></pre>
 <p>If you don't want to hard code app name here, you can do:</p>
-<pre class="prettyprint"><code>url_for('%s.views.index' % request.appname)</code></pre>
+<pre><code>url_for('%s.views.index' % request.appname)</code></pre>
 <p><code>request</code> is request object, and it has a <code>appname</code> attribute, it's the current app name.</p>
 <div class="ui info message">
 <p>For now, you can use url_for directory in both view functions and templates without import it explicitly.</p>
@@ -122,7 +122,7 @@ def index():
 <dl>
 <dt>int</dt>
 <dd><p>Basic format is:</p>
-<pre class="prettyprint"><code>&lt;int:name&gt;                      #Simple format
+<pre><code>&lt;int:name&gt;                      #Simple format
 &lt;int(fixed_digits=4):name&gt;      #With arguments</code></pre>
 <p>Supported arguments are:</p>
 <ul>
@@ -133,7 +133,7 @@ def index():
 </dd>
 <dt>float</dt>
 <dd><p>Basic format is:</p>
-<pre class="prettyprint"><code>&lt;float:name&gt;                    #Simple format
+<pre><code>&lt;float:name&gt;                    #Simple format
 &lt;float(min=0.01):name&gt;          #With arguments</code></pre>
 <p>Supported arguments are:</p>
 <ul>
@@ -143,7 +143,7 @@ def index():
 </dd>
 <dt>string and unicode</dt>
 <dd><p>They are the same actually Basic format is:</p>
-<pre class="prettyprint"><code>&lt;string:name&gt;
+<pre><code>&lt;string:name&gt;
 &lt;unicode(length=2):name&gt;</code></pre>
 <p>Supported arguments are:</p>
 <ul>
@@ -154,17 +154,17 @@ def index():
 </dd>
 <dt>path</dt>
 <dd><p>Just like <code>string</code> and <code>unicode</code> convertor, but has no arguments. Used to match stuff between <code>'/'</code> and next string or the end. Basic format is:</p>
-<pre class="prettyprint"><code>&lt;path:name&gt;</code></pre>
+<pre><code>&lt;path:name&gt;</code></pre>
 <p>Example:</p>
-<pre class="prettyprint"><code>'/static/&lt;path:filename&gt;'</code></pre>
+<pre><code>'/static/&lt;path:filename&gt;'</code></pre>
 <p>can match:</p>
-<pre class="prettyprint"><code>'/static/a.css'         -&gt; filename='a.css'
+<pre><code>'/static/a.css'         -&gt; filename='a.css'
 '/static/css/a.css'     -&gt; filename='css/a.css'
 '/static/image/a.gif'   -&gt; filename='image/a.gif'</code></pre>
 </dd>
 <dt>any</dt>
 <dd><p>Basic format is:</p>
-<pre class="prettyprint"><code>&lt;any(about, help, imprint, u"class"):name&gt;</code></pre>
+<pre><code>&lt;any(about, help, imprint, u"class"):name&gt;</code></pre>
 <p>It'll match any of string listed.</p>
 </dd>
 </dl>

@@ -73,7 +73,7 @@
 <h2 id="title_1-2">Project Organization<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>A web application is defined as a <strong>Project</strong> in Uliweb. An Uliweb web application Project consists of any number of smaller modules. These modules can be any fucntionality unit, them called <strong>Apps</strong> in Uliweb. These modules can include: templates, static files, views, model definitions, middlewares, configuration, etc. An App can be a normal python package, so you can make it a standalone package so that it can be installed separately .</p>
 <p>The basic directory structure of an Uliweb Project is as follows:</p>
-<pre class="prettyprint"><code>project/                        #project directory
+<pre><code>project/                        #project directory
     .gitignore                  #gitignore file
     apps/                       #all apps should be placed in it
         settings.ini            #project level configuration file
@@ -106,7 +106,7 @@
 <p>A <code>settings.ini</code> can be used to carry out some initalization work. For example, database, i18n configuration etc.</p>
 <h3 id="title_1-3-2">APPs configuration<a class="anchor" href="#title_1-3-2">&para;</a></h3>
 <p>You should configure what apps should be used in your project, so you should add something in <code>settings.ini</code> like this:</p>
-<pre class="prettyprint"><code>[GLOBAL]
+<pre><code>[GLOBAL]
 INSTALLED_APPS = [
     'uliweb.contrib.orm',
     'third-party-app',
@@ -120,7 +120,7 @@ INSTALLED_APPS = [
 <p>In a deployed production project, you could, for example, have a main app that contains all the globally available static and template files. It could even take care of I18n and database initialisation processes.</p>
 <h3 id="title_1-3-4">Creating dependencies between apps<a class="anchor" href="#title_1-3-4">&para;</a></h3>
 <p>If you intend to make an app dependant on another app or more, you can define the dependancies in a <code>config.ini</code> file and then place this file in the app folder, it content should looks like:</p>
-<pre class="prettyprint"><code>[DEFAULT]
+<pre><code>[DEFAULT]
 REQUIRED_APPS = ['uliweb.contrib.i18n']</code></pre>
 <p>So when Uliweb import the app, if it find <code>config.ini</code> in its app folder, it'll parse <code>config.ini</code>, and import dependent apps automatically.</p>
 <h2 id="title_1-4">Defined in distributed but used in centralized<a class="anchor" href="#title_1-4">&para;</a></h2>
@@ -138,11 +138,11 @@ REQUIRED_APPS = ['uliweb.contrib.i18n']</code></pre>
 <h2 id="title_1-6">URL Mapping Process<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>At present, Uliweb supports two ways to define URLs in views.</p>
 <p>One way is to define a URL by using the <code>expose</code> decorator. This is the easier method, just like:</p>
-<pre class="prettyprint"><code>@expose('/login')
+<pre><code>@expose('/login')
 def login():
     return {}</code></pre>
 <p>The other way is define URL in settings, just like:</p>
-<pre class="prettyprint"><code>[EXPOSES]
+<pre><code>[EXPOSES]
 login = '/login', 'uliweb.contrib.auth.views.login'
 logout = '/logout', 'uliweb.contrib.auth.views.logout'</code></pre>
 <p>To assist in URL management, Uliweb provides an <code>url_for</code> function. This function can be used for reversed URL creation, it'll create URLs according to the correspondingview function name. For more details, see the <a href="url_mapping.html" class="inner">URL Mapping</a> document.</p>

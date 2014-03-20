@@ -66,7 +66,7 @@
 <p>Uliweb provides essential runtime environment and objects, that's I call them global environment.</p>
 <h2 id="title_1-1">Objects<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Some globally objects can be easily imported from <code>uliweb</code>, for example:</p>
-<pre class="prettyprint"><code>from uliweb import application, request, response, settings, Request, Response</code></pre>
+<pre><code>from uliweb import application, request, response, settings, Request, Response</code></pre>
 <h3 id="title_1-1-1">application<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>It's a unique object which is used as Uliweb project instance object. It's the instance of <code>uliweb.core.SimpleFrame.Dispatcher</code>, and there are several attributes and properties you can use, for example:</p>
 <dl>
@@ -110,14 +110,14 @@
 <p>Settings configure object.</p>
 <h2 id="title_1-2">Methods<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>For example:</p>
-<pre class="prettyprint"><code>from uliweb import (redirect, json, POST, GET, post_view,
+<pre><code>from uliweb import (redirect, json, POST, GET, post_view,
     pre_view, url_for, expose, get_app_dir, get_apps
     )</code></pre>
 <h3 id="title_1-2-7">redirect<a class="anchor" href="#title_1-2-7">&para;</a></h3>
-<pre class="prettyprint"><code>def redirect(location, code=302):</code></pre>
+<pre><code>def redirect(location, code=302):</code></pre>
 <p>Return a Response object, cause browser redirect to a new ULR.</p>
 <h3 id="title_1-2-8">json<a class="anchor" href="#title_1-2-8">&para;</a></h3>
-<pre class="prettyprint"><code>def json(data):</code></pre>
+<pre><code>def json(data):</code></pre>
 <p>Convert the data to json format, and return it as a Response object.</p>
 <h3 id="title_1-2-9">expose<a class="anchor" href="#title_1-2-9">&para;</a></h3>
 <p>See details in <a href="url_mapping" class="inner">URL Mapping</a></p>
@@ -126,13 +126,13 @@
 <h3 id="title_1-2-11">GET<a class="anchor" href="#title_1-2-11">&para;</a></h3>
 <p>Just like expose, but only matched when the request method is <code>GET</code>.</p>
 <h3 id="title_1-2-12">url_for<a class="anchor" href="#title_1-2-12">&para;</a></h3>
-<pre class="prettyprint"><code>def url_for(endpoint, **values):</code></pre>
+<pre><code>def url_for(endpoint, **values):</code></pre>
 <p>It'll return reversed URL according the endpoint argument. endpoint can be string format, just like: <code>Hello.view.index</code>, and you can also pass it a real function object.</p>
 <h3 id="title_1-2-13">get_app_dir<a class="anchor" href="#title_1-2-13">&para;</a></h3>
-<pre class="prettyprint"><code>def get_app_dir(app):</code></pre>
+<pre><code>def get_app_dir(app):</code></pre>
 <p>It'll return the directory of the app.</p>
 <h3 id="title_1-2-14">get_apps<a class="anchor" href="#title_1-2-14">&para;</a></h3>
-<pre class="prettyprint"><code>def get_apps(apps_dir, include_apps=None):</code></pre>
+<pre><code>def get_apps(apps_dir, include_apps=None):</code></pre>
 <p>It'll return a list of all available app's name according the apps argument. apps is the project/apps directory.</p>
 
         

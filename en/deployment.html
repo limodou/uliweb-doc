@@ -81,7 +81,7 @@
 <li><p>Modify Apache's httpd.conf file</p>
 <ul>
 <li><p>Add the code below</p>
-<pre class="prettyprint"><code>LoadModule wsgi_module modules/mod_wsgi.so
+<pre><code>LoadModule wsgi_module modules/mod_wsgi.so
 WSGIScriptAlias / /path/to/uliweb/wsgi_handler.wsgi
 
 &lt;Directory /path/to/youruliwebproject&gt;
@@ -89,7 +89,7 @@ Order deny,allow
 Allow from all
 &lt;/Directory&gt;</code></pre>
 <p>The code above assumes that the root URL is <code>/</code>, you can change this to suite your project, for example <code>/myproj</code>. Here is an example of a configuration on the Windows platform:</p>
-<pre class="prettyprint"><code>WSGIScriptAlias / d:/project/svn/uliweb/wsgi_handler.wsgi
+<pre><code>WSGIScriptAlias / d:/project/svn/uliweb/wsgi_handler.wsgi
 
 &lt;Directory d:/project/svn/uliweb&gt;
 Order deny,allow

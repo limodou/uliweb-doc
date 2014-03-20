@@ -68,11 +68,11 @@
 <p>Uliweb don't bind any ORM, but you can use dispatch, app tech to encapsulate your own usage of database or ORM. Of cause Uliweb indeed has its own ORM, I call it <strong>uliorm</strong>, and also provide an orm App, so you can easily use it. But please remember, uliorm is not forced, and if you don't like it, you don't need to use it at all. But I want to make it suit for many simple tasks. And uliorm is based on SQLAlchemy, so you can also use many features from SQLAlchemy.</p>
 <h2 id="title_1-1">Installation<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Because uliorm is built on SQLAlchemy, and it also needs pytz when you want to process timezone, so you should install them first before you want to use uliorm. Of cause, Uliweb has also provided such install command for you:</p>
-<pre class="prettyprint"><code>uliweb call -a uliweb.contrib.orm install</code></pre>
+<pre><code>uliweb call -a uliweb.contrib.orm install</code></pre>
 <p>After executing it, it'll automatically install SQLAlchemy and pytz for you.</p>
 <h2 id="title_1-2">ORM Configuration<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>First, you should add <code>uliweb.contrib.orm</code> to <code>INSTALLED_APPS</code> in <code>apps/settings.ini</code>. Then, there are several parameters you can set to control the behavior of the ORM.</p>
-<pre class="prettyprint"><code>[ORM]
+<pre><code>[ORM]
 DEBUG_LOG = False
 AUTO_CREATE = True
 CONNECTION = 'sqlite://'</code></pre>
@@ -80,9 +80,9 @@ CONNECTION = 'sqlite://'</code></pre>
 <p>The <code>AUTO_CREATE</code> is used to enable ORM create tables automatically. If set it to False, you should create table yourself.</p>
 <p>The <code>CONNECTION</code> is used to set the connection string. Just follow the SQLAlchemy format. (You can see <a href="http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments" class="outter">http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments</a>)</p>
 <p>The common format is:</p>
-<pre class="prettyprint"><code>driver://username:password@host:port/database</code></pre>
+<pre><code>driver://username:password@host:port/database</code></pre>
 <p>There are some examples:</p>
-<pre class="prettyprint"><code>#sqlite
+<pre><code>#sqlite
 sqlite_db = create_engine('sqlite:////absolute/path/to/database.txt')
 sqlite_db = create_engine('sqlite:///d:/absolute/path/to/database.txt')
 sqlite_db = create_engine('sqlite:///relative/path/to/database.txt')
@@ -108,11 +108,11 @@ mssql_db = create_engine('mssql://scott:tiger@mydsn')
 # firebird
 firebird_db = create_engine('firebird://scott:tiger@localhost/sometest.gdm')</code></pre>
 <p>And if you don't like to modify the apps/settings.ini manually, you can also start development sever via:</p>
-<pre class="prettyprint"><code>uliweb runadmin</code></pre>
+<pre><code>uliweb runadmin</code></pre>
 <p>Then in Build page of <a href="http://localhost:8000/admin" class="outter">http://localhost:8000/admin</a> to set the settings of ORM App.</p>
 <h2 id="title_1-3">Model Definition<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>In common, you may create your model in models.py. First you should import from uliweb.orm, then create your own model and it should inherit from <code>Model</code> class. Then add any fields you want to define. For example:</p>
-<pre class="prettyprint"><code>from uliweb.orm import *
+<pre><code>from uliweb.orm import *
 import datetime
 
 class Note(Model):
@@ -124,16 +124,16 @@ class Note(Model):
 <h3 id="title_1-3-1">Table Name<a class="anchor" href="#title_1-3-1">&para;</a></h3>
 <p>By default, the table name will be the lower string of model class name, so Note model's table name should be <code>note</code>.</p>
 <p>And if you want to set it to other table name, you can define a <code>__tablename__</code> in model class. For example:</p>
-<pre class="prettyprint"><code>class Note(Model):
+<pre><code>class Note(Model):
 
     __tableame__ = 't_note'</code></pre>
 <h3 id="title_1-3-2">Tabel Arguments<a class="anchor" href="#title_1-3-2">&para;</a></h3>
 <p>In SQLAlchemy, when you creating a Table, you may pass some extra arguments, just like: mysql_engine, etc. So you could define <code>__table_args__</code> in Model, for example:</p>
-<pre class="prettyprint"><code>class Todo(Model):
+<pre><code>class Todo(Model):
     __table_args__ = dict(mysql_charset='utf8')</code></pre>
 <h3 id="title_1-3-3">3.3\ \ \ OnInit Method<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>uliorm also enable you do some initialization works before doing the creation of the table. Just write a class method OnInit, for example:</p>
-<pre class="prettyprint"><code>class Todo(Model):
+<pre><code>class Todo(Model):
     @classmethod
     def OnInit(cls):
         Index('my_indx', cls.c.title, cls.c.owner, unique=True)</code></pre>
@@ -142,14 +142,14 @@ class Note(Model):
 <p>uliorm define a model field as Property, but you can also use field concept, it's no problem.</p>
 <p>uliorm can define property of a model in two ways. One is very like GAE data store, just <code>*Property</code> class. The other is just using Field() function.</p>
 <p>Below are real properties defined in Uliewb ORM:</p>
-<pre class="prettyprint"><code>'BlobProperty', 'BooleanProperty', 'DateProperty', 'DateTimeProperty',
+<pre><code>'BlobProperty', 'BooleanProperty', 'DateProperty', 'DateTimeProperty',
 'TimeProperty', 'DecimalProperty', 'FloatProperty',
 'IntegerProperty', 'Property', 'StringProperty', 'CharProperty',
 'TextProperty', 'UnicodeProperty', 'FileProperty'</code></pre>
 <p>But you may think they are not easy to remember, so you can use the second way to define a property. Just using <code>Field()</code>.</p>
 <p>For Field() function, it'll receive a Python date type or some special SQLAlchemy type, and convert it to a real Property class and then create an instance of it.</p>
 <p>The mapping of Python data type and Property are:</p>
-<pre class="prettyprint"><code>str:StringProperty,
+<pre><code>str:StringProperty,
 CHAR:CharProperty,
 unicode: UnicodeProperty,
 TEXT:TextProperty,
@@ -168,7 +168,7 @@ DECIMAL:DecimalProperty,</code></pre>
 <p>By default, uliorm will automatically create an <code>ID</code> property for you, and you don't need to define it in model.</p>
 <h3 id="title_1-3-6">Property Constuctor<a class="anchor" href="#title_1-3-6">&para;</a></h3>
 <p>Property is the Base class of all other properties. So many of its attributes and methods will be used in dirived class:</p>
-<pre class="prettyprint"><code>Property(verbose_name=None, name=None, default=None, required=False, validators=None, choices=None, max_length=None)</code></pre>
+<pre><code>Property(verbose_name=None, name=None, default=None, required=False, validators=None, choices=None, max_length=None)</code></pre>
 <dl>
 <dt>verbose_name</dt>
 <dd><p>can be used as prompt message of a property</p>
@@ -184,7 +184,7 @@ DECIMAL:DecimalProperty,</code></pre>
 </dd>
 <dt>validators</dt>
 <dd><p>when you set a value to this property, uliorm will validate the value according this parameter. It should be a function list, the function should be:</p>
-<pre class="prettyprint"><code>def validator(data):
+<pre><code>def validator(data):
     xxx
     if error:
         raise BadValueError, message</code></pre>
@@ -265,7 +265,7 @@ DECIMAL:DecimalProperty,</code></pre>
 <p>uliorm also supports relation definition: OneToOne, ManyToOne, ManyToMany.</p>
 <h3 id="title_1-4-18">One to One<a class="anchor" href="#title_1-4-18">&para;</a></h3>
 <p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 351)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>&gt;&gt;&gt; class Test(Model):
+<pre><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
 ...     year = Field(int)
 &gt;&gt;&gt; class Test1(Model):
@@ -273,7 +273,7 @@ DECIMAL:DecimalProperty,</code></pre>
 ...     name = Field(str)</code></pre>
 <p>You can use OneToOne to reference other model. For example:</p>
 <p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 362)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>&gt;&gt;&gt; a1 = Test(username='limodou')
+<pre><code>&gt;&gt;&gt; a1 = Test(username='limodou')
 &gt;&gt;&gt; a1.save()
 True
 &gt;&gt;&gt; b1 = Test1(name='user', test=a1)
@@ -287,7 +287,7 @@ True
 &lt;Test {'username':'limodou','year':0,'id':1}&gt;</code></pre>
 <h3 id="title_1-4-19">Many to One<a class="anchor" href="#title_1-4-19">&para;</a></h3>
 <p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 380)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>&gt;&gt;&gt; class Test(Model):
+<pre><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
 ...     year = Field(int)
 &gt;&gt;&gt; class Test1(Model):
@@ -311,12 +311,12 @@ True
 <p>You should use <code>Reference</code> to reference a many to one relation. And <code>Reference</code> has a <code>collection_name</code> parameter, if you don't give it, the referenced model will use object_test.test1_set to get reversed data set. And if there are two and above relation on same model, you need to define different <code>collection_name</code> for each relation. So <code>a1</code> could use <code>a1.tttt</code> to get the reversed data set relation to it. For now, uliorm will not create Foreign Key constrain, because when creating a table, if there is a foreign key constrain, the foreign table should be created first, then this table. And it has some difficult for distributed apps.</p>
 <p>How to think about many to one relation? Think about Test:Test1 is 1:n relation, that means one Test object could have one or more Test1 objects. So you should define <code>Reference</code> in Test1 model.</p>
 <p>And if you want to reference one model to itself, you can use: SelfReference, for example:</p>
-<pre class="prettyprint"><code>&gt;&gt;&gt; class User(Model):
+<pre><code>&gt;&gt;&gt; class User(Model):
 ...     username = Field(unicode)
 ...     parent = SelfReference(collection_name='children')</code></pre>
 <h3 id="title_1-4-20">Many to Many<a class="anchor" href="#title_1-4-20">&para;</a></h3>
 <p>"System Message: WARNING/2 (D:projectmyworkuliweb-docdocsenorm.rst:, line 428)" Cannot analyze code. No Pygments lexer found for "python+console".</p>
-<pre class="prettyprint"><code>&gt;&gt;&gt; class User(Model):
+<pre><code>&gt;&gt;&gt; class User(Model):
 ...     username = Field(CHAR, max_length=20)
 ...     year = Field(int)
 &gt;&gt;&gt; class Group(Model):
@@ -343,7 +343,7 @@ True
 &gt;&gt;&gt; g1.users.add(a)
 &gt;&gt;&gt; g1.users.add(b)</code></pre>
 <p>You can use <code>ManyToMany</code> to reference a many to many relation. uliorm will work like Django, it'll create the third table automatically, for example, the third table of above example will be: group_user_users, it's the two table names (user and group) and ManyToMany property name (users). The table structure of the third table will be:</p>
-<pre class="prettyprint"><code>CREATE TABLE group_user_users (
+<pre><code>CREATE TABLE group_user_users (
     group_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     PRIMARY KEY (group_id, user_id)
@@ -363,33 +363,33 @@ True
 </dl><h3 id="title_1-5-21">Instance Level<a class="anchor" href="#title_1-5-21">&para;</a></h3>
 <h4 id="title_1-5-21-1">Create an Instance<a class="anchor" href="#title_1-5-21-1">&para;</a></h4>
 <p>Say there is a User model, the class definition is:</p>
-<pre class="prettyprint"><code>class User(Model):
+<pre><code>class User(Model):
     username = Field(CHAR, max_length=20)
     year = Field(int)</code></pre>
 <p>So if you want to create an instance of User model, just do like this:</p>
-<pre class="prettyprint"><code>user = User(username='limodou', year=36)</code></pre>
+<pre><code>user = User(username='limodou', year=36)</code></pre>
 <p>But it'll not be saved in database, it just creates an instance, you need call <code>put</code> or <code>save</code> to save it:</p>
-<pre class="prettyprint"><code>user.save()
+<pre><code>user.save()
 #or
 user.put()</code></pre>
 <h4 id="title_1-5-21-2">Get an Instance<a class="anchor" href="#title_1-5-21-2">&para;</a></h4>
-<pre class="prettyprint"><code>user = User.get(5)
+<pre><code>user = User.get(5)
 user = User.get(User.c.id==5)</code></pre>
 <p>If you want to get an instance from a model, you should call <code>get</code> method of a model. You can pass a integer or a query condition. So <code>User.get(5)</code> will be exact:</p>
-<pre class="prettyprint"><code>User.get(User.c.id==5)</code></pre>
+<pre><code>User.get(User.c.id==5)</code></pre>
 <p>The query condition syntax is exact SQLAlchemy query syntax, so you can see more detail at: <a href="http://www.sqlalchemy.org/docs/05/sqlexpression.html" class="outter">http://www.sqlalchemy.org/docs/05/sqlexpression.html</a></p>
 <h4 id="title_1-5-21-3">Delete an instance<a class="anchor" href="#title_1-5-21-3">&para;</a></h4>
-<pre class="prettyprint"><code>user = User.get(5)
+<pre><code>user = User.get(5)
 user.delete()</code></pre>
 <h4 id="title_1-5-21-4">Update an instance<a class="anchor" href="#title_1-5-21-4">&para;</a></h4>
-<pre class="prettyprint"><code>user = User.get(5)
+<pre><code>user = User.get(5)
 user.uesrname = 'user'
 user.save()</code></pre>
 <h4 id="title_1-5-21-5">Other APIs<a class="anchor" href="#title_1-5-21-5">&para;</a></h4>
 <dl>
 <dt>to_dict([*fields])</dt>
 <dd><p>Dumps instance to a dict object. If there is no <code>fields</code> parameter, it'll dump all fields of the instance. And you can pass fields which you want to dumps, for example:</p>
-<pre class="prettyprint"><code>a = User.get(1)
+<pre><code>a = User.get(1)
 a.to_dict() #this will dump all fields
 a.to_dict('name', 'age')    #this will only dump 'name' and 'age' fields</code></pre>
 </dd>
@@ -397,11 +397,11 @@ a.to_dict('name', 'age')    #this will only dump 'name' and 'age' fields</code><
 <h4 id="title_1-5-22-6">Query<a class="anchor" href="#title_1-5-22-6">&para;</a></h4>
 <p>There are two query methods: all() and filter(). all() and filter() will both return an <code>Result</code> object, and all() will return all records of a model, but filter() will only return records of a model which match the condition passed to filter().</p>
 <p>For example:</p>
-<pre class="prettyprint"><code>User.all()
+<pre><code>User.all()
 User.filter(User.c.year &gt; 18)</code></pre>
 <h4 id="title_1-5-22-7">Result Object<a class="anchor" href="#title_1-5-22-7">&para;</a></h4>
 <p>When you executing all() or filter(), it'll return a Result object, and you can use it for further opration, just like: filter, count, delete, order_by, limit, offset, etc. And other operation will also return Result object, for example, when you access the reversed relation property. Result has many methods, and you can combine them one by one, for example:</p>
-<pre class="prettyprint"><code>User.all().filter(User.c.year&gt;18).count()</code></pre>
+<pre><code>User.all().filter(User.c.year&gt;18).count()</code></pre>
 <dl>
 <dt>all()</dt>
 <dd><p>It'll return Result object itself.</p>
@@ -417,7 +417,7 @@ User.filter(User.c.year &gt; 18)</code></pre>
 </dd>
 <dt>order_by(*field)</dt>
 <dd><p>It'll add an ORDER_BY clause to the select. For example:</p>
-<pre class="prettyprint"><code>result.order_by(User.c.year.desc()).order_by(User.c.username.asc())
+<pre><code>result.order_by(User.c.year.desc()).order_by(User.c.username.asc())
 #or
 result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 </dd>
@@ -429,7 +429,7 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 </dd>
 <dt>values(*fields)</dt>
 <dd><p>It'll return an iteration of records list, and each row will only contain the values of the listed fields. It's different from the common query result( common query result will be the model objects interation):</p>
-<pre class="prettyprint"><code>&gt;&gt;&gt; print a1.tttt.all().values(Test1.c.name, Test1.c.year)
+<pre><code>&gt;&gt;&gt; print a1.tttt.all().values(Test1.c.name, Test1.c.year)
 [(u'user', 5), (u'aaaa', 10)]</code></pre>
 </dd>
 <dt>values_one(*fields)</dt>
@@ -440,10 +440,10 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 </dd>
 </dl><h4 id="title_1-5-22-8">Delete objects<a class="anchor" href="#title_1-5-22-8">&para;</a></h4>
 <p>For common usage, you should use all() or filter() first, then use the returned Result object to delete objects. But you can still use <code>remove()</code> to delete objects without calling all() or filter() first.</p>
-<pre class="prettyprint"><code>User.delete(User.c.year&lt;18)</code></pre>
+<pre><code>User.delete(User.c.year&lt;18)</code></pre>
 <h4 id="title_1-5-22-9">Count objects<a class="anchor" href="#title_1-5-22-9">&para;</a></h4>
 <p>Just like <code>remove()</code>, you can still use <code>count()</code> to count the objects without calling all() or filter() first.</p>
-<pre class="prettyprint"><code>User.count(User.c.year&lt;18)</code></pre>
+<pre><code>User.count(User.c.year&lt;18)</code></pre>
 <h4 id="title_1-5-22-10">Other APIs<a class="anchor" href="#title_1-5-22-10">&para;</a></h4>
 <dl>
 <dt>bind(metadata=None, auto_create=False)</dt>
@@ -455,7 +455,7 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 </dl><h3 id="title_1-5-23">Relation Level<a class="anchor" href="#title_1-5-23">&para;</a></h3>
 <h4 id="title_1-5-23-11">One to One<a class="anchor" href="#title_1-5-23-11">&para;</a></h4>
 <p>There is no magic for one to one relation, for example:</p>
-<pre class="prettyprint"><code>&gt;&gt;&gt; class Test(Model):
+<pre><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
 ...     year = Field(int)
 &gt;&gt;&gt; class Test1(Model):
@@ -467,7 +467,7 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 &lt;Test {'username':'limodou', 'year':36}&gt;</code></pre>
 <p>So you can use <code>b.test</code> just like <code>a</code> object.</p>
 <h4 id="title_1-5-23-12">Many to One<a class="anchor" href="#title_1-5-23-12">&para;</a></h4>
-<pre class="prettyprint"><code>&gt;&gt;&gt; class Test(Model):
+<pre><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
 ...     year = Field(int)
 &gt;&gt;&gt; class Test1(Model):
@@ -478,7 +478,7 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 &gt;&gt;&gt; c = Test1(name='aaaa', test=a).save()</code></pre>
 <p>According above code, Test:Test1 is a 1:n relation. And <code>b.test</code> will be the object <code>a</code>. But <code>a.tttt</code> will be the reversed query set, it may not be only one objects. So <code>a.tttt</code> will return a Result object. And this Result object will be bound to Test1 model, so the all() and filter() of the Result will return only Test1 objects. More details you should see <code>Result</code> description previous.</p>
 <h4 id="title_1-5-23-13">Many to Many<a class="anchor" href="#title_1-5-23-13">&para;</a></h4>
-<pre class="prettyprint"><code>&gt;&gt;&gt; class User(Model):
+<pre><code>&gt;&gt;&gt; class User(Model):
 ...     username = Field(CHAR, max_length=20)
 ...     year = Field(int)
 &gt;&gt;&gt; class Group(Model):
@@ -508,9 +508,9 @@ result.order_by(User.c.year.desc(), User.c.username.asc())</code></pre>
 </dl><h2 id="title_1-6">Transacation<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>If you are using uliorm, you can install <code>middle_transaction.TransactionMiddle</code> to <code>MIDDLEWARE_CLASSES</code> in <code>settings.ini</code>. So when the request is coming, the transaction is began, and when the response is returned, the transaction will be committed. And if there are exceptions, the transaction will be rollbacked.</p>
 <p>If you want to control the transacation manually, you could get the connection object first:</p>
-<pre class="prettyprint"><code>db = get_connection()</code></pre>
+<pre><code>db = get_connection()</code></pre>
 <p>Then there are many functions you can use:</p>
-<pre class="prettyprint"><code>db.begin()      #start a transacation
+<pre><code>db.begin()      #start a transacation
 db.commit()     #commit
 db.rollback()   #rollback</code></pre>
 <h2 id="title_1-7">Model Register & Reference<a class="anchor" href="#title_1-7">&para;</a></h2>
@@ -521,7 +521,7 @@ db.rollback()   #rollback</code></pre>
 <li>Call get_model(tablename) to get a real model class instance.</li>
 <li>Reference, ManyToMany can also accept a string(tablename) parameter instead     of a model class.</li>
 <li><p>Models can be configured in settings.ini, for examle:</p>
-<pre class="prettyprint"><code>[MODELS]
+<pre><code>[MODELS]
 user = 'uliweb.contrib.auth.models.User'</code></pre>
 <p>For the key is the tablename, and the value is the string format of the model also with its module name which belongs.</p></li>
 </ol>
@@ -531,7 +531,7 @@ user = 'uliweb.contrib.auth.models.User'</code></pre>
 <h2 id="title_1-9">Mysql Issues<a class="anchor" href="#title_1-9">&para;</a></h2>
 <h3 id="title_1-9-24">Encoding Setting<a class="anchor" href="#title_1-9-24">&para;</a></h3>
 <p>uliorm will default use utf8 encoding when creating the table in Mysql even if the default charset of mysql is not utf8. So that if you are using Mysql you should check if the default charset of your sechma is utf8 encoding, if not you should add charset in connection string, just like:</p>
-<pre class="prettyprint"><code>[ORM]
+<pre><code>[ORM]
 CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'</code></pre>
 <p>The charset=utf8 is needed when the default charset of server is not utf8, otherwise you don't need to set it.</p>
 <h2 id="title_1-10">Module Level API<a class="anchor" href="#title_1-10">&para;</a></h2>
@@ -550,7 +550,7 @@ CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'</code></pre>
 </dd>
 <dt>set_model(model, tablename=None, created=None)</dt>
 <dd><p>Register a model or model string. For example:</p>
-<pre class="prettyprint"><code>set_model(User)
+<pre><code>set_model(User)
 set_model('uliweb.contrib.models.User', 'users')</code></pre>
 <p>If you pass a model instance to set_model, you don't need to pass it a tablename parameter. But if you pass a string as model parameter to it, you should also need to pass a tablename. And created parameter used for indicate that if the table has been created already. So for common usage, you don't need to care about this parameter.</p>
 </dd>

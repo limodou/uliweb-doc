@@ -77,9 +77,9 @@
 <ol>
 <li>easy_install Uliweb</li>
 <li><p>Download Uliweb package from <a href="http://code.google.com/p/uliweb/downloads/list" class="outter">http://code.google.com/p/uliweb/downloads/list</a> or     get the source files from svn:</p>
-<pre class="prettyprint"><code>svn checkout http://uliweb.googlecode.com/svn/trunk/ uliweb</code></pre></li>
+<pre><code>svn checkout http://uliweb.googlecode.com/svn/trunk/ uliweb</code></pre></li>
 <li><p>In uliweb installation directory, run <code>setup.py</code> to install it:</p>
-<pre class="prettyprint"><code>python setup.py develop</code></pre>
+<pre><code>python setup.py develop</code></pre>
 <p>This command will install a link of the current Uliweb directory to the Python site-packages directory. , and you can find an entry in easy_install.pth. This command will also install a script named <code>uliweb</code> to Python/Scripts directory. Make sure that you have added the Python and Python/Scripts directories to your systems search path(adding the new path to the PATH environment). Doing this allows you to run the uliweb scripts anywhere on te commandline.</p>
 <div class="ui info message">
 <p>Why not use <code>python setup.py install</code>? The <code>uliweb</code> script can't be installed correctly using this method, I will appreciate if someone can help with this issue.</p>
