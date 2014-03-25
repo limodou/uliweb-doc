@@ -139,7 +139,7 @@ Testing /...OK</code></pre>
 <dt>log</dt>
 <dd><p>结果输出</p>
 </dd>
-</dl><h3 id="title_1-3-8">`ok_test` 比较模式<a class="anchor" href="#title_1-3-8">&para;</a></h3>
+</dl><h3 id="title_1-3-8">ok_test 比较模式<a class="anchor" href="#title_1-3-8">&para;</a></h3>
 <ol>
 <li><p>tuple, list 类型</p>
 <p>如果是这些类型，则会认为它们是status_code的集合，只要 Response 对象的状态码 在这个范围内都认为成功。</p></li>
@@ -203,9 +203,10 @@ Options:
 <p><code>template</code> 和 <code>template_row</code> 分别对应输出脚本的模板，一个用于整体代码，一个用于 每条记录的生成。你可以自已写模板进行替換。 recorder 已经提供了缺省模板，就在 <code>uliweb.contrib.recorder</code> 的 <code>template_files</code> 目录下。</p>
 <h2 id="title_1-5">注意事项<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>此功能强烈要求在测试环境下使用，因为：</p>
-<blockquote><p>这个功能会把用户输入的信息原样保存，所以象登录操作，会把密码录制下来，以 明文的形式生成脚本。会存不安全的情况。另外，会占用数据库空间。</p>
-</blockquote>
+<div class="ui error message">
+<p>这个功能会把用户输入的信息原样保存，所以象登录操作，会把密码录制下来，以 明文的形式生成脚本。会存不安全的情况。另外，会占用数据库空间。</p>
 
+</div>
         
         <div class="ui blue inverted small label">
             <i class="icon download"></i><a href="../app/recorder.md">View Source</a>
