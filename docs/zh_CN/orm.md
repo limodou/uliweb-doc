@@ -354,7 +354,7 @@ Python type和字段类的对应关系为:
 将不会自动创建 id 属性。并且，当你自行定义了一个主键，id也将不自动定义。如：
 
 ```
-user_id = Field(int, primary_key=True, autoincream=True)
+user_id = Field(int, primary_key=True, autoincreament=True)
 ```
 
 
