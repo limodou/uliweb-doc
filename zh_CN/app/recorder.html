@@ -89,26 +89,38 @@ uliweb alembic upgrade</code></pre>
 <h3 id="title_1-2-5">生成脚本<a class="anchor" href="#title_1-2-5">&para;</a></h3>
 <pre class="prettyprint "><code>uliweb recorder print [filename]</code></pre>
 <p>如果没有给出文件名，则脚本将输出到控制台。 <code>print</code> 命令将生成一个 .py 的脚本。 生成的脚本内容如：</p>
-<pre class="prettyprint "><code>import os
-from datetime import datetime
+<pre class="prettyprint "><code>#coding=utf8
 
-from uliweb.utils.test import client
-c = client('.')
-print 'Current directory is %s' % os.getcwd()
-print
+def test(log, counter):
+    c.test_url('/login', data={}, method='GET', ok_test=200, log=log, counter=counter)
+    c.test_url('/login', data={"username":"xxx","password":"xxx","next":"/"}, 
+        method='POST', ok_test=302, log=log, counter=counter)
 
-#log = 'recorder_test_%s.log' % datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-log = True
+if __name__ == '__main__':
+    import os
+    from datetime import datetime
+    from uliweb.utils.test import client, Counter
 
-c.test_url('/login', data={}, method='GET', ok_test=200, log=log)
-c.test_url('/login', data={"username":"xxxx","password":"yyyy","next":"/"}, method='POST', ok_test=302, log=log)
-c.test_url('/', data={}, method='GET', ok_test=200, log=log)
-
-#total 88 records output, time used 0s</code></pre>
+    c = client('.')
+    print 'Current directory is %s' % os.getcwd()
+    print
+    
+    #log = 'recorder_test_%s.log' % datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    log = True
+    
+    counter = Counter()
+    test(log, counter)
+    
+    print
+    print 'Total cases is %d, %d passed, %d failed' % (counter.total, 
+        counter.passed, counter.failed)
+#total 13 records output, time used 2s</code></pre>
 <p>上面的 <code>c = client('.')</code> 将创建一个测试用的客户端对象。它需要一个启动应用的路 径作为参数。上面 <code>'.'</code> 表示当前目录就是应用的目录。如果你生成的文件在其它的目录 下，那么你要手工修改一下，让它可以正确找到你的应用目录。</p>
 <p>这个客户端提供 <code>get</code>, <code>post</code> 等方法，但是，它将返回 Response 对象，所以使用它 们的话，还需要自已去写判断结果的代码。</p>
 <p>因此客户端还提供了 <code>test_url</code> 的方法，它可以测试相应的 url 并且与 <code>ok_test</code> 的值 进行比较，并将结果输出。详情参见下面的具体描述。</p>
 <p>log 用来控制结果输出。这里 <code>log=True</code> 表示输出到控制台。但是在测试时，会和日志输 出混在一起，所以最好是输出到文件名。上面注释掉的一行就是日志文件的生成。按日期和 时间，如果认为不合适可以进行手工修改。</p>
+<p>counter 用来计数，统计成功或失败的个数。</p>
+<p>以上代码主要执行为 <code>test()</code> 函数，这样可以把不同的测试分别录制为不同的文件，然后 通过导入其它的模块来统一执行。执行时，可以传入 <code>log</code> 和 <code>counter</code> 参数进行统一 处理。</p>
 <h3 id="title_1-2-6">编辑或执行<a class="anchor" href="#title_1-2-6">&para;</a></h3>
 <p>在文件生成之后，即可以直接运行。但是你还可以再编辑一下，比如删除重复的请求， 对请求数据进行加工。</p>
 <p>这是一个可能的输出结果：</p>
