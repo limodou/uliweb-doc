@@ -57,22 +57,32 @@ uliweb recorder print [filename]
 生成的脚本内容如：
 
 ```
-import os
-from datetime import datetime
+#coding=utf8
 
-from uliweb.utils.test import client
-c = client('.')
-print 'Current directory is %s' % os.getcwd()
-print
+def test(log, counter):
+    c.test_url('/login', data={}, method='GET', ok_test=200, log=log, counter=counter)
+    c.test_url('/login', data={"username":"xxx","password":"xxx","next":"/"}, 
+        method='POST', ok_test=302, log=log, counter=counter)
 
-#log = 'recorder_test_%s.log' % datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-log = True
+if __name__ == '__main__':
+    import os
+    from datetime import datetime
+    from uliweb.utils.test import client, Counter
 
-c.test_url('/login', data={}, method='GET', ok_test=200, log=log)
-c.test_url('/login', data={"username":"xxxx","password":"yyyy","next":"/"}, method='POST', ok_test=302, log=log)
-c.test_url('/', data={}, method='GET', ok_test=200, log=log)
-
-#total 88 records output, time used 0s
+    c = client('.')
+    print 'Current directory is %s' % os.getcwd()
+    print
+    
+    #log = 'recorder_test_%s.log' % datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    log = True
+    
+    counter = Counter()
+    test(log, counter)
+    
+    print
+    print 'Total cases is %d, %d passed, %d failed' % (counter.total, 
+        counter.passed, counter.failed)
+#total 13 records output, time used 2s
 ```
 
 上面的 `c = client('.')` 将创建一个测试用的客户端对象。它需要一个启动应用的路
@@ -88,6 +98,12 @@ c.test_url('/', data={}, method='GET', ok_test=200, log=log)
 log 用来控制结果输出。这里 `log=True` 表示输出到控制台。但是在测试时，会和日志输
 出混在一起，所以最好是输出到文件名。上面注释掉的一行就是日志文件的生成。按日期和
 时间，如果认为不合适可以进行手工修改。
+
+counter 用来计数，统计成功或失败的个数。
+
+以上代码主要执行为 `test()` 函数，这样可以把不同的测试分别录制为不同的文件，然后
+通过导入其它的模块来统一执行。执行时，可以传入 `log` 和 `counter` 参数进行统一
+处理。
 
 ### 编辑或执行
 
