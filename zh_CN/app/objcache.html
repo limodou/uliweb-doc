@@ -80,7 +80,8 @@
 <p>有一些全局性的配置项可以在需要的时候进行修改：</p>
 <pre class="prettyprint "><code>enable = True
 timeout = 24*3600
-key_format = 'OC:%(engine)s:%(tablename)s:%(id)s'</code></pre>
+table_format = 'OC:%(engine)s:%(table_id)s:'
+key_format = table_format + '%(id)s'</code></pre>
 <dl>
 <dt>enable</dt>
 <dd><p>用来切換objcache功能是否启动的标志。缺省是启用。</p>
@@ -88,8 +89,16 @@ key_format = 'OC:%(engine)s:%(tablename)s:%(id)s'</code></pre>
 <dt>timeout</dt>
 <dd><p>用来设置失效时间。缺省为一天。如果为0表示不失败。这是一个全局性的设置，在 定义每张表时，还可以单独对某张表进行控制。</p>
 </dd>
+<dt>table_format</dt>
+<dd><p>用来定义key的前缀生成规则，与下面的key_format联用。</p>
+<div class="ui info message">
+<p>上面table_id将会使用 <code>uliweb.contrib.tables</code> 来获得一个表对应的id，如果你不想 使用它，而是用表名，可以在自已的settings.ini中定义为：</p>
+<pre class="prettyprint "><code>table_format = 'OC:%(engine)s:%(tablename)s:'</code></pre>
+<p>这里engine, tableid, tablename, id都是自动提供的。</p>
+
+</div></dd>
 <dt>key_format</dt>
-<dd><p>用来控制缓存时的key的生成规则。这里engine, tablename, id都是自动提供的。你 只能修改除它们之外的内容。engine是给多数据库使用。</p>
+<dd><p>用来控制缓存时的key的生成规则。</p>
 </dd>
 </dl><h3 id="title_1-1-3">Model的配置<a class="anchor" href="#title_1-1-3">&para;</a></h3>
 <p>哪个Model可以使用缓存的功能还需要再进一步进行配置，可以有几种配置方式，如：</p>
@@ -97,7 +106,7 @@ key_format = 'OC:%(engine)s:%(tablename)s:%(id)s'</code></pre>
 tablename = field1, field2, ...
 tablename = 
 tablename = {'fields':[field1, field2, ...], 'expire':xxx, 
-    'key':other_key_name, 'fetch_obj':'xxx.xxx.func'}</code></pre>
+    'key':other_key_name_or_function_path}</code></pre>
 <p>上面列出了常见的三种配置方式，其中第一种和第二种差不多，唯一的区别就是第一种设置 了具体哪些字段需要缓存，这样没列出来的不会放在缓存中。第二种则表示所有字段都需要 缓存。</p>
 <p>第三种为更精确的设置，它的值是一个dict，其中各参数的作用为：</p>
 <dl>
@@ -112,18 +121,21 @@ tablename = {'fields':[field1, field2, ...], 'expire':xxx,
 <pre class="prettyprint "><code>def key(obj):
     return obj.a1+':'+obj.a2</code></pre>
 </dd>
-<dt>fetch_obj</dt>
-<dd><p>当key不是使用缺省的ID，并且也不是Model中存在的字段时，那么它是计算出来的，因 此在需要缓存对象时，需要手工来获取对象并返回，此时可以定义这个回调函数，定义 格式及示例为：</p>
-<pre class="prettyprint "><code>def fetch_obj(model, id):
-    return model.get(model.c.field==id)</code></pre>
-<p>将上面函数的字符串路径配置到 <code>fetch_obj</code> 对应的值即可。</p>
-</dd>
 </dl><h2 id="title_1-2">使用示例<a class="anchor" href="#title_1-2">&para;</a></h2>
-<p>目前uliweb还没有提供自动cache的功能，所以需要显示地使用API来进行处理。</p>
-<pre class="prettyprint "><code>    def get_object(table, id, cache=False, fields=None, use_local=False, engine_name=None)</code></pre>
+<p>Uliweb 提供了两个API来处理缓存： <code>functions.get_object()</code> 和 <code>functions.get_cached_object()</code>. 其中 <code>get_cached_object()</code> 就是调用的 <code>get_object()</code> 中不过自动将 <code>cache</code> 和 <code>use_local</code>  两个参数默认设为 <code>True</code>。</p>
+<div class="ui info message">
+<p><strong>New in 0.3</strong>  目前可以在 Model 中定义 <code>__cacheable__</code> 来自动启动cache处理。</p>
+
+</div>
+<pre class="prettyprint "><code>def get_object(table, id, condition=None, cache=False, fields=None, 
+    use_local=False, session=None)</code></pre>
 <p><code>get_object()</code> 有以下几个功能：</p>
 <ol>
-<li>从cache中读取某条记录，如果不存在，则直接从数据库中读取</li>
+<li><p>从cache中读取某条记录，如果不存在，则直接从数据库中读取。</p>
+<div class="ui info message">
+<p><strong>New in 0.3</strong> 如果id在redis中不存在，则Uliorm会尝试用id的值从数据库中读取，但是它会缺省认 为id的值是Model.c.id字段对应的值。这在大多数情况下是有效的，但是对于自定义 的key值（如使用了非id的字段作为key），这样是取不到数据的。所以在这种情况下， 你可以传入condition参数，它就是一个条件，当按id找不到对应的值时，使用condition 从数据库中获取数据。</p>
+
+</div></li>
 <li>不使用cache, 直接从数据库中读取记录的功能</li>
 <li>在使用缓存的情况下，使用线程缓存作为二级缓存</li>
 <li>指定要读出的字段来生成返回的对象，对于未指定的字段，缺省为Lazy状态，则当通过    实例来访问时会引发底层的完整读取</li>
@@ -144,6 +156,10 @@ tablename = {'fields':[field1, field2, ...], 'expire':xxx,
 <pre class="prettyprint "><code>[OBJCACHE_TABLES]
 blog = {'key':'subject'}</code></pre>
 <p>这个配置修改了原来使用id作为key的处理，改为使用 <code>subject</code> 字段。</p>
+<p>读取时：</p>
+<pre class="prettyprint "><code>Blog = functions.get_model('blog')
+obj = functions.get_object('blog', 'title1', condition=(Blog.c.subject=='title1'),
+    cache=True, use_local=True)</code></pre>
 <h2 id="title_1-3">关于日志<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>为了方便调试，objcache有很多地方会输出 DEBUG 级别的日志。而Uliweb的缺省日志级 别是 <code>info</code> ，所以如果你想要查看，可以在settings.ini中设置：</p>
 <pre class="prettyprint "><code>[LOG]

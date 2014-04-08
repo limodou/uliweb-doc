@@ -28,7 +28,8 @@ objcache目前只支持使用redis。所以还需要使用 `uliweb.contrib.redis
 ```
 enable = True
 timeout = 24*3600
-key_format = 'OC:%(engine)s:%(tablename)s:%(id)s'
+table_format = 'OC:%(engine)s:%(table_id)s:'
+key_format = table_format + '%(id)s'
 ```
 
 enable
@@ -37,10 +38,24 @@ enable
 timeout
 :   用来设置失效时间。缺省为一天。如果为0表示不失败。这是一个全局性的设置，在
     定义每张表时，还可以单独对某张表进行控制。
+
+table_format
+:   用来定义key的前缀生成规则，与下面的key_format联用。
+
+    {% alert class=info %}
+    上面table_id将会使用 `uliweb.contrib.tables` 来获得一个表对应的id，如果你不想
+    使用它，而是用表名，可以在自已的settings.ini中定义为： 
+    
+    ```
+    table_format = 'OC:%(engine)s:%(tablename)s:'
+    ```
+
+    这里engine, tableid, tablename, id都是自动提供的。
+    {% endalert %}
     
 key_format
-:   用来控制缓存时的key的生成规则。这里engine, tablename, id都是自动提供的。你
-    只能修改除它们之外的内容。engine是给多数据库使用。
+:   用来控制缓存时的key的生成规则。
+    
     
 ### Model的配置
 
@@ -51,7 +66,7 @@ key_format
 tablename = field1, field2, ...
 tablename = 
 tablename = {'fields':[field1, field2, ...], 'expire':xxx, 
-    'key':other_key_name, 'fetch_obj':'xxx.xxx.func'}
+    'key':other_key_name_or_function_path}
 ```
 
 上面列出了常见的三种配置方式，其中第一种和第二种差不多，唯一的区别就是第一种设置
@@ -76,29 +91,34 @@ key
         return obj.a1+':'+obj.a2
     ```
 
-fetch_obj
-:   当key不是使用缺省的ID，并且也不是Model中存在的字段时，那么它是计算出来的，因
-    此在需要缓存对象时，需要手工来获取对象并返回，此时可以定义这个回调函数，定义
-    格式及示例为：
-    
-    ```
-    def fetch_obj(model, id):
-        return model.get(model.c.field==id)
-    ```
-    
-    将上面函数的字符串路径配置到 `fetch_obj` 对应的值即可。
 
 ## 使用示例
 
-目前uliweb还没有提供自动cache的功能，所以需要显示地使用API来进行处理。
+Uliweb 提供了两个API来处理缓存： `functions.get_object()` 和 `functions.get_cached_object()`.
+其中 `get_cached_object()` 就是调用的 `get_object()` 中不过自动将 `cache` 和 `use_local` 
+两个参数默认设为 `True`。
+
+{% alert class=info %}
+**New in 0.3**  目前可以在 Model 中定义 `__cacheable__` 来自动启动cache处理。
+{% endalert %}
 
 ```
-    def get_object(table, id, cache=False, fields=None, use_local=False, engine_name=None)
+def get_object(table, id, condition=None, cache=False, fields=None, 
+    use_local=False, session=None)
 ```
 
 `get_object()` 有以下几个功能：
 
-1. 从cache中读取某条记录，如果不存在，则直接从数据库中读取
+1. 从cache中读取某条记录，如果不存在，则直接从数据库中读取。
+
+    {% alert class=info %}
+    **New in 0.3** 如果id在redis中不存在，则Uliorm会尝试用id的值从数据库中读取，但是它会缺省认
+    为id的值是Model.c.id字段对应的值。这在大多数情况下是有效的，但是对于自定义
+    的key值（如使用了非id的字段作为key），这样是取不到数据的。所以在这种情况下，
+    你可以传入condition参数，它就是一个条件，当按id找不到对应的值时，使用condition
+    从数据库中获取数据。 
+    {% endalert %}
+    
 2. 不使用cache, 直接从数据库中读取记录的功能
 3. 在使用缓存的情况下，使用线程缓存作为二级缓存
 4. 指定要读出的字段来生成返回的对象，对于未指定的字段，缺省为Lazy状态，则当通过
@@ -142,6 +162,16 @@ blog = {'key':'subject'}
 ```
 
 这个配置修改了原来使用id作为key的处理，改为使用 `subject` 字段。
+
+读取时：
+
+```
+Blog = functions.get_model('blog')
+obj = functions.get_object('blog', 'title1', condition=(Blog.c.subject=='title1'),
+    cache=True, use_local=True)
+```
+
+
 
 ## 关于日志
 

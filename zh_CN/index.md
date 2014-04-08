@@ -52,7 +52,6 @@ settings.md
 i18n.md
 mail.md
 manage_guide.md
-orm.md
 template.md
 url_mapping.md
 views.md
@@ -66,6 +65,14 @@ cache.md
 xmlrpc.md
 command.md
 uliweb_apps.md
+{% endtoc %}
+
+### 数据库
+
+{% toc max_depth=1 %}
+db/introduction.md
+db/orm.md
+db/multidb.md
 {% endtoc %}
 
 ### 部署
