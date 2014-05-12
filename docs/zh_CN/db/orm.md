@@ -1,11 +1,4 @@
-# ORM使用说明
-
-Uliweb内置了一个ORM，不过它是通过orm这个app来安装的，所以缺省情况下，ORM不是自
-动生效的。因此，你可以自已使用其它的ORM或数据相关的模块。当然，Uliweb的orm(以下
-简称uliorm)也提供了不错的功能，欢迎使用和提改进意见。uliorm是基于sqlalchemy开
-发的，并且目前没有使用session机制，而且你可以直接使用一些sqlalchemy底层的功能，如:
-select, update, join等。
-
+# ORM基本使用
 
 ## 使用要求
 
@@ -23,45 +16,65 @@ select, update, join等。
 [ORM]
 DEBUG_LOG = False
 AUTO_CREATE = True
-AUTO_DOTRANSACTION = True
+AUTO_TRANSACTION_IN_NOTWEB = False
+AUTO_TRANSACTION_IN_WEB = False
+CHECK_MAX_LENGTH = False
 CONNECTION = 'sqlite:///database.db'
-CONNECTION_TYPE = 'long'
 CONNECTION_ARGS = {}
+CONNECTION_TYPE = 'long'
 STRATEGY = 'threadlocal'
+PK_TYPE = 'int'
 CONNECTIONS = {}
+TABLENAME_CONVERTER = None
+NULLABLE = True
+SERVER_DEFAULT = False
+MANYTOMANY_INDEX_REVERSE = False
+PATCH_NONE = 'empty'
+
 
 [MIDDLEWARES]
-transaction = 'uliweb.orm.middle_transaction.TransactionMiddle'
+
 ```
 
 你可以在apps/settings.ini中覆盖它们。
 
-`DEBUG_LOG` 用来切换是否显示SQLAlchemy的日志。如果设置为True，则SQL语句会输出
-到日志中。缺省为False。
+下面对这些配置项分别解释一下：
 
-`AUTO_CREATE` 用于切换是否可以自动建表。在开发的时候，最简单的情况就是当你定
-义完一个Model，那么就可以直接使用它了。Uliorm会自动在数据库中创建表。如果设置为
-False，则需要手工建表。要么，你可以直接手工写Create语句，然后到数据库中去创建表，
-但是我们一般不会使用这种方法。要么，你可以通过uliweb sql <appname>来生成建表的
-SQL语句，然后再到数据库中执行这些语句。另外采用uliweb syncdb就可以自动将没有创
-建过的表进行创建。注意：它只会创建没有创建过的表。还有一种方式就是使用alembic工具，
-它可以实现对Model和数据库表的比较，从而创建新表，修改表结构，修改索引等工作。
+### DEBUG_LOG
 
-对于已经创建，但是修改过的表应该如何重建呢？答案是使用uliweb reset命令。
+用来切换是否显示SQLAlchemy的日志。如果设置为 `True` ，则SQL语句会输出
+到日志中。缺省为 `False` 。
+
+### AUTO_CREATE
+
+用于切换是否可以自动建表。在缺省情况下为 `False` ，但是在测试代码中
+可以考虑置为 `True` 以便可以自动建表。当它设为 `False` 时，有几种创建数据库表的方法：
+
+* 通过 `uliweb syncdb` 或 `uliweb reset` 等命令来自动建表。不过 `syncdb` 在执行时，只会对数据库不存在的表进行创建处理，对于已经存在，但是表结构变化的表，不会进行更新处理。而 `reset` 则是先将表 `drop` 掉，再创建，所以总是新的。但是它同时也会将表删除。
+* 通过 `uliweb alembic` 命令集来处理。它需要安装 `uliweb-alembic` 包。它可以实现表的创建，表结构的修改等处理，所以建议使用这种方式来处理。
+* 手工创建 ，不过手工创建比较麻烦不建议这样的。如果要做，可以先通过 `uliweb sqltable tablename` 命令得到对应的建表SQL语句，然后再手工创建。
 
 
 {% alert class=info %}
-自动建表对于sqlite有一个问题。如果在你执行一个事务时，非查询和更新类的语句
+为什么不建议在正式运行时打开自动建表。因为：自动建表每次都要检查数据表是否存在，存在性能问题。同时对于sqlite数据库有一个问题：如果在你执行一个事务时，非查询和更新类的语句
 会引发事务的自动提交。而自动建表就是会先查找表是否存在，因此会破坏事务的处理。
-所以建议对于sqlite禁止自动建表，而是手工建表。其它的暂时还没有发现。
 {% endalert %}
 
-`AUTO_DOTRANSACTION` 用于指示是否在执行 `do_` 时自动根据环境来创建新的共享
-的线程连接并启动事务，详情参见下面关于多数据库连接的说明。
+### AUTO_TRANSACTION_IN_NOTWEB (0.3修改)
 
+用于指示是否在非WEB环境下，当执行 `do_` 时自动启动事务，详情参见下面关于多数据库连接的说明。非WEB环境主要是指守护和批处理，因此建议手工来处理事务。
 
-`CONNECTION` 用于设置数据库连接串。它是遵循SQLAlchemy的要求的。（详情可以参考 --
-    [http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments](http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments)）
+### AUTO_TRANSACTION_IN_WEB (0.3修改)
+
+用于指示是否在WEB环境下自动启动事务。在添加 `uliweb.contrib.orm` 时，会自动安装 transcation_middleware 中间件，因此在缺省情况下，它会通过中间件的方式来自动创建和处理事务。
+
+### CHECK_MAX_LENGTH
+
+是否当字段为 Varchar 或 Char 时检查max_length参数是否设置。这两种类型分别对应 Uliorm 中的 StringProperty 和 CharProperty，缺省情况下，max_length=255，因此 max_length 其实可以不用定义。但是为了让程序更清晰，可以把这个配置设为 `True` ，这样在定义这两种字段时，max_length 就一定要给出，否则报错。
+
+### CONNECTION
+
+用于设置数据库连接串。它是遵循SQLAlchemy的要求的。（
 
 
 普通的格式为:
@@ -88,6 +101,9 @@ pg_db = create_engine('postgres://scott:tiger@localhost/mydatabase')
 # mysql
 mysql_db = create_engine('mysql://scott:tiger@localhost/mydatabase')
 
+# pymysql
+mysql_db = create_engine('mysql+pymysql://scott:tiger@localhost/mydatabase')
+
 # oracle
 oracle_db = create_engine('oracle://scott:tiger@127.0.0.1:1521/sidname')
 
@@ -102,11 +118,14 @@ mssql_db = create_engine('mssql://scott:tiger@mydsn')
 firebird_db = create_engine('firebird://scott:tiger@localhost/sometest.gdm')
 ```
 
-`CONNECTION_TYPE` 用于指明连接模式： `'long'` 为长连接，会在启动时建立。
-`'short'` 为短连接，只会在每个请求时建立。使用短连接需要配置 `middle_transaction` 。
-使用长连接并不需要配置这个middleware。缺省值为 `'long'` 即长连接。
+### CONNECTION_TYPE
 
-`CONNECTION_ARGS` 用于除连接串之外的一些参数。SQLAlchemy中，创建引擎时要使用:
+用于指明连接模式： `'long'` 为长连接，会在启动时建立。
+`'short'` 为短连接，只会在每个请求时建立。缺省值为 `'long'` 即长连接。
+
+### CONNECTION_ARGS
+
+用于除连接串之外的一些参数。SQLAlchemy中，创建引擎时要使用:
 
 
 ```
@@ -118,7 +137,9 @@ create_engine(connection, **kwargs)
 数是会直接传给更底层的mysql的驱动。而CONNECTION_ARGS是传给create_engine的，所以
 还是有所不同。
 
-`STRATEGY` 连接策略。此为sqlalchemy的连接参数，可以选择的值为 `plain` 和 `threadlocal`.
+### STRATEGY
+
+连接策略。此为sqlalchemy的连接参数，可以选择的值为 `plain` 和 `threadlocal`.
 其中 `threadlocal` 是为了实现无连接的执行。在sqlalchemy中，一般我们在执行sql命令
 时或者使用engine或connection来执行。这样有时会感觉比较麻烦。于是如果在创建连接
 时使用 `strategy='threadlocal'` 来创建，那么会在线程范围内创建一个共享的连接，
@@ -136,7 +157,13 @@ select().execute()
 返回时进行释放。它使用的并不是共享方式的连接。那么共享方式的连接主要是在命令行
 或批处理执行时使用比较方便。在View处理中，建议都使用 `do_` 来进行包装。
 
-`CONNECTIONS` 数据库多连接设置。uliweb是支持多个数据库连接，自然也支持多个数据库。
+### PK_TYPE
+
+表示主键ID使用的类型。缺省情况下，ID类型为 Integer, 但是如果数据特别多，则有可能超过Integer的最大值，所以可以通过它改为 `bigint` ，这样范围就更大了。
+
+### CONNECTIONS
+
+数据库多连接设置(详情可以参见 [多数据库连接](multidb.html) 的文档)。uliweb是支持多个数据库连接，自然也支持多个数据库。
 为了保持和以前使用方式的兼容。在 `CONNECTIONS` 中一般只要设置非缺省的数据库，
 而缺省的数据库仍然使用原来的处理方式。 `CONNECTIONS` 的设置格式为:
 
@@ -162,9 +189,59 @@ CONNECTION_ARGS = {}
 STRATEGY = 'plain'
 ```
 
+### TABLENAME_CONVERTER
 
-MIDDLEWARES --
-    安装 uliweb.contrib.orm app会自动添加 TransactionMiddle ，这样将自动启动事务。 **0.1.1修改**
+用来设置文件名转换规则，缺省为 `None` 表示Model类名的小写作为表名。如果你还有其它的要求，可以定义一个函数，然后配置到这个参数中，如：
+
+```
+def tablename_converter(name):
+	return 't_%s' % name
+```
+
+然后配置到settings.ini中：
+
+```
+TABLENAME_CONVERTER = 'path.to.tablename_converter'
+```
+
+### NULLABLE
+
+字段是否可以为 NULL 的全局设置。缺省为 `True` 表示在定义字段时可以，数据库的值可以为 NULL。你可以通过修改为 `False` 来强制要求所有字段不能为 NULL，也可以针对单个字段传入 `nullable=True` 来设置允许为 NULL。
+
+### SERVER_DEFAULT
+
+建表时，字段的缺省值设置。缺省为 `False` 表示没有指定缺省字段。它是全局设置，当置为 `True` ，每种类型都有自已的缺省值。也可以在定义某个字段时，通过传入 `server_default` 来设置数据库字段的缺省值。关于更详细的说明，参见字段定义时的常见参数说明关于 `server_default` 的说明。
+
+### MANYTOMANY_INDEX_REVERSE
+
+对于 ManyToMany 字段是否要建立反向关系的索引。
+
+例如 A 和 B 两个 Model，在A中定义了一个 bs 的ManyToMany的字段，这样在表中会建立 `(a_id, b_id)` 的一个索引。如果这时 `MANYTOMANY_INDEX_REVERSE` 为 `False`, 则并不会创建一个 `(b_id, a_id)` 的索引。如果置为 `True` 则会创建。如果不想这个功能全局生效，还可以在定义 `ManyToMany` 时传入 `index_reverse＝True` 的参数。
+
+### PATCH_NONE (0.3修改)
+
+当你使用 0.9 版本的 SQLAlchemy 时，对于 None 在条件中的处理会发生变化。在 0.8 版本中， 这样的代码 None 是会被忽略掉：
+
+```
+condition = None
+if xxx:
+    condition = (Model.c.id == n) & None
+```
+
+但是在 0.9 中，None会转为 `NULL` 从而造成上面的代码为 False，所以要么你将上面的代码改为:
+
+```
+from sqlalchemy.sql import true
+condition = true()
+if xxx:
+    condition = (Model.c.id == n) & None
+```
+
+如果 PATCH_NONE 为 `'empty'` 时，会保证 0.9 对 None 的处理和 0.8一样。也可以设置它的值为 `'exception'` 这样，在 0.9 版本中，当条件与 None 进行与操作时，会抛出异常。
+
+### MIDDLEWARES
+
+安装 uliweb.contrib.orm app会自动添加 TransactionMiddle ，这样将自动启动事务。
 
 
 
@@ -199,6 +276,8 @@ class Note(Model):
 
     __tablename__ = 't_note'
 ```
+
+如果存在通用的表名定义规则，可以考虑使用配置参数 `TABLENAME_CONVERTER` 。
 
 ### 表的映射(0.1.7新増)
 
@@ -249,25 +328,27 @@ __table_args__ = {'mysql_engine':'MyISAM'} #'InnoDB'
 
 常见的参数定义为：
 
-__table_args__ --
+`__table_args__` --
     将传给底层的 Table 的定义，具体内容符合 SQLAlchemy 的要求
     
-__mapping_only__ --
+`__mapping_only__` --
     用来定义表的映射状态，详情见上面的说明。
     
-__tablename__ --
+`__tablename__` --
     用来定义数据库的表名。缺省情况下，表名是 Model 的类名小写形式。如果Model与
     数据库中的表名不同，则可以通过这个属性定义数据库中的名字。在使用时，仍然应
     使用配置名，而不是表名。
     
-__dispatch_enabled__ --
+`__dispatch_enabled__` --
     用来设置是否发出信号，如： `post_save`, `pre_save`, `pre_delete` 等。在不希
     望有人处理这些事件时考虑设置。还可以通过调用 `set_dispatch(False)` 来实现全
     局性的禁止，主要是用在批处理中。
     
-__cacheable__ --
+`__cacheable__` --
     在使用 get() 方法时，如果 `__cacheable__` 为 True，则自动进行缓存处理，如使
     用uliweb内置的 objcache APP 来处理。则 `get(id)` 相当于 `get(id, cache=True)`
+    
+注意，这些参数都可以定义在 settings.ini 中。
 
 ### OnInit 方法
 
@@ -301,8 +382,10 @@ class Todo(model):
 default_query 将传入一个query对象，你可以对它使用Result上的查询相关的处理，比如:
 `filter`, `order_by`, `limit`, `offset` 等可以返回结果集的方法。
 
+不过，一旦定义了 default_query 所有的 filter 查询都会使用这个结果，除非你使用 `filter().without()` 来显示指时不需要 default_query 的处理。
 
-### 属性定义
+
+### 字段定义
 
 uliorm中定义一个Model的字段为Property，但为了方便，uliorm还提供了Field函数。
 
@@ -351,11 +434,7 @@ Python type和字段类的对应关系为:
 缺省情况下，uliorm会自动为你添加一个 `id` 字段，而你并不需要在Model中进行定义。
 
 如果你不想自动定义ID，则可以在Model添加一个类属性 `__without_id__` 则 uliorm
-将不会自动创建 id 属性。并且，当你自行定义了一个主键，id也将不自动定义。如：
-
-```
-user_id = Field(int, primary_key=True, autoincreament=True)
-```
+将不会自动创建 id 属性。
 
 
 ### Property 构造函数
@@ -366,8 +445,12 @@ Property 其它所有字段类的基类。所以它的一些属性和方法将�
 
 ```
 Property(verbose_name=None, name=None, default=None, required=False,
-    validators=None, choices=None, max_length=None, type_class=None,
-    type_attrs=None)
+    validators=None, choices=None, max_length=None, hint='',
+    auto=None, auto_add=None, type_class=None,
+    type_attrs=None, placeholder='', extra=None, 
+    sequence=False, server_default=None,
+    nullable=__nullable__, index=None, unique=False,
+    primary_key=False, autoincrement=False)
 ```
 
 
@@ -395,6 +478,8 @@ default --
     在某个环境下，而你在执行时可能不具备所要求的环境，比如default函数要处理request.user，
     但是你有可能在批处理中去创建实例，这样request.user是不会存在的，因此会报错。
     简单的处理就是把Model.field.default置为None。
+    
+    default 并不影响建表语句，所以如果想实现建表的default定义，需要使用 `server_default` 。
 
 required --
     指明字段值是否不能为None。如果在创建Model实例时，没有传入required的字段值，
@@ -414,6 +499,15 @@ validators --
     如果校验失败，这个函数应该抛出一个 BadValueError的异常。如果成功，则返回
     None或不返回。
 
+hint --
+	 用来定义一个帮助信息，可以用在form中作为Form字段的help_string的值。
+	 
+auto --
+	 可以是一个函数。表示在Update时，如果没提供值则自动设置auto。
+	 
+auto_add --
+	 与 auto 类似，不同之处在于，它只是在Insert时起作用。default的取值是不关心作什么操作的，而 auto 和 auto_add 要关心具体的操作。
+	 
 choices --
     当属性值的取值范围是有限时可以使用。它是一个list，每个元素是一个二元tuple，
     格式为(value, display)，value为取值，display为显示信息。目前，uliorm并不用
@@ -422,8 +516,11 @@ choices --
 
 max_length --
     字段的最大长度，仅用在 `StringProperty`, `CharProperty` 中。如果没
-    有指定缺省为30。
+    有指定缺省为255。
 
+sequence --
+	 用在postgresql数据库中，表示一个sequence字段。
+	 
 index --
     如果设置为True则表示要使用当前字段生成索引。只适合单字段索引。如果要生成复
     合索引，要生成OnInit类方法，并调用Index函数来生成。缺省为False。
@@ -440,7 +537,7 @@ type_class, type_attrs --
 
 server_default --
     数据库缺省值，它会影响创建表时的Create语句，它会生成 `DEFAULT` 子句。它的取
-    值按SQLAlchemy的写法应该使用text来封装，如 `text(0)` 。
+    值按SQLAlchemy的写法应该使用text来封装，如 `text(0)` 。对于数值类型，正确的写法是使用 	 `text()` 来封装，不过Uliorm作了处理，可以直接使用数值。如： `server_default=0` 。
 
 {% alert class=info %}
 关于nullable和server_default在settings.ini中有配置项可以进行全局缺省值的设置：
@@ -588,13 +685,6 @@ tablename --
 
 
 
-{% alert class=info %}
-Uliweb中Model对应的表名一方面可以通过 `__tablename__` 来指定。另一方面，它
-可以将Model的类名小写作为表名。
-
-{% endalert %}
-
-
 ## 关系定义
 
 uliorm支持以下几种关系的定义: OneToOne, Reference, SelfReference, ManyToMany.
@@ -638,7 +728,6 @@ True
 
 {% alert class=info %}
 注意，OneToOne只是一个关系，它并不会自动根据主表记录自动创建关联表的记录。
-
 {% endalert %}
 
 
@@ -1501,96 +1590,6 @@ except:
 每次循环创建新的连接。因此，我在ORM中提供了Reset命令，它可以清除当前连接，从而
 实现新连接的创建。因此如果你的处理是一个循环，可以在每次循环时执行 `Reset()` 。
 
-
-## 模块级 API
-
-uliweb.orm 提供了一些模块级别的方法，用于控制整个uliorm的工作模式。不过，如果
-你不是在脱离uliweb的框架环境下来使用orm模块的话，以下的一些方法在settings.ini
-中有相应的配置，因此不需要去手工调用相应的函数。但如果是在其它的非uliweb的环境
-下使用uliorm，则有可能需要手工调用这些函数来控制uliorm的行为。
-
-
-set_auto_create(flag) --
-    设置是否自动建表。flag取值为True或False。缺省为False。这一功能在开发时比较
-    有用，因为可以不使用uliweb syncdb来建表，但是在生产环境中建议关闭，手动来
-    处理。
-
-    {% alert class=info %}
-    在使用sqlite时，发现有问题。当处于一个事务中，如果出现非select, update
-    之类的语句，sqlite会自动提交事务，造成事务处理不是按你的预期，所以也需
-    要关闭这个功能。
-    {% endalert %}
-
-
-set_debug_query(flag) --
-    设置调试模式。如果flag为True，则生成的SQL语句将输出到日志中。如果你是通过
-    `get_connection()` 得到的一个数据库连接对象，可以简单地设置 `db.echo = True`
-    来激活调试模式。
-
-set_encoding(encoding) --
-    设置缺省编码。缺省为 `utf-8` 。
-
-get_connection(connection='', default=True, debug=None, engine_name=None, connection_type='long', **args) --
-    建立一个数据库连接，并返回连接对象。
-    connection需要按SQLAlchemy的要求来编写。
-    get_connection既可以支持原来的单数据库连接模式，也可以支持多数据库连接模式，
-    还可以支持缺省连接模式，既上次创建过，然后复用原来的连接。那么它按以下策略
-    来处理:
-
-    ```
-    if connection 不为空:
-        则缺建新的连接
-        if default is True:
-            则将连接设置到线程中进行共享
-        else:
-            不共享
-    else:
-        按engine_name来返回连接。如果engine_name为None，则使用 default
-    ```
-
-
-get_model(model, engine_name=None) --
-    返回指定连接的 `model` 对应的Class。如果是字符串值，则需要根据Model配置的要求在settings.ini
-    中定义Model的信息才有效果。也可以传入Model的类。
-    如果engine_name不为None，则根据给定的engine_name来查找Model。如果不存在，则
-    抛出异常。
-    如果engine_name为空时，将会智能搜索。如果某个Model只设置了一个数据库连接，
-    则自动使用这个连接，如果存在多个则会抛出异常。
-
-local_connection(engine_name=None, auto_transaction=False): conn --
-    返回缓存的数据库连接。如果不存在，则创建。 `auto_transaction` 是用来控制
-    是否自动创建事务。
-
-Connect(engine_name=None): None --
-    清除缓存的线程连接，保证下次再访问时可以重建连接。
-
-Begin(ec=None): transaction object --
-    开始一个事务。如果存在线程连接对象同时如果不存在当前线程内的连接对象，则自动从连接池中取一个连接
-    并绑定到当前线程环境中。ec为数据库引擎对象名，如果没提供，则缺省为 'default'.
-    ec也可以为连接对象。
-
-Commit(close=False, ec=None, trans=None) --
-    提交一个事务。使用当前线程的连接对象。
-
-CommitAll(close=False) --
-    提交所有线程事务。
-
-Rollback(close=False, ec=None, trans=None) --
-    回滚一个事务。使用当前线程的连接对象。
-
-RollbackAll(close=False) --
-    回滚所有线程事务。
-
-do_(sql, ec=None) --
-    执行一条SQL语句。使用当前的线程连接。只有当使用非ORM的API时才需要使用它
-    来处理，比如直接使用SQLAlchemy提供的：select, update, delete, insert时，可
-    以这样:
-
-    ```
-    from uliweb.orm import do_
-    
-    result = do_(select(User.c, User.c.username=='limodou'))
-    ```
 
 
 ## 信号处理

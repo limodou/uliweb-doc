@@ -14,7 +14,7 @@ SQLAlchemy库来实现ORM相关的功能。因此，你既可以使用 Uliweb �
 
 * SQLAlchemy (可以使用 0.8+版本)
 * 数据库驱动 (Mysqldb, pymysql等)
-* 如果考虑使用alembic进行数据库迁移，建议安装我修改过的 alembic，因为它做了与
+* 如果考虑使用alembic进行数据库迁移，建议安装我修改过的 uliweb-alembic ，因为它做了与
   uliweb的集成
 
 为了方便安装上面的包，uliweb提供了缺省的命令，如：
@@ -23,7 +23,7 @@ SQLAlchemy库来实现ORM相关的功能。因此，你既可以使用 Uliweb �
 uliweb install uliweb.contrib.orm
 ```
 
-这个命令将缺省安装： SQLAlchemy, mysqldb, alembic
+这个命令将缺省安装： SQLAlchemy, mysqldb, uliweb-alembic
 
 然后要向 settings.ini 中添加 `uliweb.contrib.orm` APP，如：
 
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     user = 'uliweb.contrib.auth.models.User'
     ```
     
-    定义时，前面的名字最好与Model的名字相同，并且使用小写。
+    定义时，前面的名字最好与Model的名字相同，并且建议使用小写。
     
 1. 在使用Model时，使用 `functions.get_model(model_name)` 来获得Model类
 1. 在关系定义时，使用settings.ini中定义的名字，而不是直接引用Model类（在0.2.6+
@@ -93,7 +93,7 @@ ORM 文档中关于表参数的描述。但是对于多数据库配置 `engines`
 但同时又与 SQLAlchemy 有密切的关系。主要体现在：
 
 * Model.table 可以得到底层的 Table 实例
-* Model.c 和 Model.table.c 的效果一样，就是 Table 实例中字段的字典
+* Model.c 和 Model.table.c 的效果一样，就是 Table 实例中字段的字典 (c=Columns)
 * 在Model查询时使用的条件符合 SQLAlchemy 的语法，例如： `Model.c.id==1` 和 `Table.c.id==1` 类似。
 * 可以直接使用 SQLAlchemy 的底层函数，如：
 
