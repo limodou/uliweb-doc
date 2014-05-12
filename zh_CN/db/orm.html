@@ -183,7 +183,7 @@ STRATEGY = 'plain'</code></pre>
 <h3 id="title_1-2-15">MANYTOMANY_INDEX_REVERSE<a class="anchor" href="#title_1-2-15">&para;</a></h3>
 <p>对于 ManyToMany 字段是否要建立反向关系的索引。</p>
 <p>例如 A 和 B 两个 Model，在A中定义了一个 bs 的ManyToMany的字段，这样在表中会建立 <code>(a_id, b_id)</code> 的一个索引。如果这时 <code>MANYTOMANY_INDEX_REVERSE</code> 为 <code>False</code>, 则并不会创建一个 <code>(b_id, a_id)</code> 的索引。如果置为 <code>True</code> 则会创建。如果不想这个功能全局生效，还可以在定义 <code>ManyToMany</code> 时传入 <code>index_reverse＝True</code> 的参数。</p>
-<h3 id="title_1-2-16">PATCH_NONE (0.3修改)<a class="anchor" href="#title_1-2-16">&para;</a></h3>
+<h3 id="patch">PATCH_NONE (0.3修改)<a class="anchor" href="#patch">&para;</a></h3>
 <p>当你使用 0.9 版本的 SQLAlchemy 时，对于 None 在条件中的处理会发生变化。在 0.8 版本中， 这样的代码 None 是会被忽略掉：</p>
 <pre class="prettyprint "><code>condition = None
 if xxx:
@@ -194,7 +194,7 @@ condition = true()
 if xxx:
     condition = (Model.c.id == n) &amp; None</code></pre>
 <p>如果 PATCH_NONE 为 <code>'empty'</code> 时，会保证 0.9 对 None 的处理和 0.8一样。也可以设置它的值为 <code>'exception'</code> 这样，在 0.9 版本中，当条件与 None 进行与操作时，会抛出异常。</p>
-<h3 id="title_1-2-17">MIDDLEWARES<a class="anchor" href="#title_1-2-17">&para;</a></h3>
+<h3 id="title_1-2-16">MIDDLEWARES<a class="anchor" href="#title_1-2-16">&para;</a></h3>
 <p>安装 uliweb.contrib.orm app会自动添加 TransactionMiddle ，这样将自动启动事务。</p>
 <h2 id="title_1-3">Model 定义<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>一般情况下，你应该在app下的models.py中创建Model。从uliweb.orm中导入所有东西，然 后创建自已的Model，它应该从 <code>Model</code> 类进行派生。然后添加你想要定义的字段。例如:</p>
@@ -207,14 +207,14 @@ class Note(Model):
     homepage = Field(str, max_length=128)
     email = Field(str, max_length=128)
     datetime = Field(datetime.datetime, auto_now_add=True)</code></pre>
-<h3 id="title_1-3-18">表名<a class="anchor" href="#title_1-3-18">&para;</a></h3>
+<h3 id="title_1-3-17">表名<a class="anchor" href="#title_1-3-17">&para;</a></h3>
 <p>缺省情况下，表名应该是Model类名的小写。比如上面的Note的表名应该是 <code>note</code> 。</p>
 <p>如果你想设置为其它的表名，你可以在Model类中定义一个 <code>__tablename__</code> ，例如:</p>
 <pre class="prettyprint "><code>class Note(Model):
 
     __tablename__ = 't_note'</code></pre>
 <p>如果存在通用的表名定义规则，可以考虑使用配置参数 <code>TABLENAME_CONVERTER</code> 。</p>
-<h3 id="title_1-3-19">表的映射(0.1.7新増)<a class="anchor" href="#title_1-3-19">&para;</a></h3>
+<h3 id="title_1-3-18">表的映射(0.1.7新増)<a class="anchor" href="#title_1-3-18">&para;</a></h3>
 <p>什么叫表的映射，就是它只是现有表的一个映射，在执行syncdb, reset, alembic相关命令 时，不会在数据库中执行create table或drop table的操作。因此，它只是用来映射。</p>
 <p>这里，映射的表，可以是真正的表，或者是视图(View)。</p>
 <p>它的作用？比如有两个项目，其中一个项目功能比较简单，它将使用另一个项目的表，因此 它本身并不需要建表，只要映射就可以了。因此它只需要把另一个项目的App添加到项目中。 另外，在使用alembic时，因为数据库的表是 由两个项目组成的，所以需要某种方式来区分：哪些表要真正创建，哪些表是已经存在直接 映射即可。因此Uliweb 0.1.7就引入了 <code>__mapping_only__</code> 属性。需要时，在Model的类 属性中定义即可，如：</p>
@@ -250,14 +250,14 @@ user = {'__mapping_only__':True}</code></pre>
 <dd><p>在使用 get() 方法时，如果 <code>__cacheable__</code> 为 True，则自动进行缓存处理，如使 用uliweb内置的 objcache APP 来处理。则 <code>get(id)</code> 相当于 <code>get(id, cache=True)</code></p>
 </dd>
 </dl><p>注意，这些参数都可以定义在 settings.ini 中。</p>
-<h3 id="title_1-3-20">OnInit 方法<a class="anchor" href="#title_1-3-20">&para;</a></h3>
+<h3 id="title_1-3-19">OnInit 方法<a class="anchor" href="#title_1-3-19">&para;</a></h3>
 <p>uliorm也允许你在创建表之时在一些初始化工作。只要写一个OnInit的class method，例 如:</p>
 <pre class="prettyprint "><code>class Todo(Model):
     @classmethod
     def OnInit(cls):
         Index('my_indx', cls.c.title, cls.c.owner, unique=True)</code></pre>
 <p>上面的代码是用来创建复合索引。一般的单字段索引，可以在定义字段时直接指定Index=True。</p>
-<h3 id="title_1-3-21">default_query 方法<a class="anchor" href="#title_1-3-21">&para;</a></h3>
+<h3 id="title_1-3-20">default_query 方法<a class="anchor" href="#title_1-3-20">&para;</a></h3>
 <p>uliorm目前支持用户自定义缺省条件，即在查询时，会自动将缺省条件与输入的条件合并 处理，它需要定义为一个类方法，如:</p>
 <pre class="prettyprint "><code>class Todo(model):
     @classmethod
@@ -265,7 +265,7 @@ user = {'__mapping_only__':True}</code></pre>
         return query.filter(xxx).order_by(yyy)</code></pre>
 <p>default_query 将传入一个query对象，你可以对它使用Result上的查询相关的处理，比如: <code>filter</code>, <code>order_by</code>, <code>limit</code>, <code>offset</code> 等可以返回结果集的方法。</p>
 <p>不过，一旦定义了 default_query 所有的 filter 查询都会使用这个结果，除非你使用 <code>filter().without()</code> 来显示指时不需要 default_query 的处理。</p>
-<h3 id="title_1-3-22">字段定义<a class="anchor" href="#title_1-3-22">&para;</a></h3>
+<h3 id="title_1-3-21">字段定义<a class="anchor" href="#title_1-3-21">&para;</a></h3>
 <p>uliorm中定义一个Model的字段为Property，但为了方便，uliorm还提供了Field函数。</p>
 <p>所有的字段都是以Property结尾的类。下面是uliorm中的字段类:</p>
 <pre class="prettyprint "><code>'BlobProperty', 'BooleanProperty', 'DateProperty', 'DateTimeProperty',
@@ -275,7 +275,7 @@ user = {'__mapping_only__':True}</code></pre>
 <p>你可能认为它们不好记忆，所以你可以使用Field来定义。</p>
 <p>Field是一个函数，它的第一个参数可以是内置的Python type，也可以是uliorm定义的特殊 类型。其它的参数是和对应的Property类一致的。它会根据你传入的Python type或特殊类 型来自动查找匹配的字段类。</p>
 <p>Python type和字段类的对应关系为:</p>
-<table>
+<table class="ui collapsing celled table segment">
 <tr><td>引用简写类型</td><td>实际类型</td>
 </tr>
 <tr><td>str</td><td>StringProperty,</td>
@@ -311,10 +311,10 @@ user = {'__mapping_only__':True}</code></pre>
 
 </table>
 <p>小写的，都是Python内置的类型或类。大写的都是uliorm为了方便记忆而创建的。而上面 看到的关于Node的示例就是使用Field来定义字段的。</p>
-<h3 id="title_1-3-23">ID 属性<a class="anchor" href="#title_1-3-23">&para;</a></h3>
+<h3 id="title_1-3-22">ID 属性<a class="anchor" href="#title_1-3-22">&para;</a></h3>
 <p>缺省情况下，uliorm会自动为你添加一个 <code>id</code> 字段，而你并不需要在Model中进行定义。</p>
 <p>如果你不想自动定义ID，则可以在Model添加一个类属性 <code>__without_id__</code> 则 uliorm 将不会自动创建 id 属性。</p>
-<h3 id="title_1-3-24">Property 构造函数<a class="anchor" href="#title_1-3-24">&para;</a></h3>
+<h3 id="title_1-3-23">Property 构造函数<a class="anchor" href="#title_1-3-23">&para;</a></h3>
 <p>Property 其它所有字段类的基类。所以它的一些属性和方法将会被派生类使用到，它的定 义为:</p>
 <pre class="prettyprint "><code>Property(verbose_name=None, name=None, default=None, required=False,
     validators=None, choices=None, max_length=None, hint='',
@@ -390,18 +390,18 @@ SERVER_DEFAULT = False</code></pre>
 <p>所以在缺省情况下，当没有给字段值的时候，如果default为None并且server_default也为 None，则存入数据库时会是NULL。如果你可以根据需要来修改这个全局配置，或针对每张表 通过参数来调整。</p>
 
 </div>
-<h3 id="title_1-3-25">字段列表<a class="anchor" href="#title_1-3-25">&para;</a></h3>
-<h4 id="title_1-3-25-1">CharProperty<a class="anchor" href="#title_1-3-25-1">&para;</a></h4>
+<h3 id="title_1-3-24">字段列表<a class="anchor" href="#title_1-3-24">&para;</a></h3>
+<h4 id="title_1-3-24-1">CharProperty<a class="anchor" href="#title_1-3-24-1">&para;</a></h4>
 <p>与 <code>CHAR</code> 相对应。你应该传入一个 <code>max_length</code> 。如果传入一个Unicode字符串它 将转换为缺省编码(utf-8)。</p>
-<h4 id="title_1-3-25-2">StringProperty<a class="anchor" href="#title_1-3-25-2">&para;</a></h4>
+<h4 id="title_1-3-24-2">StringProperty<a class="anchor" href="#title_1-3-24-2">&para;</a></h4>
 <p>与 <code>VARCHAR</code> 相对应。你应该传入一个 <code>max_length</code> 。如果传入一个Unicode字符串它 将转换为缺省编码(utf-8)。目前uliorm从数据库中取出StringProperty时会使用Unicode， 而不转换为utf-8或其它的编码。因此与UnicodeProperty是一致的。</p>
-<h4 id="title_1-3-25-3">TextProperty<a class="anchor" href="#title_1-3-25-3">&para;</a></h4>
+<h4 id="title_1-3-24-3">TextProperty<a class="anchor" href="#title_1-3-24-3">&para;</a></h4>
 <p>与 <code>TEXT</code> 相对应。用于录入大段的文本。</p>
-<h4 id="title_1-3-25-4">UnicodeProperty<a class="anchor" href="#title_1-3-25-4">&para;</a></h4>
+<h4 id="title_1-3-24-4">UnicodeProperty<a class="anchor" href="#title_1-3-24-4">&para;</a></h4>
 <p>与 <code>VARCHAR</code> 相对应。但是你需要传入Unicode字符串。</p>
-<h4 id="title_1-3-25-5">BlobProperty<a class="anchor" href="#title_1-3-25-5">&para;</a></h4>
+<h4 id="title_1-3-24-5">BlobProperty<a class="anchor" href="#title_1-3-24-5">&para;</a></h4>
 <p>与 <code>BLOB</code> 相对应。用于保存二进制的文本。</p>
-<h4 id="title_1-3-25-6">DateProperty DateTimeProperty TimeProperty<a class="anchor" href="#title_1-3-25-6">&para;</a></h4>
+<h4 id="title_1-3-24-6">DateProperty DateTimeProperty TimeProperty<a class="anchor" href="#title_1-3-24-6">&para;</a></h4>
 <p>这些字段类型用在日期和时间类型上。它们还有其它的参数:</p>
 <dl>
 <dt>auto_now</dt>
@@ -412,7 +412,7 @@ SERVER_DEFAULT = False</code></pre>
 </dd>
 <dt>format</dt>
 <dd><p>用来设置日期时间的格式串，uliorm会用它进行日期格式的转换。在缺省情况 下，当传入一个字符串格式的日期字段时，uliorm会进行以下尝试:</p>
-<table>
+<table class="ui collapsing celled table segment">
 <tr><td>格式串</td><td>样例</td>
 </tr>
 <tr><td>'%Y-%m-%d %H:%M:%S'</td><td>'2006-10-25 14:30:59'</td>
@@ -445,9 +445,9 @@ SERVER_DEFAULT = False</code></pre>
 </tr>
 </table>
 </dd>
-</dl><h4 id="title_1-3-25-7">BooleanProperty<a class="anchor" href="#title_1-3-25-7">&para;</a></h4>
+</dl><h4 id="title_1-3-24-7">BooleanProperty<a class="anchor" href="#title_1-3-24-7">&para;</a></h4>
 <p>与 <code>Boolean</code> 相对应。不过对于不同的数据库底层可能还是不同。具体是由SQLAlchemy 来实现的。</p>
-<h4 id="title_1-3-25-8">DecimalProperty<a class="anchor" href="#title_1-3-25-8">&para;</a></h4>
+<h4 id="title_1-3-24-8">DecimalProperty<a class="anchor" href="#title_1-3-24-8">&para;</a></h4>
 <p>与 <code>Numric</code> 相对应。它有两个参数：</p>
 <dl>
 <dt>precision</dt>
@@ -456,19 +456,19 @@ SERVER_DEFAULT = False</code></pre>
 <dt>scale</dt>
 <dd><p>小数长度。</p>
 </dd>
-</dl><h4 id="title_1-3-25-9">FloatProperty<a class="anchor" href="#title_1-3-25-9">&para;</a></h4>
+</dl><h4 id="title_1-3-24-9">FloatProperty<a class="anchor" href="#title_1-3-24-9">&para;</a></h4>
 <p>与 <code>Float</code> 对应。它有一个参数：</p>
 <dl>
 <dt>precision</dt>
 <dd><p>总长度。</p>
 </dd>
-</dl><h4 id="title_1-3-25-10">IntegerProperty<a class="anchor" href="#title_1-3-25-10">&para;</a></h4>
+</dl><h4 id="title_1-3-24-10">IntegerProperty<a class="anchor" href="#title_1-3-24-10">&para;</a></h4>
 <p>与 <code>Integer</code> 对应。</p>
-<h4 id="title_1-3-25-11">FileProperty<a class="anchor" href="#title_1-3-25-11">&para;</a></h4>
+<h4 id="title_1-3-24-11">FileProperty<a class="anchor" href="#title_1-3-24-11">&para;</a></h4>
 <p>与 <code>VARCHAR</code> 对应。用于保存文件名，而不是文件对象。缺省的max_length为255。</p>
-<h4 id="title_1-3-25-12">PickleProperty<a class="anchor" href="#title_1-3-25-12">&para;</a></h4>
+<h4 id="title_1-3-24-12">PickleProperty<a class="anchor" href="#title_1-3-24-12">&para;</a></h4>
 <p>有时我们需要将一个Python对象保存到数据库中，因此我们可以采用 <code>BLOB</code> 字段来处理。 首先将对象序列化为字符串，可以使用Python自带的pickle，然后写入数据库。读出时再 反序列化为Python的对象。使用 <code>PickleProperty</code> 可以把这一过程自动化。</p>
-<h3 id="title_1-3-26">Model的常见属性<a class="anchor" href="#title_1-3-26">&para;</a></h3>
+<h3 id="title_1-3-25">Model的常见属性<a class="anchor" href="#title_1-3-25">&para;</a></h3>
 <dl>
 <dt>table</dt>
 <dd><p>uliorm的Model对应于SQLAlchemy的 <code>Table</code> 对象，而 <code>table</code> 将是底层的 Table的实例。所以你可以使用这个属性来执行表级的操作。</p>
@@ -487,7 +487,7 @@ SERVER_DEFAULT = False</code></pre>
 </dd>
 </dl><h2 id="title_1-4">关系定义<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>uliorm支持以下几种关系的定义: OneToOne, Reference, SelfReference, ManyToMany.</p>
-<h3 id="title_1-4-27">OneToOne<a class="anchor" href="#title_1-4-27">&para;</a></h3>
+<h3 id="title_1-4-26">OneToOne<a class="anchor" href="#title_1-4-26">&para;</a></h3>
 <p>OneToOne是用来定义一对一的关系。</p>
 <pre class="prettyprint "><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
@@ -513,7 +513,7 @@ True
 <p>注意，OneToOne只是一个关系，它并不会自动根据主表记录自动创建关联表的记录。</p>
 
 </div>
-<h3 id="title_1-4-28">Reference<a class="anchor" href="#title_1-4-28">&para;</a></h3>
+<h3 id="title_1-4-27">Reference<a class="anchor" href="#title_1-4-27">&para;</a></h3>
 <p>uliorm使用 <code>Reference</code> 来定义多对一的关系。</p>
 <pre class="prettyprint "><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
@@ -558,12 +558,12 @@ True
 <p>uliorm的Reference关系并不会生成ForeignKey的外键。因为，一旦使用外键，则删除 导入数据时都有一个执行顺序，非常难处理。所以在设计上没有采用外键。</p>
 
 </div>
-<h3 id="title_1-4-29">SelfReference<a class="anchor" href="#title_1-4-29">&para;</a></h3>
+<h3 id="title_1-4-28">SelfReference<a class="anchor" href="#title_1-4-28">&para;</a></h3>
 <p>如果你想引用自身,你可以使用 <code>SelfReference</code>, 例如:</p>
 <pre class="prettyprint "><code>&gt;&gt;&gt; class User(Model):
 ...     username = Field(unicode)
 ...     parent = SelfReference(collection_name='children')</code></pre>
-<h3 id="title_1-4-30">ManyToMany<a class="anchor" href="#title_1-4-30">&para;</a></h3>
+<h3 id="title_1-4-29">ManyToMany<a class="anchor" href="#title_1-4-29">&para;</a></h3>
 <pre class="prettyprint "><code>&gt;&gt;&gt; class User(Model):
 ...     username = Field(CHAR, max_length=20)
 ...     year = Field(int)
@@ -608,8 +608,8 @@ True
 <dt>关系级</dt>
 <dd><p>不同的关系可以执行不同的操作。如：OneToOne可以进行实例级操作。而Reference, SelfReference和ManyToMany则可以进行集合操作。在使用关系时，一种我们是使用 inst.relationship的方式，这样会自动将关系与正在处理的实例进行条件的绑定， 另一种是通过Model.relationship的方式，这样可以调用关系字段的某些特殊方法， 比如用来生成条件。</p>
 </dd>
-</dl><h3 id="title_1-5-31">实例级<a class="anchor" href="#title_1-5-31">&para;</a></h3>
-<h4 id="title_1-5-31-13">创建实例<a class="anchor" href="#title_1-5-31-13">&para;</a></h4>
+</dl><h3 id="title_1-5-30">实例级<a class="anchor" href="#title_1-5-30">&para;</a></h3>
+<h4 id="title_1-5-30-13">创建实例<a class="anchor" href="#title_1-5-30-13">&para;</a></h4>
 <p>假定有一个 User Model，类的定义为:</p>
 <pre class="prettyprint "><code>class User(Model):
     username = Field(CHAR, max_length=20)
@@ -618,7 +618,7 @@ True
 <pre class="prettyprint "><code>user = User(username='limodou', year=36)</code></pre>
 <p>但这样还不会保存到数据库中，它只是创建了一个实例，你还需要调用 <code>save</code> 来保存:</p>
 <pre class="prettyprint "><code>user.save()</code></pre>
-<h4 id="title_1-5-31-14">获取实例<a class="anchor" href="#title_1-5-31-14">&para;</a></h4>
+<h4 id="title_1-5-30-14">获取实例<a class="anchor" href="#title_1-5-30-14">&para;</a></h4>
 <pre class="prettyprint "><code>user = User.get(5)
 user = User.get(User.c.id==5)</code></pre>
 <p>可以通过Model.get()来获取一个实例。在get()中是条件。如果是一个整数，则认为是要 获取id等于这个值的记录。否则你可以使用一个条件。这里条件的写法完全是遵守 SQLAlchemy 的要求。如果条件不止一个，可以使用 <code>and_, or_, not_</code> 或 <code>&amp;, |, ~</code> 来拼接条件。SQLAlchemy 的相关文档可以查看： <a href="http://www.sqlalchemy.org/docs/core/tutorial.html" class="outter">http://www.sqlalchemy.org/docs/core/tutorial.html</a></p>
@@ -628,11 +628,11 @@ user = User.get(User.c.id==5)</code></pre>
 </div>
 <pre class="prettyprint "><code>user = User.get_or_notfound(5)</code></pre>
 <p>使用get_or_notfound可以当无满足条件的对象时抛出一个NotFound的异常。</p>
-<h4 id="title_1-5-31-15">删除实例<a class="anchor" href="#title_1-5-31-15">&para;</a></h4>
+<h4 id="title_1-5-30-15">删除实例<a class="anchor" href="#title_1-5-30-15">&para;</a></h4>
 <pre class="prettyprint "><code>user = User.get(5)
 user.delete()</code></pre>
 <p>delete在删除对象时，会自动删除相关联的ManyToMany的关系数据。如果不想删除，则可以 传入 <code>manytomany=False</code> 。</p>
-<h4 id="title_1-5-31-16">更新实例<a class="anchor" href="#title_1-5-31-16">&para;</a></h4>
+<h4 id="title_1-5-30-16">更新实例<a class="anchor" href="#title_1-5-30-16">&para;</a></h4>
 <pre class="prettyprint "><code>user = User.get(5)
 user.username = 'user'
 user.save()</code></pre>
@@ -648,7 +648,7 @@ user.save()</code></pre>
 <p>Model中更新数据库相关的方法，如: save, delete, get, get_or_notfound, count, remove 都可以传入connection参数，它可以是数据库连接名或真正的连接对象。</p>
 
 </div>
-<h4 id="title_1-5-31-17">其它的API<a class="anchor" href="#title_1-5-31-17">&para;</a></h4>
+<h4 id="title_1-5-30-17">其它的API<a class="anchor" href="#title_1-5-30-17">&para;</a></h4>
 <dl>
 <dt>to_dict(fields=[], convert=True, manytomany=False)</dt>
 <dd><p>将实例的值转为一个dict对象。如果没有给出fields参数，则所有字段都将转出。 注意，这里对 <code>ManyToMany</code> 属性有特殊的处理。因为 <code>ManyToMany</code> 属性并 不是真正的表中的字段，所以缺省情况下是不会包含这些值的，如果指定manytomany为 True，则会也把相应的 <code>ManyToMany</code> 所对应的对象集的ID取出来，组织为一个list。 如果convert=True，则在取出字段值的时候，还会调用field_str函数进行值的处理。 在调用field_str时，strict保持为False不变。 举例:</p>
@@ -668,16 +668,16 @@ a.to_dict(['name', 'age'])    #this will only dump 'name' and 'age' fields</code
 <p>uliorm会将 <code>Reference</code> 字段保存到 <code>_field_name_</code> 的属性中，因此可以 直接使用它来得到 <code>Reference</code> 的值。比如 <code>User.c.system</code> 可能是指向 <code>System</code> 表的引用，直接使用 <code>user.system</code> 会得到对象的 <code>System</code> 的对象。而使用 <code>user._system_</code> 则得到对应的数据库的值。</p>
 
 </div></dd>
-</dl><h3 id="title_1-5-32">Model级<a class="anchor" href="#title_1-5-32">&para;</a></h3>
+</dl><h3 id="title_1-5-31">Model级<a class="anchor" href="#title_1-5-31">&para;</a></h3>
 <p>uliorm在Model级上的操作主要有两类，一类是直接通过Model.func来调用的，另一类是通 过Model.func或Model.relationship的方式返回结果集，再在结果集上进行操作。对于与 查询相关的函数，是可以连在一起使用的，比如:</p>
 <pre class="prettyprint "><code>User.filter(...).filter(...).count()</code></pre>
 <p>有些方法会返回结果集，因此你可以在返回值的基础上，再调用查询相关的方法。有些方法会 直接返回结果，不能再调用查询相关的方法。</p>
-<h4 id="title_1-5-32-18">查询<a class="anchor" href="#title_1-5-32-18">&para;</a></h4>
+<h4 id="title_1-5-31-18">查询<a class="anchor" href="#title_1-5-31-18">&para;</a></h4>
 <p>在查询一个表的时候可能会有两种需求：全部记录和按条件筛选，因此对应着可以使用 <code>all()</code> 和 <code>filter()</code> 。<code>all()</code> 中是没有参数的，它会返回一个 <code>Result</code> 对象，这是前面介绍的结果集，你可以在结果集上继续使用其它的方法。 <code>filter()</code> 需要传入条件，条件的写法是符合SQLAlchemy要求的。它也返回一个结果集。多个 <code>filter()</code> 是可以连接使用的，相当于多个与条件。</p>
 <p>举例:</p>
 <pre class="prettyprint "><code>User.all()
 User.filter(User.c.year &gt; 18)</code></pre>
-<h4 id="title_1-5-32-19">删除记录<a class="anchor" href="#title_1-5-32-19">&para;</a></h4>
+<h4 id="title_1-5-31-19">删除记录<a class="anchor" href="#title_1-5-31-19">&para;</a></h4>
 <p>Model中提供了 <code>remove(condition)</code> 来删除满足条件的记录。同时你也可以利用结果 集来删除。例如:</p>
 <pre class="prettyprint "><code>User.remove(User.c.year&lt;18)
 #等价于
@@ -686,12 +686,12 @@ User.filter(User.c.year&lt;18).remove()</code></pre>
 <p>注意，结果集的删除是使用 <code>remove</code> ，而实例的删除是使用 <code>delete</code> 。</p>
 
 </div>
-<h4 id="title_1-5-32-20">记录条数统计<a class="anchor" href="#title_1-5-32-20">&para;</a></h4>
+<h4 id="title_1-5-31-20">记录条数统计<a class="anchor" href="#title_1-5-31-20">&para;</a></h4>
 <p>Model中提供了 <code>count(condition)</code> 来计算满足条件的记录数。同时你也可以利用结果 集来统计，例如:</p>
 <pre class="prettyprint "><code>User.count(User.c.year&lt;18)
 #等价于
 User.filter(User.c.year&lt;18).count()</code></pre>
-<h4 id="title_1-5-32-21">其它 API<a class="anchor" href="#title_1-5-32-21">&para;</a></h4>
+<h4 id="title_1-5-31-21">其它 API<a class="anchor" href="#title_1-5-31-21">&para;</a></h4>
 <dl>
 <dt>bind(metadata=None, auto_create=False)</dt>
 <dd><p>绑定当前的类到一个metadata对象上。如果 <code>auto_create</code> 为 <code>True</code>, 则将 自动建表。</p>
@@ -711,8 +711,8 @@ User.filter(User.c.year&lt;18).count()</code></pre>
 </ul>
 <p>这样在缺省情况下，数据库连接名为 <code>default</code> .</p>
 </dd>
-</dl><h3 id="title_1-5-33">关系级<a class="anchor" href="#title_1-5-33">&para;</a></h3>
-<h4 id="title_1-5-33-22">一对一(One to One)<a class="anchor" href="#title_1-5-33-22">&para;</a></h4>
+</dl><h3 id="title_1-5-32">关系级<a class="anchor" href="#title_1-5-32">&para;</a></h3>
+<h4 id="title_1-5-32-22">一对一(One to One)<a class="anchor" href="#title_1-5-32-22">&para;</a></h4>
 <p>一对一关系没什么特别的，例如:</p>
 <pre class="prettyprint "><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
@@ -729,7 +729,7 @@ User.filter(User.c.year&lt;18).count()</code></pre>
 <p>注意，关系的建立是在相关的对象创建之后，而不是会根据关系自动创建对应的对象。</p>
 
 </div>
-<h4 id="title_1-5-33-23">多对一(Many to One)<a class="anchor" href="#title_1-5-33-23">&para;</a></h4>
+<h4 id="title_1-5-32-23">多对一(Many to One)<a class="anchor" href="#title_1-5-32-23">&para;</a></h4>
 <pre class="prettyprint "><code>&gt;&gt;&gt; class Test(Model):
 ...     username = Field(str)
 ...     year = Field(int)
@@ -740,7 +740,7 @@ User.filter(User.c.year&lt;18).count()</code></pre>
 &gt;&gt;&gt; b = Test1(name='user', test=a).save()
 &gt;&gt;&gt; c = Test1(name='aaaa', test=a).save()</code></pre>
 <p>根据上面的代码， Test:Test1 是一个 1:n 关系。并且 <code>b.test</code> 是对象 <code>a</code> 。但是 <code>a.tttt</code> 将是反向的结果集，它可能不止一个对象。所以 <code>a.tttt</code> 将返回一个 <code>Result</code> 对象。并且这个结果集对象将绑定到 Test1 Model，所以结果集的 <code>all()</code> 和 <code>filter()</code> 方法将只返回 Test1 对象。更多的细节可以查看 <code>Result</code> 的描述。</p>
-<h4 id="title_1-5-33-24">多对多(Many to Many)<a class="anchor" href="#title_1-5-33-24">&para;</a></h4>
+<h4 id="title_1-5-32-24">多对多(Many to Many)<a class="anchor" href="#title_1-5-32-24">&para;</a></h4>
 <pre class="prettyprint "><code>&gt;&gt;&gt; class User(Model):
 ...     username = Field(CHAR, max_length=20)
 ...     year = Field(int)
@@ -756,7 +756,7 @@ User.filter(User.c.year&lt;18).count()</code></pre>
 &gt;&gt;&gt; g1.users.add(a)
 &gt;&gt;&gt; g1.users.add(b)</code></pre>
 <p>当你调用 <code>a.group_set</code> (因为你没有在ManyToMany属性中定义collection_name)或 <code>g1.users</code> 时，将返回一个 <code>ManyResult</code> 对象。</p>
-<h3 id="title_1-5-34">Result 对象<a class="anchor" href="#title_1-5-34">&para;</a></h3>
+<h3 id="title_1-5-33">Result 对象<a class="anchor" href="#title_1-5-33">&para;</a></h3>
 <p><code>Result</code> 对象的生成有多种方式，一种是执行某个关系查询时生成的，一种是直接在 Model上调用 <code>all()</code> 或 <code>filter()</code> 生成的。<code>Result</code> 对象有多个方法可以调 用，有些方法，如 <code>filter()</code> 会返回 <code>Result</code> 本身，因此还可以继续调用相应的 方法。有些方法直接返回结果，如： <code>one()</code>, <code>count()</code> 。因此你可以根据不同的 方法来考虑是不是使用方法的连用形式。</p>
 <p>注意， <code>Result</code> 对象在调用相应的方法时，如果返回的是结果集本身，此时不会立即 进行数据库的交互，而是当你调用返回非结果集的函数，或要真正获得记录时才会与数据 库进行交互。比如执行 <code>User.filter(...).count()</code> 时，在执行到User.filter(...) 并没有与数据库进行交互，但在执行到 count() 时，则生成相应的SQL语句与数据库进行 交互。又如:</p>
 <pre class="prettyprint "><code>query = User.all()
@@ -829,7 +829,7 @@ a1.tttt.all().values(Test1.c.name, Test1.c.year)</code></pre>
 <dt>without(flag='default_query')</dt>
 <dd><p>去掉default_query的条件处理。</p>
 </dd>
-</dl><h3 id="title_1-5-35">ManyResult<a class="anchor" href="#title_1-5-35">&para;</a></h3>
+</dl><h3 id="title_1-5-34">ManyResult<a class="anchor" href="#title_1-5-34">&para;</a></h3>
 <p><code>ManyResult</code> 非常象 <code>Result</code>, 只不过它是通过 <code>ManyToMany</code> 关系创建的，它 拥有与 <code>Result</code> 大部分相同的方法，但是有一些差别:</p>
 <dl>
 <dt>add(*objects): boolean</dt>
@@ -855,7 +855,7 @@ a1.tttt.all().values(Test1.c.name, Test1.c.year)</code></pre>
 
 </div>
 <p>手工处理事务，uliorm提供了基于线程模式的连接处理。uliorm提供了：Begin(), Commit(), 和Rollback()函数。当执行Begin()时，它会先检查是否当前线程已经存在一个连接， 如果存在，则直接使用，如果不存在则，如果传入了create=True，则自动创建一个连接， 并绑到当前的线程中。如果create=False，则使用engine的连接。同时Commit()和Rollback() 都会使用类似的方式，以保证与Begin()中获得的连接一致。</p>
-<h3 id="title_1-6-36">Web事务模式<a class="anchor" href="#title_1-6-36">&para;</a></h3>
+<h3 id="title_1-6-35">Web事务模式<a class="anchor" href="#title_1-6-35">&para;</a></h3>
 <p>一般你要使用事务中间件，它的处理代码很简单，为:</p>
 <pre class="prettyprint "><code>class TransactionMiddle(Middleware):
     ORDER = 80
@@ -893,7 +893,7 @@ do_(User.table.update().where(User.c.username=='limodou').values(flag=True))
 do_(User.table.delete().where(User.c.username=='limodou'))
 #查询
 do_(select(User.c, User.c.username=='limodou'))</code></pre>
-<h3 id="title_1-6-37">命令行事务模式<a class="anchor" href="#title_1-6-37">&para;</a></h3>
+<h3 id="title_1-6-36">命令行事务模式<a class="anchor" href="#title_1-6-36">&para;</a></h3>
 <p>所谓命令行事务模式一般就是在命令行下运行，比如批处理。它们一般不存在多线程的环境， 所以一个程序就是一个进程，使用一个连接就可以了。这时我们可以还使用engine的连接 对象。使用时，只要简单的不带参数调用Begin(), Commit()和Rollback()就可以了。因为 Begin()在没有参数调用的情况下，会自动先判断有没有线程级的连接对象，这时一定是没有， 如果没有，则使用engine下的连接对象。</p>
 <p>这样，SQL语句既可以使用do_()来运行，也可以使用原来的SQLAlchemy的执行方式，如:</p>
 <pre class="prettyprint "><code>#插入
@@ -924,7 +924,7 @@ user = 'uliweb.contrib.auth.models.User'</code></pre>
 <p>在定义关系时，象OneToOne, Reference和ManyToMany时既可以接受字符串的Model名，也 可以直接传入Model的类，都可以。</p>
 <h2 id="title_1-9">如何在其它项目中使用 uliorm<a class="anchor" href="#title_1-9">&para;</a></h2>
 <p>uliorm是可以在非Uliweb项目和非web程序中使用的，因此根据是否有Uliweb项目，决定了 可以使用不同的方式。</p>
-<h3 id="title_1-9-38">非Uliweb项目<a class="anchor" href="#title_1-9-38">&para;</a></h3>
+<h3 id="title_1-9-37">非Uliweb项目<a class="anchor" href="#title_1-9-37">&para;</a></h3>
 <p>Uliweb项目中，所有的Model都要配置到settings.ini中去，所以在非Uliweb项目中，你无 法这样做，因此处理上会有所不同。因为没有了Model的配置，所以你需要在使用Model前 先导入它们。然后你要考虑是自动建表还是手工建表。我建议是把自动建表单独处理，只 在需要时执行。简单的一个代码示例:</p>
 <pre class="prettyprint "><code>from uliweb.orm import *
 
@@ -947,7 +947,7 @@ if __name__ == '__main__':
     print g1.users.one().groups.one().users.one().name
     print u1.groups.one().users.one().groups.one().name</code></pre>
 <p>这里 <code>db.metadata.create_all()</code> 用于创建所有的表。</p>
-<h3 id="title_1-9-39">Uliweb项目<a class="anchor" href="#title_1-9-39">&para;</a></h3>
+<h3 id="title_1-9-38">Uliweb项目<a class="anchor" href="#title_1-9-38">&para;</a></h3>
 <p>如果我们要在非web程序中使用uliorm时，我们还是希望使用Uliweb的管理机制，使用Uliweb 项目的配置信息，这时我们可以:</p>
 <pre class="prettyprint "><code>from uliweb.manage import make_simple_application
 
@@ -959,12 +959,12 @@ try:
     Commit()
 except:
     Rollback()</code></pre>
-<h3 id="title_1-9-40">在守护中使用Uliorm的注意事务<a class="anchor" href="#title_1-9-40">&para;</a></h3>
+<h3 id="title_1-9-39">在守护中使用Uliorm的注意事务<a class="anchor" href="#title_1-9-39">&para;</a></h3>
 <p>其实在守护中使用uliorm就是要注意使用事务。在我自已的开发中发现一个问题:</p>
 <p>例如有一个循环，它的工作就是扫描数据库满足某个条件的数据集，如果有，则取出进行 处理，然后修改处理标志。处理完毕或不存在这样的数据，则sleep一定的时间。然后反复 执行。我在循环外创建一个数据库连接，这样可以复用这个连接。但是发现：一旦我在循 环中查到了数据，并执行了更新，则在以后的循环中，如果数据又发生了变化，但是我将 无法得到后来变化的数据。于是我到SQLAlchemy上问了一下，结果发现是由于数据库的连 接如果一直使用的话，当执行了更新，插入之类的操作后，事务隔离级会上升，造成数据 库认为当前连接所得到的数据已经是最新的，再查询时将不会返回新结果。所以，建议是 每次循环创建新的连接。因此，我在ORM中提供了Reset命令，它可以清除当前连接，从而 实现新连接的创建。因此如果你的处理是一个循环，可以在每次循环时执行 <code>Reset()</code> 。</p>
 <h2 id="title_1-10">信号处理<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>uliorm提供类似django信号的处理机制，它会在一些重要的执行点调用发出信号，以便让 其它的信号处理函数进行后续的工作。注意，uliorm的信号并不是真正的异步，它只是定 义上的异步，调用还是同步的。</p>
-<h3 id="title_1-10-41">预定义的几种信号<a class="anchor" href="#title_1-10-41">&para;</a></h3>
+<h3 id="title_1-10-40">预定义的几种信号<a class="anchor" href="#title_1-10-40">&para;</a></h3>
 <p>uliorm已经提供了几种预定义好的信号，下面列举出来。在每个信号名的冒号后面所定义 的是使用dispatch调用时使用的方法，分为call和get。其中call不需要返回值，并且会 将所有订阅此信号的方法依次调用。而get需要一个返回值，一旦某个方法返回非None的值， 则结束调用并将值返回。</p>
 <dl>
 <dt>pre_save:call</dt>
@@ -1017,7 +1017,7 @@ except:
 <dd><pre class="prettyprint "><code>所获得的对象实例</code></pre>
 </dd>
 </dl></dd>
-</dl><h3 id="title_1-10-42">定义接收函数<a class="anchor" href="#title_1-10-42">&para;</a></h3>
+</dl><h3 id="title_1-10-41">定义接收函数<a class="anchor" href="#title_1-10-41">&para;</a></h3>
 <p>当使用uliorm时，它会根据执行情况自动发出相应的信号，此时如果有订阅此信号的方法存 在则将被自动调用，如果不存在，则继续后面的处理。在uliweb中，一般将订阅方法写在 settings.ini中，以减少启动时的导入处理。举例如下:</p>
 <pre class="prettyprint "><code>[BINDS]
 audit.post_save = 'post_save'
@@ -1031,71 +1031,6 @@ audit.pre_delete = 'pre_delete'</code></pre>
 <p>第一和第二个参数都是固定的，sender是发出信号的对象。在uliorm中都是Model类。 topic是信号的名称。后面的kwargs对应每个信号可以接受的参数。不同的信号所接受的 参数可能是不同的。</p>
 <h2 id="title_1-11">测试代码<a class="anchor" href="#title_1-11">&para;</a></h2>
 <p>在 uliweb/test/test_orm.py 中有一些测试代码，你可以查看一些例子来了解如何使用 uliorm。</p>
-<h2 id="title_1-12">F&Q<a class="anchor" href="#title_1-12">&para;</a></h2>
-<h3 id="title_1-12-43">如何处理Mysql中的 "MySQL server has gone away" 错误？<a class="anchor" href="#title_1-12-43">&para;</a></h3>
-<p>出现这个问题是因为Mysql有关于非活动连接超时断开的设置，缺省为8小时。当8小时以后 现有的连接没有活动，则MySql会自动断开。因此再次访问时会抛出这个错误。uliorm 使用SQLAlchemy的缺省的连接方式，会自动使用连接池。默认是5个连接。它有一个pool_recycle 的参数，用于设置回收连接的时间。这样，只要你设置一个小于MySql断开的超时时间就 可以了。示例如下:</p>
-<pre class="prettyprint "><code>[ORM]
-CONNECTION_ARGS = {'pool_recycle':7200, 'echo_pool':True}</code></pre>
-<p>上述配置表示：连接池回收时间为7200秒(2小时)。echo_pool为True表示在日志中显示 回收信息。这样是通过自动回收重建连接池避免了这个问题。</p>
-<h3 id="title_1-12-44">MySQL 编码设置<a class="anchor" href="#title_1-12-44">&para;</a></h3>
-<p>在MySql中创建表时，uliorm将缺省使用utf8编码来创建，即使MySql的缺省编码不是utf8。 所以如果你使用的是MySql，你应该检查schema的缺省编码是不是utf8，如果不是则应该在 connection连接串上添加charset信息，如:</p>
-<pre class="prettyprint "><code>[ORM]
-CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'</code></pre>
-<p>当服务器的缺省编码不是utf8时， <code>charset=utf8</code> 是必须的，其它情况下可以不设置。</p>
-<h3 id="title_1-12-45">如果使用sock文件来连接MySQL<a class="anchor" href="#title_1-12-45">&para;</a></h3>
-<p>可以在settings中如下配置：</p>
-<pre class="prettyprint "><code>[ORM]
-CONNECTION_ARGS = {'connect_args':{'unix_socket':'/tmp/mysql.sock'}}</code></pre>
-<p>其中 <code>/tmp/mysql.sock</code> 只是一个示例，你可以改为你需要的sock文件路径。</p>
-<h3 id="title_1-12-46">如何实现update table set field = field + 1类似的更新<a class="anchor" href="#title_1-12-46">&para;</a></h3>
-<p>举例如下:</p>
-<pre class="prettyprint "><code>User.filter(User.c.id==1).update(score=User.c.score+1)
-
-或
-
-User.filter(User.c.id==1).update(User.c.score=User.c.score+1)</code></pre>
-<p>或者使用底层的SQLAlchemy的写法:</p>
-<pre class="prettyprint "><code>do_(User.table.update().where(User.c.id==1).values(score=User.c.score+1))</code></pre>
-<h3 id="title_1-12-47">如何实现MySql中区分大小写字段定义和查询<a class="anchor" href="#title_1-12-47">&para;</a></h3>
-<p>MySql在定义字段和查询字段时，缺省是使用非大小写敏感方式进行处理的。有时我们需要 进行大小写敏感方式的查询，因此这里涉及两种处理，一种是查询时的大小写区分，如:</p>
-<pre class="prettyprint "><code>from sqlalchemy.sql import func
-
-User.filter(User.c.username == func.binary('limodou'))</code></pre>
-<p>上述代码将按大小写对'limodou'进行查询。</p>
-<p>但是如果你把CHAR或VARCHAR设置为不重复的索引，在插入类似： <code>Limodou</code> 或 <code>limodou</code> 有可能会报重复。这就不是靠查询来解决的了。要通过将字段定义为区分大小写的形式。在 MySql中一般是在VARCHAR之后添加Binary，如:</p>
-<pre class="prettyprint "><code>username VARCHAR(40) binary</code></pre>
-<p>那么在Uliorm或SQLAlchemy中如何做呢？代码如下:</p>
-<pre class="prettyprint "><code>from sqlalchemy.dialects.mysql import VARCHAR
-
-class Human(Model):
-    name = Field(str, verbose_name='姓名', max_length=40, required=True)
-    login_name = Field(str, verbose_name='登录名', required=True,
-        max_length=40, unique=True, type_class=VARCHAR,
-        type_attrs=dict(binary=True))</code></pre>
-<p>可以看到它使用了mysql的dialect的字段定义，并将其传入uliorm的字段定义中，其中参 数 <code>type_class</code> 为字段类型， <code>type_attrs</code> 为字段相应的参数，这里设置 <code>binary</code> 为 <code>True</code> 。在SQLAlchemy中的定义示例如:</p>
-<pre class="prettyprint "><code>from sqlalchemy.dialects.mysql import VARCHAR
-
-Column('username', VARCHAR(40, binary=True))</code></pre>
-<p>这样在数据库中，就是区分大小写的，在查询时不再需要使用func.binary()来处理了。</p>
-<p>不过这种方式兼容性不好，所以还有一种变通的方式就是写一个sql文件，在命令行下对 字段进行修改，这样Model就不需要修改了。比如:</p>
-<pre class="prettyprint "><code>use &lt;database&gt;;
-ALTER TABLE human MODIFY COLUMN `login_name` VARCHAR(40)
-    BINARY CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL;</code></pre>
-<h3 id="title_1-12-48">RuntimeError: dictionary changed size during iteration<a class="anchor" href="#title_1-12-48">&para;</a></h3>
-<p>在Uliweb下使用uliorm，要求将所有的Model都定义在settings.ini中，一旦出现某个Model 没有在settings.ini中定义，就有可能出现上面的问题。</p>
-<h3 id="title_1-12-49">反向获取ManyToMany关系时，找不到对应属性<a class="anchor" href="#title_1-12-49">&para;</a></h3>
-<p>在Uliweb中，如果两个表存在ManyToMany关系，则关系一般只会定义在其中一个Model类上 被定义。例如有两个Model: A和B。在A上定义了一个到B的ManyToMany的关系。在导入A类 时(或通过get_model来获取)会自动向B类绑定一个反向获取的对象，用于从B的对象获得A对 象时使用。因此，有时候，你直接导入B类，但是因为B类中没有定义与A的任何关系，所以 对A的反向获取对象将无法生成，因此可能不能直接使用B到A的反向获取。在这种情况下，你 可以再使用get_model或导入A，这样就可以生成反向获取对象了。</p>
-<h3 id="title_1-12-50">None 条件在0.9.X中的变化<a class="anchor" href="#title_1-12-50">&para;</a></h3>
-<p>None在0.9以前的版本中，如果进行 &amp; 操作，会自动丢弃。但是在 0.9.X 中却会变成 NULL， 所以以前这样的写法：</p>
-<pre class="prettyprint "><code>cond = None
-for c in conditions:
-    cond = c &amp; cond</code></pre>
-<p>就不再正确了，要改为：</p>
-<pre class="prettyprint "><code>from uliweb.orm import true
-cond = true()
-for c in conditions:
-    cond = c &amp; cond</code></pre>
-<p><code>true</code> 也可以从 sqlalchemy.sql 中导出。</p>
 
         
         <div class="ui blue inverted small label">

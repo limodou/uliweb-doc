@@ -78,14 +78,14 @@
 </ul>
 <h2 id="title_1-1">The Form Class<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>To get started, define a Form class first, as follows:</p>
-<pre><code>from uliweb.form import *
+<pre class="prettyprint"><code>from uliweb.form import *
 
 class Form1(Form):
     title = TextField(label='Title:', required=True, help_string='Title help string')
     content = TextAreaField(label='Content:')</code></pre>
 <p>You can see, you should inherit from <code>Form</code> class, and you can define field directly in Form class, just like define class attributes.</p>
 <p>Then you could create Form object, just like:</p>
-<pre><code>f = Form1()</code></pre>
+<pre class="prettyprint"><code>f = Form1()</code></pre>
 <p>When creating Form instance, there are some parameters you can set:</p>
 <dl>
 <dt>action</dt>
@@ -96,7 +96,7 @@ class Form1(Form):
 </dd>
 <dt>buttons</dt>
 <dd><p>It'll be used to create button lines of a form, like submit and reset button. If you not set it, default will be submit and reset buttons. The HTML code will be:</p>
-<pre><code>&lt;input type="submit" value="Submit"&gt;&lt;/input&gt;
+<pre class="prettyprint"><code>&lt;input type="submit" value="Submit"&gt;&lt;/input&gt;
 &lt;input type="reset" value="Reset"&gt;&lt;/input&gt;</code></pre>
 <p>If you want other buttons, you can provide any HTML code in <code>buttons</code> parameter, Form will use it to create buttons.</p>
 </dd>
@@ -118,7 +118,7 @@ class Form1(Form):
 </dl><h2 id="title_1-2">Defining a Form<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>You can define any field as you want in a Form class, just define it in Form class just like abvoe example. More details about available fields you can see <em>Bultin Fields</em> section.</p>
 <p>Beside defining fields in a Form class, you can also define validators for fields or whole Form. For example:</p>
-<pre><code>from uliweb.form import *
+<pre class="prettyprint"><code>from uliweb.form import *
 
 class F(Form):
     user_name = StringField(required=True)
@@ -135,7 +135,7 @@ class F(Form):
 <p>This example demenstrates how to define a validateor for <code>user_name</code> field in the <code>F</code> form. You can define a function which name is like <code>validate_&lt;field_name&gt;</code>. And how to define a whole Form level validator, just define a function which name is <code>form_validate</code>.</p>
 <h2 id="title_1-3">Form Layout<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>Form class supports layout feature. A layout can be used to create real HTML code. There are two layouts: TableLayout and CSSLayout already defined in Form module. So you can use them directly. Default is TableLayout. And if you want to change it, just define a <code>layout_class</code> attribute in Form class. For example:</p>
-<pre><code>from uliweb.form import *
+<pre class="prettyprint"><code>from uliweb.form import *
 
 class F(Form):
     layout_class = CSSLayout
@@ -144,7 +144,7 @@ class F(Form):
     date = DateField(label='Date:', name='adate', required=True)</code></pre>
 <h2 id="title_1-4">Outputing HTML Code<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>For simple cases, you may want to output Form HTML code with empty value. For example, below is view function:</p>
-<pre><code>from uliweb.form import *
+<pre class="prettyprint"><code>from uliweb.form import *
 
 @expose('/form_test')
 def form_test():
@@ -156,13 +156,13 @@ def form_test():
     f = F()
     return {'form':f}</code></pre>
 <p>So after you create the instance of <code>F</code>, you can return a dict to template. And the template is:</p>
-<pre><code>{{ if '_' in form.errors: }}
+<pre class="prettyprint"><code>{{ if '_' in form.errors: }}
 &lt;h2&gt;Error:{{=form.errors._}}&lt;/h2&gt;
 {{pass}}
 {{&lt;&lt; form}}</code></pre>
 <p>For first 3 lines, they are the form level error display process. And <code>{&lt;&lt; form}}</code> is: outputing the form object without escaping, so characters like <code>&lt;</code> etc. will not be converted to <code>&amp;lt;</code>. That's exactly what we want.</p>
 <p>If you want the form have initial values, you have two ways. One you can pass the <code>data</code> and <code>errors</code> (if existing) parameters to Form initialization function. For example:</p>
-<pre><code>from uliweb.form import *
+<pre class="prettyprint"><code>from uliweb.form import *
 
 class F(Form):
     user_name = StringField(required=True)
@@ -172,7 +172,7 @@ class F(Form):
 d = {'user_name':'limodou'}
 f = F(data=d)</code></pre>
 <p>Or you can use Form.bind() function. For example:</p>
-<pre><code>f = F()
+<pre class="prettyprint"><code>f = F()
 f.bind(data=d)</code></pre>
 <div class="ui info message">
 <p>The <code>data</code> should be a dict, and the values are matched with the Fields date type.</p>
@@ -180,7 +180,7 @@ f.bind(data=d)</code></pre>
 </div>
 <p>You can also output Form HTML code with <code>f.html()</code> method, it the same as <code>str(f)</code>. Here <code>f</code> is the instance of a defined Form.</p>
 <p>Because f.html() will output a whole Form HTML code, but sometimes you may want to create Form HTML code yourself, and you can do it in template. form module also provides funnctions to help you to do that. For example:</p>
-<pre><code>{{&lt;&lt;form.form_begin}}
+<pre class="prettyprint"><code>{{&lt;&lt;form.form_begin}}
 &lt;dl&gt;
 &lt;dt&gt;{{&lt;&lt;form.title.label}}&lt;/dt&gt;
 &lt;dd&gt;{{&lt;&lt;form.title}} {{&lt;&lt;form.f.title.error}} {{&lt;&lt;form.f.title.help_string}}&lt;/dd&gt;
@@ -200,7 +200,7 @@ f.bind(data=d)</code></pre>
 <h2 id="title_1-5">Validating Submitted Data<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>When you defining a Form, you may want to validate the value. And you've seen how to define validator functions in a Form. So when user submitting the data, how to validate them and what's the next step after validating?</p>
 <p>You can use Form.validate() to validate the submmited data. For example:</p>
-<pre><code>from uliweb.form import *
+<pre class="prettyprint"><code>from uliweb.form import *
 
 class F(Form):
     user_name = StringField(required=True)
@@ -213,7 +213,7 @@ if f.validate(request.params):
 else:
     return {'form':f}</code></pre>
 <p>Above example demonstrates how to validate the submitted data. You should pass <code>request.GET</code> or <code>request.POST</code> or <code>request.params</code> or <code>request.FILES</code> to Form.validate() function. Or you can also pass multiple vars to Form.validate(), just like:</p>
-<pre><code>f.validate(request.POST, request.FILES)</code></pre>
+<pre class="prettyprint"><code>f.validate(request.POST, request.FILES)</code></pre>
 <div class="ui info message">
 <p>Here the data passed to Form.validate() should be a dict-like object, and if you define <code>multiple</code> parameter in one field definition, the data should support getall() method or getlist() method.</p>
 
@@ -222,7 +222,7 @@ else:
 <p>So after validating the data, you can use <code>form.data</code> or <code>form.&lt;field&gt;.data</code> to do more process.</p>
 <h2 id="title_1-6">Field Definition<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>The basic field class definition will be:</p>
-<pre><code>Form.BaseField(label='', default=None, required=False, validators=None,
+<pre class="prettyprint"><code>Form.BaseField(label='', default=None, required=False, validators=None,
     name='', html_attrs=None, help_string='', build=None, datatype=None,
     multiple=False, idtype=None, **kwargs)</code></pre>
 <p>Let's explain these parameters one by one:</p>
@@ -241,7 +241,7 @@ else:
 </dd>
 <dt>name</dt>
 <dd><p>The name of the field. By default, you don't need to define it, because when you define a field in a form, Uliweb form will assign field name to field instance. But you can still pass <code>name</code> parameter to a field. That will result: the form will use field name to access the data, and HTML code will use <code>name</code> to access the HTML data. For example:</p>
-<pre><code>from uliweb.form import *
+<pre class="prettyprint"><code>from uliweb.form import *
 
 class F(Form):
     user_name = StringField(name='username')</code></pre>

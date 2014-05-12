@@ -77,7 +77,7 @@
 <li>Improve autocomplete in shell command</li>
 <li>Fix manytomany cached value is not used when do the save, because of not stored   in <code>_old_values</code></li>
 <li><p>If you've already define primary key in Model, then it'll not create id property   for you, just like:</p>
-<pre><code>user_id = Field(int, primary_key=True, autoincrement=True)</code></pre></li>
+<pre class="prettyprint"><code>user_id = Field(int, primary_key=True, autoincrement=True)</code></pre></li>
 <li>Fix sqldot bug and improve sqlhtml generation</li>
 <li>Eanble colored log output by default.</li>
 </ul>
@@ -85,19 +85,19 @@
 <ul>
 <li>Fix config template and add <code>uwsgi</code> shell support</li>
 <li><p>Add environment variables support in <code>settings.ini</code>. For example, there is a    <code>MYSQL_PORT</code> defined in environment, so you can defined something in settings.ini:</p>
-<pre><code>[DEFAULT]
+<pre class="prettyprint"><code>[DEFAULT]
 port = $MYSQL_PORT
 port_str = '${MYSQL_PORT}'</code></pre>
 <p><code>$MYSQL_PORT</code> is the same as <code>${MYSQL_PORT}</code>. Just when the variable follows identifier, so <code>${}</code> can easily separate between them.</p></li>
 <li><p>Add <code>STATIC_COMBINE_CONFIG</code> configuration, you can toggle static combination with it.   Default is False. The configuration is:</p>
-<pre><code>[STATIC_COMBINE_CONFIG]
+<pre class="prettyprint"><code>[STATIC_COMBINE_CONFIG]
 enabled = False</code></pre></li>
 <li>Fix objcache app bug, if not fields defined in settings, it'll use all columns of table</li>
 <li>Add <code>get_table</code> function to <code>functions</code>, you can use it to get table object. Used   in <code>uliweb.contrib.tables</code> app.</li>
 <li>Add <code>local_cache</code> to local in SimpleFrame, and it can be used to store require relative   cache values, and it'll be empty after each require process.</li>
 <li>Improve <code>get_object()</code> function in ORM, add <code>use_local</code> parameter, so the cached   value will be checked in <code>local_cache</code> first, and also save it in local_cache when    get a value from cache or database.</li>
 <li><p>Improve objcache config format, you can also define table like this:</p>
-<pre><code>user = {'fields':['username'], 'expire':expire_time, 'key':callable(instance)|key_field}
+<pre class="prettyprint"><code>user = {'fields':['username'], 'expire':expire_time, 'key':callable(instance)|key_field}
 #or
 user = ['username', 'nickname']
 #or
@@ -105,7 +105,7 @@ user =</code></pre>
 <p>If no fields defined, it'll use all fields of Model. And if expire is 0 or not defined, it'll not expired at all.</p>
 <p><code>key</code> will be used to replace <code>id</code>, if you want another key value, and it can be also a callable object, it'll receive an instance of Model parameter, so you can create any key value as you want.</p></li>
 <li><p>Add Optimistic Concurrency Control support for ORM, so you should defined <code>version</code>   Field first in Model, then when you save the object, you should use:</p>
-<pre><code>obj.save(occ=True)</code></pre>
+<pre class="prettyprint"><code>obj.save(occ=True)</code></pre>
 <p>If there is already other operation saved the record, it'll raise an <code>SaveError</code> Exception by default, because the version has been changed. You can also pass:</p>
 <ul>
 <li><code>occ_fieldname</code> used to defined the version fieldname, default is <code>version</code></li>
@@ -115,19 +115,19 @@ user =</code></pre>
 <h2 id="title_1-3">0.2.4 Version<a class="anchor" href="#title_1-3">&para;</a></h2>
 <ul>
 <li><p>Fix ORM is not compatible with SQLAlchemy 0.9.1. Old style:</p>
-<pre><code>cond = None
+<pre class="prettyprint"><code>cond = None
 cond = (Blog.c.id==5) &amp; None</code></pre>
 <p>will not right in 0.9.1, because None will not be skipped, so you can change above code <code>cond = None</code> to :</p>
-<pre><code>from sqlalchemy.sql import true
+<pre class="prettyprint"><code>from sqlalchemy.sql import true
 cond = true()</code></pre>
 <p>or</p>
-<pre><code>from uliweb.orm import true
+<pre class="prettyprint"><code>from uliweb.orm import true
 cond = true()</code></pre></li>
 <li><p>add <code>__contains__</code> to functions, so you can test if an API is already defined, just   use:</p>
-<pre><code>'flash' in functions</code></pre></li>
+<pre class="prettyprint"><code>'flash' in functions</code></pre></li>
 <li>Refact generic.py, remove <code>functions.flash</code> and <code>functions.get_fileserving</code> dependencies by default.</li>
 <li><p>Fix <code>yield</code> support in view function, you can also used in gevent environment, for example:</p>
-<pre><code>@expose('/test')
+<pre class="prettyprint"><code>@expose('/test')
 def test():
     yield "&lt;ul&gt;"
     for i in range(10):
@@ -137,23 +137,23 @@ def test():
 <li>Fix <code>rawsql()</code> bug for different database engine</li>
 <li>Fix <code>jsonp()</code> dumps Chinese characters bug</li>
 <li><p>Add <code>trim_path()</code> function to <code>utils/common.py</code>, it can trim a file path to    limited length, for example:</p>
-<pre><code>&gt;&gt;&gt; a = '/project/apps/default/settings.ini'
+<pre class="prettyprint"><code>&gt;&gt;&gt; a = '/project/apps/default/settings.ini'
 &gt;&gt;&gt; trim_path(a, 30)
 '.../apps/default/settings.ini'</code></pre>
 <p>Default limited length is 30.</p></li>
 <li><p>Add ORM connection information output when given <code>-v</code> option in command line. And   the password will be replace with <code>'*'</code>. For example:</p>
-<pre><code>$&gt;uliweb syncdb -v
+<pre class="prettyprint"><code>$&gt;uliweb syncdb -v
 Connection : mysql://blog:***@localhost/blog?charset=utf8
 
 [default] Creating [1/1, blog] blog...EXISTED</code></pre></li>
 <li><p>Add multiple apps support for <code>makeapp</code> command, so you can use :</p>
-<pre><code>uliweb makeapp a b c</code></pre>
+<pre class="prettyprint"><code>uliweb makeapp a b c</code></pre>
 <p>to create <code>a</code>, <code>b</code>, <code>c</code> apps at once time.</p></li>
 <li><p>Refactor <code>save_file()</code> process, add <code>headers</code> and <code>convertors</code> parameter.</p>
 <p><code>headers</code> used to create csv header instead of using column name, but you can create alias name like this:</p>
-<pre><code>User.c.username.label(u"Name")</code></pre>
+<pre class="prettyprint"><code>User.c.username.label(u"Name")</code></pre>
 <p>and <code>convertors</code> used to convert column value, for example:</p>
-<pre><code>def name(value, data):
+<pre class="prettyprint"><code>def name(value, data):
     """
     value is the column value
     data is the current record object
@@ -183,7 +183,7 @@ save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</cod
 <li>Add logo files</li>
 <li>Fix find -t --blocks bug</li>
 <li><p>Add <code>DEBUG_TEMPLATE</code> option to settings/GLOBAL, if it's <code>True</code>, then all blocks in a template   will be surrounded by comment code just like:</p>
-<pre><code>&lt;!-- BLOCK title (apps/theme/templates/theme/skeleton.html) --&gt;
+<pre class="prettyprint"><code>&lt;!-- BLOCK title (apps/theme/templates/theme/skeleton.html) --&gt;
 &lt;!-- END title --&gt;</code></pre>
 <p>  But this output may breaks template output, so make sure you just use it in debug mode.</p></li>
 <li>Add <code>--color</code> option to runserver, default is False. The log output will be colored by default.   And you can change it in <code>[LOG.COLORS]</code>. Color supported is: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE.</li>
@@ -299,7 +299,7 @@ save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</cod
 <li>Fix <code>--version</code> command argument process bug.</li>
 <li>Improve <code>import_mod_attr</code>, and make it can receive object parameter</li>
 <li><p>Add <code>handler()</code> function to Dispatcher, and it'll return an instance of <code>DispatcherHandler</code>   and it provide <code>get</code>, <code>post</code>, <code>delete</code>, .etc, restful api, and you can invoke   them to execute an url, for example:</p>
-<pre><code>from uliweb import application
+<pre class="prettyprint"><code>from uliweb import application
 
 handler = application.handler()
 r = handler.get('/index')
@@ -326,28 +326,28 @@ r = handler.get('/index')
 <li>Add <code>generic</code> command, you can use it to create scafold of List, Add, View, Edit, Delete,   it support angularjs, html, easyui theme.</li>
 <li>Add <code>Builder</code> class to html.py, then refactor <code>generic.DetailView</code> , so you can use   <code>{{&lt;&lt; view.body}}</code> to get the body result but not the whole paragraph.</li>
 <li><p>Add <code>kwargs</code> to ORM get, filter, and also add <code>for_update</code> method to Result, so.   you can do select with for update lock, for example:</p>
-<pre><code>Model.get(Model.c.id==id, for_update=True)
+<pre class="prettyprint"><code>Model.get(Model.c.id==id, for_update=True)
 Model.filter(condition).for_update().filter(condition)</code></pre></li>
 <li>generic ListView and SimpleListView can get value of page and rows from request,   so if you pass these variables in the GET or POST, you don't need to parse them   and then pass them to ListView or SimpleListView, you can just skip them, ListView   and SimpleListView will parse them automatically</li>
 <li><code>Result.for_update</code> can receive an argument, default it <code>True</code>, and string also   can be accpeted, please see the sqlalchemy doc <a href="http://docs.sqlalchemy.org/en/latest/core/expression_api.html" class="outter">http://docs.sqlalchemy.org/en/latest/core/expression_api.html</a> for details.</li>
 <li><p>Add secretkey app, when you installed this app, you can execute cmd:</p>
-<pre><code>uliweb makekey</code></pre>
+<pre class="prettyprint"><code>uliweb makekey</code></pre>
 <p>  to create a secretkey file, which will be locate in current directory by default. Then:</p>
-<pre><code>from uliweb import functions
+<pre class="prettyprint"><code>from uliweb import functions
 des = functions.get_cipher()
 d = des.encrypt('hello')
 des.descrypt(d)</code></pre></li>
 <li>Remove pagecache app</li>
 <li>Add <code>safe_unicode</code> and <code>safe_str</code> support i18n LazyString class</li>
 <li><p>Refactor generic.ListView and generic.SimpleListView output, the table will be   and Builder object, so you can:</p>
-<pre><code>table.begine
+<pre class="prettyprint"><code>table.begine
 table.colgroup
 table.head
 table.body
 table.end</code></pre></li>
 <li>Add <code>get_input()</code> to command.py, you can use it to get a value from command line   if an option is not given</li>
 <li><p>Remove APP_LAYOUT functionality, and it can be replaced with</p>
-<pre><code>settings.APP_LAYOUTS.get('messages', 'layout.html')</code></pre>
+<pre class="prettyprint"><code>settings.APP_LAYOUTS.get('messages', 'layout.html')</code></pre>
 <p>  so you can still config app's layout template in settings.ini. Another way is   to replace app's layout template in a new app with the same filename, and then   install it after the original app in <code>INSTALLED_APPS</code>.</p></li>
 </ul>
 <h2 id="title_1-10">0.1.5 Version<a class="anchor" href="#title_1-10">&para;</a></h2>
@@ -359,7 +359,7 @@ table.end</code></pre></li>
 <li>Improve file_storage process.</li>
 <li>Fix RedirectException still display bug.</li>
 <li><p>Add TablenameConvert support to uliweb.orm, you can pass an converter function   via orm.set_tablename_converter(converter) function, or defined it in settings.ini   if you are in a project, for example:</p>
-<pre><code>[ORM]
+<pre class="prettyprint"><code>[ORM]
 TABLENAME_CONVERTER = 'uliweb.utils.common.camel_to_'</code></pre>
 <p>  Then if the Model name is CamelCase then it'll be converted to <code>camel_case</code>.</p></li>
 <li>Add Reference, OneToOne, ManyToMany relation definition in Model level</li>
@@ -370,7 +370,7 @@ TABLENAME_CONVERTER = 'uliweb.utils.common.camel_to_'</code></pre>
 <li>Add validators to uliweb, but this appoach is using [VALIDAOTRS] mechanism.</li>
 <li>Add IS_LENGTH_LESSTHAN validator to generic.py if there is max_length exists.</li>
 <li><p>Add newline and attrs to core/html.py/Tag, for example:</p>
-<pre><code>&gt;&gt;&gt; print Tag('p', 'Hello', attrs={'data-link':'ok'}, newline=False)
+<pre class="prettyprint"><code>&gt;&gt;&gt; print Tag('p', 'Hello', attrs={'data-link':'ok'}, newline=False)
 &lt;p data-link="ok"&gt;Hello&lt;/p&gt;</code></pre>
 <p>  so you can pass <code>data-link</code> to <code>attrs</code>. For <code>newline=False</code> will not create <code>\n</code>.</p></li>
 <li>Remove <code>Script</code> of core/html.py.</li>
@@ -378,7 +378,7 @@ TABLENAME_CONVERTER = 'uliweb.utils.common.camel_to_'</code></pre>
 <li>Fix BootstrapTableLayout HiddenField creation bug.</li>
 <li>Add serial_cls support, so you can config session serial class yourself. Default is Cache.Serial.</li>
 <li><p>If the url prefix '!' then don't parse it with appname URL prefix. For example:</p>
-<pre><code>@expose('!/hello')</code></pre></li>
+<pre class="prettyprint"><code>@expose('!/hello')</code></pre></li>
 <li>Improve url expose for '!' process, and make class view also support it. Add test_url.py.</li>
 <li>Change form validate_xxx in the front of the original validator functions, move BaseField   validate error mssage to module level, e.g. ERR_REQUIRED</li>
 <li>Fix i18n bug for LazyString</li>
@@ -400,7 +400,7 @@ TABLENAME_CONVERTER = 'uliweb.utils.common.camel_to_'</code></pre>
 <li>Add default parameter to uliweb/utils/common.py get_choice()</li>
 <li>Improve template extend and include process, if you extend the same filename    with current filename, then it'll find the parent same named filename. This    way can make new same named filename but extended from parent. Also support    include tag.</li>
 <li><p>Add APP_LAYOUT support in uliweb.contrib.template, so in your template you can    use: <code>{{use layout_template}}</code> in your tmplate, and config the app layout template    as:</p>
-<pre><code>[APP_LAYOUTS]
+<pre class="prettyprint"><code>[APP_LAYOUTS]
 appname = 'layout.html'</code></pre>
 <p>   so when render the template, the <code>layout_template</code> will be replaced with <code>layout.html</code></p></li>
 <li>Add QueryString and query_string support in common.py</li>
@@ -425,7 +425,7 @@ appname = 'layout.html'</code></pre>
 <ul>
 <li>Add <code>#uliweb-template-tag:&lt;begin_tag&gt;,&lt;end_tag&gt;&lt;newline&gt;</code> process to template    file, and you can also pass <code>begin_tag</code> and <code>end_tag</code> to Template, and    <code>template_file()</code> or <code>template()</code></li>
 <li><p>Add <code>[TEMPLATE_PROCESSOR]</code> section to <code>default_settings.ini</code>, so that user    can setup his own template processor, the option will look like:</p>
-<pre><code>angularjs_template = {'file_exts':['.ahtml'],
+<pre class="prettyprint"><code>angularjs_template = {'file_exts':['.ahtml'],
     'processor':'uliweb.core.template.template_file',
     'args':{}}</code></pre></li>
 <li>the key is not very important, but you should keep it unique</li>
@@ -433,7 +433,7 @@ appname = 'layout.html'</code></pre>
 <li><code>processor</code> will be the path of template function, uliweb will      import it when needed</li>
 <li><code>args</code> will be a dict, and it will be passed to template function</li>
 <li><p>Add <code>BEGIN_TAG</code> and <code>END_TAG</code> to settings.ini, so user can change    default tag name from <code>{{</code> and <code>}}</code> to other strings. But this    appoach will effect globally, so if you are using other apps with    templates which using old tag strings, will cause errors. So using    <code>#uliweb-template-tag</code> or <code>TEMPLATE_PROCESSOR</code> maybe the good way,    but you still need to set it in template file or set <code>response.template</code>    with other template extension, because the defult template file extension    is <code>.html</code>. For example:</p>
-<pre><code>def index():
+<pre class="prettyprint"><code>def index():
     response.template = 'index.ahtml'
     return {}</code></pre>
 <p>   Above code will override the default template filename from <code>index.html</code>    to <code>index.ahtml</code>.</p></li>
@@ -450,7 +450,7 @@ appname = 'layout.html'</code></pre>
 <h2 id="title_1-13">0.1.2 Version<a class="anchor" href="#title_1-13">&para;</a></h2>
 <ul>
 <li><p>Fix permission tag, and change PERMISSION definitions in settings.ini, now the    PERMISSION definition can use dict datatype, just like:</p>
-<pre><code>[PERMISSION]
+<pre class="prettyprint"><code>[PERMISSION]
 PERM = {'name':'PERM', 'roles':['a', 'b'], 'description':'PERM}</code></pre>
 <p>   and with this method, you don't need to define ROLES_PERMISSIONS section</p></li>
 <li>Add TransactionMiddle as default settings in ORM settings.ini. By default, if    you add 'uliweb.contrib.orm', the transaction middleware will automatically    enabled. In the previous version, you should add this middleware yourself.</li>
@@ -458,7 +458,7 @@ PERM = {'name':'PERM', 'roles':['a', 'b'], 'description':'PERM}</code></pre>
 <li>Remove --with-static option of export command, so default behavior is export    static folder</li>
 <li>Fix default file_serving process, add x_filename process, in order to make    alt filename support processing correctly.</li>
 <li><p>Add -m option to find command, so you can use:</p>
-<pre><code>uliweb find -m model_name</code></pre>
+<pre class="prettyprint"><code>uliweb find -m model_name</code></pre>
 <p>   to find the model is defined in which model</p></li>
 <li>Add manytomany parameter to Model.delete() function, so it'll automatically    delete manytomany relationships.</li>
 <li>Add tables app to uliweb.</li>

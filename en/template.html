@@ -85,7 +85,7 @@
 <dt><code>{{extend parent_template_file}}</code></dt>
 <dd><p><code>extend</code> is used to derive a parent template.</p>
 <p><code>parent_template_file</code> is the template filename, it can be a string or a variable. So these are all valid usages:</p>
-<pre><code>{{extend "base.html"}}
+<pre class="prettyprint"><code>{{extend "base.html"}}
 {{extend parent}}</code></pre>
 <p>For the second one, the <code>parent</code> can be passed from the outside or be calculated from template.</p>
 </dd>
@@ -95,13 +95,13 @@
 </dd>
 <dt><code>{{=variable}}</code></dt>
 <dd><p><code>=</code> is used to output HTML escaped value. So if there are something like: <code>&amp;</code>, <code>&lt;</code>, etc will be escaped to HTML entity. <code>variable</code> can be a real Python variable, value, function call or anything can return a value. So these are all valid usages:</p>
-<pre><code>{{= 123}}
+<pre class="prettyprint"><code>{{= 123}}
 {{= a}}  #here a should be define in other place or pass from outside
 {{= function(arg)}}
 {{= obj}    #obj can be cast to a string</code></pre>
 <div class="ui info message">
 <p>If you don't want to escape the output, you can use <code>{{&lt;&lt;}}</code> , just like this:</p>
-<pre><code>{{&lt;&lt; v}}</code></pre>
+<pre class="prettyprint"><code>{{&lt;&lt; v}}</code></pre>
 
 </div></dd>
 <dt><code>{{block name}}...{{end}}</code></dt>
@@ -113,10 +113,10 @@
 </dd>
 </dl><h3 id="title_1-2-2">2.2\ \ \ Embeding Python Code<a class="anchor" href="#title_1-2-2">&para;</a></h3>
 <p>You can easily embed Python code between <code>{{</code> and <code>}}</code>, just like this:</p>
-<pre><code>{{ import os }}</code></pre>
+<pre class="prettyprint"><code>{{ import os }}</code></pre>
 <p>You can use almost all Python code in template, but I suggest that just keep simple and relationship with representation code in template, otherwise your template will become bloated and difficult to maintain.</p>
 <p>If you want to use Python block statement, just like: if, def, while, etc, you should add <code>pass</code> when the block is over. For example:</p>
-<pre><code>{{if user=='admin':}}
+<pre class="prettyprint"><code>{{if user=='admin':}}
     &lt;p&gt;Welcome&lt;/p&gt;
 {{else:}}
     &lt;a href="/login"&gt;Login&lt;/a&gt;
@@ -129,7 +129,7 @@
 <li>Don't need to care about the indent, Uliweb template will automaticall     reindent it according the block and <code>pass</code>.</li>
 </ul>
 <p>More examples:</p>
-<pre><code>{{ if user=='admin':
+<pre class="prettyprint"><code>{{ if user=='admin':
     out.write('&lt;p&gt;Welcome&lt;/p&gt;', escape=False)
       else:
     out.write('&lt;a href="/login"&gt;Login&lt;/a&gt;', escape=False)
@@ -141,7 +141,7 @@
 <p>*      <code>out</code> --     It's a object, Uliweb template use it to output the template buffer. If you         want to output unescape content you can use: <code>out.write(v, escape=False)</code> or         <code>out.noescape(v)</code>, the results are the same.</p>
 <h2 id="title_1-3">3\ \ \ How to use it standalone<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>Uliweb template module is just a single file module, you can use it in your project if you want. You can simple import it. For example:</p>
-<pre><code>&gt;&gt;&gt; import template
+<pre class="prettyprint"><code>&gt;&gt;&gt; import template
 &gt;&gt;&gt; print template.template("Hello, {{=name}}", {'name':'Uliweb'})
 Hello, Uliweb</code></pre>
 <p>It provides several functions:</p>
@@ -149,20 +149,20 @@ Hello, Uliweb</code></pre>
 <li><p><code>template(text, vars=None, env=None, dirs=None, default_template=None)</code></p>
 <dl>
 <dt><code>text</code></dt>
-<dd><pre><code>is the template string you want to process.</code></pre>
+<dd><pre class="prettyprint"><code>is the template string you want to process.</code></pre>
 </dd>
 <dt><code>vars</code></dt>
-<dd><pre><code>is a dict data type, it's the variables you want to use in template</code></pre>
+<dd><pre class="prettyprint"><code>is a dict data type, it's the variables you want to use in template</code></pre>
 </dd>
 <dt><code>env</code></dt>
-<dd><pre><code>is also a dict data type, template will be executed under this environment.</code></pre>
+<dd><pre class="prettyprint"><code>is also a dict data type, template will be executed under this environment.</code></pre>
 </dd>
 <dt><code>dirs</code></dt>
-<dd><pre><code>is the directories list, Uliweb will find the real template file path</code></pre>
+<dd><pre class="prettyprint"><code>is the directories list, Uliweb will find the real template file path</code></pre>
 <p>according this list when it needed. If you don't pass this parameter, the defult value will be <code>[.]</code>, it means current directory.</p>
 </dd>
 <dt><code>default_template</code></dt>
-<dd><pre><code>will be also used in searching template file, if it's been set, if it can't</code></pre>
+<dd><pre class="prettyprint"><code>will be also used in searching template file, if it's been set, if it can't</code></pre>
 <p>find the extend template or include template, this value will be used.</p>
 </dd>
 </dl><p>This function will return a string value, which is the result of template executing.</p></li>
@@ -171,7 +171,7 @@ Hello, Uliweb</code></pre>
 <li><p><code>render_file(filename, vars=None, env=None, dirs=None, default_template=None, use_temp=False)</code></p>
 <dl>
 <dt><code>use_temp</code></dt>
-<dd><pre><code>if set to True, then Uliweb template will store the translated Python code</code></pre>
+<dd><pre class="prettyprint"><code>if set to True, then Uliweb template will store the translated Python code</code></pre>
 <p>to a temporary file, and if you render the same template file again, and if you haven't change the original template file after last render time, Uliweb template will use the temporary file instead, but not the real template file and rerenders it again. So this will speed the process.</p>
 </dd>
 </dl><p>Other parameters' meaning of this function are the same as <code>template()</code> and <code>template_file</code>.</p></li>
@@ -183,11 +183,11 @@ Hello, Uliweb</code></pre>
 <p>When you developing a view function, if the return value is a dict data type, Uliweb will automatically find a matched template and use the returned value to render it. By default, the matched template filename will be the view function name pluses <code>'.html'</code>. For example, if the view function is <code>index</code> the template filename will be <code>index.html</code>.</p>
 <h3 id="title_1-4-5">4.2\ \ \ Providing in response<a class="anchor" href="#title_1-4-5">&para;</a></h3>
 <p>You can also provide a template filename in <code>response</code> object, just like this:</p>
-<pre><code>response.template = 'another.html'</code></pre>
+<pre class="prettyprint"><code>response.template = 'another.html'</code></pre>
 <p>So this will make Uliweb use the <code>another.thml</code> as the template filename.</p>
 <h3 id="title_1-4-6">4.3\ \ \ Dealing it yourself<a class="anchor" href="#title_1-4-6">&para;</a></h3>
 <p>You can also use any template system in view function. Juse use them and get the result, then return it. If the return value is not a dict data type, Uliweb will wrap it to a Response object. And in Uliweb view functions, you can use <code>application.template</code> to access the template, for example:</p>
-<pre><code>def some_view_func():
+<pre class="prettyprint"><code>def some_view_func():
     response.write(application.template('show_document.html', locals()))
     return response</code></pre>
 

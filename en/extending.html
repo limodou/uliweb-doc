@@ -78,9 +78,9 @@
 </ul>
 <h3 id="title_1-1-2">Dispatch points<a class="anchor" href="#title_1-1-2">&para;</a></h3>
 <p>An Dispatch point will define the place where the dispatcher want to call its associated receiver functions, and it'll pass the auguments to those receiver functions. A dispatch point will looks like:</p>
-<pre><code>dispatch.call(sender, topic, signal=None, *args, **kwargs)</code></pre>
+<pre class="prettyprint"><code>dispatch.call(sender, topic, signal=None, *args, **kwargs)</code></pre>
 <p>or</p>
-<pre><code>ret = dispatch.get(sender, topic, signal=None, *args, **kwargs)</code></pre>
+<pre class="prettyprint"><code>ret = dispatch.get(sender, topic, signal=None, *args, **kwargs)</code></pre>
 <p>You can see there are two arguments must be passed:</p>
 <ul>
 <li><code>sender</code>     It just looks like the name.</li>
@@ -100,13 +100,13 @@
 </div>
 <h3 id="title_1-1-3">Receiver functions<a class="anchor" href="#title_1-1-3">&para;</a></h3>
 <p>It's a function will be used for processing special topic and optional signal. The signature of a receiver function will look like:</p>
-<pre><code>def receiver(sender, topic, *args, **kwargs)</code></pre>
+<pre class="prettyprint"><code>def receiver(sender, topic, *args, **kwargs)</code></pre>
 <p>So, receiver functions are very common.</p>
 <h3 id="title_1-1-4">Collection system<a class="anchor" href="#title_1-1-4">&para;</a></h3>
 <p>Collection system is used to collect all of avaible receiver functions, so that when executing a dispatch point, it can find all associated receiver functions. So there are two things you need to do after defining the receiver functions:</p>
 <ol>
 <li><p>Call dispatch.bind to receiver functions, for example:</p>
-<pre><code>from uliweb.core.dispatch import bind
+<pre class="prettyprint"><code>from uliweb.core.dispatch import bind
 
 @bind('test_point')
 def receiver():
@@ -114,7 +114,7 @@ def receiver():
 <li>Put the code to the right place, so that uliweb can import them, and calling     the bind function. When Uliweb startup, it'll try to import all <code>start.py</code>     from every available app, so you can put the code to <code>__init__.py</code> or <code>start.py</code>     of each app folder.</li>
 </ol>
 <p>The signature of the <code>bind</code> function is:</p>
-<pre><code>def bind(topic, signal=None, kind=MIDDLE, nice=-1)</code></pre>
+<pre class="prettyprint"><code>def bind(topic, signal=None, kind=MIDDLE, nice=-1)</code></pre>
 <ul>
 <li><code>topic</code>     which you want to bind to</li>
 <li><p><code>signal</code>     used to match with the dispatch point signal argument. And if the receiver     function has no signal argument, this argument will be removed. On the     contrary, it'll be passed to the receiver function.</p>

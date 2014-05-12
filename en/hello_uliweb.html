@@ -73,21 +73,21 @@
 </dl><h2 id="title_1-2">Creating a new project<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>Uliweb provides a command line tool named <code>uliweb</code>, you can use it to execute several commands.</p>
 <p>At the command line,  change to or create a directory in which you want to create new Uliweb project,  then execute:</p>
-<pre><code>uliweb makeproject project</code></pre>
+<pre class="prettyprint"><code>uliweb makeproject project</code></pre>
 <p>If the command execution is successful, it'll output nothing and create a directory named <code>hello_project</code>. A clean workspace is created with relevant files for the project in this directory.</p>
 <p>The project folder will be:</p>
-<pre><code>|-- app.yaml
+<pre class="prettyprint"><code>|-- app.yaml
 |-- apps/
 |   `-- settings.ini
 |-- gae_handler.py
 |-- runcgi.py
 `-- wsgi_handler.wsgi</code></pre>
 <h2 id="title_1-3">Creating the 'Hello' app<a class="anchor" href="#title_1-3">&para;</a></h2>
-<pre><code>cd project
+<pre class="prettyprint"><code>cd project
 uliweb makeapp Hello</code></pre>
 <p>Go into <code>project</code> directory, create a new app following the command as shown. You can substitute the name of the app, <code>Hello</code> with another name of your choice.</p>
 <p>After the command above is executed successfully, you can find the following files in <code>apps/Hello</code> directory:</p>
-<pre><code>|-- __init__.py
+<pre class="prettyprint"><code>|-- __init__.py
 |-- conf.py
 |-- info.ini
 |-- static/
@@ -97,11 +97,11 @@ uliweb makeapp Hello</code></pre>
 `-- views.py</code></pre>
 <h2 id="title_1-4">Starting the server<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>After the above steps, you can start up your web project as follows:</p>
-<pre><code>uliweb runserver</code></pre>
+<pre class="prettyprint"><code>uliweb runserver</code></pre>
 <p>Following the instructions and information printout to the console, you can open a browser and enter the url <a href="http://localhost:8000" class="outter">http://localhost:8000</a>.  You would see a rendered page with the message "Hello, Uliweb" . Congratulations!</p>
 <h2 id="title_1-5">Modifying the "View"<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>When user requests an URL, Uliweb tries to map the URL to a view function. So in the case of our example, the request for <a href="http://localhost:8000" class="outter">http://localhost:8000</a> would map to a function thatmaps to the "/" location on our server. To see how this works, take a look in the <code>Hello/view.py</code> file. All your view functions should be declared in this file. Open it in your favourite editor, then you will see:</p>
-<pre><code>#coding=utf-8
+<pre class="prettyprint"><code>#coding=utf-8
 from uliweb import expose
 
 @expose('/')
@@ -112,25 +112,25 @@ def index():
 <p>This function will return a line of HTML code that will be displayed directly in browser.</p>
 <h2 id="title_1-6">Adding templates<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>If your view function returns a dict object, Uliweb will apply it to a template automatically. It means that different return value will cause a different action. The template is the same name as your view function with '.html' suffix. For example, the template of <code>index()</code> is <code>index.html</code>. Templates should be placed into the directory <code>templates</code> which will be automatically created when creating a new app. Now let's add a new function to test template process.</p>
-<pre><code>@expose('/template')
+<pre class="prettyprint"><code>@expose('/template')
 def template():
     return {}</code></pre>
 <p>Then create a new file <code>template.html</code> in <code>apps/Hello/templates</code> with contents like below:</p>
-<pre><code>&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;</code></pre>
+<pre class="prettyprint"><code>&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;</code></pre>
 <p>Visit <a href="http://localhost:8000/template" class="outter">http://localhost:8000/template</a> in the browser, you will see the same thing as the previous one.</p>
 <h2 id="title_1-7">Using template variables<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>In above two examples, all data are outputed directly, we're going to use template variables to change that. Add another view function with the following code:</p>
-<pre><code>@expose('/template1')
+<pre class="prettyprint"><code>@expose('/template1')
 def template1():
     return {'content':'Uliweb'}</code></pre>
 <p>The function <code>template1()</code> returns a dict object with <code>content</code> which representing the content to be displayed. If you feel uncomfortable with the <code>{}</code>, try this alternative:</p>
-<pre><code>return dict(content='Uliweb')</code></pre>
+<pre class="prettyprint"><code>return dict(content='Uliweb')</code></pre>
 <p>or:</p>
-<pre><code>content = 'Uliweb'
+<pre class="prettyprint"><code>content = 'Uliweb'
 return locals()</code></pre>
 <p>The first one uses <code>dict()</code> to construct a dict object while the second one uses the builtin function <code>locals()</code> directly - as long as you define the corresponding variables in current scope. Although <code>locals()</code> may return some irrelevant variables, it is not harmful.</p>
 <p>Then create <code>template1.html</code> in <code>apps/Hello/templates</code> with contents like below:</p>
-<pre><code>&lt;h1&gt;Hello, {{=content}}&lt;/h1&gt;</code></pre>
+<pre class="prettyprint"><code>&lt;h1&gt;Hello, {{=content}}&lt;/h1&gt;</code></pre>
 <p><code>{{=content}}</code> represents outputing value of <code>content</code> to template. Here you can use a variable or a function with return value between <code>{{=</code> and <code>}}</code>.</p>
 <div class="ui info message">
 <p>The development server provided by Uliweb has the ability to reload apps, you don't need to restart the server too often when making changes - refreshing you browser is enough in most situations. However, when you are struck with templates cache or something goes wrong seriously, you do need to restart it. Pressing Ctrl + C in command line can shutdown the server, and then you can restart it.</p>

@@ -73,6 +73,7 @@ uliweb_apps.md
 db/introduction.md
 db/orm.md
 db/multidb.md
+db/faq.md
 db/api.md
 {% endtoc %}
 
