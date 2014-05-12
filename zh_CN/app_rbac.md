@@ -141,7 +141,7 @@ PERMISSIONS用来定义权限信息，在rbac/settings.ini中没有缺省权限�
 write = _('Write Permission')
 ```
 
-它的定义很简单，就是权限名和权限名的显示文本。
+它的定义很简单，就是权限名和权限名的显示文本。如果APP很多，为了更好的区分不同的权限，可以采用 `appname.perm` 的形式。建议使用英文形式，如: `Task.Edit` 表示任务编辑权限。
 
 
 ### ROLES_PERMISSIONS
@@ -161,12 +161,10 @@ permission_name = (role1, role_prop1),(role2, role_prop2)
 
 {% alert class=info %}
 什么是附加属性？通常的权限与角色关系，我们可能只关心一个角色有什么样的权限就够了。但是对于特殊的场合，如审批处理，不同的角色可能审批的额度不同，但是对于只使用角色与权限关系的定位方式就无法定义不同的额度值来，因此在 uliweb 设计 rbac 时，在关系表中还添加了一个附加的 props 字段，利用它可以定义一些特殊的值。不过，目前没有更多对它的处理， rbac 只是把它定义成为了 PICKLE 字段，用户可以存储任意的简单数据类型，如： int, str, dict, list 等。这只是留作以后扩展使用的。
-
 {% endalert %}
 
 {% alert class=info %}
 在 settings.ini 中定义的上述内容，应该只是做为初始化数据时使用，在运行时不应直接使用 settings.ini 中的数据，而是通过 rbac 提供的方法或 Model 来处理。
-
 {% endalert %}
 
 ## rbac使用的表结构说明

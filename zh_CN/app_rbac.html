@@ -156,7 +156,7 @@ trusted = _('Trusted User'), 'uliweb.contrib.rbac.trusted', True</code></pre>
 <p>PERMISSIONS用来定义权限信息，在rbac/settings.ini中没有缺省权限，示例如下:</p>
 <pre class="prettyprint "><code>[PERMISSIONS]
 write = _('Write Permission')</code></pre>
-<p>它的定义很简单，就是权限名和权限名的显示文本。</p>
+<p>它的定义很简单，就是权限名和权限名的显示文本。如果APP很多，为了更好的区分不同的权限，可以采用 <code>appname.perm</code> 的形式。建议使用英文形式，如: <code>Task.Edit</code> 表示任务编辑权限。</p>
 <h3 id="title_1-4-3">ROLES_PERMISSIONS<a class="anchor" href="#title_1-4-3">&para;</a></h3>
 <p>ROLES_PERMISSIONS用来定义角色和权限之间的关系，如:</p>
 <pre class="prettyprint "><code>[ROLES_PERMISSIONS]
@@ -398,8 +398,8 @@ def topic_view(topic_id):
 </div>
 
 
-<script type="text/javascript" src="./static/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/jquery-1.7.2.min.js"></script>
+<script src="./static/semantic/javascript/semantic.min.js"></script>
 <script src="./static/asset/prettify.js"></script>
 <script src="./static/toc/toc.js"></script>
 <script src="./static/docs.js"></script>
