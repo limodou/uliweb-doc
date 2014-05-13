@@ -7,14 +7,14 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
-<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
 
-<title>使用Uliweb的网站或项目 - Uliweb-Doc</title>
+<title>0.2.4 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
 <div class="navbar">
   <div class="ui small secondary inverted borderless menu">
     
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
+    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
       
@@ -59,31 +59,66 @@
     <div class="twelve wide column" id="markdown-content">
     
         <div class="chapter-prev chapter-top">
-    <a prev-chapter href="./globals.html"><i class="icon-arrow-left"></i> 全局环境</a>
+    <a prev-chapter href="../update/update_0.2.5.html"><i class="icon-arrow-left"></i> 0.2.5</a>
 </div>
-
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../update/update_0.2.3.html">0.2.3 <i class="icon-arrow-right"></i></a>
+</div>
         
-        <h1 id="title_1">使用Uliweb的网站或项目<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">网站<a class="anchor" href="#title_1-1">&para;</a></h2>
+        <h1 id="title_1">0.2.4<a class="anchor" href="#title_1">&para;</a></h1>
 <ul>
-<li><a href="http://uliweb.clkg.org" class="outter">http://uliweb.clkg.org</a></li>
-<li><a href="http://www.xyxwsju.gov.cn/" class="outter">http://www.xyxwsju.gov.cn/</a></li>
-<li><a href="http://www.xyxdaj.gov.cn/" class="outter">http://www.xyxdaj.gov.cn/</a></li>
-<li><a href="http://mnz.xuyong.gov.cn/" class="outter">http://mnz.xuyong.gov.cn/</a></li>
-</ul>
-<h2 id="title_1-2">项目<a class="anchor" href="#title_1-2">&para;</a></h2>
-<ul>
-<li><a href="https://github.com/limodou/uliwebzone" class="outter">https://github.com/limodou/uliwebzone</a> (social site)</li>
-<li><a href="http://git.oschina.net/devop/honeybee" class="outter">http://git.oschina.net/devop/honeybee</a></li>
-<li><a href="https://github.com/limodou/wshell" class="outter">https://github.com/limodou/wshell</a> (web shell)</li>
-<li><a href="https://github.com/limodou/chatroom" class="outter">https://github.com/limodou/chatroom</a></li>
-<li><a href="https://github.com/zhangchunlin/shapps" class="outter">https://github.com/zhangchunlin/shapps</a> (app collections)</li>
-<li><a href="https://github.com/Longwosion/uliweb-redbreast" class="outter">https://github.com/Longwosion/uliweb-redbreast</a> (workflow engine)</li>
+<li><p>修正 ORM 与 SQLAlchemy 0.9.1 不兼容的Bug. 旧的写法:</p>
+<pre class="prettyprint "><code>cond = None
+cond = (Blog.c.id==5) &amp; None</code></pre>
+<p>在 0.9.1 中将不是正确的，因为 None 不会被忽略掉（0.8.x 只在 and 时会这样）， 所以你可以将 <code>cond = None</code> 改为：</p>
+<pre class="prettyprint "><code>from sqlalchemy.sql import true
+cond = true()</code></pre>
+<p>或者</p>
+<pre class="prettyprint "><code>from uliweb.orm import true
+cond = true()</code></pre></li>
+<li><p>向 functions 中添加 <code>__contains__</code> , 这样如果要检查一个 API 是否在 functions   中存在，只要:</p>
+<pre class="prettyprint "><code>'flash' in functions</code></pre></li>
+<li>重构 generic.py, 删除对 <code>functions.flash</code> 和 <code>functions.get_fileserving</code>   的缺省依赖。</li>
+<li><p>修复在 view 函数中对 <code>yield</code> 的支持， 你还可以在 gevent 环境中使用，例如：</p>
+<pre class="prettyprint "><code>@expose('/test')
+def test():
+    yield "&lt;ul&gt;"
+    for i in range(10):
+        yield "&lt;li&gt;%d&lt;/li&gt;" % (i + 1)
+        sleep(1)
+    yield "&lt;/ul&gt;"</code></pre></li>
+<li>修复 <code>rawsql()</code> 在不同数据库引擎中出错的 bug</li>
+<li>修复 <code>jsonp()</code> 在处理中文时的 bug</li>
+<li><p>添加 <code>trim_path()</code> 函数向 <code>utils/common.py</code>这，可以用它将一个路径处理为指定长   度，过长的部分会转为 <code>...</code></p>
+<pre class="prettyprint "><code>&gt;&gt;&gt; a = '/project/apps/default/settings.ini'
+&gt;&gt;&gt; trim_path(a, 30)
+'.../apps/default/settings.ini'</code></pre>
+<p>缺省的限制长度是 30。</p></li>
+<li><p>在命令行使用了 <code>-v</code> 参数时，将输出 ORM 连接信息。并且口令将会替換为 <code>'*'</code> ，例如：</p>
+<pre class="prettyprint "><code>$&gt;uliweb syncdb -v
+Connection : mysql://blog:***@localhost/blog?charset=utf8
+
+[default] Creating [1/1, blog] blog...EXISTED</code></pre></li>
+<li><p>添加 <code>makeapp</code> 命令可以一次创建多个 app 的支持，如使用：</p>
+<pre class="prettyprint "><code>uliweb makeapp a b c</code></pre>
+<p>一次创建 <code>a</code>, <code>b</code>, <code>c</code> app。</p></li>
+<li><p>重构 <code>save_file()</code> 的处理, 添加 <code>headers</code> 和 <code>convertors</code> 参数。</p>
+<p><code>headers</code> 用于创建 csv 的头时，以替換原来字段的名字，但是你也可以象下面来 创建别名：</p>
+<pre class="prettyprint "><code>User.c.username.label(u"Name")</code></pre>
+<p>而 <code>convertors</code> 用于转換字段的值，例如：</p>
+<pre class="prettyprint "><code>def name(value, data):
+    """
+    value is the column value
+    data is the current record object
+    """
+    return value + 'test'
+save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</code></pre></li>
+<li>修复 <code>call_view()</code> 调用 <code>wrap_result</code> bug。</li>
 </ul>
 
         
         <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./whouse.md">View Source</a>
+            <i class="icon download"></i><a href="../update/update_0.2.4.md">View Source</a>
         </div>
         
     </div>
@@ -147,16 +182,16 @@
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
+<script src="../static/jquery-1.7.2.min.js"></script>
+<script src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
+<script src="../../static/jquery.cookie.js"></script>
 
 
     <script type="text/javascript">
@@ -198,7 +233,7 @@ $(function(){
     });
     $('a.language').on('click', function(){
         $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+        window.location.href = "../../"+$(this).data('lang')+'/index.html';
     });
 });
 </script>

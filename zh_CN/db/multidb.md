@@ -94,26 +94,6 @@ engine = get_connection()
 正用来与数据库通讯的连接对象还没有创建，它们将随着请求被自动创建和管理。这个连
 接对象就是下面的 Session。
 
-## Session管理
-
-当我们需要进行数据库的操作时，我们要建立一个连接对象。在一个engine对象上，可以
-建不同的连接对象，一个连接对象可以有不同的事务。因此事务都是放在某个连接对象上的。
-为了方便使用这些连接对象，Uliweb对其进行了包装，构造了 Session 类。这个 Session
-和SQLalchemy提供的 session 机制是不同的。在Uliweb主要是管理连接的，它还提供了事务
-的管理功能。
-
-Session对象会有两种创建方式，一种是自动创建。当我们在某个数据库连接上进行操作时，
-如： `do_(sql, engine_name)` ，这里只指明了要操作的连接名。这种情况下，Uliorm会
-自动使用对应连接名对象上的session对象（如果在执行SQL时还没有创建，则会自动创建）。
-同时，考虑到多线程工作的情况，这个session对象在不同的线程环境是不同的。
-
-所以这种情况下，当只使用连接名来进行SQL操作时，同一个线程使用的 Session 对象是
-相同的，因此它们的事务也将是相同的。
-
-第二种情况就是手工创建 Session 对象，只要执行 `session = Session()` 或 `session = Session(engine_name)`
-会通过相应的数据库连接对象来创建相应的连接。这种方式是显示地创建 session 对象，
-不会复用已经存在的 Session 对象。
-
 
 ### Model的连接设置
 
@@ -157,7 +137,6 @@ Result.connect(engine_name)
 {% alert class=info %}
 原来想实现隐式的连接切換功能，即不要显示地使用象 `connect()` 这样的方法。但是
 发现很难做到。
-
 {% endalert %}
 
 

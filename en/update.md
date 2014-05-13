@@ -1,6 +1,57 @@
 Uliweb Change Log
 =====================
 
+## 0.3 Version
+
+* Fix pyini "key=" for raw output bug
+* Fix objcache for Lazy field bug, it'll refresh first if found Lazy field
+* Fix executing orm command raise Exception not be thrown bug
+* Refact multidb support
+* Change UserWarn to DeprecationWarning
+* Fix syncdb for different table name between `Model.__tablename__` and settings bug
+* Remove `get_cached()` and add `cache` parameter to `Model.get()`
+* Add `get_local_cache()` and `clear_local_cache()` in order to compatiable
+  with SimpleFrame implementation
+* ORM `Property.to_str()` will return string but not unicode for CHAR and VARCHAR.
+* Simplify server_default, if integer given, it'll be convert to `text(n)`
+* `ManyResult.all()` can receive a `cache` parameter
+* Improve `dump()` and `load()`, add PickleType , ManyToMany support
+* Refact objcache app implementation and add `exclude` config option
+* Remove primary_key detect, because multi primary_key columns can make composite primary key,
+  add partition support for mysql
+
+  you can define:
+
+    ```
+    __table_args__ = {
+        'mysql_partition_by':'HASH(YEAR(create_time))',
+        'mysql_partitions': '6'
+    }
+    ```
+* add None patch process, you can set '', 'empty, 'exception'.
+* move uliweb/orm/middle*.py to uliweb/contrib/orm
+* move uliweb/i18n/middle_i18n.py to uliweb/contrib/i18n
+* move storage from core to utils directory
+* improve count process
+* Fix Reference and ManyToMany dump and load bug
+* Add `is_in_web()` funciton, so you can test if current frame is in web executation
+* Add `--gevent` support to call command
+* Add `any` to Model, Result, ManyResult
+* Add `clear_prefix()` to redis_cli APP, this feature need redis 2.6+ version
+* Add version check to redis_cli APP, default is disabled
+* Add `clear_table()` to objcache APP
+* Add 'id' parameter to `get()` and `get_object()` and `get_cached_object()` functions,
+  so that if the ID can't be found in cache, condition (old parameter) will be used.
+  And when id and condition given both, only when id is not integer or valid expression
+  condition will be used. So in most cases, you don't need pass condition.
+* If not set url option for session of database type, it'll automatically use ORM settings if exists
+* Add settings and local_settings env variables support
+* Fix count bug
+* Change orm requirement.txt, add uliweb-alembic package
+* generic app add avalon and mmgrid support
+* Model.put() not is deprecated, you should use save
+* `generic.py` add version support when saving
+
 ## 0.2.6
 
 * Add warning output for Reference class parameter of relation properties definition.

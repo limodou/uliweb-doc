@@ -7,14 +7,14 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
-<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
 
-<title>使用Uliweb的网站或项目 - Uliweb-Doc</title>
+<title>0.2.3 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
 <div class="navbar">
   <div class="ui small secondary inverted borderless menu">
     
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
+    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
       
@@ -59,31 +59,24 @@
     <div class="twelve wide column" id="markdown-content">
     
         <div class="chapter-prev chapter-top">
-    <a prev-chapter href="./globals.html"><i class="icon-arrow-left"></i> 全局环境</a>
+    <a prev-chapter href="../update/update_0.2.4.html"><i class="icon-arrow-left"></i> 0.2.4</a>
 </div>
-
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../update/update_0.2.2.html">0.2.2 <i class="icon-arrow-right"></i></a>
+</div>
         
-        <h1 id="title_1">使用Uliweb的网站或项目<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">网站<a class="anchor" href="#title_1-1">&para;</a></h2>
+        <h1 id="title_1">0.2.3<a class="anchor" href="#title_1">&para;</a></h1>
 <ul>
-<li><a href="http://uliweb.clkg.org" class="outter">http://uliweb.clkg.org</a></li>
-<li><a href="http://www.xyxwsju.gov.cn/" class="outter">http://www.xyxwsju.gov.cn/</a></li>
-<li><a href="http://www.xyxdaj.gov.cn/" class="outter">http://www.xyxdaj.gov.cn/</a></li>
-<li><a href="http://mnz.xuyong.gov.cn/" class="outter">http://mnz.xuyong.gov.cn/</a></li>
-</ul>
-<h2 id="title_1-2">项目<a class="anchor" href="#title_1-2">&para;</a></h2>
-<ul>
-<li><a href="https://github.com/limodou/uliwebzone" class="outter">https://github.com/limodou/uliwebzone</a> (social site)</li>
-<li><a href="http://git.oschina.net/devop/honeybee" class="outter">http://git.oschina.net/devop/honeybee</a></li>
-<li><a href="https://github.com/limodou/wshell" class="outter">https://github.com/limodou/wshell</a> (web shell)</li>
-<li><a href="https://github.com/limodou/chatroom" class="outter">https://github.com/limodou/chatroom</a></li>
-<li><a href="https://github.com/zhangchunlin/shapps" class="outter">https://github.com/zhangchunlin/shapps</a> (app collections)</li>
-<li><a href="https://github.com/Longwosion/uliweb-redbreast" class="outter">https://github.com/Longwosion/uliweb-redbreast</a> (workflow engine)</li>
+<li>更新nginx配置文件的输出模板，添加 proxy_set_header 指令</li>
+<li>向 ORM 添加 save_file() 方法，你可以用它保存select之后的结果集到一个csv文件中</li>
+<li>修复 SortedDict 类中丢失的 clear() 方法</li>
+<li>修改i18n处理，对于项目和apps方式的抽取，它将首先启动应用，这样是为了让自定义tag可以起作用。但是建议用户尽量不用自定义tag，因为模板中可以直接写python代码。</li>
+<li>向utils/common.py中添加walk_dirs()方法，这个函数可以用来遍历目录，同时可以支持对文件名和后缀的过滤功能。</li>
 </ul>
 
         
         <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./whouse.md">View Source</a>
+            <i class="icon download"></i><a href="../update/update_0.2.3.md">View Source</a>
         </div>
         
     </div>
@@ -147,16 +140,16 @@
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
+<script src="../static/jquery-1.7.2.min.js"></script>
+<script src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
+<script src="../../static/jquery.cookie.js"></script>
 
 
     <script type="text/javascript">
@@ -198,7 +191,7 @@ $(function(){
     });
     $('a.language').on('click', function(){
         $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+        window.location.href = "../../"+$(this).data('lang')+'/index.html';
     });
 });
 </script>

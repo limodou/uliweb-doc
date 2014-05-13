@@ -5,8 +5,24 @@ introduction.md
 installation.md
 architecture.md
 globals.md
-update.md
 whouse.md
+{% endtoc %}
+
+## 更新说明
+
+{% toc max_depth=1 %}
+update/update_0.3.md
+update/update_0.2.6.md
+update/update_0.2.5.md
+update/update_0.2.4.md
+update/update_0.2.3.md
+update/update_0.2.2.md
+update/update_0.2.1.md
+update/update_0.2.md
+update/update_0.1.7.md
+update/update_0.1.6.md
+update/update_0.1.5.md
+update/update_0.1.4.md
 {% endtoc %}
 
 ## 教程
@@ -119,3 +135,4 @@ articles/svg_mimetype_config.md
 articles/tornado_support.md
 articles/gevent_support.md
 {% endtoc %}
+

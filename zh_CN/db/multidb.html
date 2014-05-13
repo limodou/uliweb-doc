@@ -111,12 +111,7 @@ models          与之相关的所有的Model对象信息</code></pre>
 <p>如果只是访问缺省的连接，可以:</p>
 <pre class="prettyprint "><code>engine = get_connection()</code></pre>
 <p>因此我们可以了解，一旦项目启动，定义的数据库的引擎对象将直接被创建。但是此时真 正用来与数据库通讯的连接对象还没有创建，它们将随着请求被自动创建和管理。这个连 接对象就是下面的 Session。</p>
-<h2 id="title_1-4">Session管理<a class="anchor" href="#title_1-4">&para;</a></h2>
-<p>当我们需要进行数据库的操作时，我们要建立一个连接对象。在一个engine对象上，可以 建不同的连接对象，一个连接对象可以有不同的事务。因此事务都是放在某个连接对象上的。 为了方便使用这些连接对象，Uliweb对其进行了包装，构造了 Session 类。这个 Session 和SQLalchemy提供的 session 机制是不同的。在Uliweb主要是管理连接的，它还提供了事务 的管理功能。</p>
-<p>Session对象会有两种创建方式，一种是自动创建。当我们在某个数据库连接上进行操作时， 如： <code>do_(sql, engine_name)</code> ，这里只指明了要操作的连接名。这种情况下，Uliorm会 自动使用对应连接名对象上的session对象（如果在执行SQL时还没有创建，则会自动创建）。 同时，考虑到多线程工作的情况，这个session对象在不同的线程环境是不同的。</p>
-<p>所以这种情况下，当只使用连接名来进行SQL操作时，同一个线程使用的 Session 对象是 相同的，因此它们的事务也将是相同的。</p>
-<p>第二种情况就是手工创建 Session 对象，只要执行 <code>session = Session()</code> 或 <code>session = Session(engine_name)</code> 会通过相应的数据库连接对象来创建相应的连接。这种方式是显示地创建 session 对象， 不会复用已经存在的 Session 对象。</p>
-<h3 id="title_1-4-1">Model的连接设置<a class="anchor" href="#title_1-4-1">&para;</a></h3>
+<h3 id="title_1-3-1">Model的连接设置<a class="anchor" href="#title_1-3-1">&para;</a></h3>
 <p>在Uliweb中，每张表如果要使用首先要在settings.ini中进行配置，原来的写法是:</p>
 <pre class="prettyprint "><code>[MODELS]
 user = 'uliweb.contrib.auth.models.User'</code></pre>
@@ -133,7 +128,7 @@ Result.connect(engine_name)</code></pre>
 <p>原来想实现隐式的连接切換功能，即不要显示地使用象 <code>connect()</code> 这样的方法。但是 发现很难做到。</p>
 
 </div>
-<h3 id="title_1-4-2">多数据库下的语句执行与事务处理<a class="anchor" href="#title_1-4-2">&para;</a></h3>
+<h3 id="title_1-3-2">多数据库下的语句执行与事务处理<a class="anchor" href="#title_1-3-2">&para;</a></h3>
 <p>在数据库处理中，所有的语句都需要在连接上被执行，事务也是在连接上被处理。不同的 连接意味着不同的处理。考虑到web处理和批处理的方式不同，我们可以考虑以下的场景:</p>
 <ul>
 <li>web处理一般是按请求来执行的，因此一个请求过来，创建一个连接，处理完毕后释放。     连接可以是长连接或短连接。长连接意味着将使用连接池，因此所谓的释放就是放回池     子里供下一次使用。而短连接就没有池子，释放就是真正的关闭，下次请求将再次创建。     而不管长连接还是短连接，处理模式都基本相同。     为了简化处理，我们可以每次当请求进入时自动创建一个连接，然后启动事务，并且把     这个连接放到线程环境中，这样所有使用 <code>do_</code> 就可以直接利用这个共享的连接和事务     了。这样的处理只是为了简化。因为有可能一个请求并没有事务处理，甚至不涉及到数据     操作，这样做有些过头了，不过目前为了简化，uliweb就是这样设计的。     当支持多数据库连接时，情况有了一些变化。原来可以只自动建一个连接，但是现     在有可能是有多个连接。那么我们要为所有的连接创建实例，并启动事务吗？因此，     现在的策略就是只为缺省的连接创建连接实例，并启动事务。对于其它的连接，     Uliorm 増加了一个名为 <code>AUTO_DOTRANSACTION</code> 的配置项，缺省为 <code>True</code>.     它的作用就是当你执行 <code>do_</code> 时自动创建连接并启动事务。另一种做法就是使用     <code>Begin(ec=engine_name)</code> 来手工创建连接和事务。目前只要是基本的 SQL 语句     ，包括： select, update, insert, delete 都是封装到了 <code>do_</code> 中了。而象     <code>create</code> 之类的是直接绑定到某个 engine 上，无法直接使用 <code>do_</code> , 所以     自动创建连接和事务一般还是可行的。象建表目前不建议自动创建，所以都是在命     令行上来执行的，它们都有特殊的处理。     同时在处理完毕后，也不能只关闭和提交缺省的连接了，需要对所有创建的连接（包括     自动创建的连接）执行事务提交和关闭。     不过这些已经通过修改middle_transaction完成了。所以在简单情况下用户不用过份关心     这些细节。并且这种做法是兼容只有一个数据库连接的情况。</li>
@@ -144,7 +139,7 @@ Result.connect(engine_name)</code></pre>
 </div></li>
 </ul>
 <p>前面说了，在使用 <code>do_</code> 和 <code>Begin</code> 时可以自动在创建线程共享的连接。在Uliorm 中维护着一个Local的对象，它上面有 <code>conn</code> 和 <code>trans</code> 对象，它们各是一个dict 分别保存着线程相关的连接和事务对象。在调用 <code>do_</code> 和 <code>Begin</code> 时会先检查是否 存在相应的连接和事务对象，如果存在，则直接使用，如果不存在，则创建。这里，还可以 分别传入 engine_name 参数，用来指明检查某个连接名相关的对象是否存在。线程相关的 连接和事务对象存在的目的是为了编程方便。如果所有的SQL都使用 <code>do_</code> 会比较简单。 但是因为 Model 把底层SQL的执行封装到了不同的方法中，所以要么它会自动使用 Model 配置的连接名来获得线程连接对象，要么你通过 connect(engine_name) 切換到其它的连接 名上，以便可以获得其它的线程连接对象，目前也可以传入一个真正的连接对象或Engine对象。</p>
-<h3 id="title_1-4-3">命令行对多数据库的支持<a class="anchor" href="#title_1-4-3">&para;</a></h3>
+<h3 id="title_1-3-3">命令行对多数据库的支持<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>为了支持多数据库，在所有数据库相关的命令上都増加了 <code>--engine</code> 参数，可以用来 切換连接名。缺省是使用 <code>default</code> 。影响较大的是 <code>dump*</code> 和 <code>load*</code> 系列的函数. 原来数据库的数据文件是缺省放在 <code>./data</code> 目录下的。现在为了支持多数据库，将会在 它的下面按连接分别创建子目录， 如： <code>default</code> 等。所以一旦使用了多数据库支持的 版本，原来的备份和数据装入的路径就发生了变化。</p>
 
         

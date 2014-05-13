@@ -7,14 +7,14 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
-<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
 
-<title>使用Uliweb的网站或项目 - Uliweb-Doc</title>
+<title>0.2.5 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
 <div class="navbar">
   <div class="ui small secondary inverted borderless menu">
     
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
+    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
       
@@ -59,31 +59,47 @@
     <div class="twelve wide column" id="markdown-content">
     
         <div class="chapter-prev chapter-top">
-    <a prev-chapter href="./globals.html"><i class="icon-arrow-left"></i> 全局环境</a>
+    <a prev-chapter href="../update/update_0.2.6.html"><i class="icon-arrow-left"></i> 0.2.6</a>
 </div>
-
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../update/update_0.2.4.html">0.2.4 <i class="icon-arrow-right"></i></a>
+</div>
         
-        <h1 id="title_1">使用Uliweb的网站或项目<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">网站<a class="anchor" href="#title_1-1">&para;</a></h2>
+        <h1 id="title_1">0.2.5<a class="anchor" href="#title_1">&para;</a></h1>
 <ul>
-<li><a href="http://uliweb.clkg.org" class="outter">http://uliweb.clkg.org</a></li>
-<li><a href="http://www.xyxwsju.gov.cn/" class="outter">http://www.xyxwsju.gov.cn/</a></li>
-<li><a href="http://www.xyxdaj.gov.cn/" class="outter">http://www.xyxdaj.gov.cn/</a></li>
-<li><a href="http://mnz.xuyong.gov.cn/" class="outter">http://mnz.xuyong.gov.cn/</a></li>
-</ul>
-<h2 id="title_1-2">项目<a class="anchor" href="#title_1-2">&para;</a></h2>
+<li>修复 config 的模板，添加 <code>uwsgi</code> 的shell方式支持</li>
+<li><p>向 <code>settings.ini</code> 中添加对环境变量的支持。例如，在环境变量中定义了 <code>MYSQL_PORT</code>,   你可以在 settings.ini 中定义：</p>
+<pre class="prettyprint "><code>[DEFAULT]
+port = $MYSQL_PORT
+port_str = '${MYSQL_PORT}'</code></pre>
+<p><code>$MYSQL_PORT</code> 与 <code>${MYSQL_PORT}</code> 是一样的。当变量后面跟着标识符时，使用 <code>${}</code> 可以容易地将它分区分开。</p></li>
+<li><p>添加 <code>STATIC_COMBINE_CONFIG</code> 配置项，你可以用它来切換是否启动静态文件合并。缺   省是 <code>False</code>. 配置格式为：</p>
+<pre class="prettyprint "><code>[STATIC_COMBINE_CONFIG]
+enabled = False</code></pre></li>
+<li>向 <code>functions</code> 中添加 <code>get_table()</code> 函数，你可以用它来获得 table 对象。它是   定义在 <code>uliweb.contrib.tables</code> app中的。</li>
+<li>添加 <code>local_cache</code> 的支持，可以用来存储与请求相关的缓存值。它会在每个请求处理   完毕之后被清除。</li>
+<li>优化 <code>get_object()</code> 函数，添加 <code>use_local</code> 参数，所以缓存的值将在 <code>local_cache</code>   中先进行检查，并且将从缓存或数据库中获取的值保存在 local_cache 中。</li>
+<li><p>优化 objcache 的配置格式，你可以如下定义：</p>
+<pre class="prettyprint "><code>user = {'fields':['username'], 'expire':expire_time,
+    'key':callable(instance)|key_field}
+#or
+user = ['username', 'nickname']
+#or
+user =</code></pre>
+<p>如果没有定义 <code>fields</code> ，将使用Model中定义的全部字段。如果 <code>expire</code> 为0或没有 定义，将不会失效。</p>
+<p><code>key</code> 将用来替換 <code>id</code>, 缺省为 <code>id</code>, 当你需要其它的key值时才需要定义。它也可以 是一个 callable 对象，可以接受一个 Model 的实例参数。所以你可以创建任何想要的 key值。</p></li>
+<li><p>向ORM中添加乐观并发控制支持，使用它，需要先在 Model 中定义一个 <code>version</code> 字段，   然后当你在保存对象时，需要乐观锁的处理时，需要使用：</p>
+<pre class="prettyprint "><code>obj.save(occ=True)</code></pre>
+<p>如果在保存时有其它的操作已经保存了记录，它将缺省引发一个 <code>SaveError</code> 的异常， 因为 version 已经被改变了。你还可以传入其它的参数：</p>
 <ul>
-<li><a href="https://github.com/limodou/uliwebzone" class="outter">https://github.com/limodou/uliwebzone</a> (social site)</li>
-<li><a href="http://git.oschina.net/devop/honeybee" class="outter">http://git.oschina.net/devop/honeybee</a></li>
-<li><a href="https://github.com/limodou/wshell" class="outter">https://github.com/limodou/wshell</a> (web shell)</li>
-<li><a href="https://github.com/limodou/chatroom" class="outter">https://github.com/limodou/chatroom</a></li>
-<li><a href="https://github.com/zhangchunlin/shapps" class="outter">https://github.com/zhangchunlin/shapps</a> (app collections)</li>
-<li><a href="https://github.com/Longwosion/uliweb-redbreast" class="outter">https://github.com/Longwosion/uliweb-redbreast</a> (workflow engine)</li>
+<li><code>occ_fieldname</code> 用于定义 version 字段名，缺省是 <code>version</code></li>
+<li><code>occ_exception</code> 用来控制是否允许引发异常，缺省为 <code>True</code>.</li>
+</ul></li>
 </ul>
 
         
         <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./whouse.md">View Source</a>
+            <i class="icon download"></i><a href="../update/update_0.2.5.md">View Source</a>
         </div>
         
     </div>
@@ -147,16 +163,16 @@
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
+<script src="../static/jquery-1.7.2.min.js"></script>
+<script src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
+<script src="../../static/jquery.cookie.js"></script>
 
 
     <script type="text/javascript">
@@ -198,7 +214,7 @@ $(function(){
     });
     $('a.language').on('click', function(){
         $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+        window.location.href = "../../"+$(this).data('lang')+'/index.html';
     });
 });
 </script>

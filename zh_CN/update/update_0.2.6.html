@@ -7,14 +7,14 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
-<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
 
-<title>使用Uliweb的网站或项目 - Uliweb-Doc</title>
+<title>0.2.6 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
 <div class="navbar">
   <div class="ui small secondary inverted borderless menu">
     
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
+    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
       
@@ -59,31 +59,33 @@
     <div class="twelve wide column" id="markdown-content">
     
         <div class="chapter-prev chapter-top">
-    <a prev-chapter href="./globals.html"><i class="icon-arrow-left"></i> 全局环境</a>
+    <a prev-chapter href="../update/update_0.3.html"><i class="icon-arrow-left"></i> 0.3</a>
 </div>
-
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../update/update_0.2.5.html">0.2.5 <i class="icon-arrow-right"></i></a>
+</div>
         
-        <h1 id="title_1">使用Uliweb的网站或项目<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">网站<a class="anchor" href="#title_1-1">&para;</a></h2>
+        <h1 id="title_1">0.2.6<a class="anchor" href="#title_1">&para;</a></h1>
 <ul>
-<li><a href="http://uliweb.clkg.org" class="outter">http://uliweb.clkg.org</a></li>
-<li><a href="http://www.xyxwsju.gov.cn/" class="outter">http://www.xyxwsju.gov.cn/</a></li>
-<li><a href="http://www.xyxdaj.gov.cn/" class="outter">http://www.xyxdaj.gov.cn/</a></li>
-<li><a href="http://mnz.xuyong.gov.cn/" class="outter">http://mnz.xuyong.gov.cn/</a></li>
-</ul>
-<h2 id="title_1-2">项目<a class="anchor" href="#title_1-2">&para;</a></h2>
-<ul>
-<li><a href="https://github.com/limodou/uliwebzone" class="outter">https://github.com/limodou/uliwebzone</a> (social site)</li>
-<li><a href="http://git.oschina.net/devop/honeybee" class="outter">http://git.oschina.net/devop/honeybee</a></li>
-<li><a href="https://github.com/limodou/wshell" class="outter">https://github.com/limodou/wshell</a> (web shell)</li>
-<li><a href="https://github.com/limodou/chatroom" class="outter">https://github.com/limodou/chatroom</a></li>
-<li><a href="https://github.com/zhangchunlin/shapps" class="outter">https://github.com/zhangchunlin/shapps</a> (app collections)</li>
-<li><a href="https://github.com/Longwosion/uliweb-redbreast" class="outter">https://github.com/Longwosion/uliweb-redbreast</a> (workflow engine)</li>
+<li>増加在定义关系字段时，当引用Model不是字符串而是Model类时发出警告的提示。需   使用字符串名称。</li>
+<li>修复在 ListView 和 SelectListView 中对 <code>manual</code> 和 <code>total</code> 处理的Bug。</li>
+<li>修复 <code>rawsql</code> bug。</li>
+<li>向 Generic ListView 中増加使用 <code>get_object</code> 的调用，使用缓存机制来处理引用对象。</li>
+<li>修复 <code>get_cached()</code> Bug。</li>
+<li>修复在 Generic 中 AddView 和 EditView 中处理 <code>process_files()</code> 的Bug。</li>
+<li>在进入 Shell 环境前増加对调用 <code>readline</code> 的支持。</li>
+<li>将乐观锁相关的参数由 <code>occ</code> 改为 <code>version</code> 。</li>
+<li>修复 ManyToMany 缓存值在保存时没有正确使用的Bug（由于没有存入 <code>_old_values</code> ）。</li>
+<li><p>当在 Model 中定义了主键时，将不再自动创建 <code>id</code> 字段，如：</p>
+<pre class="prettyprint "><code>user_id = Field(int, primary_key=True, autoincrement=True)</code></pre></li>
+<li>修复 <code>sqldot</code> 命令在处理 settings.ini 中定义的 Model 名称与 <code>__tablename__</code> 不一致   时的Bug。</li>
+<li>优化 <code>sqlhtml</code> 文档输出，増加 Model 描述及索引的输出。</li>
+<li>将 <code>runserver</code> 的日志输出改为缺省是彩色输出，可以使用 <code>--nocolor</code> 关闭。</li>
 </ul>
 
         
         <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./whouse.md">View Source</a>
+            <i class="icon download"></i><a href="../update/update_0.2.6.md">View Source</a>
         </div>
         
     </div>
@@ -147,16 +149,16 @@
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
+<script src="../static/jquery-1.7.2.min.js"></script>
+<script src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
+<script src="../../static/jquery.cookie.js"></script>
 
 
     <script type="text/javascript">
@@ -198,7 +200,7 @@ $(function(){
     });
     $('a.language').on('click', function(){
         $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+        window.location.href = "../../"+$(this).data('lang')+'/index.html';
     });
 });
 </script>

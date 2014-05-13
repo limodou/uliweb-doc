@@ -7,14 +7,14 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
-<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
 
-<title>使用Uliweb的网站或项目 - Uliweb-Doc</title>
+<title>0.2 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
 <div class="navbar">
   <div class="ui small secondary inverted borderless menu">
     
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
+    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
       
@@ -59,31 +59,47 @@
     <div class="twelve wide column" id="markdown-content">
     
         <div class="chapter-prev chapter-top">
-    <a prev-chapter href="./globals.html"><i class="icon-arrow-left"></i> 全局环境</a>
+    <a prev-chapter href="../update/update_0.2.1.html"><i class="icon-arrow-left"></i> 0.2.1</a>
 </div>
-
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../update/update_0.1.7.html">0.1.7 <i class="icon-arrow-right"></i></a>
+</div>
         
-        <h1 id="title_1">使用Uliweb的网站或项目<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">网站<a class="anchor" href="#title_1-1">&para;</a></h2>
+        <h1 id="title_1">0.2<a class="anchor" href="#title_1">&para;</a></h1>
+<p>更新内容</p>
 <ul>
-<li><a href="http://uliweb.clkg.org" class="outter">http://uliweb.clkg.org</a></li>
-<li><a href="http://www.xyxwsju.gov.cn/" class="outter">http://www.xyxwsju.gov.cn/</a></li>
-<li><a href="http://www.xyxdaj.gov.cn/" class="outter">http://www.xyxdaj.gov.cn/</a></li>
-<li><a href="http://mnz.xuyong.gov.cn/" class="outter">http://mnz.xuyong.gov.cn/</a></li>
-</ul>
-<h2 id="title_1-2">项目<a class="anchor" href="#title_1-2">&para;</a></h2>
-<ul>
-<li><a href="https://github.com/limodou/uliwebzone" class="outter">https://github.com/limodou/uliwebzone</a> (social site)</li>
-<li><a href="http://git.oschina.net/devop/honeybee" class="outter">http://git.oschina.net/devop/honeybee</a></li>
-<li><a href="https://github.com/limodou/wshell" class="outter">https://github.com/limodou/wshell</a> (web shell)</li>
-<li><a href="https://github.com/limodou/chatroom" class="outter">https://github.com/limodou/chatroom</a></li>
-<li><a href="https://github.com/zhangchunlin/shapps" class="outter">https://github.com/zhangchunlin/shapps</a> (app collections)</li>
-<li><a href="https://github.com/Longwosion/uliweb-redbreast" class="outter">https://github.com/Longwosion/uliweb-redbreast</a> (workflow engine)</li>
+<li>修复 auth.models <code>get_href</code> 错误</li>
+<li>修改 ORM <code>save()</code> 处理，它将保存manytomany数据</li>
+<li>向 <code>save()</code> 中添加 <code>changed</code>, <code>saved</code> 和 <code>send_dispatch</code> 参数。其中 <code>changed</code>   是一个回调函数，当有更新时（不是新増)时被调用。 <code>saved</code> 也是一个回调，当保存   了数据时被回调，它包括更新和新増两种情况。 <code>send_dispatch</code> 表示是否发送pre_save和   post_save信号。</li>
+<li>改进 <code>set_echo()</code>, 添加 <code>time</code>, <code>explain</code>, <code>caller</code> 等参数。</li>
+<li>向 utils.common 模块添加 <code>get_caller()</code> 函数。</li>
+<li>向 form 模块添加 <code>CheckboxSelectField</code> 字段类。</li>
+<li>添加 <code>jsonp</code> 函数，使用方式如json。</li>
+<li>修复rule合并错误。</li>
+<li>优化 <code>get_redis(**options)</code> 允许传入参数。</li>
+<li>优化 <code>jsonp()</code> 限制 <code>callback</code> 参数只能传入字母和数字。</li>
+<li>优化 pyini, 支持跨section变量引用和延迟处理。</li>
+<li>优化 <code>load</code> 命令，添加总条数和花费时间显示，同时在插入时采用批量插入。</li>
+<li>向 uliweb/utils/image.py 添加 <code>test_image</code> 函数。</li>
+<li>添加 <code>xhr_redirect_json</code> 支持. 在启动uliewb应用时，可以传入 <code>xhr_redirect_json</code> (布尔值) 参数，   缺省值是 <code>True</code> 。它的作用是，如果请求是ajax，重定向将返回为一个json结果，错   误码是 500。所以前端可以使用它来根据需要进行重定向。</li>
+<li>ORM <code>remove/clear</code> 函数在传入空条件时将删除全部记录。</li>
+<li>向 uliweb.utils.common 中添加 <code>classonlymethod()</code> 方法, 它和classmethod类似，   但是它可以限制类属性只能通过类来调用，而不是实例。主要用来控制ORM的Model delete 方法 。</li>
+<li>重构上传App，添加 <code>download</code> 到 functions 配置。</li>
+<li>优化 secretkey app, 添加 <code>-o</code> 来指定输出文件名。向大部分加解密函数添加 <code>keyfile</code> 参数。</li>
+<li>向upload App添加 <code>MIME_TYPES</code> section，但是它只会对uliweb应用有效，而不是对web server。</li>
+<li>优化 <code>call</code> 命令，允许调用在apps目录之外的模块，添加project目录到 <code>sys.path</code> 中。</li>
+<li>修复 ORM PICKLE 更新错误, 使用 <code>deepcopy</code> 来保存 old_value。</li>
+<li>添加 tornado 服务器支持。</li>
+<li>添加 gevent 和 gevent-socketio 服务器支持。</li>
+<li>添加 <code>install</code> 命令支持，你可以在项目目录或app目录下写 <code>requirements.txt</code>。</li>
+<li>在执行 <code>makeproject</code> 时添加 <code>setup.py</code> 文件。</li>
+<li><code>make_application()</code> 可以重入。</li>
+<li>添加 <code>ORM/MODELS_CONFIG</code> 配置支持。</li>
 </ul>
 
         
         <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./whouse.md">View Source</a>
+            <i class="icon download"></i><a href="../update/update_0.2.md">View Source</a>
         </div>
         
     </div>
@@ -147,16 +163,16 @@
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
+<script src="../static/jquery-1.7.2.min.js"></script>
+<script src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
+<script src="../../static/jquery.cookie.js"></script>
 
 
     <script type="text/javascript">
@@ -198,7 +214,7 @@ $(function(){
     });
     $('a.language').on('click', function(){
         $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+        window.location.href = "../../"+$(this).data('lang')+'/index.html';
     });
 });
 </script>
