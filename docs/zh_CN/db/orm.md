@@ -218,7 +218,7 @@ TABLENAME_CONVERTER = 'path.to.tablename_converter'
 
 例如 A 和 B 两个 Model，在A中定义了一个 bs 的ManyToMany的字段，这样在表中会建立 `(a_id, b_id)` 的一个索引。如果这时 `MANYTOMANY_INDEX_REVERSE` 为 `False`, 则并不会创建一个 `(b_id, a_id)` 的索引。如果置为 `True` 则会创建。如果不想这个功能全局生效，还可以在定义 `ManyToMany` 时传入 `index_reverse＝True` 的参数。
 
-### PATCH_NONE (0.3修改)
+### PATCH_NONE (0.3修改) {#patch}
 
 当你使用 0.9 版本的 SQLAlchemy 时，对于 None 在条件中的处理会发生变化。在 0.8 版本中， 这样的代码 None 是会被忽略掉：
 
@@ -860,6 +860,64 @@ CREATE TABLE group_user_users (
 )
 ```
 
+### 手工创建 ManyToMany 表
+
+在 Uliorm 中支持两种创建 ManyToMany 表的机制，一种是最常见的自动创建的方式。只要定义关系，就可以
+自动创建。但是这种情况下，ManyToMany 表只会有两个字段。如果我们还希望在这个表上添加其它的字段，就
+需要手工创建这张表，然后将其关联到 ManyToMany 中。
+
+例如，先定义两个 User, Group Model:
+
+```
+class User(Model):
+    username = Field(str)
+
+class Group(model):
+    name = Field(str)
+```
+
+然后定义第三张表，如： User_Group_Rel:
+
+```
+class User_Group_Rel(Model):
+    user = Reference('user')
+    group = Reference('group')
+    role = Field(CHAR)
+```
+
+这里第三张表要定义两个 Reference 字段，一个指向 User ，一个指向 Group。然后我们可以把这个关系放
+在 User 或 Group 上，修改 User 为：
+
+```
+class User(Model):
+    username = Field(str)
+    groups = ManyToMany('group', through='user_group_rel',
+        through_reference_fieldname='user',through_reversed_fieldname='group')
+```
+
+通过 `through` 来定义将要引用的表名，通过 `through_reference_fieldname` 定义与 User.id 对应的
+关系字段名，通过 `through_reversed_fieldname` 定义与 `Group.id` 对应的关系字段名，相当于要使用
+以下的连接条件：
+
+```
+user.id==user_group_rel.user and group.id==user_group_rel.group
+```
+
+如果你的两个关系字段分别定义为对应的 `<表名>_id` 的形式，如：
+
+```
+class User_Group_Rel(Model):
+    user_id = Reference('user')
+    group_id = Reference('group')
+    role = Field(CHAR)
+```
+
+那么将不需要设置 `through_reference_fieldname` 和 `through_reversed_fieldname` 。
+
+定义好之后，就可以象一般 ManyToMany 字段一样来使用了。
+
+但是我们定义单独的 ManyToMany 表是为了能够在关系上保存额外的数据，因此为了得到它们，需要在查询时指定
+`with_relation(relation
 
 ## 操作
 
@@ -928,7 +986,6 @@ user = User.get(User.c.id==5)
 {% alert class=info %}
 注意，在结果集上，你可以多个使用filter()连接多个 `and` 的条件，而get不支
 持这样的用法。比如你可以 User.filter(User.c.id=5).filter(User.c.year>30)。
-
 {% endalert %}
 
 
@@ -974,7 +1031,6 @@ user.save()
 注意，象创建和更新时，在调用相关的方法时，你传入的是key=value的写法，这里
 key就是字段的名字。但是在写条件时，你要使用 Model.c.fieldname 这样的写法，
 并且不是赋值，而是python的各种运算符。不要搞错了。
-
 {% endalert %}
 
 Uliorm在保存时会根据对象的id值是否为None来判断是否是insert还是update。如果你直接
@@ -984,7 +1040,6 @@ Uliorm在保存时会根据对象的id值是否为None来判断是否是insert�
 {% alert class=warning %}
 Model中更新数据库相关的方法，如: save, delete, get, get_or_notfound, count, remove
 都可以传入connection参数，它可以是数据库连接名或真正的连接对象。
-
 {% endalert %}
 
 
@@ -1349,6 +1404,27 @@ has(*objects): boolean --
     判断传入的对象是否存在于关系中。这里对象可以是对象的id值，也可以是对象。如果
     存在则返回 True，如果不存在则返回 False。
 
+## Session管理
+
+当我们需要进行数据库的操作时，我们要建立一个连接对象。在一个engine对象上，可以
+建不同的连接对象，一个连接对象可以有不同的事务。因此事务都是放在某个连接对象上的。
+为了方便使用这些连接对象，Uliweb对其进行了包装，构造了 Session 类。这个 Session
+和SQLalchemy提供的 session 机制是不同的。在Uliweb主要是管理连接的，它还提供了事务
+的管理功能。
+
+Session对象会有两种创建方式，一种是自动创建。当我们在某个数据库连接上进行操作时，
+如： `do_(sql, engine_name)` ，这里只指明了要操作的连接名。这种情况下，Uliorm会
+自动使用对应连接名对象上的session对象（如果在执行SQL时还没有创建，则会自动创建）。
+同时，考虑到多线程工作的情况，这个session对象在不同的线程环境是不同的。
+
+所以这种情况下，当只使用连接名来进行SQL操作时，同一个线程使用的 Session 对象是
+相同的，因此它们的事务也将是相同的。
+
+第二种情况就是手工创建 Session 对象，只要执行 `session = Session()` 或 `session = Session(engine_name)`
+会通过相应的数据库连接对象来创建相应的连接。这种方式是显示地创建 session 对象，
+不会复用已经存在的 Session 对象。
+
+
 
 
 ## 事务处理
@@ -1370,7 +1446,6 @@ MIDDLEWARE_CLASSES = [
 {% alert class=info %}
 一般情况下，只有事务处理Middleware捕获到了异常时，才会自动对事务进行回滚。
 因此，如果你自行捕获了异常并进行了处理，一般要自行去处理异常。
-
 {% endalert %}
 
 手工处理事务，uliorm提供了基于线程模式的连接处理。uliorm提供了：Begin(), Commit(),
@@ -1714,166 +1789,3 @@ topic是信号的名称。后面的kwargs对应每个信号可以接受的参数
 uliorm。
 
 
-## F&Q
-
-
-### 如何处理Mysql中的 "MySQL server has gone away" 错误？
-
-出现这个问题是因为Mysql有关于非活动连接超时断开的设置，缺省为8小时。当8小时以后
-现有的连接没有活动，则MySql会自动断开。因此再次访问时会抛出这个错误。uliorm
-使用SQLAlchemy的缺省的连接方式，会自动使用连接池。默认是5个连接。它有一个pool_recycle
-的参数，用于设置回收连接的时间。这样，只要你设置一个小于MySql断开的超时时间就
-可以了。示例如下:
-
-
-```
-[ORM]
-CONNECTION_ARGS = {'pool_recycle':7200, 'echo_pool':True}
-```
-
-上述配置表示：连接池回收时间为7200秒(2小时)。echo_pool为True表示在日志中显示
-回收信息。这样是通过自动回收重建连接池避免了这个问题。
-
-
-### MySQL 编码设置
-
-在MySql中创建表时，uliorm将缺省使用utf8编码来创建，即使MySql的缺省编码不是utf8。
-所以如果你使用的是MySql，你应该检查schema的缺省编码是不是utf8，如果不是则应该在
-connection连接串上添加charset信息，如:
-
-
-```
-[ORM]
-CONNECTION = 'mysql://root:limodou@localhost/new?charset=utf8'
-```
-
-当服务器的缺省编码不是utf8时， `charset=utf8` 是必须的，其它情况下可以不设置。
-
-### 如果使用sock文件来连接MySQL
-
-可以在settings中如下配置：
-
-```
-[ORM]
-CONNECTION_ARGS = {'connect_args':{'unix_socket':'/tmp/mysql.sock'}}
-```
-
-其中 `/tmp/mysql.sock` 只是一个示例，你可以改为你需要的sock文件路径。
-
-### 如何实现update table set field = field + 1类似的更新
-
-举例如下:
-
-
-```
-User.filter(User.c.id==1).update(score=User.c.score+1)
-
-或
-
-User.filter(User.c.id==1).update(User.c.score=User.c.score+1)
-```
-
-或者使用底层的SQLAlchemy的写法:
-
-
-```
-do_(User.table.update().where(User.c.id==1).values(score=User.c.score+1))
-```
-
-
-### 如何实现MySql中区分大小写字段定义和查询
-
-MySql在定义字段和查询字段时，缺省是使用非大小写敏感方式进行处理的。有时我们需要
-进行大小写敏感方式的查询，因此这里涉及两种处理，一种是查询时的大小写区分，如:
-
-
-```
-from sqlalchemy.sql import func
-
-User.filter(User.c.username == func.binary('limodou'))
-```
-
-上述代码将按大小写对'limodou'进行查询。
-
-但是如果你把CHAR或VARCHAR设置为不重复的索引，在插入类似： `Limodou` 或 `limodou`
-有可能会报重复。这就不是靠查询来解决的了。要通过将字段定义为区分大小写的形式。在
-MySql中一般是在VARCHAR之后添加Binary，如:
-
-
-```
-username VARCHAR(40) binary
-```
-
-那么在Uliorm或SQLAlchemy中如何做呢？代码如下:
-
-
-```
-from sqlalchemy.dialects.mysql import VARCHAR
-
-class Human(Model):
-    name = Field(str, verbose_name='姓名', max_length=40, required=True)
-    login_name = Field(str, verbose_name='登录名', required=True,
-        max_length=40, unique=True, type_class=VARCHAR,
-        type_attrs=dict(binary=True))
-```
-
-可以看到它使用了mysql的dialect的字段定义，并将其传入uliorm的字段定义中，其中参
-数 `type_class` 为字段类型， `type_attrs` 为字段相应的参数，这里设置 `binary`
-为 `True` 。在SQLAlchemy中的定义示例如:
-
-
-```
-from sqlalchemy.dialects.mysql import VARCHAR
-
-Column('username', VARCHAR(40, binary=True))
-```
-
-这样在数据库中，就是区分大小写的，在查询时不再需要使用func.binary()来处理了。
-
-不过这种方式兼容性不好，所以还有一种变通的方式就是写一个sql文件，在命令行下对
-字段进行修改，这样Model就不需要修改了。比如:
-
-
-```
-use <database>;
-ALTER TABLE human MODIFY COLUMN `login_name` VARCHAR(40)
-    BINARY CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL;
-```
-
-
-### RuntimeError: dictionary changed size during iteration
-
-在Uliweb下使用uliorm，要求将所有的Model都定义在settings.ini中，一旦出现某个Model
-没有在settings.ini中定义，就有可能出现上面的问题。
-
-
-### 反向获取ManyToMany关系时，找不到对应属性
-
-在Uliweb中，如果两个表存在ManyToMany关系，则关系一般只会定义在其中一个Model类上
-被定义。例如有两个Model: A和B。在A上定义了一个到B的ManyToMany的关系。在导入A类
-时(或通过get_model来获取)会自动向B类绑定一个反向获取的对象，用于从B的对象获得A对
-象时使用。因此，有时候，你直接导入B类，但是因为B类中没有定义与A的任何关系，所以
-对A的反向获取对象将无法生成，因此可能不能直接使用B到A的反向获取。在这种情况下，你
-可以再使用get_model或导入A，这样就可以生成反向获取对象了。
-
-### None 条件在0.9.X中的变化
-
-None在0.9以前的版本中，如果进行 & 操作，会自动丢弃。但是在 0.9.X 中却会变成 NULL，
-所以以前这样的写法：
-
-```
-cond = None
-for c in conditions:
-    cond = c & cond
-```
-
-就不再正确了，要改为：
-
-```
-from uliweb.orm import true
-cond = true()
-for c in conditions:
-    cond = c & cond
-```
-
-`true` 也可以从 sqlalchemy.sql 中导出。

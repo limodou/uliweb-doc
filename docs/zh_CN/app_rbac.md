@@ -29,25 +29,38 @@ Permission m:n Role m:n User
 1. 判断当前用户，使用request.user对象，可以区分：超级用户、登录用户和匿名用户
 
     超级用户 --
-    if request.user and request.user.is_superuser
+
+        ```
+        if request.user and request.user.is_superuser
+        ```
 
     普通用户 --
-    if request.user and not request.user.is_superuser
+
+        ```
+        if request.user and not request.user.is_superuser
+        ```
 
     匿名用户 --
-    if not request.user
 
+        ```
+        if not request.user
+        ```
 
 1. 判断指定用户，需要从 User 表中动态获取，然后利用是否存在和 is_superuser 字段来判断是否为普通用户或超级用户，这里无法判断匿名用户
 
     超级用户 --
-    user = User.get(User.c.username == username)
+
+        ```
+        user = User.get(User.c.username == username)
         if user and user.is_superuser
+        ```
 
     普通用户 --
-    user = User.get(User.c.username == username)
-        if user and not user.is_superuser
 
+        ```
+        user = User.get(User.c.username == username)
+        if user and not user.is_superuser
+        ```
 
 
 在最简单情况下，你可能只使用auth就足够了，那么我们看看rbac会带给我们什么呢？
