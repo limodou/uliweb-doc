@@ -7,3 +7,4 @@ _svn
 *.bak
 *.txt
 make.bat
+.DS_Store

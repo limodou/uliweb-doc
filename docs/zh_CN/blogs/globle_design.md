@@ -26,7 +26,7 @@
 cd uliweb_blogs
 uliweb makeapp home
 uliweb makeapp admin
-uliweb make semantic
+uliweb makeapp semantic
 ```
 
 {% alert class=info %}
@@ -453,11 +453,11 @@ site = 'http://limodou.github.com/uliweb-doc'
 在 `uliweb_blogs` 目录下运行 :
 
 ```
-uliweb runserver --color
+uliweb runserver
 ```
 
-这样就启动了开发服务器，并且可以看到日志输出是带有颜色的。不加 `--color` 的话，
-颜色都是一样的。输出结果大概是这个样子：
+这样就启动了开发服务器，并且可以看到日志输出是带有颜色的。如果不想要颜色输出，可以添加 `--nocolor` 参数。
+输出结果大概是这个样子：
 
 ```
 [INFO]  * Loading DebuggedApplication...

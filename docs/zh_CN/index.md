@@ -44,6 +44,8 @@ blogs/introduction.md
 blogs/create_project.md
 blogs/globle_design.md
 blogs/blog_design.md
+blogs/admin_layout.md
+blogs/blog_add.md
 {% endtoc %}
 
 ## 视频
