@@ -80,30 +80,26 @@
 <li><p>判断当前用户，使用request.user对象，可以区分：超级用户、登录用户和匿名用户</p>
 <dl>
 <dt>超级用户</dt>
-<dd>
+<dd><pre class="prettyprint "><code>if request.user and request.user.is_superuser</code></pre>
 </dd>
-</dl><p>if request.user and request.user.is_superuser</p>
-<dl>
 <dt>普通用户</dt>
-<dd>
+<dd><pre class="prettyprint "><code>if request.user and not request.user.is_superuser</code></pre>
 </dd>
-</dl><p>if request.user and not request.user.is_superuser</p>
-<dl>
 <dt>匿名用户</dt>
-<dd>
+<dd><pre class="prettyprint "><code>if not request.user</code></pre>
 </dd>
-</dl><p>if not request.user</p></li>
+</dl></li>
 <li><p>判断指定用户，需要从 User 表中动态获取，然后利用是否存在和 is_superuser 字段来判断是否为普通用户或超级用户，这里无法判断匿名用户</p>
 <dl>
 <dt>超级用户</dt>
-<dd>
+<dd><pre class="prettyprint "><code>user = User.get(User.c.username == username)
+if user and user.is_superuser</code></pre>
 </dd>
-</dl><p>user = User.get(User.c.username == username)     if user and user.is_superuser</p>
-<dl>
 <dt>普通用户</dt>
-<dd>
+<dd><pre class="prettyprint "><code>user = User.get(User.c.username == username)
+if user and not user.is_superuser</code></pre>
 </dd>
-</dl><p>user = User.get(User.c.username == username)     if user and not user.is_superuser</p></li>
+</dl></li>
 </ol>
 <p>在最简单情况下，你可能只使用auth就足够了，那么我们看看rbac会带给我们什么呢？</p>
 <h2 id="title_1-3">rbac app的安装<a class="anchor" href="#title_1-3">&para;</a></h2>

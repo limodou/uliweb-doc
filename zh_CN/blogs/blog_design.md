@@ -12,14 +12,15 @@
 
 ```
 pip install sqlalchemy
-pip install git+git://github.com/limodou/alembic#egg=alebmic
+pip install uliweb-alebmic
 pip install MySQL-python
 ```
 
 这里alembic没有使用原始的版本，而是我修改过的。因为我在alembic中添加了一些对Uliweb
 特性的一些支持，直接使用原来的alembic是没有的。并且原始的不能直接与Uliweb集成。
 
-本例使用的数据库是常见的Mysql，所以需要安装 `MySQL-python` 包。
+本例使用的数据库是常见的Mysql，所以需要安装 `MySQL-python` 包。除了 `MySQL-python`
+我还试过 pymysql ，所以你也可以考虑使用它。它还支持 py3 版本。
 
 如果觉得上面的安装比较麻烦，还可以在命令行执行：
 
@@ -31,14 +32,14 @@ uliweb install uliweb.contrib.orm
 
 {% alert class=info %}
 如果是在Linux下安装MySQL-python，需要安装python-devel和mysql-devel的包，因为有
-一些C模块需要编译。
+一些C模块需要编译。而 pymysql 是纯python的包，所以安装方便。不过效率上比 MySQL-python 差一些。
 {% endalert %}
 
 ## 使用Mysql数据库
 
 在安装了 `uliweb.contrib.orm` 之后，缺省已经有了数据库的设置，缺省使用 sqlite 。不过
 如果数据库发生变化，sqlite不支持 `alert table` 这样的命令，所以不能很方便使用
-alembic来进行表结构迁移。所以我们把数据库换成 Mysql 的。我们可以在 local_settings.ini
+alembic 来进行表结构迁移。所以我们把数据库换成 Mysql 的。我们可以在 local_settings.ini
 中进行配置，这样不影响别人使用你的代码。
 
 在local_settings.ini中添加以下内容：
@@ -48,12 +49,12 @@ alembic来进行表结构迁移。所以我们把数据库换成 Mysql 的。我
 CONNECTION = 'mysql://blog:blog@localhost/blog?charset=utf8'
 ```
 
-这里我们使用sqlalchemy的格式来配置数据库连接串。其中，用户名为 blog，口令是 blog，
-数据库是blog(你可以改为实际的用户名、口令和数据库)。同时我们还通过类似于 query_string
+这里我们使用sqlalchemy的格式来配置数据库连接串。其中，用户名为 `blog`，口令是 `blog`，
+数据库是`blog`(你可以改为实际的用户名、口令和数据库)。同时我们还通过类似于 query_string
 指定了客户端连接时使用的编码是 `utf8` 。
 
 接着让我们在Mysql中创建对应的数据库，创建用户，以及给用户设置权限。这些操作都
-需要通过Mysql相关的工具[^1]来进行。
+需要通过Mysql相关的工具[^1]来进行。注意，这些是不能通过 Uliweb 来完成的。
 
 [^1]: 这里向大家推荐 [heidisql](http://www.heidisql.com/) 这个工具，体积小，
     有绿色版，功能强大。
@@ -202,7 +203,7 @@ class Blog(Model):
 
 html
 :   将用来存储转成Html之后的内容。因为我们这个Blog将使用markdown语法来写，所以
-    需要将其转为Html，将使用我写的 [par](https::/github.com/limodou/par) 这个包。
+    需要将其转为Html。转换工具将使用我写的 [par](https::/github.com/limodou/par) 这个包。
     转为Html是为了在展示时提高效率，否则每次都要进行转换。以后我们还可以考虑实现
     页面的静态化，这样展示速度就会更快了。
     
@@ -228,7 +229,7 @@ category, user
     ManyToMany
     :   多对多
     
-    在关系中，我们使用字符串的表名来关联。
+    在关系中，我们使用字符串形式的表名来关联。
     
 ### 配置Model
 
@@ -241,7 +242,7 @@ blogcategory = 'blog.models.BlogCategory'
 blog = 'blog.models.Blog'
 ```
 
-这里， `blogcategory` 和 `blog` 就是表名。对应的值是它们的类所在的路径。
+这里， `blogcategory` 和 `blog` 就是表名。对应的值是它们的类所在的路径。这里 key 一般是小写，大写也没关系。
 
 因为 User 是在 `uliweb.contrib.auth` 中定义的，它已经配置好了。
 

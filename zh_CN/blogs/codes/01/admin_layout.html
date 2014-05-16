@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>{{block title}}Uliweb BLog Demo Admin{{end title}}</title>
+</head>
+<body>
+
+<!-- resource -->
+{{link "admin_layout.css"}}
+{{use "semantic"}}
+<!-- end resource -->
+
+{{block content}}
+
+<!-- head -->
+<div class="head">
+    <div class="ui secondary inverted menu">
+        <div class="item">Uliweb Blog Demo Admin</div>
+        <a class="item" href="/">
+            <i class="home icon"></i> Home
+        </a>
+        <div class="right menu">
+          <div class="ui pointing dropdown item">
+            {{if request.user:}}
+                <i class="icon user"></i> {{=unicode(request.user)}}
+                <i class="icon dropdown"></i>
+                <div class="menu">
+                  <a class="item" href="/logout"><i class="sign out icon"></i> Logout</a>
+                </div>
+            {{else:}}
+                <a href="/login">登录</a>
+            {{pass}}
+          </div>
+        </div>
+    </div>
+</div>
+<!-- end head -->
+
+<!-- container -->
+<div class="container">
+    <div class="side-menu">
+        {{block side_menu}}
+            <div class="ui vertical small menu">
+              <div class="header item">
+                <i class="user icon"></i>
+                Communities
+              </div>
+              <div class="item">
+                College
+                <div class="menu">
+                  <a class="active item">Baseball</a>
+                  <a class="item">Basketball</a>
+                  <a class="item">Golf</a>
+                </div>
+              </div>
+              <a class="active item">
+                Dance
+              </a>
+              <a class="item">
+                Aerobics
+              </a>
+            </div>
+        {{end}}
+    </div>
+    <div class="content">
+    {{block main}}
+         main
+    {{end}}
+    </div>
+</div>
+<!-- end container -->
+
+<!-- script -->
+<script>
+$(function(){
+    $('.head .ui.dropdown').dropdown({
+        on: 'hover',
+        action: 'nothing'
+    });
+
+});
+</script>
+<!-- end script -->
+
+{{end}}
+
+</body>
+</html>

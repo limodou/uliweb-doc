@@ -76,7 +76,7 @@
 <pre class="prettyprint "><code>cd uliweb_blogs
 uliweb makeapp home
 uliweb makeapp admin
-uliweb make semantic</code></pre>
+uliweb makeapp semantic</code></pre>
 <div class="ui info message">
 <p>在uliweb 0.2.4版本之后，还可以使用 <code>uliweb makeapp home admin semantic</code> 一次性 创建多个app。</p>
 
@@ -330,8 +330,8 @@ site = 'http://limodou.github.com/uliweb-doc'</code></pre>
 <h2 id="title_1-6">测试效果<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>到这里，我们可以先看一下我们已经实现的成果。</p>
 <p>在 <code>uliweb_blogs</code> 目录下运行 :</p>
-<pre class="prettyprint "><code>uliweb runserver --color</code></pre>
-<p>这样就启动了开发服务器，并且可以看到日志输出是带有颜色的。不加 <code>--color</code> 的话， 颜色都是一样的。输出结果大概是这个样子：</p>
+<pre class="prettyprint "><code>uliweb runserver</code></pre>
+<p>这样就启动了开发服务器，并且可以看到日志输出是带有颜色的。如果不想要颜色输出，可以添加 <code>--nocolor</code> 参数。 输出结果大概是这个样子：</p>
 <pre class="prettyprint "><code>[INFO]  * Loading DebuggedApplication...
 [INFO]  * Running on http://localhost:8000/
 [INFO]  * Restarting with reloader
