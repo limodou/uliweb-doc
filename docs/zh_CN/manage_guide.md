@@ -237,7 +237,7 @@ uliweb exportstatic static
 ```
 Usage: uliweb find -u url
 or
-Usage: uliweb find -t template --tree
+Usage: uliweb find -t template --tree --blocks --with-filename --source --comment
 or
 Usage: uliweb find -c static
 or
@@ -245,6 +245,69 @@ Usage: uliweb find -m model_name
 or
 Usage: uliweb find -o option
 ```
+
+关于模板查找
+
+`uliweb find -t template` --
+    查找某个模板的实际路径，如果存在多个同名的模板，则按照查找顺序依次列出。但是系统真正使用的只是第一个。
+
+`uliweb find -t template --tree` --
+    查找某个模板的实际路径，同时列出这个模板继承或包含其它模板的信息，如：
+
+    ```
+    apps/project/templates/layout.html
+
+    -------------- Tree --------------
+         /Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html
+             (extend)/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html
+                 (extend)/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html
+    ---------------> (extend)apps/project/templates/layout.html
+                         (include)/Users/limodou/mywork/uliweb/uliweb/contrib/csrf/templates/inc_jquery_csrf.html
+                     (include)/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/menu.html
+                     (include)/Users/limodou/mywork/plugs/plugs/ui/jquery/pnotify/templates/inc_show_flashes.html
+    ```
+
+    其中箭头表示当前模板的位置。
+
+`uliweb find -t template --blocks --with-filename` --
+    查找某个模板的实际路径，同时列出这个模板中所有block定义及继承的情况。如果同时给出 `--with-filename`
+    参数，则同时显示此block定义所在的文件名，如：
+
+    ```
+    apps/project/templates/layout.html
+    /Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html
+    /Users/limodou/mywork/plugs/plugs/layout/default/templates/layout.html
+
+    -------------- Blocks --------------
+        html_tag   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+        meta   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+        title   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+        _css   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+        body_tag   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+        before_header   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+        header   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+            project   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+            nav   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+                menu   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+            user_info   (apps/project/templates/layout.html)
+                message_number_show   (apps/project/templates/layout.html)
+        content   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+            content_sidebar   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+            content_tool_container   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+                content_tool   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+            content_main   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+        footer_container   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+            footer   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+        after_footer   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+    ```
+
+    从上面的结果可以看出block之间的包含关系，并且每个block最终生效的是定义在哪个文件中。
+
+`uliweb find -t template --source` --
+    打印当前模板转换为python后的源代码，不包含相关的生成注释
+
+`uliweb find -t template --source --comment` --
+    打印当前模板转换为python后的源代码，包含相关的生成行号及注释
 
 
 ### makeproject

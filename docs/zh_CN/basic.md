@@ -271,7 +271,7 @@ AUTO_CREATE = False
 中，这里主要是配置了sqlite数据库，并且使用了相对路径，因此，以后再运行时，database.db
 将会在simple_todo这个目录下。
 
-注意AUOT_CREATE=False，它的作用就是当使用某个Model时，不自动创建Model。缺省情况
+注意AUTO_CREATE=False，它的作用就是当使用某个Model时，不自动创建Model。缺省情况
 下是自动创建，这样只要Model不存在，Uliweb就会自动创建。但是发现对于sqlite，如果
 在事务中，执行了非select, update, delete等语句，会引发事务自动提交，造成不一致。
 因此这里我就把它关掉了。
