@@ -284,7 +284,7 @@ Uliweb为了方便使用，同时还提供了 uliweb.contrib.template 这个app�
 
 ## 命令行
 
-在 [命令行](manage_guide.html) 的文档中有详细的关于模板相关的操作，主要是集中在 `find -t template_file` 中，再配合以不同的
+在 [命令行](manage_guide.html#find) 的文档中有详细的关于模板相关的操作，主要是集中在 `find -t template_file` 中，再配合以不同的
 参数。
 
 ## 问题描述

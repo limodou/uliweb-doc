@@ -229,7 +229,7 @@ uliweb exportstatic static
 
 目前exportstatic支持将css和js进行打包，合并，压缩的功能，具体描述详见 [CSS, JS合并与压缩](css_js_combine.html)
 
-### find
+### find {#find}
 
 查找对象，包括：模板、URL对应的view、静态文件、Model定义及配置项的定义位置的模块
 
@@ -248,10 +248,10 @@ Usage: uliweb find -o option
 
 关于模板查找
 
-`uliweb find -t template` --
+uliweb find -t template --
     查找某个模板的实际路径，如果存在多个同名的模板，则按照查找顺序依次列出。但是系统真正使用的只是第一个。
 
-`uliweb find -t template --tree` --
+uliweb find -t template --tree --
     查找某个模板的实际路径，同时列出这个模板继承或包含其它模板的信息，如：
 
     ```
@@ -269,7 +269,7 @@ Usage: uliweb find -o option
 
     其中箭头表示当前模板的位置。
 
-`uliweb find -t template --blocks --with-filename` --
+uliweb find -t template --blocks --with-filename --
     查找某个模板的实际路径，同时列出这个模板中所有block定义及继承的情况。如果同时给出 `--with-filename`
     参数，则同时显示此block定义所在的文件名，如：
 
@@ -303,10 +303,10 @@ Usage: uliweb find -o option
 
     从上面的结果可以看出block之间的包含关系，并且每个block最终生效的是定义在哪个文件中。
 
-`uliweb find -t template --source` --
+uliweb find -t template --source --
     打印当前模板转换为python后的源代码，不包含相关的生成注释
 
-`uliweb find -t template --source --comment` --
+uliweb find -t template --source --comment --
     打印当前模板转换为python后的源代码，包含相关的生成行号及注释
 
 
