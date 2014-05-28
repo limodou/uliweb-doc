@@ -155,8 +155,10 @@ NAME = _('username')</code></pre>
 <dt><code>--exact</code></dt>
 <dd><p>如果设置，则在旧的.po中存在，但是在.pot中不存在的项目将被删除。 (<code>0.0.1新増</code>)</p>
 </dd>
-</dl><p><code>-t TEMPLATE, --template=TEMPLATE</code> --     PO文件中一些静态信息的定义，如：charset, translater等模板的定义。</p>
-<p>因此i18n支持几种语言提取方式:</p>
+<dt><code>-t TEMPLATE, --template=TEMPLATE</code></dt>
+<dd><p>PO文件中一些静态信息的定义，如：charset, translater等模板的定义。</p>
+</dd>
+</dl><p>因此i18n支持几种语言提取方式:</p>
 <ol>
 <li><code>--apps</code> 这种方式会在每个app下都生成一个locale的目录。注意这种方式只处理存在于项目目录下的app，对于已经安装但是不存在于项目目录下的app将不做处理。</li>
 <li><code>-p</code> 这种方式会将项目下创建一个locale目录，将整个项目所有的内容都放在一个文件中</li>
