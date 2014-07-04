@@ -157,7 +157,7 @@ firebird_db = create_engine('firebird://scott:tiger@localhost/sometest.gdm')</co
 <h3 id="title_1-2-10">PK_TYPE<a class="anchor" href="#title_1-2-10">&para;</a></h3>
 <p>表示主键ID使用的类型。缺省情况下，ID类型为 Integer, 但是如果数据特别多，则有可能超过Integer的最大值，所以可以通过它改为 <code>bigint</code> ，这样范围就更大了。</p>
 <h3 id="title_1-2-11">CONNECTIONS<a class="anchor" href="#title_1-2-11">&para;</a></h3>
-<p>数据库多连接设置(详情可以参见 <a href="multidb.html" class="inner">多数据库连接</a> 的文档)。uliweb是支持多个数据库连接，自然也支持多个数据库。 为了保持和以前使用方式的兼容。在 <code>CONNECTIONS</code> 中一般只要设置非缺省的数据库， 而缺省的数据库仍然使用原来的处理方式。 <code>CONNECTIONS</code> 的设置格式为:</p>
+<p>数据库多连接设置(详情可以参见 <a class="inner" href="multidb.html">多数据库连接</a> 的文档)。uliweb是支持多个数据库连接，自然也支持多个数据库。 为了保持和以前使用方式的兼容。在 <code>CONNECTIONS</code> 中一般只要设置非缺省的数据库， 而缺省的数据库仍然使用原来的处理方式。 <code>CONNECTIONS</code> 的设置格式为:</p>
 <pre class="prettyprint "><code>CONNECTIONS = {
     'test': {
         'CONNECTION':'mysql://root:limodou@localhost/test2?charset=utf8',
@@ -649,7 +649,7 @@ class Group(model):
 <h4 id="title_1-5-31-14">获取实例<a class="anchor" href="#title_1-5-31-14">&para;</a></h4>
 <pre class="prettyprint "><code>user = User.get(5)
 user = User.get(User.c.id==5)</code></pre>
-<p>可以通过Model.get()来获取一个实例。在get()中是条件。如果是一个整数，则认为是要 获取id等于这个值的记录。否则你可以使用一个条件。这里条件的写法完全是遵守 SQLAlchemy 的要求。如果条件不止一个，可以使用 <code>and_, or_, not_</code> 或 <code>&amp;, |, ~</code> 来拼接条件。SQLAlchemy 的相关文档可以查看： <a href="http://www.sqlalchemy.org/docs/core/tutorial.html" class="outter">http://www.sqlalchemy.org/docs/core/tutorial.html</a></p>
+<p>可以通过Model.get()来获取一个实例。在get()中是条件。如果是一个整数，则认为是要 获取id等于这个值的记录。否则你可以使用一个条件。这里条件的写法完全是遵守 SQLAlchemy 的要求。如果条件不止一个，可以使用 <code>and_, or_, not_</code> 或 <code>&amp;, |, ~</code> 来拼接条件。SQLAlchemy 的相关文档可以查看： <a class="outter" href="http://www.sqlalchemy.org/docs/core/tutorial.html">http://www.sqlalchemy.org/docs/core/tutorial.html</a></p>
 <div class="ui info message">
 <p>注意，在结果集上，你可以多个使用filter()连接多个 <code>and</code> 的条件，而get不支 持这样的用法。比如你可以 User.filter(User.c.id=5).filter(User.c.year&gt;30)。</p>
 

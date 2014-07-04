@@ -66,7 +66,7 @@
 </div>
         
         <h1 id="title_1">svg mimetype在uliweb中的设置<a class="anchor" href="#title_1">&para;</a></h1>
-<p>发现 <a href="https://github.com/limodou/plugs" class="outter">plugs</a>
+<p>发现 <a class="outter" href="https://github.com/limodou/plugs">plugs</a>
  中的wiki在python 2.6下以img方式显示svg不正确，经检查是content-type不对，正确的应该是 image/svg+xml。但是在2.7下就是正确的。于是发现2.6缺省的mime列表不全。查看了mimetypes模块源码，大概是这样处理的：</p>
 <ol>
 <li>mimetypes会有自动检查系统中可能存放mimetypes的配置文件，它们可以放在如： /etc, usr/local/etc 等目录下，还可以直接识别象apache的标准安装目录下的mime.types文件。不过nginx的mime.types的格式和标准的不同，所以还无法直接识别。</li>

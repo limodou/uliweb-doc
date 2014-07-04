@@ -64,6 +64,14 @@ server {
 如果你是 WEB-AP-DB 三层结构，在WEB层还有一个Nginx的话，那么上面的proxy_set_header可能
 需要加上，这样可以让AP层得到正确的客户端地址。
 
+同时应用中对于存在二级代理的情况要对IP进行特殊处理，才可以得到正确的客户端的IP，所以可以在 settings.ini
+或local_settings.ini中添加：
+
+```
+﻿[WSGI_MIDDLEWARES]
+proxyfix = 'werkzeug.contrib.fixers.ProxyFix', 50
+```
+
 上面就把Nginx设置好了。如果要使用Nignx提供静态文件服务，可以在上面的server中添加:
 
 

@@ -107,7 +107,7 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
 <dt>BACKEND</dt>
 <dd><p>upload中文件上传和下载的类定义。如果没有给出，则缺省使用 <code>FileServing</code> 类来处理。</p>
 </dd>
-</dl><p>目前upload还支持X-Sendfile的处理方式，这是目前apache, nginx中都有的一种方法，不过细节上有所差异。关于X-Sendfile这里有一篇 <a href="http://www.kuigg.com/xiazai-kongzhi" class="outter">文章</a> 可以参考。简单地说就是在下载文件时可以对下载的过程进行控制，详情可参加下面的Nginx配置示例。</p>
+</dl><p>目前upload还支持X-Sendfile的处理方式，这是目前apache, nginx中都有的一种方法，不过细节上有所差异。关于X-Sendfile这里有一篇 <a class="outter" href="http://www.kuigg.com/xiazai-kongzhi">文章</a> 可以参考。简单地说就是在下载文件时可以对下载的过程进行控制，详情可参加下面的Nginx配置示例。</p>
 <dl>
 <dt>X_SENDFILE</dt>
 <dd><p>X-Sendfile处理类型，目前只支持Nginx和Apache。根据需要可以输入'nginx'或'apache'。缺省为None，则表示不启动，则文件读取及下载是由Uliweb本身提供的。</p>
@@ -427,7 +427,7 @@ file_serving = '/uploads/&lt;path:filename&gt;', 'uliweb.contrib.upload.file_ser
 <p>upload在启动时会缺省按照 <code>UPLOAD/BACKEND</code> 的定义来生成缺省的fileserving类。如果 没给出，则使用FileServing。通过修改 <code>BACKEND</code> ，用户就可以定义自已缺省的文件上传处理类。</p>
 <h2 id="title_1-10">X-Sendfile Nginx配置说明<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>简单的处理流程可以表示为:</p>
-<p><img src="_static/upload_01.png" alt="image"/>
+<p><img alt="image" src="_static/upload_01.png"/>
 </p>
 <p>以上的处理可以理解为：</p>
 <ol>

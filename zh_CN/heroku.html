@@ -73,7 +73,7 @@
 <p>首先在本地创建一个目录作为你的项目目录，如: heroku。进入这个目录，然后执行:</p>
 <pre class="prettyprint "><code>heroku create --stack cedar</code></pre>
 <p>执行如图:</p>
-<p><img src="_static/heroku1.png" alt="image"/>
+<p><img alt="image" src="_static/heroku1.png"/>
 </p>
 <p>我们可以从结果中看到已经生成了可访问的URL和git仓库地址。在后面我们可以改个名。 不过我试了，如果还没有上传过代码，好象改不了。</p>
 <p>文本没有使用virtualenv来创建 Python 环境，所以省略了这块的处理。</p>
@@ -111,7 +111,7 @@ SQLAlchemy==0.7.7</code></pre>
 <p>因为 heroku 采用的是 postgreSql 数据库。</p>
 </dd>
 </dl><p>然后将 simple_todo (在uliweb-doc/projects/simple_todo下) 的代码拷贝到项目目录下。 注意，这里没有单独创建一个project的项目目录，而是直接使用项目目录。所以在这个目 录下应该直接有 apps 子目录。当前目录结构如:</p>
-<p><img src="_static/heroku2.png" alt="image"/>
+<p><img alt="image" src="_static/heroku2.png"/>
 </p>
 <p>因为 heroku 可以直接运行后端的命令，因此就可以直接运行 uliweb 的命令行工具，如 同步数据库。所以将项目目录直接做为uliweb项目是为了方便执行命令行。</p>
 <p>接着修改 <code>apps/settings.ini</code> ，内容为:</p>
@@ -146,7 +146,7 @@ git commit -m "message"</code></pre>
 <p>可以先用:</p>
 <pre class="prettyprint "><code>heroku config</code></pre>
 <p>结果如图:</p>
-<p><img src="_static/heroku3.png" alt="image"/>
+<p><img alt="image" src="_static/heroku3.png"/>
 </p>
 <p>可以看到有 <code>DATABASE_URL</code> 的信息。如果没有，说明数据库实例没有创建，则可以执行:</p>
 <pre class="prettyprint "><code>heroku addons:add shared-database</code></pre>
@@ -157,13 +157,13 @@ git commit -m "message"</code></pre>
 <h2 id="title_1-7">数据库表的同步<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>代码传完了，名字也改了，数据库也建了，但是访问 simple_todo 还是有问题，因为这个 例子需要创建一个 todo 的表。heroku没有提供phpadmin，不过它可以在本地执行远端的 命令，所以很方便，下面执行:</p>
 <pre class="prettyprint "><code>heroku run uliweb syncdb</code></pre>
-<p>这里你会看到 todo 表被创建的信息。这样就可以访问你的应用了。我的例子是 <a href="http://uliweb.herokuapp.com/" class="outter">http://uliweb.herokuapp.com/</a></p>
+<p>这里你会看到 todo 表被创建的信息。这样就可以访问你的应用了。我的例子是 <a class="outter" href="http://uliweb.herokuapp.com/">http://uliweb.herokuapp.com/</a></p>
 <h2 id="title_1-8">调试<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>在heroku上可以直接查看出错页面，所以还是挺方便。同时如果想看日志，可以执行:</p>
 <pre class="prettyprint "><code>heroku logs</code></pre>
 <h2 id="title_1-9">参考<a class="anchor" href="#title_1-9">&para;</a></h2>
 <p>参考原 Heroku 的文档有些问题并不能解决，有些是通过这篇文档来解决的。</p>
-<p><a href="http://www.tylerlong.me/1336566394/" class="outter">部署Python网站到Heroku云平台</a></p>
+<p><a class="outter" href="http://www.tylerlong.me/1336566394/">部署Python网站到Heroku云平台</a></p>
 
         
         <div class="ui blue inverted small label">

@@ -67,7 +67,7 @@
 <p>This tutorial will get you started with the Uliweb framework. In the following simple demo, we're going to generate a plain page which displays "Hello, Uliweb." step by step.</p>
 <h2 id="title_1-1">Getting Started<a class="anchor" href="#title_1-1">&para;</a></h2>
 <dl>
-<dt>The first thing would be to read this article <a href="installation" class="inner">Installation</a>,</dt>
+<dt>The first thing would be to read this article <a class="inner" href="installation">Installation</a>,</dt>
 <dd><p>a correct installation of Uliweb is a prerequisite.</p>
 </dd>
 </dl><h2 id="title_1-2">Creating a new project<a class="anchor" href="#title_1-2">&para;</a></h2>
@@ -98,9 +98,9 @@ uliweb makeapp Hello</code></pre>
 <h2 id="title_1-4">Starting the server<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>After the above steps, you can start up your web project as follows:</p>
 <pre class="prettyprint"><code>uliweb runserver</code></pre>
-<p>Following the instructions and information printout to the console, you can open a browser and enter the url <a href="http://localhost:8000" class="outter">http://localhost:8000</a>.  You would see a rendered page with the message "Hello, Uliweb" . Congratulations!</p>
+<p>Following the instructions and information printout to the console, you can open a browser and enter the url <a class="outter" href="http://localhost:8000">http://localhost:8000</a>.  You would see a rendered page with the message "Hello, Uliweb" . Congratulations!</p>
 <h2 id="title_1-5">Modifying the "View"<a class="anchor" href="#title_1-5">&para;</a></h2>
-<p>When user requests an URL, Uliweb tries to map the URL to a view function. So in the case of our example, the request for <a href="http://localhost:8000" class="outter">http://localhost:8000</a> would map to a function thatmaps to the "/" location on our server. To see how this works, take a look in the <code>Hello/view.py</code> file. All your view functions should be declared in this file. Open it in your favourite editor, then you will see:</p>
+<p>When user requests an URL, Uliweb tries to map the URL to a view function. So in the case of our example, the request for <a class="outter" href="http://localhost:8000">http://localhost:8000</a> would map to a function thatmaps to the "/" location on our server. To see how this works, take a look in the <code>Hello/view.py</code> file. All your view functions should be declared in this file. Open it in your favourite editor, then you will see:</p>
 <pre class="prettyprint"><code>#coding=utf-8
 from uliweb import expose
 
@@ -108,7 +108,7 @@ from uliweb import expose
 def index():
     return '&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;'</code></pre>
 <p>The above code was generated automatically when you executing <code>makeapp</code>, and we even don't need write any code, the  !</p>
-<p><code>@expose('/')</code> decorator is used for URL Mapping, which means map the url <code>'/'</code> to the view function below. So when visiting <a href="http://localhost:8000" class="outter">http://localhost:8000</a>, function <code>index()</code> will be called. If a view function is not decorated by <code>expose</code>, it will not be mapped to any url and is treated as a local function.</p>
+<p><code>@expose('/')</code> decorator is used for URL Mapping, which means map the url <code>'/'</code> to the view function below. So when visiting <a class="outter" href="http://localhost:8000">http://localhost:8000</a>, function <code>index()</code> will be called. If a view function is not decorated by <code>expose</code>, it will not be mapped to any url and is treated as a local function.</p>
 <p>This function will return a line of HTML code that will be displayed directly in browser.</p>
 <h2 id="title_1-6">Adding templates<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>If your view function returns a dict object, Uliweb will apply it to a template automatically. It means that different return value will cause a different action. The template is the same name as your view function with '.html' suffix. For example, the template of <code>index()</code> is <code>index.html</code>. Templates should be placed into the directory <code>templates</code> which will be automatically created when creating a new app. Now let's add a new function to test template process.</p>
@@ -117,7 +117,7 @@ def template():
     return {}</code></pre>
 <p>Then create a new file <code>template.html</code> in <code>apps/Hello/templates</code> with contents like below:</p>
 <pre class="prettyprint"><code>&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;</code></pre>
-<p>Visit <a href="http://localhost:8000/template" class="outter">http://localhost:8000/template</a> in the browser, you will see the same thing as the previous one.</p>
+<p>Visit <a class="outter" href="http://localhost:8000/template">http://localhost:8000/template</a> in the browser, you will see the same thing as the previous one.</p>
 <h2 id="title_1-7">Using template variables<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>In above two examples, all data are outputed directly, we're going to use template variables to change that. Add another view function with the following code:</p>
 <pre class="prettyprint"><code>@expose('/template1')
@@ -144,7 +144,7 @@ return locals()</code></pre>
 <li>Configurations</li>
 <li>etc.</li>
 </ul>
-<p>You can find other documentation at <a href="http://uliwebproject.appspot.com" class="outter">http://uliwebproject.appspot.com</a>.</p>
+<p>You can find other documentation at <a class="outter" href="http://uliwebproject.appspot.com">http://uliwebproject.appspot.com</a>.</p>
 
         
         <div class="ui blue inverted small label">

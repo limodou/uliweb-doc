@@ -68,7 +68,7 @@
         <h1 id="title_1">全局设计<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">界面布局<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>一个典型的应用，根据用户不同，一般分为：普通用户和系统用户。当然，我们可以根据 实际情况进行更细的划分。因此界面也可以分为普通界面和管理界面。不同的页面它们的 风格应该是统一的，因此一般会考虑将界面通用部分放到统一的模板中，然后具体的页面 分别从这些模板继承。因此对于我们这个项目，我们将创建两个父模板： <code>layout.html</code> 和 <code>admin_layout.html</code>, 分别对应一般页面和管理页面。</p>
-<p>界面设计是一件复杂而又相对专业的工作，现在已经有不少优秀的开源CSS框架可以让我们 直接使用，常见的有 <a href="http://getbootstrap.com/" class="outter">Bootstrap</a>,  <a href="http://semantic-ui.com/" class="outter">Semantic-UI</a>, <a href="http://foundation.zurb.com/" class="outter">Fundation</a>. 这里我选择Semantic-UI这个css框架。</p>
+<p>界面设计是一件复杂而又相对专业的工作，现在已经有不少优秀的开源CSS框架可以让我们 直接使用，常见的有 <a class="outter" href="http://getbootstrap.com/">Bootstrap</a>,  <a class="outter" href="http://semantic-ui.com/">Semantic-UI</a>, <a class="outter" href="http://foundation.zurb.com/">Fundation</a>. 这里我选择Semantic-UI这个css框架。</p>
 <h2 id="title_1-2">创建 APP<a class="anchor" href="#title_1-2">&para;</a></h2>
 <h3 id="title_1-2-1">创建 home, admin 和 semantic APP<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <p>让我们分别创建 home 和 admin 这两个app，其中 home 用来存放普通用户使用的全局性的 内容，包括整站的CSS，JS和模板。而 admin 用来存放后台管理使用的全局性的内容。</p>
@@ -137,7 +137,7 @@ DEBUG_TEMPLATE = False
 <h2 id="title_1-3">向 semantic App 添加资源<a class="anchor" href="#title_1-3">&para;</a></h2>
 <h3 id="title_1-3-3">拷贝文件<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>为什么不直接把semantic的静态资源直接放到 home 或 admin 中呢？就是因为想要复用。</p>
-<p>访问 <a href="https://github.com/Semantic-Org/Semantic-UI" class="outter">semantic-ui</a> 的 github 页面， 可以直接下载 zip 文件或 clone 这个项目。找到其中的 <code>build\packaged</code> 子目录。将 其拷贝到 <code>semantic/static/semantic</code> 目录下。注意，<code>semantic</code> 要创建，原来是没有的。</p>
+<p>访问 <a class="outter" href="https://github.com/Semantic-Org/Semantic-UI">semantic-ui</a> 的 github 页面， 可以直接下载 zip 文件或 clone 这个项目。找到其中的 <code>build\packaged</code> 子目录。将 其拷贝到 <code>semantic/static/semantic</code> 目录下。注意，<code>semantic</code> 要创建，原来是没有的。</p>
 <div class="ui info message">
 <p>通常，与app相关的静态资源，我都会在static目录下创建与app同名的子目录，将静态文件 放在这个目录下，主要是防止在进行静态文件抽时，万一有同名的文件会进行覆盖，而放在 不同的子目录下就可以避免这个问题。</p>
 
@@ -145,7 +145,7 @@ DEBUG_TEMPLATE = False
 <h3 id="title_1-3-4">删除 semantic/views.py 文件<a class="anchor" href="#title_1-3-4">&para;</a></h3>
 <p>因为semantic app只是用来存放静态文件，所以并不需要 <code>views.py</code>，因此我们把它删除。</p>
 <h3 id="title_1-3-5">创建 use 配置<a class="anchor" href="#title_1-3-5">&para;</a></h3>
-<p>uliweb.contrib.template app提供了在模板中可以使用的use标签，可以方便引用静态文件。 具体的详情可以参见 <a href="../app_template.html" class="inner">template app</a>。use 内容的定义可以使用 .py 文件和配置文件两种方式。这里我们简单使用配置文件的方式。</p>
+<p>uliweb.contrib.template app提供了在模板中可以使用的use标签，可以方便引用静态文件。 具体的详情可以参见 <a class="inner" href="../app_template.html">template app</a>。use 内容的定义可以使用 .py 文件和配置文件两种方式。这里我们简单使用配置文件的方式。</p>
 <p>在 semantic app下创建 settings.ini ，然后输入：</p>
 <pre class="prettyprint "><code>[TEMPLATE_USE]
 semantic = {

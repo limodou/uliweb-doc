@@ -64,13 +64,13 @@
 
         
         <h1 id="title_1">迷你留言板<a class="anchor" href="#title_1">&para;</a></h1>
-<p>也许你已经学过了 <a href="hello_uliweb.html" class="inner">Hello, Uliweb</a> 这篇教程，对Uliweb已经有了一个感性的 认识，那么好，现在让我们进入数据库的世界，看一看如何使用简单的数据库。</p>
+<p>也许你已经学过了 <a class="inner" href="hello_uliweb.html">Hello, Uliweb</a> 这篇教程，对Uliweb已经有了一个感性的 认识，那么好，现在让我们进入数据库的世界，看一看如何使用简单的数据库。</p>
 <h2 id="title_1-1">准备<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在 uliweb-doc 项目中已经有完整的GuestBook的源代码，你可以从它里面检出:</p>
 <pre class="prettyprint "><code>git clone git@github.com:limodou/uliweb-doc.git
 cd uliweb-doc/projects/guestbook
 uliweb runserver</code></pre>
-<p>然后在浏览器输入 <a href="http://localhost:8000/" class="outter">http://localhost:8000/</a> 这样就可以看到了。 目前缺省是使用sqlite3。如果你安装了python 2.6它已经是内置的。否则要安装相应的数 据库和Python的绑定模块。目前Uliweb使用 <a href="http://www.sqlalchemy.org" class="outter">SqlAlchemy</a>  作为数据库底层驱动，它支持多种数据库，如：mysql, sqlite, postgresql, 等。在开始 这个例子之前要安装SQLAlchemy, 如：</p>
+<p>然后在浏览器输入 <a class="outter" href="http://localhost:8000/">http://localhost:8000/</a> 这样就可以看到了。 目前缺省是使用sqlite3。如果你安装了python 2.6它已经是内置的。否则要安装相应的数 据库和Python的绑定模块。目前Uliweb使用 <a class="outter" href="http://www.sqlalchemy.org">SqlAlchemy</a>  作为数据库底层驱动，它支持多种数据库，如：mysql, sqlite, postgresql, 等。在开始 这个例子之前要安装SQLAlchemy, 如：</p>
 <pre class="prettyprint "><code>pip install SQLAlachemy</code></pre>
 <p>在Uliweb 0.2.2版本中，为了安装方便，在uliweb.contrib.orm中添加了一个requirements.txt，里 面有最基础的ORM支持需要的包，所以可以这样安装：</p>
 <pre class="prettyprint "><code>uliweb install uliweb.contrib.orm</code></pre>
@@ -324,7 +324,7 @@ def del_comment(id):
         error("No such record [%s] existed" % id)</code></pre>
 <p>删除很简单，首先通过 <code>Note.get(int(id))</code> 来得到对象，然后再调用对象的delete() 方法来删除。</p>
 <h3 id="title_1-12-6">URL参数定义<a class="anchor" href="#title_1-12-6">&para;</a></h3>
-<p>请注意，这里expose使用了一个参数，即 <code>&lt;id&gt;</code> 形式。一旦在expose中的url定义 中有 <code>&lt;type:para&gt;</code> 的形式，就表示定义了一个参数。其中type:可以省略，它可以是int等类型。而 int将自动转化为 <code>\d+</code> 这种形式的正则式。Uliweb内置了象: int, float, path, any, string等类型，你可以在 <a href="url_mapping" class="inner">URL Mapping</a> 文档中了解更多的细节。如果你只定义了 <code>&lt;name&gt;</code> 这种形式，它表示匹配 <code>//</code> 间的内容。一旦在URL中定义了参数，则需要 在View函数中也需要定义相应的参数，因此del_comment函数就写为了： <code>del_comment(id)</code> 。 这里的id与URL中的id是一样的。</p>
+<p>请注意，这里expose使用了一个参数，即 <code>&lt;id&gt;</code> 形式。一旦在expose中的url定义 中有 <code>&lt;type:para&gt;</code> 的形式，就表示定义了一个参数。其中type:可以省略，它可以是int等类型。而 int将自动转化为 <code>\d+</code> 这种形式的正则式。Uliweb内置了象: int, float, path, any, string等类型，你可以在 <a class="inner" href="url_mapping">URL Mapping</a> 文档中了解更多的细节。如果你只定义了 <code>&lt;name&gt;</code> 这种形式，它表示匹配 <code>//</code> 间的内容。一旦在URL中定义了参数，则需要 在View函数中也需要定义相应的参数，因此del_comment函数就写为了： <code>del_comment(id)</code> 。 这里的id与URL中的id是一样的。</p>
 <p>好了，现在你可以试一试删除功能是否可用了。</p>
 <h3 id="title_1-12-7">出错页面<a class="anchor" href="#title_1-12-7">&para;</a></h3>
 <p>当程序出错时，你可能需要向用户提示一个错误信息，因此可以使用error()方法来返回一个出错 的页面。它的前面不需要return。只需要一个出错信息就可以了。</p>
@@ -351,7 +351,7 @@ def del_comment(id):
 <li>URL映射的使用，包括：expose的使用，参数定义，与View函数的对应</li>
 <li>结构的了解，包括：Uliweb的app组织，settings.ini的简单使用，view函数与模板文件     的对应关系</li>
 </ol>
-<p>这里演示的View的处理还是基于函数的方式 ，在另一篇 <a href="basic.html" class="inner">Simple Todo (Uliweb 版本) 之 基础篇</a> 中有如何使用Class方式的View。</p>
+<p>这里演示的View的处理还是基于函数的方式 ，在另一篇 <a class="inner" href="basic.html">Simple Todo (Uliweb 版本) 之 基础篇</a> 中有如何使用Class方式的View。</p>
 
         
         <div class="ui blue inverted small label">

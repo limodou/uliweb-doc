@@ -68,7 +68,7 @@
         <h1 id="title_1">设计Blog表结构<a class="anchor" href="#title_1">&para;</a></h1>
 <p>目前我们的首页还没有完成，但是因为还没有数据，所以我们还是先实现添加新博客的功能。 因此首先要实现表结构的定义，然后实现添加新blog的功能。</p>
 <h2 id="title_1-1">安装依赖包<a class="anchor" href="#title_1-1">&para;</a></h2>
-<p>在 <a href="introduction.html" class="inner">第一章 介绍</a> 中，我们提到了sqlalchemy和alembic，但是当时 我们没有安装。现在就让我们先来安装它们。</p>
+<p>在 <a class="inner" href="introduction.html">第一章 介绍</a> 中，我们提到了sqlalchemy和alembic，但是当时 我们没有安装。现在就让我们先来安装它们。</p>
 <p>安装它们一种方式是手工安装：</p>
 <pre class="prettyprint "><code>pip install sqlalchemy
 pip install uliweb-alebmic
@@ -167,7 +167,7 @@ class BlogCategory(Model):
 <dt>required</dt>
 <dd><p>是否必输项。如果为 <code>True</code>, 则不能为 <code>empty</code> 值，不同的字段empty的定义不同</p>
 </dd>
-</dl><p>除了以上参数，不同的字段还有不同的参数。详情可以参见 <a href="../orm.html" class="inner">ORM文档</a></p>
+</dl><p>除了以上参数，不同的字段还有不同的参数。详情可以参见 <a class="inner" href="../orm.html">ORM文档</a></p>
 <p>这里 str 类型可以定义 <code>max_length</code> 表示最大长度。<code>str</code> 是与 <code>varchar</code> 对应，而 <code>CHAR</code> 是与 <code>char</code> 对应。一个表示可变长，一个表示定长。</p>
 <p>一般每个Model建议定义一个 <code>__unicode__</code> 的函数，这样你就可以使用 <code>unicode(obj)</code> 来显示一个对应的主要信息。同时它们也将用在其它的函数中。</p>
 <p>Model的字符串类型的值，如 str, CHAR, TEXT 都会自动处理为unicode，所以在使用它们 时要特殊注意和中文字符串之间的编码要一致，不一致时需要进行转換。建议都使用unicode 或utf8编码。</p>
@@ -189,7 +189,7 @@ class BlogCategory(Model):
 <p>其中：</p>
 <dl>
 <dt>html</dt>
-<dd><p>将用来存储转成Html之后的内容。因为我们这个Blog将使用markdown语法来写，所以 需要将其转为Html。转换工具将使用我写的 <a href="https::/github.com/limodou/par" class="outter">par</a> 这个包。 转为Html是为了在展示时提高效率，否则每次都要进行转换。以后我们还可以考虑实现 页面的静态化，这样展示速度就会更快了。</p>
+<dd><p>将用来存储转成Html之后的内容。因为我们这个Blog将使用markdown语法来写，所以 需要将其转为Html。转换工具将使用我写的 <a class="outter" href="https::/github.com/limodou/par">par</a> 这个包。 转为Html是为了在展示时提高效率，否则每次都要进行转换。以后我们还可以考虑实现 页面的静态化，这样展示速度就会更快了。</p>
 </dd>
 <dt>created_time</dt>
 <dd><p>它使用了一个 <code>auto_now_add</code> 属性，表示当添加时，自动使用服务器的时间来自动填充。 因此，你并不需要给它传值。同时它还指定了 <code>index=True</code> ，表示将按这个字段来 创建索引，主要是为了排序时更快。</p>
@@ -239,9 +239,9 @@ blog = 'blog.models.Blog'</code></pre>
 <p>我们可以看到数据库是 mysql ，密码使用星号隐藏了。一共有5张表，因为都不存在所以 最后都是 <code>CREATED</code> 的状态。这里 blog 有两张表，其它三张是因为配置了 uliweb.contrib.auth  所带的表。</p>
 <div class="footnotes"><ol>
 <li id="fn-1">
-<p> 这里向大家推荐 <a href="http://www.heidisql.com/" class="outter">heidisql</a> 这个工具，体积小，     有绿色版，功能强大。</p>
+<p> 这里向大家推荐 <a class="outter" href="http://www.heidisql.com/">heidisql</a> 这个工具，体积小，     有绿色版，功能强大。</p>
 
-<a href="#fnref-1" class="footnote-backref inner">&#8617;</a>
+<a class="footnote-backref inner" href="#fnref-1">&#8617;</a>
 
 </li>
 </ol></div>

@@ -7,14 +7,14 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
-<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
 
-<title>Installation - Uliweb-Doc</title>
+<title>0.3.1 2014-07-04 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
 <div class="navbar">
   <div class="ui small secondary inverted borderless menu">
     
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
+    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
     
     <div class="right menu">
       
@@ -60,38 +60,33 @@
     
         
 <div class="chapter-next chapter-top">
-    <a next-chapter href="./url_mapping.html">URL Mapping <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="../update/update_0.3.html">0.3 <i class="icon-arrow-right"></i></a>
 </div>
         
-        <h1 id="title_1">Installation<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">Requirement<a class="anchor" href="#title_1-1">&para;</a></h2>
+        <h1 id="title_1">0.3.1 2014-07-04<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">问题修复<a class="anchor" href="#title_1-1">&para;</a></h2>
 <ul>
-<li>Python 2.5+</li>
-<li>setuptools 0.6c9</li>
+<li>修复 <code>include</code> 在 ini 中的bug</li>
+<li>修复在 orm.get() 中的condition判断bug</li>
+<li>修复 recorder bug</li>
 </ul>
-<h2 id="title_1-2">Extra Requirement<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_1-2">功能优化<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
-<li>SQLAlchemy 0.6+ (If you want to use Uliweb ORM you should install it)</li>
-<li>pytz (Used in uliweb.utils.date and ORM for timezone process)</li>
+<li>增加 qqmail 邮件服务后端支持，感谢 Yubin Wang <harry198344 AT gmail.com&gt;</li>
+<li>增加 <code>yes</code> 命令行选项，删除 makeapp, makeproject 命令的 <code>--force</code> 选项</li>
+<li>删除 <code>Command</code> 类中的 <code>has_options</code> 属性，改为根据 <code>option_list</code> 的长度来动态判断</li>
 </ul>
-<h2 id="title_1-3">Installation<a class="anchor" href="#title_1-3">&para;</a></h2>
-<ol>
-<li>easy_install Uliweb</li>
-<li><p>Download Uliweb package from <a class="outter" href="http://code.google.com/p/uliweb/downloads/list">http://code.google.com/p/uliweb/downloads/list</a> or     get the source files from svn:</p>
-<pre class="prettyprint"><code>svn checkout http://uliweb.googlecode.com/svn/trunk/ uliweb</code></pre></li>
-<li><p>In uliweb installation directory, run <code>setup.py</code> to install it:</p>
-<pre class="prettyprint"><code>python setup.py develop</code></pre>
-<p>This command will install a link of the current Uliweb directory to the Python site-packages directory. , and you can find an entry in easy_install.pth. This command will also install a script named <code>uliweb</code> to Python/Scripts directory. Make sure that you have added the Python and Python/Scripts directories to your systems search path(adding the new path to the PATH environment). Doing this allows you to run the uliweb scripts anywhere on te commandline.</p>
-<div class="ui info message">
-<p>Why not use <code>python setup.py install</code>? The <code>uliweb</code> script can't be installed correctly using this method, I will appreciate if someone can help with this issue.</p>
-
-</div></li>
-</ol>
-<p>1.      After above steps, run <code>uliweb</code> command in command line and see the tutorials --     to learn how to use <code>uliweb</code> for web application development.</p>
+<h2 id="title_1-3">ORM相关<a class="anchor" href="#title_1-3">&para;</a></h2>
+<ul>
+<li>增加 <code>sqlshell</code> 命令</li>
+<li>向 ORM 结果对象添加 <code>having</code> 和 <code>join</code> 方法</li>
+<li>增加整个数据库 dump 和 load 支持 #33</li>
+<li>向 orm 的 <strong>all</strong> 添加 <code>NotFound</code></li>
+</ul>
 
         
         <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./installation.md">View Source</a>
+            <i class="icon download"></i><a href="../update/update_0.3.1.md">View Source</a>
         </div>
         
     </div>
@@ -155,16 +150,16 @@
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
+<script src="../static/jquery-1.7.2.min.js"></script>
+<script src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
+<script src="../../static/jquery.cookie.js"></script>
 
 
     <script type="text/javascript">
@@ -190,7 +185,7 @@ $(function(){
     form.submit(function(e){
         e.preventDefault();
         var wq=$('input[name="q"]').val();
-        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/en "+wq;
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
         window.open(link);
 
     });
@@ -206,7 +201,7 @@ $(function(){
     });
     $('a.language').on('click', function(){
         $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+        window.location.href = "../../"+$(this).data('lang')+'/index.html';
     });
 });
 </script>

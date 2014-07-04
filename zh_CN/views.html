@@ -93,7 +93,7 @@ def index():
 <pre class="prettyprint "><code>@expose('/documents/&lt;lang&gt;/&lt;path:filename&gt;')
 def show_document(filename, lang):
     return _show(request, response, filename, env, lang, False)</code></pre>
-<p>关于URL的参数定义，参见 <a href="url_mapping.html" class="inner">URL映射</a> 的文档。这里可以看出，定义了两个参数： lang和filename，所以在下面的view函数中也定义了两个参数。</p>
+<p>关于URL的参数定义，参见 <a class="inner" href="url_mapping.html">URL映射</a> 的文档。这里可以看出，定义了两个参数： lang和filename，所以在下面的view函数中也定义了两个参数。</p>
 <p>但如果你的URL中没有那么多的参数怎么办？这个可以在URL的定义中解决，如:</p>
 <pre class="prettyprint "><code>@expose('/documents/&lt;path:filename&gt;', defaults={'lang':''})
 @expose('/documents/&lt;lang&gt;/&lt;path:filename&gt;')
@@ -106,14 +106,14 @@ def show_document(filename, lang):
 <li>application 这是Uliweb的实例，你可以用它来访问应用的各种属性，如：application.debug     表示是否处于调用状态，还可以通过它来调用一些方法，如：application.template()来处理模     板。当然直接导入template也是可以的。不过application.template()已经预设了环境进去。</li>
 <li>request 请求对象。</li>
 <li>response 应答对象。这个对象在传入时是一个空对象，你可以使用它，也可以自行构造一个Response     的对象进行返回。</li>
-<li>url_for 它是与expose是相反的，它用来生根据view函数生成反向的URL。详情见 <a href="url_mapping.html" class="inner">URL映射</a> 的文档。</li>
+<li>url_for 它是与expose是相反的，它用来生根据view函数生成反向的URL。详情见 <a class="inner" href="url_mapping.html">URL映射</a> 的文档。</li>
 <li>redirect 用于重定义处理，后面为一个URL信息。</li>
 <li>error 用于输出错误信息，它将自动查找出错页面。你只要在任何app下的templates中增加     error.html，然后出错信息可以自已来定制。它也不需要前面加return，也将抛出一个异常。</li>
 <li>settings 是定义在所有有效的app settings.py文件中的配置项。注意，一个配置项的名称必须是     大写的。</li>
 <li>json 用于将dict对象包装成json格式并返回。</li>
 </ul>
 <div class="ui info message">
-<p>要注意，以上的环境只能用在view函数中，当view调用其它的方法时，还是需要传入相应的参数。 有些全局性的对象将放在 uliweb/__init__.py 中，因此可以直接导入。详情见 <a href="globals.html" class="inner">全局环境</a> 的文档。</p>
+<p>要注意，以上的环境只能用在view函数中，当view调用其它的方法时，还是需要传入相应的参数。 有些全局性的对象将放在 uliweb/__init__.py 中，因此可以直接导入。详情见 <a class="inner" href="globals.html">全局环境</a> 的文档。</p>
 
 </div>
 <h3 id="title_1-2-4">view环境的扩展<a class="anchor" href="#title_1-2-4">&para;</a></h3>

@@ -79,7 +79,7 @@ AUTO_CREATE = True
 CONNECTION = 'sqlite://'</code></pre>
 <p>The <code>DEBUG_LOG</code> is used to toggle SQLAlchemy log, if set to <code>True</code>, when executing SQL, the SQL statements will be output in log.</p>
 <p>The <code>AUTO_CREATE</code> is used to enable ORM create tables automatically. If set it to False, you should create table yourself.</p>
-<p>The <code>CONNECTION</code> is used to set the connection string. Just follow the SQLAlchemy format. (You can see <a href="http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments" class="outter">http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments</a>)</p>
+<p>The <code>CONNECTION</code> is used to set the connection string. Just follow the SQLAlchemy format. (You can see <a class="outter" href="http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments">http://www.sqlalchemy.org/docs/05/dbengine.html#create-engine-url-arguments</a>)</p>
 <p>The common format is:</p>
 <pre class="prettyprint"><code>driver://username:password@host:port/database</code></pre>
 <p>There are some examples:</p>
@@ -110,7 +110,7 @@ mssql_db = create_engine('mssql://scott:tiger@mydsn')
 firebird_db = create_engine('firebird://scott:tiger@localhost/sometest.gdm')</code></pre>
 <p>And if you don't like to modify the apps/settings.ini manually, you can also start development sever via:</p>
 <pre class="prettyprint"><code>uliweb runadmin</code></pre>
-<p>Then in Build page of <a href="http://localhost:8000/admin" class="outter">http://localhost:8000/admin</a> to set the settings of ORM App.</p>
+<p>Then in Build page of <a class="outter" href="http://localhost:8000/admin">http://localhost:8000/admin</a> to set the settings of ORM App.</p>
 <h2 id="title_1-3">Model Definition<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>In common, you may create your model in models.py. First you should import from uliweb.orm, then create your own model and it should inherit from <code>Model</code> class. Then add any fields you want to define. For example:</p>
 <pre class="prettyprint"><code>from uliweb.orm import *
@@ -378,7 +378,7 @@ user.put()</code></pre>
 user = User.get(User.c.id==5)</code></pre>
 <p>If you want to get an instance from a model, you should call <code>get</code> method of a model. You can pass a integer or a query condition. So <code>User.get(5)</code> will be exact:</p>
 <pre class="prettyprint"><code>User.get(User.c.id==5)</code></pre>
-<p>The query condition syntax is exact SQLAlchemy query syntax, so you can see more detail at: <a href="http://www.sqlalchemy.org/docs/05/sqlexpression.html" class="outter">http://www.sqlalchemy.org/docs/05/sqlexpression.html</a></p>
+<p>The query condition syntax is exact SQLAlchemy query syntax, so you can see more detail at: <a class="outter" href="http://www.sqlalchemy.org/docs/05/sqlexpression.html">http://www.sqlalchemy.org/docs/05/sqlexpression.html</a></p>
 <h4 id="title_1-5-21-3">Delete an instance<a class="anchor" href="#title_1-5-21-3">&para;</a></h4>
 <pre class="prettyprint"><code>user = User.get(5)
 user.delete()</code></pre>

@@ -67,7 +67,7 @@
         
         <h1 id="title_1">模板(Template)<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">0.4 更新说明<a class="anchor" href="#title_1-1">&para;</a></h2>
-<p>从0.4版本开始，uliweb的模板由原来的 web2py 的基本上改造来的，改为基于 tornado 的模板系统。当然 tornado的模板用法与uliweb的还是有不少差异，因此在它的源码上进行了修改。新的模板最大的变化主要是生成 过程，原来uliweb的模板解析与生成是一体化的，所以速度慢。在使用了 wheezy.web 提供的性能测试代码比较 之后非常明显。通过学习tornado等其它的模板示例，发现，它们之所以快，就是因为模板的解析与生成是分离的， 所以解析的时间在根本没有计算，只计算了生成的代码执行的时间，所以当然快了。不过我也没有直接把原来的uliweb 的模板改造成解析与执行分离的模式（其实也是可以做到的），而是基于tornado进行了改造。并且象tornado的模板 会带有一个Loader的类，用来装载模板，还可以实现模板的缓存。不过tornado的缓存机制当文件发生变化时不能 自动更新，要重启服务器。而我改造之后，实现了对依赖文件的时间变化的检查，从而自动更新缓存。当然，也可以 通过配置来关掉自动检查或缓存的机制。实现了解析与执行的分离还有一个好处就是可以在命令行下直接打印出模板 编译后的python代码，非常方便。</p>
+<p>从0.4版本开始，uliweb的模板由原来的 web2py 的基础上改造来的，改为基于 tornado 的模板系统。当然 tornado的模板用法与uliweb的还是有不少差异，因此在它的源码上进行了修改。新的模板最大的变化主要是生成 过程，原来uliweb的模板解析与生成是一体化的，所以速度慢。在使用了 wheezy.web 提供的性能测试代码比较 之后非常明显。通过学习tornado等其它的模板示例，发现，它们之所以快，就是因为模板的解析与生成是分离的， 所以解析的时间在根本没有计算，只计算了生成的代码执行的时间，所以当然快了。不过我也没有直接把原来的uliweb 的模板改造成解析与执行分离的模式（其实也是可以做到的），而是基于tornado进行了改造。并且象tornado的模板 会带有一个Loader的类，用来装载模板，还可以实现模板的缓存。不过tornado的缓存机制当文件发生变化时不能 自动更新，要重启服务器。而我改造之后，实现了对依赖文件的时间变化的检查，从而自动更新缓存。当然，也可以 通过配置来关掉自动检查或缓存的机制。实现了解析与执行的分离还有一个好处就是可以在命令行下直接打印出模板 编译后的python代码，非常方便。</p>
 <p>不兼容部分说明：</p>
 <ol>
 <li><code>{{super}}</code> 功能取消</li>
@@ -126,7 +126,7 @@
 yourapp.prepare_default_env = 'prepare_default_env', 'yourapp.prepare_default_env'</code></pre>
 <p>经过上面的处理，你就可以直接在模板中使用text2html这个方法了。</p>
 <p>上面的 <code>yourapp.prepare_default_env</code> 是用来定义一个名字，主要目的是可以方便替换。 <code>prepare_default_env</code> 是对应的信号名，表示准备环境变量的信号。 <code>yourapp.prepare_default_env</code> 是上面方法的路径。</p>
-<p>目前已经有一些缺省的对象和方法可以直接用在模板中，它们目前与view是一样的，因此你可以参考 <a href="views.html" class="inner">视图</a> 文档进行了解。</p>
+<p>目前已经有一些缺省的对象和方法可以直接用在模板中，它们目前与view是一样的，因此你可以参考 <a class="inner" href="views.html">视图</a> 文档进行了解。</p>
 <h2 id="title_1-5">内置环境<a class="anchor" href="#title_1-5">&para;</a></h2>
 <p>Uliweb的模板本身已经定义了一些方法可以直接使用。</p>
 <ul>
@@ -198,9 +198,9 @@ DEBUG_TEMPLATE = True</code></pre>
 <p>这样的输出。不过要注意只用它来进行调试，不然有些地方可能会破块页面或其它非HTML 输出的正确性。</p>
 <p>如果要使用动态输出，要注意需要配置 <code>uliweb.contrib.template</code> 这个APP，它会在启动 时进行必要的初始化。</p>
 <h2 id="title_1-8">uliweb.contrib.template App<a class="anchor" href="#title_1-8">&para;</a></h2>
-<p>Uliweb为了方便使用，同时还提供了 uliweb.contrib.template 这个app，具体的功能描述见 <a href="app_template.html" class="inner">uliweb.contrib.template</a> 。</p>
+<p>Uliweb为了方便使用，同时还提供了 uliweb.contrib.template 这个app，具体的功能描述见 <a class="inner" href="app_template.html">uliweb.contrib.template</a> 。</p>
 <h2 id="title_1-9">命令行<a class="anchor" href="#title_1-9">&para;</a></h2>
-<p>在 <a href="manage_guide.html#find" class="inner">命令行</a> 的文档中有详细的关于模板相关的操作，主要是集中在 <code>find -t template_file</code> 中，再配合以不同的 参数。</p>
+<p>在 <a class="inner" href="manage_guide.html#find">命令行</a> 的文档中有详细的关于模板相关的操作，主要是集中在 <code>find -t template_file</code> 中，再配合以不同的 参数。</p>
 <h2 id="title_1-10">问题描述<a class="anchor" href="#title_1-10">&para;</a></h2>
 <h3 id="title_1-10-9">在模板中定义多行文本的限制<a class="anchor" href="#title_1-10-9">&para;</a></h3>
 <p>目前模板中不特别支持定义多行的字符串，因为它是按行来处理，并且不作特殊的语法判断的。 比如:</p>

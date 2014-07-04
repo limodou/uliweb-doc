@@ -64,13 +64,13 @@
 
         
         <h1 id="title_1">Mini GuestBook<a class="anchor" href="#title_1">&para;</a></h1>
-<p>Maybe you've learned <a href="hello_uliweb.html" class="inner">Hello, Uliweb</a> this tutorial, and have some sense to Uliweb, so, let's step into database world together, and see how to use database simply.</p>
+<p>Maybe you've learned <a class="inner" href="hello_uliweb.html">Hello, Uliweb</a> this tutorial, and have some sense to Uliweb, so, let's step into database world together, and see how to use database simply.</p>
 <h2 id="title_1-1">Prepare<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>There is already the whole GuestBook source code in uliweb-tests project. So you can checkout from it:</p>
 <pre class="prettyprint"><code>svn checkout http://uliweb-tests.googlecode.com/svn/trunk/guestbook guestbook
 cd guestbook
 uliweb runserver</code></pre>
-<p>Enter <a href="http://localhost:8000/guestbook" class="outter">http://localhost:8000/guestbook</a> in the browser, then you'll find it. By default, it'll use sqlite3, so if you are using Python 2.5, you'll not need to install sqlite Python binding module. Or you need to install pysqlite2 package yourself. For now, Uliweb uses <a href="http://www.sqlalchemy.org" class="outter">SqlAlchemy</a> for underlying database driven module, it already supports many database, such as: mysql, sqlite, postgresql, etc. Before you want to use other databases, you should also install their database module first.</p>
+<p>Enter <a class="outter" href="http://localhost:8000/guestbook">http://localhost:8000/guestbook</a> in the browser, then you'll find it. By default, it'll use sqlite3, so if you are using Python 2.5, you'll not need to install sqlite Python binding module. Or you need to install pysqlite2 package yourself. For now, Uliweb uses <a class="outter" href="http://www.sqlalchemy.org">SqlAlchemy</a> for underlying database driven module, it already supports many database, such as: mysql, sqlite, postgresql, etc. Before you want to use other databases, you should also install their database module first.</p>
 <p>Ok, let's begin to write code.</p>
 <h2 id="title_1-2">Create Project<a class="anchor" href="#title_1-2">&para;</a></h2>
 <p>I suggest that you begin your work in a new directory, for example:</p>
@@ -321,7 +321,7 @@ def del_comment(id):
         error("No such record [%s] existed" % id)</code></pre>
 <p>Delete is simple, first get the object according the <code>id</code> parameter passwd from view function. <code>Note.get(int(id))</code> will get the object, then if the object existed, then call <code>n.delete()</code> to delete the record. Or display an error page.</p>
 <h3 id="title_1-11-7">URL Arguments Definition<a class="anchor" href="#title_1-11-7">&para;</a></h3>
-<p>Notice, here, expose() uses an argument, i.e. <code>&lt;id&gt;</code>. Once there are something like <code>&lt;type:para&gt;</code> in the URL, that's means you defined an argument. And <code>type</code> can be optional. Uliweb provides many builtin types, such as: int, float, path, any, string, uniocde. And you can find more details in <a href="url_mapping.html" class="inner">URL Mapping</a> document. If you just define <code>&lt;name&gt;</code> format, it just means matching something between <code>//</code>. Once you defined some arguments in the URL, you must define the same arguments in the view function, so <code>del_comment()</code> function should be written in <code>del_command(id)</code>. There the <code>id</code> arugment is the same as the one in URL.</p>
+<p>Notice, here, expose() uses an argument, i.e. <code>&lt;id&gt;</code>. Once there are something like <code>&lt;type:para&gt;</code> in the URL, that's means you defined an argument. And <code>type</code> can be optional. Uliweb provides many builtin types, such as: int, float, path, any, string, uniocde. And you can find more details in <a class="inner" href="url_mapping.html">URL Mapping</a> document. If you just define <code>&lt;name&gt;</code> format, it just means matching something between <code>//</code>. Once you defined some arguments in the URL, you must define the same arguments in the view function, so <code>del_comment()</code> function should be written in <code>del_command(id)</code>. There the <code>id</code> arugment is the same as the one in URL.</p>
 <p>Ok, now you can try if the delete function can be used.</p>
 <h3 id="title_1-11-8">Error Page<a class="anchor" href="#title_1-11-8">&para;</a></h3>
 <p>When there are something wrong, you may need to show an error page to user, so you can use <code>error()</code> function to return an error page. <code>return</code> is no need in front of it, just give it an error message, that's enough.</p>
@@ -340,13 +340,13 @@ def del_comment(id):
 <h2 id="title_1-13">Screen Casts<a class="anchor" href="#title_1-13">&para;</a></h2>
 <p>Let's see some screen casts, this will make more sense.</p>
 <p>Homepage:</p>
-<p><img src="_static/image01.jpg" alt="image"/>
+<p><img alt="image" src="_static/image01.jpg"/>
 </p>
 <p>New Comment Page:</p>
-<p><img src="_static/image02.jpg" alt="image"/>
+<p><img alt="image" src="_static/image02.jpg"/>
 </p>
 <p>Error Comment Page:</p>
-<p><img src="_static/image03.jpg" alt="image"/>
+<p><img alt="image" src="_static/image03.jpg"/>
 </p>
 <h2 id="title_1-14">Conclusion<a class="anchor" href="#title_1-14">&para;</a></h2>
 <p>Wow, we've learnt so many things for now:</p>

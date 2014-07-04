@@ -96,7 +96,7 @@ dialog.bind('dialog2.content-update', function(e){
     });
 });</code></pre>
 <p>其中，建议给每个 <code>&lt;div&gt;</code> 都设置一个 <code>id</code> 属性。</p>
-<p>dialog2在创建时时使用的参数参考它的文档 <a href="http://nikku.github.com/jquery-bootstrap-scripting/" class="outter">http://nikku.github.com/jquery-bootstrap-scripting/</a>. 其中，ajaxFormOptions 中的onSuccess对应成功后的处理。这里 <code>common_ajaxForm_success</code> 是在 <code>inc_jquery_dialog2.html</code> 中定义的。它用来处理当ajax方式与后台交互时，出错 信息的处理。</p>
+<p>dialog2在创建时时使用的参数参考它的文档 <a class="outter" href="http://nikku.github.com/jquery-bootstrap-scripting/">http://nikku.github.com/jquery-bootstrap-scripting/</a>. 其中，ajaxFormOptions 中的onSuccess对应成功后的处理。这里 <code>common_ajaxForm_success</code> 是在 <code>inc_jquery_dialog2.html</code> 中定义的。它用来处理当ajax方式与后台交互时，出错 信息的处理。</p>
 <p>缺省的bootstrap的宽度是一定的。如果太窄，可以象上面使用:</p>
 <pre class="prettyprint "><code>dialog.closest('.modal').addClass('wide-modal');</code></pre>
 <p>如果有些js代码需要在显示弹出窗口之后再执行，可以在:</p>

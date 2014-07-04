@@ -70,21 +70,21 @@
 <h2 id="title_1-1">Python项目创建<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>为了使用Uliweb你的第一步是要先创建一个Python的项目，目前需要有邀请码并由管理人 员开通。不要问我要邀请码，因为我只有一个，为了做测试已经用掉了。</p>
 <ol>
-<li>进入 <a href="http://developer.baidu.com/service" class="outter">http://developer.baidu.com/service</a></li>
+<li>进入 <a class="outter" href="http://developer.baidu.com/service">http://developer.baidu.com/service</a></li>
 <li>点击百度应用引擎，点击 “立刻开始使用”</li>
 </ol>
-<p><img src="_static/bae1.png" alt="image"/>
+<p><img alt="image" src="_static/bae1.png"/>
 </p>
 <ol>
 <li>然后创建应用</li>
 <li>创建好后，大概是这样:</li>
 </ol>
-<p><img src="_static/bae2.png" alt="image"/>
+<p><img alt="image" src="_static/bae2.png"/>
 </p>
 <ol>
 <li>点击版本管理后，新建一个版本。这里bae的版本和sae差不多，都是用数字作为版本     目录。它是从0开始。创建好后，在下面可以看到svn的地址。这样可以用Svn工具checkout     代码了。用户名口令就是百度的用户名口令。</li>
 </ol>
-<p><img src="_static/bae3.png" alt="image"/>
+<p><img alt="image" src="_static/bae3.png"/>
 </p>
 <div class="ui info message">
 <p>要注意的是，我在使用chrome 21.x dev版本时报了一些js的错，所以后来切換到了 ie上来执行。说是我的chrome版本太高了，不知道算不算bug。</p>
@@ -101,8 +101,8 @@ index.py</code></pre></li>
 <p>下面就开始 Uliweb 的部署过程。</p>
 <h2 id="title_1-2">uliweb的部署<a class="anchor" href="#title_1-2">&para;</a></h2>
 <h3 id="title_1-2-1">uliweb安装<a class="anchor" href="#title_1-2-1">&para;</a></h3>
-<p>这里我不会演示一个 Hello, Uliweb 如何做，太简单了。我会使用 uliwebdoc 下的 SimpleTodo 的例子来做。它的代码你可以从 <a href="https://github.com/limodou/uliweb-doc" class="outter">uliweb-doc</a> 项目 中的 projects中找到，不过这个版本还不能直接运行到 bae 上去，所以需要进行必要的修改。</p>
-<p>目前uliweb最新版本是0.1，在发布时还没有对bae作特殊的支持处理。所以你要从svn或github 上下载最新的 <a href="https://github.com/limodou/uliweb" class="outter">uliweb</a> 的源码。点击上面的zip图标 就可以下载了。</p>
+<p>这里我不会演示一个 Hello, Uliweb 如何做，太简单了。我会使用 uliwebdoc 下的 SimpleTodo 的例子来做。它的代码你可以从 <a class="outter" href="https://github.com/limodou/uliweb-doc">uliweb-doc</a> 项目 中的 projects中找到，不过这个版本还不能直接运行到 bae 上去，所以需要进行必要的修改。</p>
+<p>目前uliweb最新版本是0.1，在发布时还没有对bae作特殊的支持处理。所以你要从svn或github 上下载最新的 <a class="outter" href="https://github.com/limodou/uliweb">uliweb</a> 的源码。点击上面的zip图标 就可以下载了。</p>
 <p>然后为了方便在uliweb的解压目录下执行:</p>
 <pre class="prettyprint "><code>python setup.py develop</code></pre>
 <p>来安装uliweb。这步是为了在你的机器上创建uliweb环境。</p>
@@ -147,13 +147,13 @@ index.py
 favicon.ico</code></pre>
 <p>然后我们要把 uliweb 的压缩包放到 <code>lib</code> 目录下。因为 lib 会自动加入到 sys.path 中。所以我们要保留 uliweb 子目录，以便可以直接导入 uliweb 。这里这样的处理是因为 bae中还没有预装 uliweb 所以我们要自已上传。</p>
 <p>然后我们创建 project 目录，把 uliweb-doc/projects/simple_todo 的代码拷贝过来。这样 我们的目录结构基本上就是:</p>
-<p><img src="_static/bae4.png" alt="image"/>
+<p><img alt="image" src="_static/bae4.png"/>
 </p>
 <h2 id="title_1-3">Simple To Do 部署<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>simple to do 是一个简单的todo展示。功能很简单，但是它使用到了数据库。所以使用 这个例子是为了验证数据库的安装是否正确。但是没有使用到session，所以无法测试session 是否可以正常使用。</p>
 <h3 id="title_1-3-3">创建数据库实例<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>在bae 的面板上点击 "云数据库" -&gt; "我的数据库" ，然后创建数据库:</p>
-<p><img src="_static/bae5.png" alt="image"/>
+<p><img alt="image" src="_static/bae5.png"/>
 </p>
 <p>这里名称我们一会要使用。</p>
 <h3 id="title_1-3-4">simple_todo settings.ini修改<a class="anchor" href="#title_1-3-4">&para;</a></h3>
@@ -192,16 +192,16 @@ MYSQL_DB #不可用</code></pre>
 <p>它会打印出建表的SQL语句，拷贝下来到phpadmin中执行它吧。不过 uliweb sql 无法打印 含有创建 Index 的语句。所以如果存在索引创建，要自已手工去使用 phpadmin 来建。</p>
 <h3 id="title_1-3-6">启动<a class="anchor" href="#title_1-3-6">&para;</a></h3>
 <p>将修改后的代码每次一提交，bae 会自动启动应用。使用预览的话可以看到每个版本的情况。 如果执行正确，在应用面板中，对于相要生效的版本点击前面的 radio button。bae会提 示你生效，一旦生效。你就可以通过域名来访问了。</p>
-<p>uliweb的演示版本为:  <a href="http://0.uliweb.duapp.com/" class="outter">http://0.uliweb.duapp.com/</a> 有兴趣可以试试。下面为页面示例:</p>
-<p><img src="_static/bae6.png" alt="image"/>
+<p>uliweb的演示版本为:  <a class="outter" href="http://0.uliweb.duapp.com/">http://0.uliweb.duapp.com/</a> 有兴趣可以试试。下面为页面示例:</p>
+<p><img alt="image" src="_static/bae6.png"/>
 </p>
 <h2 id="title_1-4">BAE的受限环境说明<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>具体的受限说明详见下面的开发文档。特别要说明的是上面的 <code>settings.ini</code> 中的 <code>DEBUG</code><code>为</code><code>False</code> 。 为什么，因为bae把 <code>wsgi['stderr']</code> 给禁掉了。而 uliweb 的 debug 功能是依赖于 werkzeug 的 <code>DebugApplication</code> 类，它要使用 <code>wsgi['stderr']</code> 的。因为写不进去，所以就会报错。 不知道这块为什么要禁掉，这样调试就会很麻烦。</p>
 <p>在bae的预装软件列表中，已经有了 uliweb 要使用的数据库相关的包，如：sqlalchemy， mysql-python。 其中 Werkzeug 不是必须的，虽然它已经装了，不过 uliweb 自带一个并且是有所修改的版本。</p>
 <h2 id="title_1-5">BAE的开发文档<a class="anchor" href="#title_1-5">&para;</a></h2>
 <ul>
-<li><a href="http://developer.baidu.com/wiki/index.php?title=%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3%E9%A6%96%E9%A1%B5/%E4%BA%91%E7%8E%AF%E5%A2%83/Python%E7%8E%AF%E5%A2%83%E8%AF%B4%E6%98%8E" class="outter">Python环境说明</a></li>
-<li><a href="http://developer.baidu.com/wiki/index.php?title=%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3%E9%A6%96%E9%A1%B5/%E4%BA%91%E7%8E%AF%E5%A2%83/%E5%BA%94%E7%94%A8%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B" class="outter">配置文件规范</a></li>
+<li><a class="outter" href="http://developer.baidu.com/wiki/index.php?title=%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3%E9%A6%96%E9%A1%B5/%E4%BA%91%E7%8E%AF%E5%A2%83/Python%E7%8E%AF%E5%A2%83%E8%AF%B4%E6%98%8E">Python环境说明</a></li>
+<li><a class="outter" href="http://developer.baidu.com/wiki/index.php?title=%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3%E9%A6%96%E9%A1%B5/%E4%BA%91%E7%8E%AF%E5%A2%83/%E5%BA%94%E7%94%A8%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B">配置文件规范</a></li>
 </ul>
 <h2 id="title_1-6">感受<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>BAE 和 SAE 为国内提供了云部署环境，支持 Python 很给力，不过限制比起我用过的 dotCloud等国外的环境还是有些多了点，比如 dotCloud 提供了命令行工具，可以 ssh 登录服务器，这样安装调试都很方便。并且没有太多环境的限制。希望以后在这些方便 可以加强。</p>

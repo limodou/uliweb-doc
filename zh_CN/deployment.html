@@ -92,6 +92,9 @@ include /etc/nginx/conf.d/*.conf;
 }</code></pre>
 <p>将uwsgi设置为反向代理有两种方式，一种是通过服务的方式，即上面注释掉的那一行，但 是当请求过多，这种方式会报错。因此一般都采用socket文件的方法。</p>
 <p>如果你是 WEB-AP-DB 三层结构，在WEB层还有一个Nginx的话，那么上面的proxy_set_header可能 需要加上，这样可以让AP层得到正确的客户端地址。</p>
+<p>同时应用中对于存在二级代理的情况要对IP进行特殊处理，才可以得到正确的客户端的IP，所以可以在 settings.ini 或local_settings.ini中添加：</p>
+<pre class="prettyprint "><code>﻿[WSGI_MIDDLEWARES]
+proxyfix = 'werkzeug.contrib.fixers.ProxyFix', 50</code></pre>
 <p>上面就把Nginx设置好了。如果要使用Nignx提供静态文件服务，可以在上面的server中添加:</p>
 <pre class="prettyprint "><code>location ~ ^/static/ {
     root /your/path/to;
@@ -201,14 +204,14 @@ exitcodes=0,1,2</code></pre>
 <h2 id="title_1-2">Apache<a class="anchor" href="#title_1-2">&para;</a></h2>
 <h3 id="title_1-2-5">mod_wsgi<a class="anchor" href="#title_1-2-5">&para;</a></h3>
 <ol>
-<li><p>按 <a href="http://code.google.com/p/modwsgi/" class="outter">mod_wsgi</a> 的说明安装mod_wsgi到apache下。</p>
+<li><p>按 <a class="outter" href="http://code.google.com/p/modwsgi/">mod_wsgi</a> 的说明安装mod_wsgi到apache下。</p>
 <ul>
 <li>拷贝mod_wsgi.so到apache的modules目录下</li>
 </ul>
 <p>Window环境可以看：</p>
-<p><a href="http://code.google.com/p/modwsgi/wiki/InstallationOnWindows" class="outter">http://code.google.com/p/modwsgi/wiki/InstallationOnWindows</a></p>
+<p><a class="outter" href="http://code.google.com/p/modwsgi/wiki/InstallationOnWindows">http://code.google.com/p/modwsgi/wiki/InstallationOnWindows</a></p>
 <p>Linux环境可以看：</p>
-<p><a href="http://code.google.com/p/modwsgi/wiki/InstallationOnLinux" class="outter">http://code.google.com/p/modwsgi/wiki/InstallationOnLinux</a></p></li>
+<p><a class="outter" href="http://code.google.com/p/modwsgi/wiki/InstallationOnLinux">http://code.google.com/p/modwsgi/wiki/InstallationOnLinux</a></p></li>
 <li><p>配置 apache 的httpd.conf文件</p>
 <pre class="prettyprint "><code>LoadModule wsgi_module modules/mod_wsgi.so
 WSGIScriptAlias / /path/to/uliweb/wsgi_handler.py
@@ -226,7 +229,7 @@ Order deny,allow
 Allow from all
 &lt;/Directory&gt;</code></pre></li>
 <li>重启apache</li>
-<li>测试。启动浏览器输入： <a href="http://localhost/YOURURL" class="outter">http://localhost/YOURURL</a> 来检测你的网站可否可以正常访问。</li>
+<li>测试。启动浏览器输入： <a class="outter" href="http://localhost/YOURURL">http://localhost/YOURURL</a> 来检测你的网站可否可以正常访问。</li>
 </ol>
 <h3 id="title_1-2-6">静态文件<a class="anchor" href="#title_1-2-6">&para;</a></h3>
 <p>当需要使用apache来配置静态文件时，可以在配置文件中配置为:</p>

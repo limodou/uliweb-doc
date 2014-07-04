@@ -11,6 +11,7 @@ whouse.md
 ## 更新说明
 
 {% toc max_depth=1 %}
+update/update_0.3.1.md
 update/update_0.3.md
 update/update_0.2.6.md
 update/update_0.2.5.md

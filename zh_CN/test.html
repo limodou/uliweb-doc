@@ -68,7 +68,7 @@
         <h1 id="title_1">如何测试<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">介绍<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>根据测试的要求，我们可以将其分为：函数测试，web测试。其中，函数测试大多数情况 下可以使用象doctest的技术来实现，这里不描述了。主要讲web测试。web测试一般需要 一个环境，如web server。然后通过在客户端录制脚本来摸拟页面操作，再比较返回的 内容。因为uliweb底层使用werkzeug模块，它提供了 werkzeug.test 功能，所以你可以 使用它来进行测试。它可以摸拟web server的工作方式，通过程序的方式发出get, post 请求，还可以自动处理cookie和redirect，所以使用很方便。</p>
-<p>为了简化在uliweb中的使用，uliweb.utils.test中提供了client的函数，它将返回一个 Client对象。关于如何使用werkzeug进行测试的文档请参见werkzeug的 <a href="http://werkzeug.pocoo.org/docs/test/" class="outter">文档</a> 。</p>
+<p>为了简化在uliweb中的使用，uliweb.utils.test中提供了client的函数，它将返回一个 Client对象。关于如何使用werkzeug进行测试的文档请参见werkzeug的 <a class="outter" href="http://werkzeug.pocoo.org/docs/test/">文档</a> 。</p>
 <p>示例如下:</p>
 <pre class="prettyprint "><code>from uliweb.utils.test import client
 
