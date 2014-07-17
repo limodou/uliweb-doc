@@ -191,12 +191,12 @@ out_write("&lt;h1&gt;Hello&lt;/h1&gt;")
 <p>可以输出指定模板的继承和包含使用情况。还可以输出其中使用到的block定义，包括每个block 所在的模板文件名。</p>
 <p>在运行时，可以打开：</p>
 <pre class="prettyprint "><code>[GLOBAL]
+DEBUG = True
 DEBUG_TEMPLATE = True</code></pre>
-<p>这样输出的页面就会有类似：</p>
+<p>注意， <code>DEBUG</code> 同时要设置为True。建议设置在 <code>local_settings.ini</code> 中。这样输出的页面就会有类似：</p>
 <pre class="prettyprint "><code>&lt;!-- BLOCK title (apps/theme/templates/theme/skeleton.html) --&gt;
 &lt;!-- END title --&gt;</code></pre>
 <p>这样的输出。不过要注意只用它来进行调试，不然有些地方可能会破块页面或其它非HTML 输出的正确性。</p>
-<p>如果要使用动态输出，要注意需要配置 <code>uliweb.contrib.template</code> 这个APP，它会在启动 时进行必要的初始化。</p>
 <h2 id="title_1-8">uliweb.contrib.template App<a class="anchor" href="#title_1-8">&para;</a></h2>
 <p>Uliweb为了方便使用，同时还提供了 uliweb.contrib.template 这个app，具体的功能描述见 <a class="inner" href="app_template.html">uliweb.contrib.template</a> 。</p>
 <h2 id="title_1-9">命令行<a class="anchor" href="#title_1-9">&para;</a></h2>
@@ -213,6 +213,13 @@ if tag == 'a':
 &lt;/script&gt;
 """}}</code></pre>
 <p>因为其中有 <code>if</code> 语句，所以会被模板识别为Python的 <code>if</code> 语句，会造成后面的代 码缩近而产生问题。因此如果多行字符串存在特殊的 <code>if</code>, <code>for</code> 之类的会引发 缩近的关键字时，可能会引发问题。</p>
+<h3 id="title_1-10-10">变量定义<a class="anchor" href="#title_1-10-10">&para;</a></h3>
+<p>新的实现方式是通过定义一个内部函数，所以外部传入的变量将作为全局变量来使用。但这样的话，如果在函数内部 你向一个与传入变量名同名的变量赋值，做造成提示局部变量在被定义前使用。类似于下面的代码：</p>
+<pre class="prettyprint "><code>a = 1
+def f():
+    b = a
+    a = 3</code></pre>
+<p>在执行f()时会抛出： <code>UnboundLocalError: local variable 'a' referenced before assignment</code> 所以为避免这种错误，模板中出现的赋值不要与传入的变量名相同。同时导入模块也存在类似的问题。</p>
 
         
         <div class="ui blue inverted small label">

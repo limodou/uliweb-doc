@@ -1149,6 +1149,10 @@ User.count(User.c.year<18)
 User.filter(User.c.year<18).count()
 ```
 
+注意在使用count时，uliweb自动根据查询中是否存在：limit, group_by, join来决定是直接使用 `select count(*) from table where condition`
+的形式，还是采用 `select count(*) as count_1 from (select * from table where)` 的形式。因为，一旦存在
+limit, group_by, join，在计数时统计的是结果集，而第一种只是根据条件来处理的。所以对于 limit 这样的查询要按
+结果集来统计。同时要注意，因为是对结果集来统计，所以它是先进行了一个子查询，从总体效果上来看，速度会慢一些。
 
 #### 其它 API
 

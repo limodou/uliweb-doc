@@ -261,10 +261,11 @@ uliweb find -t index.html --tree --blocks --with-filename
 
 ```
 [GLOBAL]
+DEBUG = True
 DEBUG_TEMPLATE = True
 ```
 
-这样输出的页面就会有类似：
+注意， `DEBUG` 同时要设置为True。建议设置在 `local_settings.ini` 中。这样输出的页面就会有类似：
 
 ```
 <!-- BLOCK title (apps/theme/templates/theme/skeleton.html) -->
@@ -273,9 +274,6 @@ DEBUG_TEMPLATE = True
 
 这样的输出。不过要注意只用它来进行调试，不然有些地方可能会破块页面或其它非HTML
 输出的正确性。
-
-如果要使用动态输出，要注意需要配置 `uliweb.contrib.template` 这个APP，它会在启动
-时进行必要的初始化。
 
 ## uliweb.contrib.template App
 
@@ -311,3 +309,17 @@ if tag == 'a':
 码缩近而产生问题。因此如果多行字符串存在特殊的 `if`, `for` 之类的会引发
 缩近的关键字时，可能会引发问题。
 
+### 变量定义
+
+新的实现方式是通过定义一个内部函数，所以外部传入的变量将作为全局变量来使用。但这样的话，如果在函数内部
+你向一个与传入变量名同名的变量赋值，做造成提示局部变量在被定义前使用。类似于下面的代码：
+
+```
+a = 1
+def f():
+    b = a
+    a = 3
+```
+
+在执行f()时会抛出： `UnboundLocalError: local variable 'a' referenced before assignment`
+所以为避免这种错误，模板中出现的赋值不要与传入的变量名相同。同时导入模块也存在类似的问题。
