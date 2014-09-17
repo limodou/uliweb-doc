@@ -431,6 +431,17 @@ question = 'ticket.models.Question'</code></pre>
 <pre class="prettyprint "><code>Usage: uliweb load [options] &lt;appname, appname, ...&gt;</code></pre>
 <p>将数据装入到数据库中。</p>
 <p>参数说明:</p>
+<pre class="prettyprint "><code>Options:
+  -d DIR                输出目录，缺省为当前项目下的data目录
+  -b BULK               批量插入条数，缺省为100条
+  -t, --text            以文本格式装入数据
+  --delimiter=DELIMITER
+                        文本文件使用的字段分隔符，缺省为 ','
+  --encoding=ENCODING   文本文件编码，缺省为 'utf-8'
+  -p, --project         只处理项目中的所有表。缺省为False，表示可以处理整个数据库中的表，可能在项目之外
+  -z ZIPFILE            导出数据为zip文件名
+  --engine=ENGINE       指定数据库连接名.</code></pre>
+<p>当使用 <code>-z</code> 参数时，如果不指定 <code>-d</code> 参数，则会自动在 <code>./data</code> 下创建一个临时文件夹，如果指定，则在 指定目录下创建临时文件夹，如果给出 <code>-v</code> 则可以在导出前看到输出的目录。并且在导出完成之后，会自动将临时 文件夹删除。</p>
 <h4 id="title_1-2-16-10">loadtable<a class="anchor" href="#title_1-2-16-10">&para;</a></h4>
 <pre class="prettyprint "><code>Usage: uliweb loadtable [options] &lt;tablename, tablename, ...&gt;</code></pre>
 <p>只装入指定的表名数据到数据库中。参数同load。</p>

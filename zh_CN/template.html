@@ -135,20 +135,60 @@ yourapp.prepare_default_env = 'prepare_default_env', 'yourapp.prepare_default_en
 </ul>
 <h2 id="title_1-6">编码<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>模板缺省是使用utf-8编码进行处理。如果你传入unicode字符串，将自动转为utf-8编码。如果不 是unicode，则不做处理。建议全部使用utf-8编码。</p>
-<h2 id="title_1-7">用法<a class="anchor" href="#title_1-7">&para;</a></h2>
-<h3 id="title_1-7-1">简单地变量输出<a class="anchor" href="#title_1-7-1">&para;</a></h3>
+<h2 id="title_1-7">模板标签的设置<a class="anchor" href="#title_1-7">&para;</a></h2>
+<p>缺省情况下， Uliweb的模板使用 <code>{{</code> 和 <code>}}</code> 来包括模板变量及模板中的语句，但是在特殊情况下，可能与某些 JS框架的标签冲突，所以可以在模板中动态设置，如：</p>
+<pre class="prettyprint "><code>#uliweb-template-tag:[[,]]</code></pre>
+<p>它采用注释的方式，需要写在第一行开头。表示使用 <code>[[</code> 和 <code>]]</code> 作为模板的标签。</p>
+<p>这种设置方法只影响当前模板，对于 <code>extend</code> 和 <code>include</code> 的模板不会影响。</p>
+<h2 id="title_1-8">参数配置<a class="anchor" href="#title_1-8">&para;</a></h2>
+<p>在Uliweb中使用模板时有一些配置项可以在配置文件中进行覆盖，缺省定义的配置参数为：</p>
+<pre class="prettyprint "><code>[TEMPLATE]
+namespace = {}
+cache = True
+use_tmp = False
+tmp_dir = 'tmp/templates_temp'
+begin_tag = '{{'
+end_tag = '}}'
+debug = False
+check_modified_time = True
+multilines = True</code></pre>
+<p>分别解释如下：</p>
+<dl>
+<dt>namespace</dt>
+<dd><p>用于定义预设在模板中可以使用的对象，目前没有太多应用。</p>
+</dd>
+<dt>cache, check_modified_time</dt>
+<dd><p>是否启用模板对象缓存。缺省是启用。使用模板缓存时，模板会先检查是否当前模板已经在缓存中存在，如果存在，则 不再进行模板的编译处理，否则进行编译并保存在缓存中。在检查时，还会用到 <code>check_modified_time</code> 。即 缓存有两种模式，一种是只编译一次，如果以后手工修改了模板也不再检查，适合于性能要求高的场合。另一种是每次 都检查模板文件的修改时间是否有变化，如果这个模板文件还使用了 <code>extend</code> 或 <code>include</code> 则还要检查相关的 其它的模板文件，如果有变化，则重新编译。它会比前一种稍慢，但是修改模板后就会生效，比较方便。如果设置为 False，则表示不缓存模板，模板每次都会编译，效率低。请注意使用。使用缓存会占用内存空间。</p>
+</dd>
+<dt>use_tmp</dt>
+<dd><p>是否将编译后的模板生成的 python 源码保存在临时目录下。目前没有实现。</p>
+</dd>
+<dt>tmp_dir</dt>
+<dd><p>与 <code>use_tmp</code> 联用，但目前没有实现。</p>
+</dd>
+<dt>begin_tag, end_tag</dt>
+<dd><p>模板标签字符串，缺省为 <code>{{</code> 和 <code>}}</code> 。不建议进行修改，可以参照上面在模板标签的设置方法进行处理。</p>
+</dd>
+<dt>debug</dt>
+<dd><p>是否启用模板调试，建议只在开发状态下使用。缺省为False。它是一个内部参数，在调试状态下时，它会用 <code>GLOBAL/DEBUG_TEMPLATE</code> 来进行赋值，详情参见下面的模板的块调试说明。</p>
+</dd>
+<dt>multilines</dt>
+<dd><p>原来的tornado的模板不支持多行的Python代码行，在改造后对其实现了支持，缺省为启用。如果不想使用，可以设为 False。但是要注意功能的兼容性。</p>
+</dd>
+</dl><h2 id="title_1-9">用法<a class="anchor" href="#title_1-9">&para;</a></h2>
+<h3 id="title_1-9-1">简单地变量输出<a class="anchor" href="#title_1-9-1">&para;</a></h3>
 <pre class="prettyprint "><code>{{= "hello"}}
 {{= title}}</code></pre>
 <p>如果使用了变量，则要么由view进行传入，要么在模板的其它地方进行定义，如：</p>
 <pre class="prettyprint "><code>{{title="hello"}}
 {{= title}}</code></pre>
-<h3 id="title_1-7-2">HTML代码直接输出<a class="anchor" href="#title_1-7-2">&para;</a></h3>
+<h3 id="title_1-9-2">HTML代码直接输出<a class="anchor" href="#title_1-9-2">&para;</a></h3>
 <pre class="prettyprint "><code>{{&lt;&lt; html}}</code></pre>
-<h3 id="title_1-7-3">Python代码示例<a class="anchor" href="#title_1-7-3">&para;</a></h3>
+<h3 id="title_1-9-3">Python代码示例<a class="anchor" href="#title_1-9-3">&para;</a></h3>
 <pre class="prettyprint "><code>{{import os
 out_write("&lt;h1&gt;Hello&lt;/h1&gt;")
 }}</code></pre>
-<h3 id="title_1-7-4">模板继承<a class="anchor" href="#title_1-7-4">&para;</a></h3>
+<h3 id="title_1-9-4">模板继承<a class="anchor" href="#title_1-9-4">&para;</a></h3>
 <p>父模板 (layout.html)</p>
 <pre class="prettyprint "><code>&lt;html&gt;
 &lt;head&gt;
@@ -163,7 +203,7 @@ out_write("&lt;h1&gt;Hello&lt;/h1&gt;")
 {{block main}}
 &lt;p&gt;This is child template.&lt;/p&gt;
 {{end}}</code></pre>
-<h3 id="title_1-7-5">包括其它的模板<a class="anchor" href="#title_1-7-5">&para;</a></h3>
+<h3 id="title_1-9-5">包括其它的模板<a class="anchor" href="#title_1-9-5">&para;</a></h3>
 <pre class="prettyprint "><code>&lt;html&gt;
 &lt;head&gt;
 &lt;title&gt;Title&lt;/title&gt;
@@ -172,7 +212,12 @@ out_write("&lt;h1&gt;Hello&lt;/h1&gt;")
 {{include "child.html"}}
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-<h3 id="title_1-7-6">模板注释<a class="anchor" href="#title_1-7-6">&para;</a></h3>
+<h3 id="title_1-9-6">子模板的特殊说明<a class="anchor" href="#title_1-9-6">&para;</a></h3>
+<p>子模板要求从某个父模板来继承( <code>{{extend "layout.html"}}</code> )，在其中除 extend 外，主要是用来覆盖父模板中 的 block ，同时它支持将 block 定义在 include 模板中，如：</p>
+<pre class="prettyprint "><code>{{extend "layout.html"}}
+{{include "inc_block.html"}}</code></pre>
+<p>其中在 <code>inc_block.html</code> 中覆盖了 <code>layout.html</code> 中定义的块。</p>
+<h3 id="title_1-9-7">模板注释<a class="anchor" href="#title_1-9-7">&para;</a></h3>
 <pre class="prettyprint "><code>{{# This is a comment line}}
 {{# This is another comment line}}</code></pre>
 <p>可以在每行模板代码前使用 <code>#</code> 标识当前行为注释行，其用法同 Python 的注释行</p>
@@ -180,12 +225,12 @@ out_write("&lt;h1&gt;Hello&lt;/h1&gt;")
 {{=name}}
 ##}}</code></pre>
 <p>使用 <code>{{##</code> 和 <code>##}}</code> 可以注释一个片段，其中可以含有模板标签，这些标签将被 忽略。</p>
-<h3 id="title_1-7-7">模板自引用(0.1.4)<a class="anchor" href="#title_1-7-7">&para;</a></h3>
+<h3 id="title_1-9-8">模板自引用(0.1.4)<a class="anchor" href="#title_1-9-8">&para;</a></h3>
 <p>假设我们有一个全局性的 layout.html 模板，许多模板都要从它继承以获得最基础的布局信 息等。如果，我们有一个优化要在全局生效，那么我们可能直接想到去修改 layout.html 模板，这的确是一个办法。但是如果这个 layout.html 是一个可以复用的公共模板，它可 能不由你来维护或者它的实现比较通用，如果对其修改会造成不通用，那么直接修改这个 模板可能不是一个好办法。在0.1.4版本中提供了对同名模板的自引用处理机制，它可以用 在 <code>extend</code> 和 <code>include</code> 中。Uliweb 在处理模板时会根据App的定义顺序来查找模 板。因为模板是定义在不同的app中，因此会有同名模板出现。同时这也正是Uliweb中模板 替換的机制。因此，针对上面的问题，我们可能想在自已的App中定义一个同名的模板，但是 这样只会替換原来的模板。因此我们其实需要的是可以从同名模板的上一个模板继承的机制。 例如：A, B两个App，B定义在A之后，它们都有一个同名的layout.html模板，所以在模板 搜索时，会先找到B/layout.html。在0.1.4中，如果我们在B的layout.html中输入:</p>
 <pre class="prettyprint "><code>{{extend "layout.html"}}</code></pre>
 <p>即和自身的名字相同，在这种情况下，Uliweb会使用A/layout.html作为父模板来继承。这 样，我们就可以象正确的模板继承一样对同名的模板实现继承的处理了。</p>
 <p><code>{{include}}</code> 模板时，对应的模板也可以有类似的处理机制。</p>
-<h3 id="title_1-7-8">模板的块调试(0.2.2)<a class="anchor" href="#title_1-7-8">&para;</a></h3>
+<h3 id="title_1-9-9">模板的块调试(0.2.2)<a class="anchor" href="#title_1-9-9">&para;</a></h3>
 <p>Uliweb的模板在结构变得复杂时，了解哪些块是在哪里定义的就变成比较困难的问题。uliweb 提供命令行和运行时对块信息的调试输出。在命令行可以：</p>
 <pre class="prettyprint "><code>uliweb find -t index.html --tree --blocks --with-filename</code></pre>
 <p>可以输出指定模板的继承和包含使用情况。还可以输出其中使用到的block定义，包括每个block 所在的模板文件名。</p>
@@ -197,12 +242,12 @@ DEBUG_TEMPLATE = True</code></pre>
 <pre class="prettyprint "><code>&lt;!-- BLOCK title (apps/theme/templates/theme/skeleton.html) --&gt;
 &lt;!-- END title --&gt;</code></pre>
 <p>这样的输出。不过要注意只用它来进行调试，不然有些地方可能会破块页面或其它非HTML 输出的正确性。</p>
-<h2 id="title_1-8">uliweb.contrib.template App<a class="anchor" href="#title_1-8">&para;</a></h2>
+<h2 id="title_1-10">uliweb.contrib.template App<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>Uliweb为了方便使用，同时还提供了 uliweb.contrib.template 这个app，具体的功能描述见 <a class="inner" href="app_template.html">uliweb.contrib.template</a> 。</p>
-<h2 id="title_1-9">命令行<a class="anchor" href="#title_1-9">&para;</a></h2>
+<h2 id="title_1-11">命令行<a class="anchor" href="#title_1-11">&para;</a></h2>
 <p>在 <a class="inner" href="manage_guide.html#find">命令行</a> 的文档中有详细的关于模板相关的操作，主要是集中在 <code>find -t template_file</code> 中，再配合以不同的 参数。</p>
-<h2 id="title_1-10">问题描述<a class="anchor" href="#title_1-10">&para;</a></h2>
-<h3 id="title_1-10-9">在模板中定义多行文本的限制<a class="anchor" href="#title_1-10-9">&para;</a></h3>
+<h2 id="title_1-12">问题描述<a class="anchor" href="#title_1-12">&para;</a></h2>
+<h3 id="title_1-12-10">在模板中定义多行文本的限制<a class="anchor" href="#title_1-12-10">&para;</a></h3>
 <p>目前模板中不特别支持定义多行的字符串，因为它是按行来处理，并且不作特殊的语法判断的。 比如:</p>
 <pre class="prettyprint "><code>{{t = """
 &lt;html&gt;
@@ -213,7 +258,7 @@ if tag == 'a':
 &lt;/script&gt;
 """}}</code></pre>
 <p>因为其中有 <code>if</code> 语句，所以会被模板识别为Python的 <code>if</code> 语句，会造成后面的代 码缩近而产生问题。因此如果多行字符串存在特殊的 <code>if</code>, <code>for</code> 之类的会引发 缩近的关键字时，可能会引发问题。</p>
-<h3 id="title_1-10-10">变量定义<a class="anchor" href="#title_1-10-10">&para;</a></h3>
+<h3 id="title_1-12-11">变量定义<a class="anchor" href="#title_1-12-11">&para;</a></h3>
 <p>新的实现方式是通过定义一个内部函数，所以外部传入的变量将作为全局变量来使用。但这样的话，如果在函数内部 你向一个与传入变量名同名的变量赋值，做造成提示局部变量在被定义前使用。类似于下面的代码：</p>
 <pre class="prettyprint "><code>a = 1
 def f():
