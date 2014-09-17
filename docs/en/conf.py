@@ -8,6 +8,8 @@ You can change them to fit your needs.
 #available plugins
 plugins = []
 
+encoding = 'utf8'
+
 # The suffix of source filenames.
 source_suffix = ['.md', '.markdown']
 
@@ -25,7 +27,7 @@ tag_class = {
 pre_css = 'sons-of-obsidian'
 
 # The short X.Y version.
-version = '0.3.1'
+version = '0.4'
 
 # General information about the project.
 project = u'Uliweb-Doc'

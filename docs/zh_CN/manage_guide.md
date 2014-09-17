@@ -683,6 +683,22 @@ Usage: uliweb load [options] <appname, appname, ...>
 
 参数说明:
 
+```
+Options:
+  -d DIR                输出目录，缺省为当前项目下的data目录
+  -b BULK               批量插入条数，缺省为100条
+  -t, --text            以文本格式装入数据
+  --delimiter=DELIMITER
+                        文本文件使用的字段分隔符，缺省为 ','
+  --encoding=ENCODING   文本文件编码，缺省为 'utf-8'
+  -p, --project         只处理项目中的所有表。缺省为False，表示可以处理整个数据库中的表，可能在项目之外
+  -z ZIPFILE            导出数据为zip文件名
+  --engine=ENGINE       指定数据库连接名.
+```
+
+当使用 `-z` 参数时，如果不指定 `-d` 参数，则会自动在 `./data` 下创建一个临时文件夹，如果指定，则在
+指定目录下创建临时文件夹，如果给出 `-v` 则可以在导出前看到输出的目录。并且在导出完成之后，会自动将临时
+文件夹删除。
 
 #### loadtable
 
