@@ -66,7 +66,8 @@
 </div>
         
         <h1 id="title_1">模板(Template)<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">0.4 更新说明<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h2 id="title_1-1">0.4 版本说明<a class="anchor" href="#title_1-1">&para;</a></h2>
+<h3 id="title_1-1-1">更新说明<a class="anchor" href="#title_1-1-1">&para;</a></h3>
 <p>从0.4版本开始，uliweb的模板由原来的 web2py 的基础上改造来的，改为基于 tornado 的模板系统。当然 tornado的模板用法与uliweb的还是有不少差异，因此在它的源码上进行了修改。新的模板最大的变化主要是生成 过程，原来uliweb的模板解析与生成是一体化的，所以速度慢。在使用了 wheezy.web 提供的性能测试代码比较 之后非常明显。通过学习tornado等其它的模板示例，发现，它们之所以快，就是因为模板的解析与生成是分离的， 所以解析的时间在根本没有计算，只计算了生成的代码执行的时间，所以当然快了。不过我也没有直接把原来的uliweb 的模板改造成解析与执行分离的模式（其实也是可以做到的），而是基于tornado进行了改造。并且象tornado的模板 会带有一个Loader的类，用来装载模板，还可以实现模板的缓存。不过tornado的缓存机制当文件发生变化时不能 自动更新，要重启服务器。而我改造之后，实现了对依赖文件的时间变化的检查，从而自动更新缓存。当然，也可以 通过配置来关掉自动检查或缓存的机制。实现了解析与执行的分离还有一个好处就是可以在命令行下直接打印出模板 编译后的python代码，非常方便。</p>
 <p>不兼容部分说明：</p>
 <ol>
@@ -85,6 +86,30 @@
 <li>实现了多行解析，及缩近重排。tornado主要以单行python代码解析为主，所以多行python代码解析上是有问题的。    uliweb的新模板为了兼容，实现了多行与单行的同时支持，缺省启用多行模式，它会在最后对代码的缩近进行重新    处理</li>
 <li>实现了对 <code>def</code> 块的支持</li>
 <li>去除了一些与uliweb不同的功能，如：import , from, raw 等标签的解析</li>
+</ol>
+<h3 id="title_1-1-2">迁移模板到0.4的建议<a class="anchor" href="#title_1-1-2">&para;</a></h3>
+<p>虽然升级到 0.4 已经尽量做到向前兼容，但是还是会存在原来的模板在升级之后执行出错的问题，下面是建议的方法：</p>
+<ol>
+<li><p>在0.4中添加了 <a class="inner" href="manage_guide.html#validatetemplate">validatetemplate</a> 命令，可以用来对    模板进行语法检查，比如下面是实际运行的一个例子(因为太长，输出上稍微做了点加工)：</p>
+<pre class="prettyprint "><code>FAILED .../RiskPointView/list.html 'return' outside function (list.html, line 585)
+FAILED .../GenericView/add.html Can't find template layout.
+FAILED .../timeglider.html Missing {{ end }} block for block on line .../timeglider.html:86
+FAILED .../TaskInfo/addnontsk.html Empty block tag ({{ }}) on line .../TaskInfo/addnontsk.html:55
+FAILED .../WorkorderView/view.html Can't find template workload_layout.html.</code></pre>
+<p>如果模板编译不正确，会抛出错误。</p></li>
+<li><p>根据出错文件及提示进行错误的修复。分别针对上面的5种错误类型进行分析(可能还有其它的错误)：</p>
+<ul>
+<li><p>对于错误1，多半是由于缩近不正确，如：过多的 <code>{{pass}}</code> 。所以可以打印出模板编译后的源码进行分析：</p>
+<pre class="prettyprint "><code>uliweb find -t templateilfe --source</code></pre>
+<p>也可以再添加 <code>--comment</code> 查看更详细的源码信息。</p>
+<p>根据 Python 的语法来查找缩近不正确的位置，从而进行问题修复。</p></li>
+<li><p>对于错误2，因为在0.4之前， <code>extend</code> 和 <code>include</code> 后面的模板名可以是变量，在0.4中取消这一功能，目的是为了实现   编译和执行分离，从而提高效率。而这里正好使用的是变量，所以要改为真正的模板文件名字符串。</p>
+<p>  同时 0.4 中对于动态添加父模板也有了一定的支持(<code>include</code> 还是不支持变量)，比如在调用 <code>template_file(template, vars)</code> 时   可以传入 <code>layout="xxxx"</code> 的参数。这样，如果 <code>template</code> 本身在开头没有写 <code>{{extend "xxx"}}</code> 的标签，会   自动向 <code>template</code> 的头添加 <code>{{extend "xxx"}}</code> 的文本，并进行编译，从而实现动态修改父模板的功能。如果 <code>template</code>   已经包含了 <code>{{extend}}</code> 的信息，则 <code>layout</code> 参数将不会生效。</p>
+<p>  因此 0.4 是通过动态生成模板内容的方式来实现对动态模板继承的支持。</p></li>
+<li>对于错误3，这是因为 <code>{{block}}</code> 之类的块标签没有写结束的 <code>{{end}}</code> 造成了，补充上就可以的。</li>
+<li>对于错误4，0.4中不再允许有空的标签，删除即可。</li>
+<li>对于错误5，引用的外部模板不存在，请检查是不是这个模板已经过时或父模板丢失。</li>
+</ul></li>
 </ol>
 <h2 id="title_1-2">特点<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
@@ -176,19 +201,19 @@ multilines = True</code></pre>
 <dd><p>原来的tornado的模板不支持多行的Python代码行，在改造后对其实现了支持，缺省为启用。如果不想使用，可以设为 False。但是要注意功能的兼容性。</p>
 </dd>
 </dl><h2 id="title_1-9">用法<a class="anchor" href="#title_1-9">&para;</a></h2>
-<h3 id="title_1-9-1">简单地变量输出<a class="anchor" href="#title_1-9-1">&para;</a></h3>
+<h3 id="title_1-9-3">简单地变量输出<a class="anchor" href="#title_1-9-3">&para;</a></h3>
 <pre class="prettyprint "><code>{{= "hello"}}
 {{= title}}</code></pre>
 <p>如果使用了变量，则要么由view进行传入，要么在模板的其它地方进行定义，如：</p>
 <pre class="prettyprint "><code>{{title="hello"}}
 {{= title}}</code></pre>
-<h3 id="title_1-9-2">HTML代码直接输出<a class="anchor" href="#title_1-9-2">&para;</a></h3>
+<h3 id="title_1-9-4">HTML代码直接输出<a class="anchor" href="#title_1-9-4">&para;</a></h3>
 <pre class="prettyprint "><code>{{&lt;&lt; html}}</code></pre>
-<h3 id="title_1-9-3">Python代码示例<a class="anchor" href="#title_1-9-3">&para;</a></h3>
+<h3 id="title_1-9-5">Python代码示例<a class="anchor" href="#title_1-9-5">&para;</a></h3>
 <pre class="prettyprint "><code>{{import os
 out_write("&lt;h1&gt;Hello&lt;/h1&gt;")
 }}</code></pre>
-<h3 id="title_1-9-4">模板继承<a class="anchor" href="#title_1-9-4">&para;</a></h3>
+<h3 id="title_1-9-6">模板继承<a class="anchor" href="#title_1-9-6">&para;</a></h3>
 <p>父模板 (layout.html)</p>
 <pre class="prettyprint "><code>&lt;html&gt;
 &lt;head&gt;
@@ -203,7 +228,7 @@ out_write("&lt;h1&gt;Hello&lt;/h1&gt;")
 {{block main}}
 &lt;p&gt;This is child template.&lt;/p&gt;
 {{end}}</code></pre>
-<h3 id="title_1-9-5">包括其它的模板<a class="anchor" href="#title_1-9-5">&para;</a></h3>
+<h3 id="title_1-9-7">包括其它的模板<a class="anchor" href="#title_1-9-7">&para;</a></h3>
 <pre class="prettyprint "><code>&lt;html&gt;
 &lt;head&gt;
 &lt;title&gt;Title&lt;/title&gt;
@@ -212,12 +237,12 @@ out_write("&lt;h1&gt;Hello&lt;/h1&gt;")
 {{include "child.html"}}
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-<h3 id="title_1-9-6">子模板的特殊说明<a class="anchor" href="#title_1-9-6">&para;</a></h3>
+<h3 id="title_1-9-8">子模板的特殊说明<a class="anchor" href="#title_1-9-8">&para;</a></h3>
 <p>子模板要求从某个父模板来继承( <code>{{extend "layout.html"}}</code> )，在其中除 extend 外，主要是用来覆盖父模板中 的 block ，同时它支持将 block 定义在 include 模板中，如：</p>
 <pre class="prettyprint "><code>{{extend "layout.html"}}
 {{include "inc_block.html"}}</code></pre>
 <p>其中在 <code>inc_block.html</code> 中覆盖了 <code>layout.html</code> 中定义的块。</p>
-<h3 id="title_1-9-7">模板注释<a class="anchor" href="#title_1-9-7">&para;</a></h3>
+<h3 id="title_1-9-9">模板注释<a class="anchor" href="#title_1-9-9">&para;</a></h3>
 <pre class="prettyprint "><code>{{# This is a comment line}}
 {{# This is another comment line}}</code></pre>
 <p>可以在每行模板代码前使用 <code>#</code> 标识当前行为注释行，其用法同 Python 的注释行</p>
@@ -225,12 +250,12 @@ out_write("&lt;h1&gt;Hello&lt;/h1&gt;")
 {{=name}}
 ##}}</code></pre>
 <p>使用 <code>{{##</code> 和 <code>##}}</code> 可以注释一个片段，其中可以含有模板标签，这些标签将被 忽略。</p>
-<h3 id="title_1-9-8">模板自引用(0.1.4)<a class="anchor" href="#title_1-9-8">&para;</a></h3>
+<h3 id="title_1-9-10">模板自引用(0.1.4)<a class="anchor" href="#title_1-9-10">&para;</a></h3>
 <p>假设我们有一个全局性的 layout.html 模板，许多模板都要从它继承以获得最基础的布局信 息等。如果，我们有一个优化要在全局生效，那么我们可能直接想到去修改 layout.html 模板，这的确是一个办法。但是如果这个 layout.html 是一个可以复用的公共模板，它可 能不由你来维护或者它的实现比较通用，如果对其修改会造成不通用，那么直接修改这个 模板可能不是一个好办法。在0.1.4版本中提供了对同名模板的自引用处理机制，它可以用 在 <code>extend</code> 和 <code>include</code> 中。Uliweb 在处理模板时会根据App的定义顺序来查找模 板。因为模板是定义在不同的app中，因此会有同名模板出现。同时这也正是Uliweb中模板 替換的机制。因此，针对上面的问题，我们可能想在自已的App中定义一个同名的模板，但是 这样只会替換原来的模板。因此我们其实需要的是可以从同名模板的上一个模板继承的机制。 例如：A, B两个App，B定义在A之后，它们都有一个同名的layout.html模板，所以在模板 搜索时，会先找到B/layout.html。在0.1.4中，如果我们在B的layout.html中输入:</p>
 <pre class="prettyprint "><code>{{extend "layout.html"}}</code></pre>
 <p>即和自身的名字相同，在这种情况下，Uliweb会使用A/layout.html作为父模板来继承。这 样，我们就可以象正确的模板继承一样对同名的模板实现继承的处理了。</p>
 <p><code>{{include}}</code> 模板时，对应的模板也可以有类似的处理机制。</p>
-<h3 id="title_1-9-9">模板的块调试(0.2.2)<a class="anchor" href="#title_1-9-9">&para;</a></h3>
+<h3 id="title_1-9-11">模板的块调试(0.2.2)<a class="anchor" href="#title_1-9-11">&para;</a></h3>
 <p>Uliweb的模板在结构变得复杂时，了解哪些块是在哪里定义的就变成比较困难的问题。uliweb 提供命令行和运行时对块信息的调试输出。在命令行可以：</p>
 <pre class="prettyprint "><code>uliweb find -t index.html --tree --blocks --with-filename</code></pre>
 <p>可以输出指定模板的继承和包含使用情况。还可以输出其中使用到的block定义，包括每个block 所在的模板文件名。</p>
@@ -247,7 +272,7 @@ DEBUG_TEMPLATE = True</code></pre>
 <h2 id="title_1-11">命令行<a class="anchor" href="#title_1-11">&para;</a></h2>
 <p>在 <a class="inner" href="manage_guide.html#find">命令行</a> 的文档中有详细的关于模板相关的操作，主要是集中在 <code>find -t template_file</code> 中，再配合以不同的 参数。</p>
 <h2 id="title_1-12">问题描述<a class="anchor" href="#title_1-12">&para;</a></h2>
-<h3 id="title_1-12-10">在模板中定义多行文本的限制<a class="anchor" href="#title_1-12-10">&para;</a></h3>
+<h3 id="title_1-12-12">在模板中定义多行文本的限制<a class="anchor" href="#title_1-12-12">&para;</a></h3>
 <p>目前模板中不特别支持定义多行的字符串，因为它是按行来处理，并且不作特殊的语法判断的。 比如:</p>
 <pre class="prettyprint "><code>{{t = """
 &lt;html&gt;
@@ -258,7 +283,7 @@ if tag == 'a':
 &lt;/script&gt;
 """}}</code></pre>
 <p>因为其中有 <code>if</code> 语句，所以会被模板识别为Python的 <code>if</code> 语句，会造成后面的代 码缩近而产生问题。因此如果多行字符串存在特殊的 <code>if</code>, <code>for</code> 之类的会引发 缩近的关键字时，可能会引发问题。</p>
-<h3 id="title_1-12-11">变量定义<a class="anchor" href="#title_1-12-11">&para;</a></h3>
+<h3 id="title_1-12-13">变量定义<a class="anchor" href="#title_1-12-13">&para;</a></h3>
 <p>新的实现方式是通过定义一个内部函数，所以外部传入的变量将作为全局变量来使用。但这样的话，如果在函数内部 你向一个与传入变量名同名的变量赋值，做造成提示局部变量在被定义前使用。类似于下面的代码：</p>
 <pre class="prettyprint "><code>a = 1
 def f():

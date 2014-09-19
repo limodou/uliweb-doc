@@ -303,14 +303,68 @@ uliweb find -t template --blocks --with-filename --
 
     从上面的结果可以看出block之间的包含关系，并且每个block最终生效的是定义在哪个文件中。
 
-uliweb find -t template --source --
-    打印当前模板转换为python后的源代码，不包含相关的生成注释
+uliweb find -t template --source (0.4) --
+    打印当前模板转换为python后的源代码，不包含相关的生成注释，如：
 
-uliweb find -t template --source --comment --
-    打印当前模板转换为python后的源代码，包含相关的生成行号及注释
+    ```
+    /Users/limodou/mywork/test/test/apps/test1/templates/index.html
+
+    ---------------- source of index.html ---------------
+    def _tt_execute():
+        _tt_buffer = []
+        _tt_append = _tt_buffer.append
+        def _tt_write(t, escape=True):
+            if escape:
+                _tt_append(xhtml_escape(t))
+            else:
+                _tt_append(t)
+                pass
+            pass
+        out_write = _tt_append
+        _tt_append('<h1>')
+        _tt_tmp = escape(name)
+        if isinstance(_tt_tmp, _tt_string_types):
+            _tt_tmp = _tt_utf8(_tt_tmp)
+        else:
+            _tt_tmp = _tt_utf8(str(_tt_tmp))
+            pass
+        _tt_append(_tt_tmp)
+        _tt_append(' 1</h1>\n')
+        return _tt_utf8('').join(_tt_buffer)
+    ```
+
+uliweb find -t template --source --comment (0.4) --
+    打印当前模板转换为python后的源代码，包含相关的生成行号及注释，如：
+
+    ```
+    /Users/limodou/mywork/test/test/apps/test1/templates/index.html
+
+    ---------------- source of index.html ---------------
+     1  def _tt_execute():  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+     2      _tt_buffer = []  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+     3      _tt_append = _tt_buffer.append  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+     4      def _tt_write(t, escape=True):  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+     5          if escape:  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+     6              _tt_append(xhtml_escape(t))  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+     7          else:  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+     8              _tt_append(t)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+     9              pass  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+    10          pass  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+    11      out_write = _tt_append  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+    12      _tt_append('<h1>')  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+    13      _tt_tmp = escape(name)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+    14      if isinstance(_tt_tmp, _tt_string_types):  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+    15          _tt_tmp = _tt_utf8(_tt_tmp)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+    16      else:  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+    17          _tt_tmp = _tt_utf8(str(_tt_tmp))  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+    18          pass  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+    19      _tt_append(_tt_tmp)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+    20      _tt_append(' 1</h1>\n')  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:2
+    21      return _tt_utf8('').join(_tt_buffer)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+    ```
 
 
-### validatetemplate {#validatetemplate}
+### validatetemplate(0.4) {#validatetemplate}
 
 校验模板正确性，可以用于升级到0.4的模板语法检查
 
