@@ -275,7 +275,15 @@ Usage: uliweb find -o option</code></pre>
 <dt>uliweb find -t template --source --comment</dt>
 <dd><p>打印当前模板转换为python后的源代码，包含相关的生成行号及注释</p>
 </dd>
-</dl><h3 id="title_1-1-6">makeproject<a class="anchor" href="#title_1-1-6">&para;</a></h3>
+</dl><h3 id="validatetemplate">validatetemplate<a class="anchor" href="#validatetemplate">&para;</a></h3>
+<p>校验模板正确性，可以用于升级到0.4的模板语法检查</p>
+<pre class="prettyprint "><code>Usage: uliweb validatetemplate #整个项目检查
+or
+Usage: uliweb validatetemplate appname #只对appname进行检查
+or
+Usage: uliweb validatetemplate -f template #只对template进行检查</code></pre>
+<p>其中第三种用法，template是可以是相对路径，即从 <code>templates</code> 目录开始的相对路径, 或者是绝对路径。</p>
+<h3 id="title_1-1-6">makeproject<a class="anchor" href="#title_1-1-6">&para;</a></h3>
 <p>生成一个project框架，它将自动按给定的名字生成一个project目录，同时包含有初始子目录和文件。</p>
 <pre class="prettyprint "><code>Usage: uliweb makeproject [-f] projectname</code></pre>
 <p>参数说明:</p>
