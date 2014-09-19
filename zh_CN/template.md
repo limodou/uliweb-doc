@@ -236,23 +236,18 @@ multilines --
 
 如果使用了变量，则要么由view进行传入，要么在模板的其它地方进行定义，如：
 
-
 ```
 {{title="hello"}}
 {{= title}}
 ```
 
-
 ### HTML代码直接输出
-
 
 ```
 {{<< html}}
 ```
 
-
 ### Python代码示例
-
 
 ```
 {{import os
@@ -260,11 +255,9 @@ out_write("<h1>Hello</h1>")
 }}
 ```
 
-
 ### 模板继承
 
 父模板 (layout.html)
-
 
 ```
 <html>
@@ -287,9 +280,7 @@ out_write("<h1>Hello</h1>")
 {{end}}
 ```
 
-
 ### 包括其它的模板
-
 
 ```
 <html>
