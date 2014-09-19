@@ -1,6 +1,7 @@
 # 模板(Template)
 
-## 0.4 更新说明
+## 0.4 版本说明
+### 更新说明
 
 从0.4版本开始，uliweb的模板由原来的 web2py 的基础上改造来的，改为基于 tornado 的模板系统。当然
 tornado的模板用法与uliweb的还是有不少差异，因此在它的源码上进行了修改。新的模板最大的变化主要是生成
@@ -36,6 +37,49 @@ tornado的模板用法与uliweb的还是有不少差异，因此在它的源码�
 1. 实现了对 `def` 块的支持
 1. 去除了一些与uliweb不同的功能，如：import , from, raw 等标签的解析
 
+
+### 迁移模板到0.4的建议
+
+虽然升级到 0.4 已经尽量做到向前兼容，但是还是会存在原来的模板在升级之后执行出错的问题，下面是建议的方法：
+
+1. 在0.4中添加了 [validatetemplate](manage_guide.html#validatetemplate) 命令，可以用来对
+   模板进行语法检查，比如下面是实际运行的一个例子(因为太长，输出上稍微做了点加工)：
+
+    ```
+    FAILED .../RiskPointView/list.html 'return' outside function (list.html, line 585)
+    FAILED .../GenericView/add.html Can't find template layout.
+    FAILED .../timeglider.html Missing {{ end }} block for block on line .../timeglider.html:86
+    FAILED .../TaskInfo/addnontsk.html Empty block tag ({{ }}) on line .../TaskInfo/addnontsk.html:55
+    FAILED .../WorkorderView/view.html Can't find template workload_layout.html.
+    ```
+
+    如果模板编译不正确，会抛出错误。
+
+2. 根据出错文件及提示进行错误的修复。分别针对上面的5种错误类型进行分析(可能还有其它的错误)：
+
+    * 对于错误1，多半是由于缩近不正确，如：过多的 `{{pass}}` 。所以可以打印出模板编译后的源码进行分析：
+
+        ```
+        uliweb find -t templateilfe --source
+        ```
+
+        也可以再添加 `--comment` 查看更详细的源码信息。
+
+        根据 Python 的语法来查找缩近不正确的位置，从而进行问题修复。
+
+    * 对于错误2，因为在0.4之前， `extend` 和 `include` 后面的模板名可以是变量，在0.4中取消这一功能，目的是为了实现
+      编译和执行分离，从而提高效率。而这里正好使用的是变量，所以要改为真正的模板文件名字符串。
+
+      同时 0.4 中对于动态添加父模板也有了一定的支持(`include` 还是不支持变量)，比如在调用 `template_file(template, vars)` 时
+      可以传入 `layout="xxxx"` 的参数。这样，如果 `template` 本身在开头没有写 `{{extend "xxx"}}` 的标签，会
+      自动向 `template` 的头添加 `{{extend "xxx"}}` 的文本，并进行编译，从而实现动态修改父模板的功能。如果 `template`
+      已经包含了 `{{extend}}` 的信息，则 `layout` 参数将不会生效。
+
+      因此 0.4 是通过动态生成模板内容的方式来实现对动态模板继承的支持。
+
+    * 对于错误3，这是因为 `{{block}}` 之类的块标签没有写结束的 `{{end}}` 造成了，补充上就可以的。
+    * 对于错误4，0.4中不再允许有空的标签，删除即可。
+    * 对于错误5，引用的外部模板不存在，请检查是不是这个模板已经过时或父模板丢失。
 
 ## 特点
 
@@ -192,23 +236,18 @@ multilines --
 
 如果使用了变量，则要么由view进行传入，要么在模板的其它地方进行定义，如：
 
-
 ```
 {{title="hello"}}
 {{= title}}
 ```
 
-
 ### HTML代码直接输出
-
 
 ```
 {{<< html}}
 ```
 
-
 ### Python代码示例
-
 
 ```
 {{import os
@@ -216,11 +255,9 @@ out_write("<h1>Hello</h1>")
 }}
 ```
 
-
 ### 模板继承
 
 父模板 (layout.html)
-
 
 ```
 <html>
@@ -243,9 +280,7 @@ out_write("<h1>Hello</h1>")
 {{end}}
 ```
 
-
 ### 包括其它的模板
-
 
 ```
 <html>

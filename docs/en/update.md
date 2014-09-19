@@ -1,6 +1,23 @@
 Uliweb Change Log
 =====================
 
+## 0.4 Version 2014-9-17
+
+* Refactor template with tornado
+* Fix Pickle default value process bug, will not convert empty value to ''
+* Add staticize command
+* Resume DEBUG_TEMPLATE option for template
+* Fix count implement when there is group_by, limit, join, it'll use select count(*) from (select * from table)
+* Add __debug__ parameter for tracing i18n language
+* ORM add duplication support, so you can set it in CONNECTIONS options, it'll make definition of
+  Model engine simple
+* Add `set_session()` function to orm
+* Add `fieldname` parameter to Property, and fix column mapping process between property and table field
+* Add `-z` paramter to `load` and `loadtable` command, thanks for linuxr
+* Fix uliweb load for csv format bug, thanks for taogeT
+* Fix `tmp/templates_temp` creation
+
+
 ## 0.3.1 Version  2014-07-04
 
 * Add qqmail mail server backend support, thanks to Yubin Wang <harry198344 AT gmail.com>
