@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+
+<title>sequence(序号生成) - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
+    
+    <div class="right menu">
+      
+        
+<div class="item">
+  <div class="ui icon input">
+    <form id="searchform">
+    <input name="q" type="text" placeholder="Search...">
+    </form>
+  </div>
+</div>
+
+      
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
+    <a prev-chapter href="../app/recorder.html"><i class="icon-arrow-left"></i> recorder(请求记录与回放组件)</a>
+</div>
+
+        
+        <h1 id="title_1">sequence(序号生成)<a class="anchor" href="#title_1">&para;</a></h1>
+<p>在许多数据库引擎中存在sequence的字段类型，但这是数据库自身的机制。在Uliweb中提供了一个类似的简单序号生成的机制。它的功能 很简单，就是对某个唯一的key，从1开始不断生成序号，并且将最大值保存在数据库中，这样这次可以从这个值继承生成新的序号。</p>
+<p>考虑到并发情况，它使用了乐观锁机制来处理并发。</p>
+<h2 id="title_1-1">初始化说明<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ol>
+<li>使用sequence，需要向 settings.ini 中的 <code>INSTALLED_APPS</code> 添加 <code>uliweb.contrib.sequence</code></li>
+<li>因为序号将要保存到数据库中，故需要在命令行执行 <code>uliweb syncdb</code> 来创建相关的表</li>
+</ol>
+<p>sequence 的实现并没有使用 redis 等 NoSql 数据库，大家有兴趣可以自行实现或供献给 uliweb</p>
+<h2 id="title_1-2">使用说明<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>sequnce 提供了两个api: <code>get_sequence</code> 和 <code>set_sequence</code> ，使用时可以通过 <code>functions</code> 来引用，如：</p>
+<pre class="prettyprint "><code>from uliweb import functions
+
+key = 'table'
+functions.get_sequnce(key)</code></pre>
+<h3 id="title_1-2-1">get_sequence<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<pre class="prettyprint "><code>get_sequence(key, default=1, step=1, retry_times=None, retry_waittime=None)</code></pre>
+<dl>
+<dt>key</dt>
+<dd><p>生成序号的对象可能是很多类型，比如按表来生成，一张表的序号不重复，这时key可以使用表名。还有可能有主表和明细表， 对于主表的某条记录来说，序号是从1开始的，这时key可以使用 <code>主表表名+记录ID</code> 。所以key是可以根据需要由用户来 生成的，只要不重复就可以了。</p>
+</dd>
+<dt>default</dt>
+<dd><p>当key不存在时返回的缺省值。缺省为 1。</p>
+</dd>
+<dt>step</dt>
+<dd><p>表示一次生成几个序号。缺省为 1。对于某些批量的操作，比如一次要插入10条记录，那么如果调用10次序号生成效率是比 较低的，因此可以传入 <code>step=10</code> ，然后第一个序号就是 <code>返回值 - 9</code> 。</p>
+</dd>
+<dt>retry_times</dt>
+<dd><p>当出现并发时，重试次数。如果不传入，缺省按 <code>SEQUENCE/retry_times</code> 的值来处理，缺省为3.</p>
+</dd>
+<dt>retry_waittime(毫秒)</dt>
+<dd><p>如果保存时出现并发冲突， 会自动根据retry_times的值来重试。两次保存之间会按 retry_waittime 的值来等待，如 果没有传入则按 <code>SEQUENCE/retry_waittime</code> 来处理，缺省为 0.05 毫秒。</p>
+</dd>
+</dl><h3 id="title_1-2-2">set_sequence<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+<pre class="prettyprint "><code>set_sequence(key, value)</code></pre>
+<p>如果一个key的序号不正确，需要直接设定为某个值时，可以调用 <code>set_sequence</code> 来直接设置。此时将不会重试，一旦执行失 败则抛出相应的异常。</p>
+<h2 id="title_1-3">其它<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>通过 <code>get_sequence</code> 得到的是一个整数，如果你需要的是一个字符串，一般是有一个前缀的规范，如： <code>XXX_XX_00001</code> 之类的，前缀可以根据你的需要自行生成，后面数字部分可以使用 <code>get_sequence</code> 来生成。</p>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="../app/sequence.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script src="../static/jquery-1.7.2.min.js"></script>
+<script src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
+<script src="../../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "../../"+$(this).data('lang')+'/index.html';
+    });
+});
+</script>
+</body>
+</html>
