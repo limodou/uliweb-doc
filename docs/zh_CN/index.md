@@ -119,6 +119,7 @@ app_csrf.md
 app_secretkey.md
 app/objcache.md
 app/recorder.md
+app/sequence.md
 {% endtoc %}
 
 ### Plugs使用
