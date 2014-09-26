@@ -24,7 +24,7 @@ clone完成之后，将会在当前目录下生成一个名为 uliweb-blogs-demo
 这个目录才是真正的uliweb项目的目录，因为可以在这个目录下启动我们的项目。
 
 ```
-uliweb makeproject uliweb_globs
+uliweb makeproject uliweb_blogs
 ```
 
 生成的目录结构如下：
