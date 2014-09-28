@@ -26,7 +26,7 @@ Uliweb按照BSD协议进行发布。
 
 还有一些比较小的引用，如：
 
-* template 是从 [web2py](http://mdp.cti.depaul.edu/) 改造来的
+* template 是从 [tornado](http://mdp.cti.depaul.edu/) 改造来的（从0.4开始，在此之前是基于 [web2py](http://mdp.cti.depaul.edu/) ）
 * 部分处理代码从 [Django](http://www.djangoproject.com/) 中借鉴
 
 另外还有一些是自已新造的，如：
@@ -72,6 +72,7 @@ Uliweb按照BSD协议进行发布。
 * ORM
 
     * 类Django和GAE的datastore，可以支持自动建表，同时提供命令行工具进行数据的备分，装入，建表等处理。
+    * Model可配置化，因此可以实现Model的替换
     * 提供多数据库连接的支持
     * 支持alembic的数据库迁移处理
 
