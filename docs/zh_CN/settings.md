@@ -149,6 +149,23 @@ a = $MYSQL_PORT
 
 两种用法没有什么区别。只不过 `${}` 可以更好的区分变量后面是英文字母的情况。
 
+## 预设值的替换
+
+目前主要是用于在值中替换为当前app的名字，如在 `uliweb.contrib.auth` 下的 `settings.ini`，
+以下的内容：
+
+```
+user = '#{appname}.models.User'
+```
+
+将被替换为:
+
+```
+user = 'uliweb.contrib.auth.models.User'
+```
+
+其功能的目的主要是为了当移动app的目录时，减少配置中对appname的硬编码。
+
 ## settings的使用
 
 settings在读取后会生成一个对象，要先获得这个对象再使用它。获取settings对象可以
