@@ -63,7 +63,7 @@ Uliweb目前提供两种View函数的写法，一种是简单的函数方式，�
     ```
 
     其中convertor和arguments是可以缺省的。convertor类型目前可以设置为：int, float,
-    any, string, unicode, path等。不同的convertor需要不同的参数。详情请参见
+    any, string, path等。不同的convertor需要不同的参数。详情请参见
     下面的converter说明。最简单的形式就是 `<name>` 了，它将匹配/到/间的内容。
     name为匹配后参数的名字，它需要与绑定的view方法中的参数名相匹配。
     
@@ -278,13 +278,12 @@ float --
     * min 最小值
     * max 最大值
 
-string 和 unicode --
+string --
     这两个其实是一样的。
     基本形式为：
 
     ```
-    <string:name>
-    <unicode(length=2):name>
+    <string(length=2):name>
     ```
 
     支持的参数有：

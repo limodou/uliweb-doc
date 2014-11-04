@@ -93,7 +93,7 @@ def index():
 <li><p>参数处理</p>
 <p>当URL只有可变内容，可以配置为参数。一个参数的基本形式为：</p>
 <pre class="prettyprint "><code>&lt;convertor(arguments):name&gt;</code></pre>
-<p>其中convertor和arguments是可以缺省的。convertor类型目前可以设置为：int, float, any, string, unicode, path等。不同的convertor需要不同的参数。详情请参见 下面的converter说明。最简单的形式就是 <code>&lt;name&gt;</code> 了，它将匹配/到/间的内容。 name为匹配后参数的名字，它需要与绑定的view方法中的参数名相匹配。</p></li>
+<p>其中convertor和arguments是可以缺省的。convertor类型目前可以设置为：int, float, any, string, path等。不同的convertor需要不同的参数。详情请参见 下面的converter说明。最简单的形式就是 <code>&lt;name&gt;</code> 了，它将匹配/到/间的内容。 name为匹配后参数的名字，它需要与绑定的view方法中的参数名相匹配。</p></li>
 <li><p>其它参数</p>
 <p>expose函数允许在义时除了给出URL字符串以外再提供其它的参数，比如：</p>
 <dl>
@@ -205,10 +205,9 @@ def index():
 <li>max 最大值</li>
 </ul>
 </dd>
-<dt>string 和 unicode</dt>
+<dt>string</dt>
 <dd><p>这两个其实是一样的。 基本形式为：</p>
-<pre class="prettyprint "><code>&lt;string:name&gt;
-&lt;unicode(length=2):name&gt;</code></pre>
+<pre class="prettyprint "><code>&lt;string(length=2):name&gt;</code></pre>
 <p>支持的参数有：</p>
 <ul>
 <li>minlength 最小长度</li>
