@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
 <link rel="stylesheet" href="../static/ui.totop.css"/>
 
-<title>0.4 2014-9-19 - Uliweb-Doc</title>
+<title>0.4.1 2014-11-22 - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -58,38 +58,34 @@
     
     <div class="twelve wide column" id="markdown-content">
     
-        <div class="chapter-prev chapter-top">
-    <a prev-chapter href="../update/update_0.4.1.html"><i class="icon-arrow-left"></i> 0.4.1 2014-11-22</a>
-</div>
+        
 <div class="chapter-next chapter-top">
-    <a next-chapter href="../update/update_0.3.1.html">0.3.1 2014-07-04 <i class="icon-arrow-right"></i></a>
+    <a next-chapter href="../update/update_0.4.html">0.4 2014-9-19 <i class="icon-arrow-right"></i></a>
 </div>
         
-        <h1 id="title_1">0.4 2014-9-19<a class="anchor" href="#title_1">&para;</a></h1>
+        <h1 id="title_1">0.4.1 2014-11-22<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">问题修复<a class="anchor" href="#title_1-1">&para;</a></h2>
 <ul>
-<li>修正 Pickle 缺省值Bug，将不会自动将空值转为 ''</li>
-<li>修正当存在 group_by, limit, join 时的 count 的实现，将使用 <code>select count(*) from (select * from table)</code></li>
-<li>修正 uliweb load 在处理cvs格式时的Bug，感谢 taogeT</li>
-<li>修正 <code>tmp/templates_temp</code> 创建Bug</li>
-<li>修正显示模板块顺序不正确的Bug</li>
+<li>修正 generic 中的 AddView 和 EditView 对 version的处理。当version为真时才会将version值   传入obj.save()中。而不是False时也自动传入。以避免表中无version字段时的出错。</li>
+<li>修正对同一个view函数同时使用 expose('/') 和 expose('') 时不正确的bug。</li>
+<li>修正在一个Model中多次使用 ManyToMany 使用 through 时</li>
+<li>恢复 count() 的处理使用旧的方式，即使用条件来计算，而不是根所结果集，对于结果集情况需要自行处理，因为   有可能对性能影响很大。</li>
+<li>修正模板中使用 try: 的bug</li>
 </ul>
 <h2 id="title_1-2">功能优化<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
-<li>使用tornado的模板代码重构uliweb的模板实现，具体变化内容详见 <a class="inner" href="../template.html">模板</a></li>
-<li>添加 staticize 命令，实现静态化</li>
-<li>添加 <code>__debug__</code> 参数用于跟踪 i18n 语言的变化</li>
-<li>ORM多数据库配置时，增加复制的支持，你可以在 CONNECTIONS 配置项中进行设置</li>
-<li>向 ORM 中添加 <code>set_session()</code> 函数</li>
-<li>向ORM中的 Property 类添加 <code>fieldname</code> 参数</li>
-<li>向 <code>load</code> 和 <code>loadtable</code> 添加 <code>-z</code> 参数，感谢 linuxr</li>
-<li>向模板的 <code>Loader.load()</code> 方法添加 <code>layout</code> 参数，可以用来实现动态模板继承</li>
-<li>添加 <code>validatetemplate</code> 命令，可以用来检查项目，app或单个模板的语法是否正确。可以方便用来检查升级到0.4后的模板问题。 详情参见 <a class="inner" href="../manage_guide.html#validatetemplate">validatetemplate</a></li>
+<li>增加 sequence app，可以用来它生成序列值。详情参见 <a class="inner" href="app/sequence.html">sequence</a></li>
+<li>优化 nginx 和 supervisor 配置内容的生成</li>
+<li>向URL匹配规则缺省添加 strict_slashes=False 的参数，这样URL结尾有无 '/' 都是正确的</li>
+<li>优化 Reference() ，如果 reference_class 为 None，则自动处理为 SelfReference</li>
+<li>优化 ManyToMany()，如果 reference_class 为 None，则自动实现对自身的多对多的关系</li>
+<li>在app下的settings.ini中添加 #{appname} 的支持，会自动替换为当前app的名字。</li>
+<li>在模板中添加对 head.js 的支持，可以使用 {{head "xxx"}} 和 {{head_link "xxx.js"}}标签，类似于   {{use}}和{{link}}。不过uliweb本身没有包含 head.js，将放在plugs中，并且是我修改过的。</li>
 </ul>
 
         
         <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="../update/update_0.4.md">View Source</a>
+            <i class="icon download"></i><a href="../update/update_0.4.1.md">View Source</a>
         </div>
         
     </div>

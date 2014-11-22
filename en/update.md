@@ -1,6 +1,20 @@
 Uliweb Change Log
 =====================
 
+## 0.4.1 Version 2014-11-22
+
+* Add new app sequence, you can use it to create sequence value.
+* Fix generic version parameter passing to obj.save() bug, only when version is not False will be passed
+* Improve nginx and supervisor config content for deployment
+* Fix multi expose `expose('/')` and `expose('')` for the same URL bug
+* Add `strict_slashes=False` to Map instance.
+* Add `Reference()` with `reference_class` is `None`, it can replace `SelfReference`
+* Add `ManyToMany()` with `reference_class` is `None`, it can implements self manytomany relationship.
+* Fix `ManyToMany()` with through model references to the same model bug
+* Add #{appname} support in settings.ini
+* Add support for head.js
+* Fix template try bug
+
 ## 0.4 Version 2014-9-17
 
 * Refactor template with tornado
