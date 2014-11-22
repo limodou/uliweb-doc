@@ -27,7 +27,7 @@ tag_class = {
 pre_css = 'sons-of-obsidian'
 
 # The short X.Y version.
-version = '0.4'
+version = '0.4.1'
 
 # General information about the project.
 project = u'Uliweb-Doc'

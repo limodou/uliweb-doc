@@ -27,12 +27,12 @@ tag_class = {
 pre_css = 'sons-of-obsidian'
 
 # The short X.Y version.
-version = '0.4'
+version = '0.4.1'
 
 # General information about the project.
 project = u'Uliweb-Doc'
 project_url = './index.html'
-copyright = u'2013, Limodou'
+copyright = u'2014, Limodou'
 introduction = u'''<div><img src="_static/uliweb_media.png"/></div>
 <h2 class="ui header">Unlimited Python Web Framework</h2>
 <div>
