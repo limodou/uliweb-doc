@@ -38,6 +38,8 @@ class F(Form):
 中定义了许多Form字段类，分别代表不同类型的字段。所有的字段都继承自 `BaseField` 类，对
 于BaseField类的详细说明见下面。
 
+除直接使用类的方式定义Form之外，还可以通过 `make_form` 函数来动态定义。
+
 
 ## BaseField
 
@@ -66,7 +68,6 @@ Form本身只是用来定义用来接受用户输入的数据项，当我们需�
     TableLayout   (使用Table来布局)
     BootstrapLayout  (基于Bootstrap, 以div来布局)
     BootstrapTableLayout  (基于Bootstrap，以Table来布局)
-    YamlLayout  (基于Yaml CSS框架的布局，不过现在很少用)
     QueryLayout (查询条件使用的Layout)
     
 如果你使用Bootstrap作为前端可以考虑使用BoostrapLayout或BootstrapTableLayout。因为
@@ -80,7 +81,13 @@ BootstrapLayout。你可以通过:
     from uliweb.form import Form
     Form.layout_class = NewLayout
     
-来统一修改所有Form的缺省Layout类，也可以只针对某个Form的子类来修改 `layout_class` 属性。
+来统一修改所有Form的缺省Layout类，也可以只针对某个Form的子类来修改 `layout_class` 属性。如:
+
+    class MyForm(Form):
+        layout_class = NewLayout
+
+在0.5版本之后，layout_class可以是一个字串符，而不是类本身。因此在使用之前需要先将布局类进行
+配置，具体配置参见 [Layout类的配置](#layout_setup)
 
 ### Layout说明
 
@@ -95,23 +102,35 @@ class Layout(object):
         self.form = form
         self.layout = layout
         self.kwargs = kwargs
-        
+        self.init()
+
+    def init(self):
+        pass
+
     def html(self):
-        return '\n'.join([x for x in [self.begin(), self.body(), self.buttons_line(), self.end()] if x])
-    
+        return '\n'.join([x for x in [self.begin(), self.hiddens(), self.body(), self.buttons_line(), self.end()] if x])
+
     def __str__(self):
         return self.html()
-    
+
     def get_widget_name(self, f):
         return f.build.__name__
-    
+
     def is_hidden(self, f):
-        return self.get_widget_name(f) == 'Hidden'
-    
+        return f.type_name == 'hidden' or f.hidden
+
     def begin(self):
         if not self.form.html_attrs['class'] and self.form_class:
             self.form.html_attrs['class'] = self.form_class
         return self.form.form_begin
+
+    def hiddens(self):
+        s = []
+        for name, obj in self.form.fields_list:
+            f = getattr(self.form, name)
+            if self.is_hidden(obj):
+                s.append(str(f))
+        return ''.join(s)
     
     def body(self):
         return ''
@@ -129,9 +148,29 @@ class Layout(object):
         return ' '.join([str(x) for x in self.form.get_buttons()])
 ```
 
+## Layout 类配置 {#layout_setup}
 
+如果在设置 `layout_class` 时希望使用字符串的形式，需要在settings.ini中配置：
+
+    [FORM_LAYOUT_CLASSES]
+    bs3v = '#{appname}.form_helper.Bootstrap3VLayout'
+    bs3h = '#{appname}.form_helper.Bootstrap3HLayout'
+    bs3t = '#{appname}.form_helper.Bootstrap3TLayout'
+
+上面的示例是设置了三个 Layout 类，其中 `#{appname}` 表示替换为当前的appname。
+
+配置好之后，就可以直接使用字符串的名字了，如：
+
+    class MyForm(Form):
+        layout_class = 'bs3v'
+
+## 关于 Bootstrap3 的布局扩展
+
+在 `Uliweb/form/layout.py` 中支持的Bootstrap的布局还是基于2.X版本的，但是因为Bootstrap3
+的版本差异比较大，所以不能满足要求。因此在 [uliweb_peafowl](https://github.com/uliwebext/uliweb_peafowl)
+项目中新写了几个新的Layout布局类，专门用于Bootstrap 3版本。所以有需要，可以参考并且uliweb_peafowl项目。
     
-## get_form (0.1.5 new)
+## get_form (0.1.5)
 
 可以方便替换contrib中对于Form的定义，也可以替换一些不同模块下的form，同时也可以增加一些复用。
 使用get_form，首先需要向apps/settings.ini中的INSTALLED_APPS中添加'uliweb.contrib.form'，
@@ -146,4 +185,131 @@ from uliweb.core.SimpleFrame import functions
 Form = functions.get_form('form_name')
 ...
 ```
+
+## make_form 动态创建Form (0.5)
+
+为了方便实现配置化，uliweb提供了动态生成Form的若干种办法，其中可以通过定义简单的数据结构来动态创建一个Form，甚至
+包括Layout信息的定义。简单的示例如下：
+
+    from uliweb.form import make_form
+
+    f = {
+        'fields':[
+            {'name':'username', 'type':'str', 'label':u'用户名', 'placeholder':u'用户名'},
+            {'name':'password', 'type':'password', 'label':u'密码', 'placeholder':u'密码'},
+            {'name':'remember_me', 'type':'bool', 'label':u'记住我'},
+        ],
+        'layout_class':'bs3h',
+        'layout':{
+            'rows':[
+                'username',
+                'password',
+                {'name':'remember_me', 'inline':True, 'label':''},
+            ],
+            'buttons':[u'<button type="submit" class="btn btn-primary">提交</button>', '<a href="#">忘记密码</a>']
+        }
+    }
+
+    form_cls = make_form(**f)
+    form = form_cls()
+
+以上的代码将创建一个登录Form。动态创建Form类可以使用 `make_form` 函数，它可以使用的参数主要有：
+
+fields --
+    用来定义Form的字段，目前支持的所有字段类型可以参见下面的字段类型的详细描述。
+layout_class --
+    用来指定要使用的Layout类，可以是字段串形式。
+layout --
+    具体的Layout信息。不同的Layout类可能使用不同的Layout信息，详细要看Layout类的相关说明。
+base_class --
+    Form的基类。如果提供，新的Form类将是指定基类的子类。主要是考虑动态定义的Form的校验处理，通过
+    配置只完成了界面相关的定制，通过基类实现用代码来解决其它的一些不方便配置的功能。
+get_form_field --
+    根据字段名，动态返回想要的字段类型。这是对于某些在运行时才可以确定字段的情况下使用的。它是一个
+    回调函数，形式为： `def func(name, field_info)` ，其中 `name` 是字段名，`field_info`
+    是对应的dict信息。
+name --
+    返回的Form类的名字。如果不提供则缺省为： `MakeForm_`
+rules --
+    用来定义Form的校验规则，包括前端及后端。后端则会转化为相应的validator的形式，前端校验则需要
+    自行编写相应的前端校验代码。
+
+
+### 常用字段类型
+
+
+
+## Form的校验处理 (0.5 Update)
+
+Form的校验的定义有多种形式：
+
+1. 在Form类上，通过rules类属性来定义
+2. 在Form类上编写validate_fieldname或form_validate函数来校验，第一种是只校验某个字段，第二种
+   是校验整个Form
+3. 在定义字段时，传入validators或rules
+4. 在make_form时传入rules参数
+
+关于 rules 的处理方式是在 0.5 版本以后才有的。
+
+其中validator是用于后端校验，而rules可以是前端或后端或者两者都要校验。但是要注意的是，因为无法决定
+用户使用什么样的前端，所以在这里只是一个定义，并不能真正进行校验，用户需要根据前端校验的规则来自己生成
+相应的校验处理代码。所以在使用rules时，后端校验的规则将转为validator函数。而前端校验规则可以通过
+`Form.front_rules` 来获取，它的表示形式为：
+
+    {'rules':{
+            'fieldname':{
+                'rule1':xxx,
+            }
+        },
+     'messages':{
+            'fieldname':{
+                'rule1':xxx,
+            }
+        }
+    }
+
+单个的rule是一个dict数据结构，形式为：
+
+    {
+        'required':(True, 'This field is needed!'),
+        'email:front':True，
+    }
+
+其中，key为规则名，值可以是tuple, list或单值。如果是tuple或list，则第一个元素是规则所需要的值，
+第二个是出错时的错误描述。如果是单值，则使用缺省出错信息。如果规则名后面无 `:` 则表示前后通用。否则
+可以通过定义 `:end` 或 `:front` 说明是后端或前端校验使用。
+
+对于设置在Form上或传入 `make_form` 函数的rules参数，定义格式为：
+
+    {
+        'fieldname': <单个rule>规则,
+        ...
+    }
+
+对于 `required` 既可以在 rules 中定义，也可以在定义字段时，设置 `required=True` 参数来设置，
+以实现对以前版本的兼容。
+
+## 规则映射
+
+目前针对后端校验，Uliweb定义了一些预置的规则映射，详情如下：
+
+|规则名|校验类|仅后台|
+|-----|-----|----|
+|required|TEST_NOT_EMPTY| |
+|email|TEST_EMAIL| |
+|url     |TEST_URL| |
+|equalTo |TEST_EQUALTO| |
+|in      |TEST_IN | * |
+|image   |TEST_IMAGE | * |
+|minlength   |TEST_MINLENGTH | |
+|maxlength   |TEST_MAXLENGTH | |
+|rangelength   |TEST_RANGELENGTH | |
+|min   |TEST_MIN | |
+|max   |TEST_MAX | |
+|range   |TEST_RANGE | |
+|date   |TEST_DATE | |
+|datetime   |TEST_DATETIME | * |
+|time   |TEST_TIME | * |
+|number   |TEST_NUMBER | |
+|digits   |TEST_DIGITS | |
 

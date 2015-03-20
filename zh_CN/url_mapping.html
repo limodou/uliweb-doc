@@ -157,16 +157,26 @@ class MyView(object):
     def test3(self, id):
         #可能不正确</code></pre>
 <h2 id="title_1-2">App URL 前缀定义<a class="anchor" href="#title_1-2">&para;</a></h2>
-<p>当我们写好一个APP时我们可能预先假定了它应该使用的URL前缀，如 <code>/app</code> ，但是当 别人在使用时，可能并不希望使用 <code>/app</code> 的前缀，而是想使用其它的。因此 Uliweb 提供了一种App前缀的配置机制，可以在 <code>settings.ini</code> 中定义如下内容:</p>
+<p>当我们写好一个APP时我们可能预先假定了它应该使用的URL前缀，如 <code>/app</code> ，但是当 别人在使用时，可能并不希望使用 <code>/app</code> 的前缀，而是想使用其它的。因此 Uliweb 提供了一种App前缀的配置机制，可以在原来的URL前添加一个前缀。如果你想改写，要使用 下一段介绍的URL路由的配置。可以在 <code>settings.ini</code> 中定义如下内容:</p>
 <pre class="prettyprint "><code>[URL]
-appname = '/app_prefix'</code></pre>
+appname = '/app_prefix'
+#或者采用字典定义方式，是为了可以设置subdomain参数
+appname = {'prefix':'/app_prefix', 'subdomain':'blog'}</code></pre>
 <p><code>[URL]</code> 用来存放所有需要重定义 appname 前缀的section。每项的内容：key是App的名字， value是App的前缀。</p>
 <p>一旦我们定义了这个前缀，那么在这个App下的所有URL都将加上对应的前缀。</p>
 <div class="ui info message">
 <p>如果某些链接的确不想添加这个前缀该如何处理，那么只要在 <code>@expose('/url')</code> 中添 加一个 <code>!</code> 号即可取消前缀的处理，如:  <code>@expose('!/url')</code></p>
 
 </div>
-<h2 id="title_1-3">url_for说明<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h2 id="title_1-3">URL 路由<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>上面的APP URL只是用来在某个app的所有URL前添加一个前缀，但是一旦要改写，则需要使用 URL路由的配置，如：</p>
+<pre class="prettyprint "><code>[URL_ROUTE]
+name = ('pattern', 'replacement')</code></pre>
+<p>其中真正的匹配是值的部分，它是一个tuple，第一项是正则式字符串，第二项是将要替换的结果，可以 使用组的写法，如：</p>
+<pre class="prettyprint "><code>0 = (('/admin'), r'/name\\1')</code></pre>
+<p>正则式是一个分组的写法（有小括号），替换值的作用是在原来的URL前添加一个 <code>/name</code> 的字符串。这里 <code>\\1</code> 有两个反斜线。在处理时，Uliweb自动从URL的开始进行匹配。</p>
+<p>key的部分可以随便命名，不是关键的。</p>
+<h2 id="title_1-4">url_for说明<a class="anchor" href="#title_1-4">&para;</a></h2>
 <p>url_for可以根据view方法的名字来反向生成URL。要注意，它需要一个字符串形式的view方法名， 格式为:</p>
 <pre class="prettyprint "><code>url_for('appname.views_module_name.function_name', **kwargs)</code></pre>
 <p>其中kwargs是与view方法中的参数相对应的。例如你在Hello中定义了如下URL:</p>
@@ -182,7 +192,7 @@ def index():
 <p>目前在views方法和template中都是可以直接使用这个函数的，不需要导入。</p>
 
 </div>
-<h2 id="title_1-4">convertor说明<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h2 id="title_1-5">convertor说明<a class="anchor" href="#title_1-5">&para;</a></h2>
 <dl>
 <dt>int</dt>
 <dd><p>基本形式为：</p>
