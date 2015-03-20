@@ -189,12 +189,15 @@ class MyView(object):
 
 当我们写好一个APP时我们可能预先假定了它应该使用的URL前缀，如 `/app` ，但是当
 别人在使用时，可能并不希望使用 `/app` 的前缀，而是想使用其它的。因此 Uliweb
-提供了一种App前缀的配置机制，可以在 `settings.ini` 中定义如下内容:
+提供了一种App前缀的配置机制，可以在原来的URL前添加一个前缀。如果你想改写，要使用
+下一段介绍的URL路由的配置。可以在 `settings.ini` 中定义如下内容:
 
 
 ```
 [URL]
 appname = '/app_prefix'
+#或者采用字典定义方式，是为了可以设置subdomain参数
+appname = {'prefix':'/app_prefix', 'subdomain':'blog'}
 ```
 
 `[URL]` 用来存放所有需要重定义 appname 前缀的section。每项的内容：key是App的名字，
@@ -207,6 +210,28 @@ value是App的前缀。
 如果某些链接的确不想添加这个前缀该如何处理，那么只要在 `@expose('/url')` 中添
 加一个 `!` 号即可取消前缀的处理，如:  `@expose('!/url')`
 {% endalert %}
+
+## URL 路由
+
+上面的APP URL只是用来在某个app的所有URL前添加一个前缀，但是一旦要改写，则需要使用
+URL路由的配置，如：
+
+```
+[URL_ROUTE]
+name = ('pattern', 'replacement')
+```
+
+其中真正的匹配是值的部分，它是一个tuple，第一项是正则式字符串，第二项是将要替换的结果，可以
+使用组的写法，如：
+
+```
+0 = (('/admin'), r'/name\\1')
+```
+
+正则式是一个分组的写法（有小括号），替换值的作用是在原来的URL前添加一个 `/name` 的字符串。这里
+`\\1` 有两个反斜线。在处理时，Uliweb自动从URL的开始进行匹配。
+
+key的部分可以随便命名，不是关键的。
 
 ## url_for说明
 
