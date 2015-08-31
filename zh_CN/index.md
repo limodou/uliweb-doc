@@ -121,6 +121,7 @@ app_secretkey.md
 app/objcache.md
 app/recorder.md
 app/sequence.md
+app/celery.md
 {% endtoc %}
 
 ### Plugs使用
