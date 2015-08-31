@@ -444,7 +444,7 @@ Property 其它所有字段类的基类。所以它的一些属性和方法将�
 
 
 ```
-Property(verbose_name=None, name=None, default=None, required=False,
+Property(verbose_name=None, fieldname=None, default=None, required=False,
     validators=None, choices=None, max_length=None, hint='',
     auto=None, auto_add=None, type_class=None,
     type_attrs=None, placeholder='', extra=None, 
@@ -457,18 +457,24 @@ Property(verbose_name=None, name=None, default=None, required=False,
 verbose_name --
     用于显示字段的描述信息。一般是用在显示界面上。
 
-name --
-    字段名，用在所创建的表中。它一般是和Property的实例名相同。例如:
+fieldname --
+    数据库字段名。缺省情况下和Property的实例名相同。例如:
 
     ```
     class User(Model):
-        username = StringProperty(name='user_name')
+        username = StringProperty(fieldname='user_name')
     ```
 
-    username就是Property的实例名，而name缺省不给出的话就是 `username`, 上面的
+    username就是Property的实例名，而fieldname缺省不给出的话就是 `username`, 上面的
     示例是指定了一个不同的值。因此你通过orm引用属性时要使用 `username`，但是
-    直接对数据库查询或操作时，即要使用 `user_name`, 因此为了避免造成理解和使用
-    上的混乱，建议不要指定 `name` 参数。
+    直接对数据库查询或操作时，即要使用 `user_name`。在特殊情况下代码中的字段名可能
+    和数据库中的字段名不同。
+
+    {% alert %}
+    原来此参数名为 name ，后为了清晰表示fieldname，增加了fieldname参数和属性，原来
+    的name将不允许直接赋值，它将直接和Property属性的名字相同。主要是在直接处理Property
+    实例时，可以根据name来获得Model字段的名字。
+    {%endalert%}
 
 default --
     字段的缺省值。注意，default可以是一个函数。在创建一个Model的实例时，对于未
