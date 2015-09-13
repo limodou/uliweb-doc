@@ -132,6 +132,12 @@ plugs/dialog2.md
 plugs/menus.md
 {% endtoc %}
 
+### 实用模块说明
+
+{% toc max_depth=1 %}
+utils/workers.md
+{% endtoc %}
+
 ## 技术分享
 
 {% toc max_depth=1 %}
