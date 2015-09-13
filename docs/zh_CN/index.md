@@ -121,6 +121,7 @@ app_secretkey.md
 app/objcache.md
 app/recorder.md
 app/sequence.md
+app/celery.md
 {% endtoc %}
 
 ### Plugs使用
@@ -129,6 +130,12 @@ app/sequence.md
 plugs/apps.md
 plugs/dialog2.md
 plugs/menus.md
+{% endtoc %}
+
+### 实用模块说明
+
+{% toc max_depth=1 %}
+utils/workers.md
 {% endtoc %}
 
 ## 技术分享

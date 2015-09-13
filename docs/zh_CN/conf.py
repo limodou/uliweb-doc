@@ -38,6 +38,8 @@ introduction = u'''<div><img src="_static/uliweb_media.png"/></div>
 <div>
 <a class="ui red large labeled icon button" href="https://pypi.python.org/packages/source/U/Uliweb/Uliweb-%s.tar.gz">
 <i class="awesome download cloud icon"></i> Download (%s)</a>
+<a class="ui green large labeled icon button" href="https://github.com/limodou/uliweb-doc/archive/master.zip">
+<i class="awesome download cloud icon"></i> Download Documentation</a>
 </div>
 ''' % (version, version)
 
