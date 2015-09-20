@@ -87,6 +87,7 @@ SUPPORT_LANGUAGES = []</code></pre>
 </ul>
 <p>一旦配置了I18N，则会自动应用 <code>'uliweb.i18n.middle_i18n.I18nMiddle'</code> 这个middleware， 这个可以在uliweb.contrib.i18n/settings.ini中看到。</p>
 <h2 id="title_1-2">I18N语言的判定规则<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-1">判定规则<a class="anchor" href="#title_1-2-1">&para;</a></h3>
 <p>在Uliweb中，可以有许多种方式来决定使用哪种语言，比如：在session中，在cookie中， 通过浏览器发送的HTTP头来自动判断，还有就是在settings中的 <code>LANGUAGE_CODE</code> 来决定。 Uliweb在处理时按照以下的顺序来决定是否使用某种语言:</p>
 <ol>
 <li><p>如果url的Query_String上有 <code>lang=xxx</code> 的信息，则这个值为要使用的语言。 (<code>0.0.1増加</code>)</p>
@@ -106,9 +107,13 @@ URL_LANG_KEY = 'lang'</code></pre>
 LANGUAGE_CODE = 'en'
 SUPPORT_LANGUAGES = ['en', 'zh_CN']</code></pre>
 <p>上面的定义说明当前网站支持两种语言，缺省为 <code>'en'</code> 。</p>
+<h3 id="title_1-2-2">调试<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+<p>为了方便了解判定的结果，uliweb提供了当在URL输入 <code>__debug__=1</code> 的参数时，会在后台输出判定 的依据，输出结果类似于：</p>
+<pre class="prettyprint "><code>Detect from settings of LANGUAGE_CODE=en</code></pre>
+<p>可能的结果是 cookie, session, HTTP header, settings等。</p>
 <h2 id="title_1-3">I18N字符串的定义<a class="anchor" href="#title_1-3">&para;</a></h2>
 <p>为了使用i18n，首先要在程序中进行i18n的定义，根据文件格式的不同，使用略有不同。</p>
-<h3 id="title_1-3-1">程序文件<a class="anchor" href="#title_1-3-1">&para;</a></h3>
+<h3 id="title_1-3-3">程序文件<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>这里是指.py文件。示例如下:</p>
 <pre class="prettyprint "><code>from uliweb.orm import *
 from uliweb.i18n import ugettext_lazy as _
@@ -122,7 +127,7 @@ class User(Model):
 <p>使用lazy的函数不能支持 <code>_('%s') % 'name'</code> 这种形式，所以建议使用非lazy的函数</p>
 
 </div>
-<h3 id="title_1-3-2">模板<a class="anchor" href="#title_1-3-2">&para;</a></h3>
+<h3 id="title_1-3-4">模板<a class="anchor" href="#title_1-3-4">&para;</a></h3>
 <p>因为uliweb的模板会编译为.py文件，所以除了不用导入gettext函数外，和在程序中无差别。 一旦你配置了i18n的app，会自动向模板环境中添加 <code>_()</code> 函数。示例:</p>
 <pre class="prettyprint "><code>&lt;div&gt;hi, {{=_('name')}}&lt;/div&gt;</code></pre>
 <p>所以要编辑的串，都要放在 <code>{{}}</code> 中，并且使用 <code>_()</code> 进行处理。</p>
@@ -130,11 +135,16 @@ class User(Model):
 <p>在模板中 <code>_()</code> 中的字符串不要使用 <code>u''</code> 的形式，并且整个模板以utf-8来保存。</p>
 
 </div>
-<h3 id="title_1-3-3">settings.ini<a class="anchor" href="#title_1-3-3">&para;</a></h3>
+<h3 id="title_1-3-5">settings.ini<a class="anchor" href="#title_1-3-5">&para;</a></h3>
 <p>在settings.ini中也可以使用翻译函数，如:</p>
 <pre class="prettyprint "><code>[DEFAULT]
 NAME = _('username')</code></pre>
-<h2 id="title_1-4">I18N字符串的提取<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h2 id="title_1-4">I18N字符串的特殊处理<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h3 id="title_1-4-6">格式化<a class="anchor" href="#title_1-4-6">&para;</a></h3>
+<p>有时我们需要对符串进行格式化处理，如 <code>"%s" % 'hello'</code> 或 <code>"{}".format('hello')</code> ，这两种都是目前 Python支持的格式化处理方式，对于 i18n 字符串，可以使用format的形式来处理格式化，如：</p>
+<pre class="prettyprint "><code>_('Hello, {}').format('name')</code></pre>
+<h2 id="title_1-5">I18N字符串的提取<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h3 id="title_1-5-7">命令行用法<a class="anchor" href="#title_1-5-7">&para;</a></h3>
 <p>uliweb.contrib.i18n App提供了一个i18n的命令它提供以下参数:</p>
 <dl>
 <dt><code>--apps</code></dt>
@@ -178,7 +188,11 @@ Plural_Forms = 'nplurals=1; plural=0;'</code></pre></li>
 <p>使用示例:</p>
 <pre class="prettyprint "><code>uliweb i18n -p -l zh_CN</code></pre>
 <p>注意， <code>-l</code> 参数如果不提供则自动为 <code>'en'</code> 。因此，如果要翻译中文一定要加上 <code>-l zh_CN</code> 。</p>
-<h2 id="title_1-5">编码注意事项<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h3 id="title_1-5-8">plugs 的处理<a class="anchor" href="#title_1-5-8">&para;</a></h3>
+<p>针对plugs项目，可以使用以下命令来提取翻译串：</p>
+<pre class="prettyprint "><code>cd &lt;plugs项目目录下&gt;
+uliweb i18n -d plugs -l zh_CN</code></pre>
+<h2 id="title_1-6">编码注意事项<a class="anchor" href="#title_1-6">&para;</a></h2>
 <p>在i18n中提供gettext和ugettext，它们的区别是：前者返回字符串，后者返回unicode。 为了正确处理中文编码，建议：程序、模板包括ini文件都使用utf-8编码来处理。</p>
 
         
