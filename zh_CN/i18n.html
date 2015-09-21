@@ -124,7 +124,7 @@ class User(Model):
     password = Field(str, verbose_name=_('Password'), max_length=128, nullable=False)</code></pre>
 <p>在uliweb.i18n中定义了几组gettext函数，常用的就是gettext, ugettext, gettext_lazy 和ugettext_lazy。带u的表示返回为unicode字符串，否则为字符串。后缀有lazy的表示 在运行时会根据当时的上下文环境自动进行语言的切换。因此一般使用带有lazy的函数。</p>
 <div class="ui info message">
-<p>使用lazy的函数不能支持 <code>_('%s') % 'name'</code> 这种形式，所以建议使用非lazy的函数</p>
+<p>使用lazy的函数不能支持 <code>_('%s') % 'name'</code> 这种形式，但是可以使用 <code>format()</code> 函数，详见<a class="inner" href="#format">格式化</a>.</p>
 
 </div>
 <h3 id="title_1-3-4">模板<a class="anchor" href="#title_1-3-4">&para;</a></h3>
@@ -140,11 +140,11 @@ class User(Model):
 <pre class="prettyprint "><code>[DEFAULT]
 NAME = _('username')</code></pre>
 <h2 id="title_1-4">I18N字符串的特殊处理<a class="anchor" href="#title_1-4">&para;</a></h2>
-<h3 id="title_1-4-6">格式化<a class="anchor" href="#title_1-4-6">&para;</a></h3>
+<h3 id="format">格式化<a class="anchor" href="#format">&para;</a></h3>
 <p>有时我们需要对符串进行格式化处理，如 <code>"%s" % 'hello'</code> 或 <code>"{}".format('hello')</code> ，这两种都是目前 Python支持的格式化处理方式，对于 i18n 字符串，可以使用format的形式来处理格式化，如：</p>
 <pre class="prettyprint "><code>_('Hello, {}').format('name')</code></pre>
 <h2 id="title_1-5">I18N字符串的提取<a class="anchor" href="#title_1-5">&para;</a></h2>
-<h3 id="title_1-5-7">命令行用法<a class="anchor" href="#title_1-5-7">&para;</a></h3>
+<h3 id="title_1-5-6">命令行用法<a class="anchor" href="#title_1-5-6">&para;</a></h3>
 <p>uliweb.contrib.i18n App提供了一个i18n的命令它提供以下参数:</p>
 <dl>
 <dt><code>--apps</code></dt>
@@ -188,7 +188,7 @@ Plural_Forms = 'nplurals=1; plural=0;'</code></pre></li>
 <p>使用示例:</p>
 <pre class="prettyprint "><code>uliweb i18n -p -l zh_CN</code></pre>
 <p>注意， <code>-l</code> 参数如果不提供则自动为 <code>'en'</code> 。因此，如果要翻译中文一定要加上 <code>-l zh_CN</code> 。</p>
-<h3 id="title_1-5-8">plugs 的处理<a class="anchor" href="#title_1-5-8">&para;</a></h3>
+<h3 id="title_1-5-7">plugs 的处理<a class="anchor" href="#title_1-5-7">&para;</a></h3>
 <p>针对plugs项目，可以使用以下命令来提取翻译串：</p>
 <pre class="prettyprint "><code>cd &lt;plugs项目目录下&gt;
 uliweb i18n -d plugs -l zh_CN</code></pre>
