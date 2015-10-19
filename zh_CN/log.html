@@ -89,7 +89,8 @@ uliweb.console = {'propagate':0, 'format':'format_simple'}
 
 [LOG.Handlers]
 #handler parameters example
-#{'format':'format_full', 'level':'info', 'class':'logging.StreamHandler', 'arguments':()}
+#{'format':'format_full', 'level':'info', 'class':'logging.StreamHandler',
+#  'args':(), 'kwargs':{}}
 Full = {'format':'format_full'}
 Simple = {'format':'format_simple'}
 Package = {'format':'format_package'}
@@ -160,8 +161,11 @@ key = value</code></pre>
 <dt>class</dt>
 <dd><p>handler所对应的类对象。缺省为  。注意，这里加上了 模块的路径，以便可以方便导入。</p>
 </dd>
-<dt>arguments</dt>
-<dd><p>需要传入handler类进行初始化的参数，缺省为  。</p>
+<dt>args</dt>
+<dd><p>需要传入handler类进行初始化的位置参数。</p>
+</dd>
+<dt>kwargs</dt>
+<dd><p>需要传入handler类进行初始化的名字参数。</p>
 </dd>
 <dt>level</dt>
 <dd><p>handler的日志级别。缺省为NOTSET。</p>
@@ -175,8 +179,7 @@ key = value</code></pre>
 </div>
 <h3 id="title_1-2-4">formatter的定义<a class="anchor" href="#title_1-2-4">&para;</a></h3>
 <p>从前面可以看出，在定义logger和handler时都可以直接定义format串，并不一定需要定义 formatter。那么formatter的存在只是为了复用。你可以先定义几种常用的日志格式，然后 在定义logger和handler时引用它，这样会比较简单。只不过要注意，在[LOG]中定义的format 不能是formatter的引用，因为它是要使用basicConfig()来处理的，而它是不接受一个 Formatter对象的。formatter的定义形式为:</p>
-<blockquote><p>key = value</p>
-</blockquote>
+<pre class="prettyprint "><code>key = value</code></pre>
 <p>共中key为formatter的名字。</p>
 <p>value为日志的格式串。具体定义参见  <a class="outter" href="http://docs.python.org/library/logging.html#logrecord-attributes">Python的日志记录属性</a> 。</p>
 <h2 id="title_1-3">应用介绍<a class="anchor" href="#title_1-3">&para;</a></h2>
@@ -216,6 +219,20 @@ mylog = logging.getLogger('uliweb.app')</code></pre>
 sqlalchemy = {'propagate':0}
 sqlalchemy.engine = {'propagate':0}</code></pre>
 <p>有关sqlalchemy的logger信息可以参考 <a class="outter" href="http://docs.sqlalchemy.org/en/latest/core/engines.html#configuring-logging">Configuring Logging</a> 文档。</p>
+<h3 id="title_1-4-10">如何设置一个日志按大小切分<a class="anchor" href="#title_1-4-10">&para;</a></h3>
+<p>可以按如下方式进行配置：</p>
+<pre class="prettyprint "><code>[LOG.Loggers]
+sep_audit_log = {'propagate':0, 'handlers':['sep_audit']}
+
+[LOG.Handlers]
+#handler parameters example
+#{'format':'format_full', 'level':'info', 'class':'logging.StreamHandler', 'args':()}
+sep_audit = {'format':'format_full', 'class':'logging.handlers.RotatingFileHandler',
+    'kwargs':{'filename':'sep_audit.log', 'maxBytes':10, 'backupCount':2}
+}</code></pre>
+<p>使用时：</p>
+<pre class="prettyprint "><code>import logging
+log = logging.getLogger('sep_audit_log')</code></pre>
 
         
         <div class="ui blue inverted small label">
