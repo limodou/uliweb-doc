@@ -33,7 +33,8 @@ uliweb.console = {'propagate':0, 'format':'format_simple'}
 
 [LOG.Handlers]
 #handler parameters example
-#{'format':'format_full', 'level':'info', 'class':'logging.StreamHandler', 'arguments':()}
+#{'format':'format_full', 'level':'info', 'class':'logging.StreamHandler',
+#  'args':(), 'kwargs':{}}
 Full = {'format':'format_full'}
 Simple = {'format':'format_simple'}
 Package = {'format':'format_package'}
@@ -166,8 +167,11 @@ class --
     handler所对应的类对象。缺省为  。注意，这里加上了
     模块的路径，以便可以方便导入。
 
-arguments --
-    需要传入handler类进行初始化的参数，缺省为  。
+args --
+    需要传入handler类进行初始化的位置参数。
+
+kwargs --
+    需要传入handler类进行初始化的名字参数。
 
 level --
     handler的日志级别。缺省为NOTSET。
@@ -194,8 +198,10 @@ formatter。那么formatter的存在只是为了复用。你可以先定义几�
 不能是formatter的引用，因为它是要使用basicConfig()来处理的，而它是不接受一个
 Formatter对象的。formatter的定义形式为:
 
+```
+key = value
+```
 
-> key = value
 共中key为formatter的名字。
 
 value为日志的格式串。具体定义参见  [Python的日志记录属性](http://docs.python.org/library/logging.html#logrecord-attributes) 。
@@ -302,3 +308,25 @@ sqlalchemy.engine = {'propagate':0}
 
 有关sqlalchemy的logger信息可以参考 [Configuring Logging](http://docs.sqlalchemy.org/en/latest/core/engines.html#configuring-logging) 文档。
 
+### 如何设置一个日志按大小切分
+
+可以按如下方式进行配置：
+
+```
+[LOG.Loggers]
+sep_audit_log = {'propagate':0, 'handlers':['sep_audit']}
+
+[LOG.Handlers]
+#handler parameters example
+#{'format':'format_full', 'level':'info', 'class':'logging.StreamHandler', 'args':()}
+sep_audit = {'format':'format_full', 'class':'logging.handlers.RotatingFileHandler',
+    'kwargs':{'filename':'sep_audit.log', 'maxBytes':10, 'backupCount':2}
+}
+```
+
+使用时：
+
+```
+import logging
+log = logging.getLogger('sep_audit_log')
+```
