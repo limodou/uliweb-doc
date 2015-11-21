@@ -74,6 +74,7 @@ i18n.md
 mail.md
 manage_guide.md
 template.md
+taglibs.md
 url_mapping.md
 views.md
 form.md

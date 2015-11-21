@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
+<link href="./static/asset/prettify.css" rel="stylesheet">
+<link href="./static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="./static/ui.totop.css"/>
+
+<title>Tag库 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
+    
+    <div class="right menu">
+      
+        
+<div class="item">
+  <div class="ui icon input">
+    <form id="searchform">
+    <input name="q" type="text" placeholder="Search...">
+    </form>
+  </div>
+</div>
+
+      
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        <div class="chapter-prev chapter-top">
+    <a prev-chapter href="./template.html"><i class="icon-arrow-left"></i> 模板(Template)</a>
+</div>
+<div class="chapter-next chapter-top">
+    <a next-chapter href="./url_mapping.html">URL映射 <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">Tag库<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">功能说明<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>前端一直是很痛苦的事,好在有bootstrap.但是bootstrap一升级又痛苦了,从2.X如果升到3.X有很多标签的 结构和写法都有所调整,因此一直在想如何把HTML的生成标准化,这样中间可以有一个转换层,当底层的CSS框架变 化时,只要把转换改一下就好了.那么现在的实现方案就是提供Tag库.你可以使用它定义出一层抽象的HTML结构, 然后通过转换,最终变成真正的HTML代码.</p>
+<p>它的实现处理机制是:</p>
+<ol>
+<li>在模板中定义特殊的XML结构,相当于是提供最基础的数据.</li>
+<li>在模板解析时,先进行扫描,如果存在这样的XML结构,则先进行转换,然后再进行模板的处理.</li>
+</ol>
+<p>这样,Tag的处理有些象预处理.</p>
+<h2 id="title_1-2">使用说明<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-1">Tag的使用<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<p>让我们先说一下Tag的使用.当Tag功能启用时,可以在任意的模板中使用如:</p>
+<pre class="prettyprint "><code>&lt;t:breadcrumb&gt;
+    &lt;a href="#" title="Home"&gt;&lt;/a&gt;
+    &lt;a href="#" title="Library"&gt;&lt;/a&gt;
+    &lt;a active="active" title="Data"&gt;&lt;/a&gt;
+&lt;/t:breadcrumb&gt;</code></pre>
+<p>这里 <code>&lt;t:breadcrumb&gt;</code> 就是一个Tag.其中 <code>t:</code> 是用来区别于普通的HTML的Tag.一个Tag可以有子元素. 你可以认为Tag就是一个XML的片段.</p>
+<p>上面的例子定义了一个面包屑.其中每个 <code>&lt;a&gt;&lt;/a&gt;</code> 定义了一项, <code>href</code> 和 <code>title</code> 分别对应链接和显示 名称.对于当前活动项,是不需要 <code>href</code> 的,但是需要定义一个 <code>active="active"</code>, 其中active的值可 以不是 <code>"active"</code>. 上面的结果, <strong>可能</strong> 输出为:</p>
+<pre class="prettyprint "><code>&lt;ul class="breadcrumb"&gt;
+  &lt;li&gt;&lt;a href="#"&gt;Home&lt;/a&gt; &lt;span class="divider"&gt;/&lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#"&gt;Library&lt;/a&gt; &lt;span class="divider"&gt;/&lt;/span&gt;&lt;/li&gt;
+  &lt;li class="active"&gt;Data&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+<p>我们可以看到,Tag的结构进行了扩展.由简单的 <code>&lt;a&gt;&lt;/a&gt;</code> 变成了 <code>&lt;li&gt;&lt;a&gt;&lt;/a&gt;&lt;/li&gt;</code> 的形式.并且 <code>title</code> 也写在了标签 <code>a</code> 中间.在每个 <code>&lt;a&gt;&lt;/a&gt;</code> 的最后(如果不是最后一个)会添加一个分隔符 <code>&lt;span class="divider"&gt;/&lt;/span&gt;</code>. 在活动的<code>&lt;li&gt;&lt;/li&gt;</code>中就没有 <code>&lt;a&gt;&lt;/a&gt;</code> 了,并且它还有一个 <code>class</code> 的属性,值就是前面 <code>active</code> 的值.</p>
+<p>从这个例子,我们可以看出,Tag主要是为了解决数据与形式的问题.因为现在许多的CSS框架提供了许多控件的结构,但是 它也把可变化的数据和结构混在了一起,而Tag要解决的就是把数据和结构如何有效的分离.</p>
+<p>那么我们如何实现上面的 <code>breadcrumb</code> 的Tag的实现呢.</p>
+<h3 id="title_1-2-2">Tag的定义<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+<p>目前Uliweb支持Tag定义在文件中,一个Tag一个文件.并且Tag文件需要放在App下的taglibs目录中.上面的 <code>breadcrumb</code> 的具体的实现可以是:</p>
+<pre class="prettyprint "><code>&lt;ul class="breadcrumb"&gt;
+    {%for i, li in enumerate(a):
+        active = li['_attrs'].get('active')
+        title = li['_attrs'].get('title')
+        href = li['_attrs'].get('href')%}
+        {%if active:%}
+        &lt;li class="{%=active%}"&gt;{%=title%}
+            {%if i&lt;len(a)-1:%} &lt;span class="divider"&gt;/&lt;/span&gt;{%pass%}
+        &lt;/li&gt;
+        {%else:%}
+        &lt;li&gt;&lt;a href="{%=href%}"&gt;{%=title%}&lt;/a&gt;
+            {%if i&lt;len(a)-1:%} &lt;span class="divider"&gt;/&lt;/span&gt;{%pass%}
+        &lt;/li&gt;
+        {%pass%}
+    {%pass%}
+&lt;/ul&gt;</code></pre>
+<p>看着是不是有些复杂.让我一点点来说明.</p>
+<p>Tag的转换是对模板中定义的Tag数据进行转换的过程.那么先了解一下,Tag的定义结构会得到什么样的数据?</p>
+<p>Tag的处理在 <code>uliweb.core.taglibs</code> 中,让我们试一下下面的代码:</p>
+<pre class="prettyprint "><code>t = """&lt;t:breadcrumb&gt;
+    &lt;a href="#" title="Home"&gt;&lt;/a&gt;
+    &lt;a href="#" title="Library"&gt;&lt;/a&gt;
+    &lt;a active="active" title="Data"&gt;&lt;/a&gt;
+&lt;/t:breadcrumb&gt;"""
+from uliweb.core.taglibs import parse_xml
+print parse_xml(t)</code></pre>
+<p>会得到:</p>
+<pre class="prettyprint "><code>OrderedDict([(u'breadcrumb', {
+    u'a': [
+        {'_attrs': OrderedDict([(u'href', u'#'), (u'title', u'Home')])},
+        {'_attrs': OrderedDict([(u'href', u'#'), (u'title', u'Library')])},
+        {'_attrs': OrderedDict([(u'active', u'active'), (u'title', u'Data')])}
+    ],
+   '_attrs': OrderedDict()})
+])}</code></pre>
+<p>它是一个有序字典,如果简化一下,可以看成是:</p>
+<pre class="prettyprint "><code>{'breadcrumb':{
+    'a':[
+        {'_attrs':{'href':'#', 'title':'Home'}},
+        {'_attrs':{'href':'#', 'title':'Library'}},
+        {'_attrs':{'active':'active', 'title':'Data'}},
+        ],
+    '_attrs':{}
+    }
+}</code></pre>
+<p>其中 <code>_attrs</code> 是某个结点的属性信息,如果有文本,则会是 <code>_text</code>(上例中看不出来).同名的子元素会转为 数组,象 <code>a</code> 就是数组.</p>
+<p>所以我们就可以根据这种结构来进行转换.</p>
+<p>再回过头来看看转换的代码.它其实就是uliweb的模板语法,只不过它的标记改为了 <code>{%%}</code> ,这是为了不与Tag 中可能有的 <code>{{}}</code> 产生冲突.</p>
+<p>明白了对Tag的数据的结构以及对应的模板,这段代码应该不难理解.特别要说明,在处理过程中可能要用到的变量和 方法:</p>
+<dl>
+<dt><code>_attrs</code></dt>
+<dd><p>某个元素的属性</p>
+</dd>
+<dt><code>_text</code></dt>
+<dd><p>某个元素的文本子元素.不过建议都定义为子元素的方式,即用 <code>&lt;&gt;</code> 包含起来.</p>
+</dd>
+<dt><code>xml(dict)</code></dt>
+<dd><p>将某个dict值转为XML.</p>
+</dd>
+<dt><code>xml_full(tag_name, dict)</code></dt>
+<dd><p>将某个dict值转为XML,并用 <code>&lt;tag_name&gt;&lt;/tag_name&gt;</code> 包裹.</p>
+</dd>
+</dl><p>让我们再看一个简单的例子:</p>
+<pre class="prettyprint "><code>t = """&lt;t:breadcrumb&gt;
+    &lt;a href="#" title="Home"&gt;Home&lt;/a&gt;
+&lt;/t:breadcrumb&gt;"""
+
+tags = {'breadcrumb':"""
+{%&lt;&lt; xml(a)%}
+"""}
+loader = Loader(tags)
+print parse_xml(t)</code></pre>
+<p>上面的输出结果为:</p>
+<pre class="prettyprint "><code>OrderedDict([(u'breadcrumb', {
+    u'a': {
+        '_text': u'Home',
+        '_attrs': OrderedDict([(u'href', u'#'), (u'title', u'Home')])
+    },
+    '_attrs': OrderedDict()})
+    ])
+}</code></pre>
+<p>如果再执行:</p>
+<pre class="prettyprint "><code>print parse(t, loader)</code></pre>
+<p>结果为:</p>
+<pre class="prettyprint "><code>Home</code></pre>
+<p>可以看到 <code>a</code> 的文本属性为 <code>_text</code> 值为 <code>u'Home'</code>.</p>
+<p>执行 <code>xml(a)</code> 则只是输出它的子结点的内容.如果我们要输出 <code>&lt;a&gt;</code> ,则要使用 <code>xml_full()</code> 函数,如 上面改为:</p>
+<pre class="prettyprint "><code>tags = {'breadcrumb':"""
+{%&lt;&lt; xml_full('a', a)%}
+"""}</code></pre>
+<p>再执行:</p>
+<pre class="prettyprint "><code>print parse(t, loader)</code></pre>
+<p>则会得到:</p>
+<pre class="prettyprint "><code>&lt;a href="#" title="Home"&gt;Home&lt;/a&gt;</code></pre>
+<p>所以当我们编写Tag库时,可以用上面的方法先了解解析后的数据结构,然后根据目标状态来编写模板,最后生成想要的结果.</p>
+<h3 id="title_1-2-3">关于子目录<a class="anchor" href="#title_1-2-3">&para;</a></h3>
+<p>如果Tag文件很多,可能我们想分目录存放.因此你可以在 <code>taglibs</code> 中定义子目录,然后将Tag文件放在子目录中,然后 在使用时,需要使用 <code>子目录.tag_name</code> 的形式. 如: <code>&lt;t:bs.breadcrumb&gt;</code> 就表示在 <code>taglibs</code> 目录下的 <code>bs</code> 子目录中的 <code>breadcrumb.html</code> 文件.</p>
+<h2 id="title_1-3">后话<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>因为这个功能刚开发出来,所以还没有积累的可用的Tag库,如果大家有兴趣可以供献出来,比如放在plugs项目中.</p>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="./taglibs.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script src="./static/jquery-1.7.2.min.js"></script>
+<script src="./static/semantic/javascript/semantic.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/toc/toc.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/jquery.sticky-kit.min.js"></script>
+<script src="./../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "./../"+$(this).data('lang')+'/index.html';
+    });
+});
+</script>
+</body>
+</html>
