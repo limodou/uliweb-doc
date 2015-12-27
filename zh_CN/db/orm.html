@@ -704,9 +704,10 @@ a.to_dict(['name', 'age'])    #this will only dump 'name' and 'age' fields</code
 <pre class="prettyprint "><code>User.filter(...).filter(...).count()</code></pre>
 <p>有些方法会返回结果集，因此你可以在返回值的基础上，再调用查询相关的方法。有些方法会 直接返回结果，不能再调用查询相关的方法。</p>
 <h4 id="title_1-5-32-18">查询<a class="anchor" href="#title_1-5-32-18">&para;</a></h4>
-<p>在查询一个表的时候可能会有两种需求：全部记录和按条件筛选，因此对应着可以使用 <code>all()</code> 和 <code>filter()</code> 。<code>all()</code> 中是没有参数的，它会返回一个 <code>Result</code> 对象，这是前面介绍的结果集，你可以在结果集上继续使用其它的方法。 <code>filter()</code> 需要传入条件，条件的写法是符合SQLAlchemy要求的。它也返回一个结果集。多个 <code>filter()</code> 是可以连接使用的，相当于多个与条件。</p>
+<p>在查询一个表的时候可能会有两种需求：全部记录和按条件筛选，因此对应着可以使用 <code>all()</code> 和 <code>filter()</code> 。<code>all()</code> 中是没有参数的，它会返回一个 <code>Result</code> 对象，这是前面介绍的结果集，你可以在结果集上继续使用其它的方法。 <code>filter()</code> 需要传入条件，条件的写法是符合SQLAlchemy要求的。它也返回一个结果集。多个 <code>filter()</code> 是可以连接使用的，相当于多个与条件。 <code>empty()</code> 返回一个空的结果集.</p>
 <p>举例:</p>
 <pre class="prettyprint "><code>User.all()
+User.empty()
 User.filter(User.c.year &gt; 18)</code></pre>
 <h4 id="title_1-5-32-19">删除记录<a class="anchor" href="#title_1-5-32-19">&para;</a></h4>
 <p>Model中提供了 <code>remove(condition)</code> 来删除满足条件的记录。同时你也可以利用结果 集来删除。例如:</p>
@@ -799,6 +800,12 @@ for row in query:</code></pre>
 <dl>
 <dt>all(): Result</dt>
 <dd><p>返回Result本身. 注意在 Model中也有一个all()方法，它就是创建一个 <code>Result</code> 对象，然后将其返回。如果不带任何条件创建一个结果集，则在处理记录时相当 于all()的调用。</p>
+</dd>
+<dt>empty(): Result</dt>
+<dd><p>返回空的结果集.</p>
+</dd>
+<dt>any(): Boolean</dt>
+<dd><p>根据条件判断是否存在相应的记录.如果存在返回 <code>True</code>,不存在返回 <code>False</code>.</p>
 </dd>
 <dt>filter(condition): Result</dt>
 <dd><p>按条件查询。可以多个filter连用。返回结果集本身。 示例:</p>

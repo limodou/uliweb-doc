@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
+<link href="../static/asset/prettify.css" rel="stylesheet">
+<link href="../static/toc/toc.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/parm.css"/>
+<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+
+<title>0.5b 2015-12-27 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<!-- Navbar
+================================================== -->
+<div class="navbar">
+  <div class="ui small secondary inverted borderless menu">
+    
+    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
+    
+    <div class="right menu">
+      
+        
+<div class="item">
+  <div class="ui icon input">
+    <form id="searchform">
+    <input name="q" type="text" placeholder="Search...">
+    </form>
+  </div>
+</div>
+
+      
+      <div class="ui dropdown item">
+        Select Languages <i class="icon dropdown"></i>
+        <div class="menu">
+          <a class="item language" href="#" data-lang="en">English</a>
+          <a class="item language" href="#" data-lang="zh_CN">中文</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui divided grid">
+    <div class="four wide column" id="side-bar">
+        <div id="toc" class="content"></div>
+    </div> 
+    
+    <div class="twelve wide column" id="markdown-content">
+    
+        
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../update/update_0.4.1.html">0.4.1 2014-11-22 <i class="icon-arrow-right"></i></a>
+</div>
+        
+        <h1 id="title_1">0.5b 2015-12-27<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">问题修复<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ul>
+<li>修复pyini重入的BUG</li>
+<li>修复在执行 <code>set_password</code> 时自动执行 <code>save</code> 的BUG,改为不执行</li>
+<li>修复 <code>Content-Range</code> 头处理不正确的BUG, 感谢 zhangchunlin 的支持</li>
+<li>修复 <code>StaticFilesMiddleware</code> 中的URL没有使用 <code>settings.DOMAINS</code> 的配置的BUG, 感谢 zhangchunlin 的贡献</li>
+<li>修复 form 中传入 <code>BooleanField</code> 值为 <code>None</code> 时未转为 <code>False</code> 的BUG, 感谢 zhangchunlin 的贡献</li>
+<li>修复 pretty_dict 在处理unicode出错的BUG</li>
+</ul>
+<h2 id="title_1-2">普通功能优化<a class="anchor" href="#title_1-2">&para;</a></h2>
+<ul>
+<li><code>SortedDict</code> 重构,以dict作为父类,并且支持传入初始化值.</li>
+<li>增加 <code>Dispatcher</code> 和 <code>make_application</code> <code>reset</code> 参数,可以用来决定是每次执行创建新的application   对象还是可以重用上次的对象.主要用在测试中,以便可以重用.</li>
+<li>增加按某个前缀对 redis 中的keys进行统计的函数 <code>count_prefix(prefix)</code></li>
+<li>在 <code>uliweb.utils.common</code> 中添加获得临时文件的函数 <code>get_tempfilename(prefix, dir='')</code></li>
+<li><p>修改 APP_URL 的定义形式为 <code>{'prefix':''}</code> ,只能是字典形式.增加 <code>URL_ROUTE</code> 的映射支持:</p>
+<pre class="prettyprint "><code>[URL_ROUTE]
+any_key_1 = ('mapping_str', 'replacement')
+any_key_2 = ('mapping_str', 'replacement')</code></pre>
+<p>可以把某个 URL 替换为指定值.如: <code>('/admin', '/demo')</code></p></li>
+<li>增加 pyini 在处理时,可以传入字典形式的初始化数据,如 <code>x = Ini({'DEFAULT':{'x':1}})</code></li>
+<li>增加对带路径的对象的配置项的导入处理,通过 <code>uliweb.utils.common</code> 中新增 <code>get_configrable_object(key, section, cls=None)</code>   函数.对于象 <code>key=path.to.model.function</code> ,可以自动根据路径导入后面的对象.</li>
+<li>重构Form的校验功能,增加Form中的 <code>rules</code> 配置,方便前面实现前端校验处理</li>
+<li>mail 支持 cc 转发参数, 感谢 zhangchunlin 的贡献</li>
+<li><code>uliweb runserver</code> 增加对运行单个 app 的支持.</li>
+<li>当返回一个generator时,可以通过 <code>response.content_type</code> 来设定上下文类型.</li>
+<li>在utils目录下增加 <code>workers.py</code> 用于方便生成带管理的父子进程调度处理. <a class="inner" href="../utils/workers.html">查看</a></li>
+<li>向 <code>utils/date.py</code> 中添加 <code>parse_time</code> 函数,可以解析 <code>1h, 5s</code> 之类的时间格式</li>
+<li><code>ListView</code> 中增加 <code>group_by</code> 和 <code>having</code> 的参数支持</li>
+<li>在 <code>uliweb.contrib.generic</code> 中添加 <code>MultiView</code> 的支持,它提供了对 <code>ListView</code>, <code>AddView</code>, <code>EditView</code>   等的集成.</li>
+<li><code>url_for</code> 增加 <code>_format=True</code> 参数,可以将URL生成为参数形式,如对于 <code>expose('/view/&lt;name&gt;/&lt;int:value&gt;')</code>   的URL的定义,使用 <code>url_for(endpoint, _format=True)</code> 生成结果为 <code>'/view/{name}/{value}'</code></li>
+<li>增加 <code>format_size()</code> 函数,用于将数值转为大小描述,如 <code>format_size(1026)</code> 结果为 <code>2KB</code></li>
+<li>集成 <code>xltools.py</code> 模块,用于对Excel的处理.需要安装 <code>openpyxl</code> 模块. <a class="outter" href="http://github.com/limodou/xltools">查看</a></li>
+<li>增加模板中对tag库的支持. <a class="inner" href="../taglibs.html">查看</a></li>
+<li>去除对 <code>head.js</code> 的支持</li>
+<li>向 application 添加 <code>get_config()</code> 用来读取其它的 ini 配置文件.和settings.ini类似,会自动   对所有生效的app下的配置文件进行合并处理.</li>
+<li>向 <code>uliweb.contrib.auth</code> 中 <code>User</code> 表中添加 <code>auth_type</code> 字段,将用于区分用户登录使用的方法.感谢 zhangchunlin 的贡献</li>
+</ul>
+<h2 id="title_1-3">命令行变化<a class="anchor" href="#title_1-3">&para;</a></h2>
+<ul>
+<li>增加 uliweb 命令中传入环境变量的参数支持,通过 <code>-Ea=b</code> 的形式,可以传多个.</li>
+<li><code>uliweb find -u url</code> 增加显示view函数的docstring的功能.</li>
+<li>增加 <code>uliweb find -U url_pattern</code> 命令,可以显示带通配符的URL,如: <code>uliweb find -U "blog*"</code>.   注意,模式对于 <code>*</code> 要添加双引号.</li>
+<li>增加ipython的支持,可以在启动 <code>uliweb shell</code> 时自动检测是否安装了ipython.如果使用 <code>uliweb shell -n</code>   可以启动 jupyter notebook.提供对uliweb的扩展,执行 <code>%load_ext uliweb</code> 就会自动将 <code>application</code>,   <code>functions</code>, <code>settings</code> 注入到环境中.并且,可以对Model的类和实例查看相应的内容.类则可以看到建表语句及   表之间的关系图(需要安装graphviz).实例可以看到表结构对应的值.</li>
+<li>重构recorder命令</li>
+<li>增加 <code>relectdb</code> 命令,用于反向从数据库生成 <code>models.py</code> 文件</li>
+<li>增加 <code>uliweb makemodule</code> 命令,可以快速生成uliweb第三方模块的目录结构,要求以 <code>uliweb-</code> 开头,   但生成的模块名是 <code>uliweb_</code></li>
+</ul>
+<h2 id="title_1-4">ORM 变化<a class="anchor" href="#title_1-4">&para;</a></h2>
+<ul>
+<li>重构rawsql对postgresql的支持</li>
+<li>增强 <code>OneToOne</code> 的处理.修复结果不被缓存的bug.并且当访问 <code>OneToOne</code> 对象时,如果不存在,则会自动创建空对   象.并且当记录删除时,会自动将联带的 <code>OneToOne</code> 对象删除.</li>
+<li>增加动态创建Model的支持.可以根据配置信息自动生成新的Model.提供 <code>create_model</code> 方法.</li>
+<li>增加Model的移迁的支持.提供migrate方法,可以在运行时升级数据库.</li>
+<li>向 <code>Property</code> 中添加 <code>to_column_info()</code> 函数和向 <code>Model</code> 添加 <code>get_columns_info()</code> 函数可以方便   获得Property或Model的字段详细信息.</li>
+<li>添加:UUID, UUID_B, SMALLINT, BINARY, VARBINARY, JSON字段类型</li>
+<li>增加 <code>ORMResetMiddle</code> 中间件,可以对某些全局变量进行重置,如:set_echo的状态, signal发布状态</li>
+<li>向session中增加post_commit和post_commit_once回调,可以在提交事务后执行.</li>
+<li>增加 <code>relectdb</code> 命令,用于反向从数据库生成 <code>models.py</code> 文件</li>
+<li>增加除ID外,可以自定义主键的功能.</li>
+</ul>
+<h2 id="title_1-5">APP变化<a class="anchor" href="#title_1-5">&para;</a></h2>
+<ul>
+<li>增加 <code>model_config</code> APP.用来实现Model动态迁移的支持</li>
+<li>增加 <code>celery</code> 的支持</li>
+<li>增加 <code>datadict</code> 功能,用来处理数据字典</li>
+<li><p>删除不用的APP:</p>
+<ul>
+<li>bae 百度app engine的支持</li>
+<li>dbupload 使用数据库来保存上传文件</li>
+<li>heroku heroku的支持</li>
+<li>sae 新浪app engine的支持</li>
+<li>xmlrpc</li>
+</ul></li>
+</ul>
+<h2 id="title_1-6">不再内置的模块<a class="anchor" href="#title_1-6">&para;</a></h2>
+<ul>
+<li>pysimplesoap</li>
+</ul>
+
+        
+        <div class="ui blue inverted small label">
+            <i class="icon download"></i><a href="../update/update_0.5.md">View Source</a>
+        </div>
+        
+    </div>
+</div>
+
+<div class="ui page grid">
+    <div class="column">
+    <!-- disqus -->
+    
+        <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    </div>
+</div>
+
+<div class="ui page grid" id="footer">
+    <div class="column">
+    
+  <div class="ui three column stackable grid">
+    <div class="column">
+      <div class="ui header">Library</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
+        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Community</div>
+      <div class="ui inverted link list">
+        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
+        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
+        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
+
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui header">Contact Us</div>
+      <addr>
+        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
+        Rendered by Par and Parm. <br>
+        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
+      </addr>
+    </div>
+  </div>
+
+    </div>
+</div>
+
+
+<script src="../static/jquery-1.7.2.min.js"></script>
+<script src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/toc/toc.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/jquery.sticky-kit.min.js"></script>
+<script src="../../static/jquery.cookie.js"></script>
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<script>
+$(function(){
+    $('.navbar .ui.dropdown').dropdown({
+        on: 'hover'
+    });
+    $('a.language').on('click', function(){
+        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
+        window.location.href = "../../"+$(this).data('lang')+'/index.html';
+    });
+});
+</script>
+</body>
+</html>

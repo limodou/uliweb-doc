@@ -33,6 +33,9 @@ get_file(filename, dir='static') --
     从所有App下的相应的目录，缺省是从static目录下查找一个文件。并且会先在当前请求对应
     的App下先进行查找，如果没找到，则去其它的App下的相应目录进行查找。
 
+get_config(config_filename) --
+    从所有App下的相应的目录,查找指定的ini文件,最后合成一个Ini对象并返回.
+
 template(filename, vars=None, env=None) --
     渲染一个模板，会先从当前请求对应的App下先进行查找模板文件。vars是一个dict对象。env
     不提供的话会使用缺省的环境。如果想向模板中注入其它的对象，但不是以vars方式提供，不用

@@ -1113,13 +1113,14 @@ User.filter(...).filter(...).count()
 `all()` 和 `filter()` 。`all()` 中是没有参数的，它会返回一个 `Result`
 对象，这是前面介绍的结果集，你可以在结果集上继续使用其它的方法。 `filter()`
 需要传入条件，条件的写法是符合SQLAlchemy要求的。它也返回一个结果集。多个 `filter()`
-是可以连接使用的，相当于多个与条件。
+是可以连接使用的，相当于多个与条件。 `empty()` 返回一个空的结果集.
 
 举例:
 
 
 ```
 User.all()
+User.empty()
 User.filter(User.c.year > 18)
 ```
 
@@ -1294,6 +1295,12 @@ all(): Result --
     返回Result本身. 注意在 Model中也有一个all()方法，它就是创建一个 `Result`
     对象，然后将其返回。如果不带任何条件创建一个结果集，则在处理记录时相当
     于all()的调用。
+
+empty(): Result --
+    返回空的结果集.
+
+any(): Boolean --
+    根据条件判断是否存在相应的记录.如果存在返回 `True`,不存在返回 `False`.
 
 filter(condition): Result --
     按条件查询。可以多个filter连用。返回结果集本身。
