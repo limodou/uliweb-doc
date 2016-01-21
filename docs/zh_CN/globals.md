@@ -13,6 +13,13 @@ from uliweb import (application, request, response,
     settings, Request, Response)
 ```
 
+### CONTENT_TYPE_JSON (0.5)
+
+相当于 `application/json`
+
+### CONTENT_TYPE_TEXT (0.5)
+
+相当于 `text/html`
 
 ### application
 
@@ -33,11 +40,22 @@ get_file(filename, dir='static') --
     从所有App下的相应的目录，缺省是从static目录下查找一个文件。并且会先在当前请求对应
     的App下先进行查找，如果没找到，则去其它的App下的相应目录进行查找。
 
-template(filename, vars=None, env=None) --
+get_config(config_filename) --
+    从所有App下的相应的目录,查找指定的ini文件,最后合成一个Ini对象并返回.
+
+parse_tag(xml) (0.5) --
+    解析tag的XML文本.输出生成的结果.
+
+parse_tag_xml(xml) (0.5) --
+    解析tag的XML文本,输出解析后的字典结构.
+
+template(filename, vars=None, env=None, layout=None) --
     渲染一个模板，会先从当前请求对应的App下先进行查找模板文件。vars是一个dict对象。env
     不提供的话会使用缺省的环境。如果想向模板中注入其它的对象，但不是以vars方式提供，不用
     直接修改env，而是通过dispatch功能，绑定： `prepare_view_env` 主题就可以了。
     它会返回渲染后的结果，是字符串。
+
+    0.5中添加 `layout` 参数, 可以在渲染模板时动态引用父模板.
 
 render(filename, vars, env=None) --
     它很象template，不过它是直接返回一个Response对象，而不是字符串。
@@ -48,18 +66,20 @@ render(filename, vars, env=None) --
 
 而这里的Request类是基于werkzeug的Request来派生的，区别在于：
 
-
-> 增加了一些兼容性的内容。原来的werkzeug的Request是没有象GET, POST, params, FILES这
-> 样的属性的，它们分别是：args, form, values, files，为了与其它的Request类兼容，我
-> 添加了GET, POST, params, FILES属性。
+{% alert class=info %}
+增加了一些兼容性的内容。原来的werkzeug的Request是没有象GET, POST, params, FILES这
+样的属性的，它们分别是：args, form, values, files，为了与其它的Request类兼容，我
+添加了GET, POST, params, FILES属性。
+{% endalert %}
 
 ### Response
 
 它也对werkzeug提供的Response进行了派生，区别在于：
 
-
-> 添加了一个write方法。而原werkzeug的Response类有一个stream属性，它有write方法。经过
-> 扩展，可以直接使用write方法，会更方便一些。
+{% alert class=info %}
+添加了一个write方法。而原werkzeug的Response类有一个stream属性，它有write方法。经过
+扩展，可以直接使用write方法，会更方便一些。
+{% endalert %}
 
 ### request
 
@@ -74,8 +94,8 @@ response 就可以根据不同的线程使用不同的对象了。
 {% alert class=info %}
 request和response是有生存周期的，就是在收到请求时创建，在返回后失效。因此在使用它们
 时，要确保你是在它们的生存周期中进行使用的。
-
 {% endalert %}
+
 在讲View的环境时提到过：写一个view方法时有一些对象可以认为是全局的，其中就包括request和
 response，但是这两个对象与其它的不同就是因为它是线程相关并且有生存周期的，其它的则是全局唯
 一，并且生存周期是整个运行实例的生存周期。这样，在非view函数中想要使用request和response
@@ -158,6 +178,11 @@ def json(data, **json_kwargs):
 content_type = 'text/html; charset=utf-8'
 ```
 
+{% alert class=info %}
+Ver0.5 增加对content_type的默认处理.当请求头中的 `Accept` 为 `'*/*'` 时, content_type
+值为 `application/json`,当 `Accept` 的值中不含有 `application/json` 时, 则值为 `text/plain`,
+否则为 `application/json`
+{% endalert %}
 
 ### expose
 
@@ -184,6 +209,8 @@ def url_for(endpoint, **values):
 根据endpoint可以反向获得URL，endpoint可以是字符串格式，如: `Hello.view.index` ， 也可以
 是真正的函数对象。
 
+(0.5)如果指定 `_format=True` 则会将URL中的参数转为 `{name}` 的形式.如: URL 为 `/edit/<id>` 执行
+`url_for(endpoint, _format=True)` 的结果为 `/edit/{id}`
 
 ### get_app_dir
 

@@ -289,6 +289,77 @@ Form的校验的定义有多种形式：
 对于 `required` 既可以在 rules 中定义，也可以在定义字段时，设置 `required=True` 参数来设置，
 以实现对以前版本的兼容。
 
+### 校验类 (Validator)
+
+Uliweb预定义了一些校验类,可以在uliweb.form.validators中找到以 `TEST_` 开头的类.校验类的基类
+是 `Validator`,所有自定义的校验类都需要从这个类进行派生.
+
+```
+class Validator(object):
+    default_message = _('There is an error!')
+
+    def __init__(self, args=None, message=None, extra=None, next=None, field=None):
+        self.message = message or self.default_message
+        self.extra = extra or {}
+        self.args = args
+        self.next = next
+        self.result = None
+        self.field = field
+        self.init()
+
+    def get_message(self):
+        if isinstance(self.message, LazyString):
+            message = unicode(self.message)
+        else:
+            message = self.message
+        return message % self.extra
+
+    def validate(self, data, all_data=None):
+        return True
+
+    def init(self):
+        if self.field:
+            self.extra['label'] = self.field.label
+
+    def __call__(self, data, all_data=None):
+        self.result = data
+        if not self.validate(data, all_data):
+            return self.get_message()
+        if self.next:
+            return self.next(self.result)
+```
+
+default_message --
+    用来定义缺省的提示信息.提示信息中可能会有一些占位符,因此要和 `__init__` 中的 `extra` 参数进行对应.
+
+__init__ --
+    初始化函数.
+
+    args --
+        用来定义传入的参数,不同的校验类可以传入不同的参数. `args` 的具体类型由校验类自行定义.
+    message --
+        校验提示信息.如果不提供,则缺省使用 `default_message`.目前message中可以有占位符,支持 `%` 或 `{}`.
+        需要使用关键字占位符.
+    extra --
+        用于提供与消息占位符相匹配的参数.校验类一般会根据args自动分析,但也可以直接提供进行覆盖.类型为 `dict`.
+    next --
+        表示是否有后续的校验类.用它可以实现多个校验的串接处理.
+    field --
+        对应的输入字段类.校验类可以用它获取字段中的一些信息,如 `label`,放在extra中.
+
+validate --
+    校验处理. `data` 为当前待校验的字段值. `all_data` 为所有待校验的数据.
+get_message --
+    消息获取函数.
+init --
+    初始化函数
+__call__ --
+    供form调用使用
+
+### 自定义校验类
+
+首先从 `Validator` 类派生,然后根据需要覆盖 `default_message`, `__init__` , `init`, `validate` 函数.
+
 ## 规则映射
 
 目前针对后端校验，Uliweb定义了一些预置的规则映射，详情如下：

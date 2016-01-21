@@ -1,0 +1,9 @@
+[default]
+projectname = Markdown,python,
+
+[acp]
+.md = md.acp,
+
+[highlight]
+.md = md
+

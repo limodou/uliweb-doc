@@ -4,13 +4,13 @@
 introduction.md
 installation.md
 architecture.md
-globals.md
 whouse.md
 {% endtoc %}
 
 ## 更新说明
 
 {% toc max_depth=1 %}
+update/update_0.5.md
 update/update_0.4.1.md
 update/update_0.4.md
 update/update_0.3.1.md
@@ -69,6 +69,7 @@ blogs/blog_add.md
 ### 功能说明
 
 {% toc max_depth=1 %}
+globals.md
 settings.md
 i18n.md
 mail.md
@@ -84,7 +85,6 @@ test.md
 log.md
 session.md
 cache.md
-xmlrpc.md
 command.md
 uliweb_apps.md
 {% endtoc %}
@@ -103,9 +103,6 @@ db/api.md
 
 {% toc max_depth=1 %}
 deployment.md
-sae.md
-bae.md
-heroku.md
 {% endtoc %}
 
 ### Uliweb内置APP文档

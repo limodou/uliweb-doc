@@ -448,6 +448,15 @@ uliweb makecmd Hello
 Usage: uliweb makepkg pkgname
 ```
 
+### makemodule (0.5 new)
+
+生成一个独立的uliweb app目录结构,可以独立安装.
+
+```
+Usage: uliweb makemodule uliweb-hello
+```
+
+模块名字需要以 `uliweb-` 开头,生成的模块名会把 `-` 替换成 `_`.
 
 ### i18n
 
