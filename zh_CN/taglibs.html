@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 <link rel="stylesheet" href="./static/ui.totop.css"/>
 
-<title>Tag库 - Uliweb-Doc</title>
+<title>Tag库(0.5) - Uliweb-Doc</title>
 </head>
 <body>
 
@@ -65,7 +65,7 @@
     <a next-chapter href="./url_mapping.html">URL映射 <i class="icon-arrow-right"></i></a>
 </div>
         
-        <h1 id="title_1">Tag库<a class="anchor" href="#title_1">&para;</a></h1>
+        <h1 id="title_1">Tag库(0.5)<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">功能说明<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>前端一直是很痛苦的事,好在有bootstrap.但是bootstrap一升级又痛苦了,从2.X如果升到3.X有很多标签的 结构和写法都有所调整,因此一直在想如何把HTML的生成标准化,这样中间可以有一个转换层,当底层的CSS框架变 化时,只要把转换改一下就好了.那么现在的实现方案就是提供Tag库.你可以使用它定义出一层抽象的HTML结构, 然后通过转换,最终变成真正的HTML代码.</p>
 <p>它的实现处理机制是:</p>
@@ -155,6 +155,24 @@ print parse_xml(t)</code></pre>
 </dd>
 <dt><code>xml_full(tag_name, dict)</code></dt>
 <dd><p>将某个dict值转为XML,并用 <code>&lt;tag_name&gt;&lt;/tag_name&gt;</code> 包裹.</p>
+</dd>
+<dt><code>to_attrs(_attrs, dict_args, **kwargs)</code></dt>
+<dd><p>将字典值转为标签的属性形式,如: <code>k="value" k="value"</code>. <code>dict_args</code> 的值如果与_attrs重名,则 它们的值将进行字符串相加,如 <code>{'class':'value'}</code> 会与 <code>_attrs</code> 中的 <code>class</code> 属性值进行连接.</p>
+</dd>
+<dt><code>get_list(v)</code></dt>
+<dd><p>将当前变量转为 list 对象.</p>
+</dd>
+<dt><code>get_options(v)</code></dt>
+<dd><p>莉得当前变量的 <code>options</code> 值.它需要当前变量存在 <code>option</code> 的子元素.如果没有则返回 <code>[]</code>.</p>
+</dd>
+<dt><code>has_attr(v, name)</code></dt>
+<dd><p>判断当前变量是否有 <code>name</code> 属性值, 从当前变量的 <code>_attrs</code> 中获得.如果没有则返回 <code>''</code>.</p>
+</dd>
+<dt><code>get_attr(v, name)</code></dt>
+<dd><p>获得当前变量的 <code>name</code> 属性值, 从当前变量的 <code>_attrs</code> 中获得.如果没有则返回 <code>''</code>.</p>
+</dd>
+<dt><code>get_text(v)</code></dt>
+<dd><p>获得当前变量的 <code>_text</code> 属性,如果没有则返回 <code>''</code>.</p>
 </dd>
 </dl><p>让我们再看一个简单的例子:</p>
 <pre class="prettyprint "><code>t = """&lt;t:breadcrumb&gt;

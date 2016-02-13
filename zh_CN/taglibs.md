@@ -1,4 +1,4 @@
-# Tag库
+# Tag库(0.5)
 
 ## 功能说明
 
@@ -141,6 +141,25 @@ OrderedDict([(u'breadcrumb', {
 
 `xml_full(tag_name, dict)` --
     将某个dict值转为XML,并用 `<tag_name></tag_name>` 包裹.
+
+`to_attrs(_attrs, dict_args, **kwargs)` --
+    将字典值转为标签的属性形式,如: `k="value" k="value"`. `dict_args` 的值如果与_attrs重名,则
+    它们的值将进行字符串相加,如 `{'class':'value'}` 会与 `_attrs` 中的 `class` 属性值进行连接.
+
+`get_list(v)` --
+    将当前变量转为 list 对象.
+
+`get_options(v)` --
+    莉得当前变量的 `options` 值.它需要当前变量存在 `option` 的子元素.如果没有则返回 `[]`.
+
+`has_attr(v, name)` --
+    判断当前变量是否有 `name` 属性值, 从当前变量的 `_attrs` 中获得.如果没有则返回 `''`.
+
+`get_attr(v, name)` --
+    获得当前变量的 `name` 属性值, 从当前变量的 `_attrs` 中获得.如果没有则返回 `''`.
+
+`get_text(v)` --
+    获得当前变量的 `_text` 属性,如果没有则返回 `''`.
 
 让我们再看一个简单的例子:
 

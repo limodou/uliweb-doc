@@ -123,6 +123,49 @@
 <pre class="prettyprint "><code>from uliweb.orm import do_
 
 result = do_(select(User.c, User.c.username=='limodou'))</code></pre>
+<p>也可以直接写SQL语句,如:</p>
+<pre class="prettyprint "><code>result = do_('select * from user')</code></pre>
+</dd>
+<dt>set_echo(flag, time=None, explain=False, caller=True, session=None)</dt>
+<dd><p>用于控制当执行 <code>do_</code> 时是否显示底层的SQL语句的开关函数.</p>
+<ul>
+<li><code>time</code> 表示当执行超过指定时间时才显示,否则总显示</li>
+<li><code>explain</code> 表示是否自动执行 <code>EXPLAIN SQL</code></li>
+<li><code>caller</code> 表示是否显示上层调用的函数</li>
+<li><code>session</code> 表示是否显示执行时的session名字</li>
+</ul>
+</dd>
+<dt>reflect_table(tablename, engine_name='default')</dt>
+<dd><p>用于直接从数据库中获得某张表对象 (Table)</p>
+</dd>
+<dt>reflect_table_data(tablename, engine_name='default')</dt>
+<dd><p>获得某张表的结构化数据.返回一个 <code>dict</code>,形式为: <code>{'columns':{}, 'indexes':[]}</code></p>
+<p>其中 <code>columns</code> 是一个有序字典,分别对应表中的每个字段.形式为: <code>'column_name':('type', {ATTRS})</code></p>
+</dd>
+<dt>reflect_table_model(tablename, engine_name='default')</dt>
+<dd><p>直接将某个表转为 Model 的类形式.</p>
+</dd>
+</dl><h2 id="title_1-4">常用Class<a class="anchor" href="#title_1-4">&para;</a></h2>
+<dl>
+<dt>Bulk (0.5b1)</dt>
+<dd><p>用于简化直接使用原始SQL进行查询/修改等处理.在批量操作情况下,使用ORM性能效低,所以可以考虑使用原始的 SQL.同时为了更加简化,也没有直接使用SQLAlchemy的Select,而是使用了更底层的SQL+占位符的形式.使用Bulk 有以下几个特性:</p>
+<ol>
+<li>可以预先根据输入的SQL转为占位符的形式</li>
+<li>可以设置批量操作的大小,当缓存数据达到大小时,一次性提交,提高性能</li>
+<li>根据预编译好的SQL计算点位符的顺序,根据传入的数据进行匹配,用于数据执行时</li>
+<li>支持:select, update, insert ,delete的处理</li>
+<li>提供 <code>put</code> 用于批量提交数据, <code>do_</code> 用于逐条运行 , <code>prepare</code> 用于准备SQL</li>
+<li>提供 <code>close</code> 来提交未处理的数据</li>
+<li>支持内置事务,缺省使用提用者事务</li>
+</ol>
+<pre class="prettyprint "><code>b = Bulk(size=10)
+b.prepare('insert', User.table.insert().values(username='username', year='year'))
+b.put('insert', username='u1', year=12)
+b.put('insert', username='u2', year=13)
+b.close()</code></pre>
+<pre class="prettyprint "><code>b = Bulk()
+b.prepare('select', User.table.select().where(User.c.username=='username'))
+print b.do_('select', username='u3').fetchone()</code></pre>
 </dd>
 </dl>
         

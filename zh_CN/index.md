@@ -4,7 +4,6 @@
 introduction.md
 installation.md
 architecture.md
-globals.md
 whouse.md
 {% endtoc %}
 
@@ -70,6 +69,7 @@ blogs/blog_add.md
 ### 功能说明
 
 {% toc max_depth=1 %}
+globals.md
 settings.md
 i18n.md
 mail.md
@@ -139,7 +139,6 @@ utils/workers.md
 ## 技术分享
 
 {% toc max_depth=1 %}
-articles/css_js_combine.md
 articles/xhr_redirect_json.md
 articles/find_option.md
 articles/svg_mimetype_config.md

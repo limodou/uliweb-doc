@@ -1,4 +1,27 @@
-# 0.5b 2015-12-27
+# 0.5b1 2016-2-13
+
+## 问题修复
+
+* 修复 flashmessage 的配置 BUG
+* 修复 gitignore 模板
+* 修复 setup.py 模板
+
+## 功能优化
+
+* `json` 函数增加对content_type的默认处理.当请求头中的 `Accept` 为 `'*/*'` 时, content_type
+  值为 `application/json`,当 `Accept` 的值中不含有 `application/json` 时, 则值为 `text/plain`,
+  否则为 `application/json`
+* 向 `Dispatcher` 中添加 `parse_tag_xml` 及 `parse_tag` 方法,用于方便处理taglib.前者用于解析
+  tag为数据结构,后者则将tag处理为HTML代码.
+* `support` 命令中删除掉不再支持的配置,如: bae, dotcloud, gae, fcgi等.
+* 添加 `exportconfigjs` 命令. 用于配合 `uliweb-ui` 项目,可以根据 `ui_modules.js` 生成需要的 config.js
+  用在 requirejs 中.
+* 增加 `reflect_table()`, `reflect_table_data()`, `reflect_table_model` 函数用于将数据库
+  反射为Model或数据结构.
+* 增加 `Bulk` 进行底层SQL的操作,并且支持多条一次执行.
+
+
+# 0.5b0 2015-12-27
 
 ## 问题修复
 
@@ -8,6 +31,7 @@
 * 修复 `StaticFilesMiddleware` 中的URL没有使用 `settings.DOMAINS` 的配置的BUG, 感谢 zhangchunlin 的贡献
 * 修复 form 中传入 `BooleanField` 值为 `None` 时未转为 `False` 的BUG, 感谢 zhangchunlin 的贡献
 * 修复 pretty_dict 在处理unicode出错的BUG
+
 
 ## 普通功能优化
 
@@ -47,6 +71,7 @@
 * 向 application 添加 `get_config()` 用来读取其它的 ini 配置文件.和settings.ini类似,会自动
   对所有生效的app下的配置文件进行合并处理.
 * 向 `uliweb.contrib.auth` 中 `User` 表中添加 `auth_type` 字段,将用于区分用户登录使用的方法.感谢 zhangchunlin 的贡献
+
 
 ## 命令行变化
 * 增加 uliweb 命令中传入环境变量的参数支持,通过 `-Ea=b` 的形式,可以传多个.

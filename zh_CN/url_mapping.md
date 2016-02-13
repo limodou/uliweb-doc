@@ -107,6 +107,10 @@ Uliweb目前提供两种View函数的写法，一种是简单的函数方式，�
         直接用来设置View函数的模板，只有当View函数返回dict值时才生效。并且如果
         view函数中定义了`response.template = 'xxx.html'` 则，response.template优先
         级最高。
+
+    layout(0.5) --
+        增加动态引用父模板的参数.这样当前模板中可以不引入 `{{extend 'parent.html'}}`,而
+        是由 `layout` 参数指明.
         
     关于参数更多的说明请参见werkzeug下的routing.py程序。
     

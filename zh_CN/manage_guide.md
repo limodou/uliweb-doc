@@ -581,6 +581,10 @@ gevent-socketio --
 
 可以带一个文件名参数，这样在进入shell交互环境之前可以先运行指定的文件。
 
+在缺省情况下,如果运行环境中安装了ipython,则缺省会使用ipython进行入使用.当执行 `uliweb shell --notebook` 时,
+如果安装了 `jupyter notebook` 则会自动进入 notebook 的环境.这样,当进入notebook环境后,执行: `%loadext uliweb`
+会自动装入 `settings`, `functions`, `application` 等环境变量.
+
 
 ## 其它App包含的命令
 

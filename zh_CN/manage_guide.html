@@ -419,6 +419,7 @@ path =</code></pre>
 <h3 id="title_1-1-16">shell<a class="anchor" href="#title_1-1-16">&para;</a></h3>
 <p>在当前项目目录下，进入shell环境。可以直接使用如application, settings.ini等全局 变量。</p>
 <p>可以带一个文件名参数，这样在进入shell交互环境之前可以先运行指定的文件。</p>
+<p>在缺省情况下,如果运行环境中安装了ipython,则缺省会使用ipython进行入使用.当执行 <code>uliweb shell --notebook</code> 时, 如果安装了 <code>jupyter notebook</code> 则会自动进入 notebook 的环境.这样,当进入notebook环境后,执行: <code>%loadext uliweb</code> 会自动装入 <code>settings</code>, <code>functions</code>, <code>application</code> 等环境变量.</p>
 <h2 id="title_1-2">其它App包含的命令<a class="anchor" href="#title_1-2">&para;</a></h2>
 <h3 id="title_1-2-17">orm app<a class="anchor" href="#title_1-2-17">&para;</a></h3>
 <p>orm app带有一系列针对数据库操作的命令，从0.1版本开始，uliorm开始支持多数据连接的 设置，具体的使用参见 ORM 的文档。同时在命令行工具上也支持对不同数据连接，它们共 同使用 <code>--engine</code> 参数。缺省为 <code>default</code> 。其它的数据库连接要在 <code>settings.ini</code> 中进行设置。</p>

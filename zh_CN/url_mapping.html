@@ -59,7 +59,7 @@
     <div class="twelve wide column" id="markdown-content">
     
         <div class="chapter-prev chapter-top">
-    <a prev-chapter href="./taglibs.html"><i class="icon-arrow-left"></i> Tag库</a>
+    <a prev-chapter href="./taglibs.html"><i class="icon-arrow-left"></i> Tag库(0.5)</a>
 </div>
 <div class="chapter-next chapter-top">
     <a next-chapter href="./views.html">视图(View) <i class="icon-arrow-right"></i></a>
@@ -117,6 +117,9 @@ def show(page):
 </dd>
 <dt>template(uliweb 0.2.2扩展)</dt>
 <dd><p>直接用来设置View函数的模板，只有当View函数返回dict值时才生效。并且如果 view函数中定义了<code>response.template = 'xxx.html'</code> 则，response.template优先 级最高。</p>
+</dd>
+<dt>layout(0.5)</dt>
+<dd><p>增加动态引用父模板的参数.这样当前模板中可以不引入 <code>{{extend 'parent.html'}}</code>,而 是由 <code>layout</code> 参数指明.</p>
 </dd>
 </dl><p>关于参数更多的说明请参见werkzeug下的routing.py程序。</p></li>
 </ol>
