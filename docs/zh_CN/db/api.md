@@ -94,3 +94,58 @@ do_(sql, ec=None) --
     result = do_(select(User.c, User.c.username=='limodou'))
     ```
 
+    也可以直接写SQL语句,如:
+
+    ```
+    result = do_('select * from user')
+    ```
+
+set_echo(flag, time=None, explain=False, caller=True, session=None) --
+    用于控制当执行 `do_` 时是否显示底层的SQL语句的开关函数.
+
+    * `time` 表示当执行超过指定时间时才显示,否则总显示
+    * `explain` 表示是否自动执行 `EXPLAIN SQL`
+    * `caller` 表示是否显示上层调用的函数
+    * `session` 表示是否显示执行时的session名字
+
+reflect_table(tablename, engine_name='default') --
+    用于直接从数据库中获得某张表对象 (Table)
+
+reflect_table_data(tablename, engine_name='default') --
+    获得某张表的结构化数据.返回一个 `dict`,形式为: `{'columns':{}, 'indexes':[]}`
+
+    其中 `columns` 是一个有序字典,分别对应表中的每个字段.形式为: `'column_name':('type', {ATTRS})`
+
+reflect_table_model(tablename, engine_name='default') --
+    直接将某个表转为 Model 的类形式.
+
+## 常用Class
+
+Bulk (0.5b1) --
+    用于简化直接使用原始SQL进行查询/修改等处理.在批量操作情况下,使用ORM性能效低,所以可以考虑使用原始的
+    SQL.同时为了更加简化,也没有直接使用SQLAlchemy的Select,而是使用了更底层的SQL+占位符的形式.使用Bulk
+    有以下几个特性:
+
+    1. 可以预先根据输入的SQL转为占位符的形式
+    2. 可以设置批量操作的大小,当缓存数据达到大小时,一次性提交,提高性能
+    3. 根据预编译好的SQL计算点位符的顺序,根据传入的数据进行匹配,用于数据执行时
+    4. 支持:select, update, insert ,delete的处理
+    5. 提供 `put` 用于批量提交数据, `do_` 用于逐条运行 , `prepare` 用于准备SQL
+    6. 提供 `close` 来提交未处理的数据
+    7. 支持内置事务,缺省使用提用者事务
+
+    ```
+    b = Bulk(size=10)
+    b.prepare('insert', User.table.insert().values(username='username', year='year'))
+    b.put('insert', username='u1', year=12)
+    b.put('insert', username='u2', year=13)
+    b.close()
+    ```
+
+    ```
+    b = Bulk()
+    b.prepare('select', User.table.select().where(User.c.username=='username'))
+    print b.do_('select', username='u3').fetchone()
+    ```
+
+

@@ -139,7 +139,6 @@ utils/workers.md
 ## 技术分享
 
 {% toc max_depth=1 %}
-articles/css_js_combine.md
 articles/xhr_redirect_json.md
 articles/find_option.md
 articles/svg_mimetype_config.md
