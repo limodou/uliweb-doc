@@ -120,6 +120,7 @@ app/objcache.md
 app/recorder.md
 app/sequence.md
 app/celery.md
+app/clean.md
 {% endtoc %}
 
 ### Plugs使用
@@ -138,11 +139,35 @@ utils/workers.md
 
 ## 技术分享
 
+### 前端
 {% toc max_depth=1 %}
 articles/xhr_redirect_json.md
+articles/frontend/jqcookie.md
+{% endtoc %}
+
+### 命令行
+{% toc max_depth=1 %}
 articles/find_option.md
+{% endtoc %}
+
+### 部署
+
+{% toc max_depth=1 %}
 articles/svg_mimetype_config.md
 articles/tornado_support.md
 articles/gevent_support.md
+articles/nginx_cfg.md
+articles/url_prefix.md
+{% endtoc %}
+
+### ORM
+{% toc max_depth=1 %}
+articles/sqlite_timeout.md
+articles/multitable_query.md
+{% endtoc %}
+
+### Auth
+{% toc max_depth=1 %}
+articles/auth_type.md
 {% endtoc %}
 

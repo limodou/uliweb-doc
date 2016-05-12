@@ -63,14 +63,19 @@
     <a next-chapter href="../update/update_0.4.1.html">0.4.1 2014-11-22 <i class="icon-arrow-right"></i></a>
 </div>
         
-        <h1 id="title_1">0.5b1 2016-2-13<a class="anchor" href="#title_1">&para;</a></h1>
-<h2 id="title_1-1">问题修复<a class="anchor" href="#title_1-1">&para;</a></h2>
+        <h1 id="title_1">0.5 2016-2-19<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">功能优化<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ul>
+<li>增加 convert_bytes 函数,用来将大小转为 'K', 'M' 单位的字符串.</li>
+</ul>
+<h1 id="title_2">0.5b1 2016-2-13<a class="anchor" href="#title_2">&para;</a></h1>
+<h2 id="title_2-2">问题修复<a class="anchor" href="#title_2-2">&para;</a></h2>
 <ul>
 <li>修复 flashmessage 的配置 BUG</li>
 <li>修复 gitignore 模板</li>
 <li>修复 setup.py 模板</li>
 </ul>
-<h2 id="title_1-2">功能优化<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h2 id="title_2-3">功能优化<a class="anchor" href="#title_2-3">&para;</a></h2>
 <ul>
 <li><code>json</code> 函数增加对content_type的默认处理.当请求头中的 <code>Accept</code> 为 <code>'*/*'</code> 时, content_type   值为 <code>application/json</code>,当 <code>Accept</code> 的值中不含有 <code>application/json</code> 时, 则值为 <code>text/plain</code>,   否则为 <code>application/json</code></li>
 <li>向 <code>Dispatcher</code> 中添加 <code>parse_tag_xml</code> 及 <code>parse_tag</code> 方法,用于方便处理taglib.前者用于解析   tag为数据结构,后者则将tag处理为HTML代码.</li>
@@ -79,8 +84,8 @@
 <li>增加 <code>reflect_table()</code>, <code>reflect_table_data()</code>, <code>reflect_table_model</code> 函数用于将数据库   反射为Model或数据结构.</li>
 <li>增加 <code>Bulk</code> 进行底层SQL的操作,并且支持多条一次执行.</li>
 </ul>
-<h1 id="title_2">0.5b0 2015-12-27<a class="anchor" href="#title_2">&para;</a></h1>
-<h2 id="title_2-3">问题修复<a class="anchor" href="#title_2-3">&para;</a></h2>
+<h1 id="title_3">0.5b0 2015-12-27<a class="anchor" href="#title_3">&para;</a></h1>
+<h2 id="title_3-4">问题修复<a class="anchor" href="#title_3-4">&para;</a></h2>
 <ul>
 <li>修复pyini重入的BUG</li>
 <li>修复在执行 <code>set_password</code> 时自动执行 <code>save</code> 的BUG,改为不执行</li>
@@ -89,7 +94,7 @@
 <li>修复 form 中传入 <code>BooleanField</code> 值为 <code>None</code> 时未转为 <code>False</code> 的BUG, 感谢 zhangchunlin 的贡献</li>
 <li>修复 pretty_dict 在处理unicode出错的BUG</li>
 </ul>
-<h2 id="title_2-4">普通功能优化<a class="anchor" href="#title_2-4">&para;</a></h2>
+<h2 id="title_3-5">普通功能优化<a class="anchor" href="#title_3-5">&para;</a></h2>
 <ul>
 <li><code>SortedDict</code> 重构,以dict作为父类,并且支持传入初始化值.</li>
 <li>增加 <code>Dispatcher</code> 和 <code>make_application</code> <code>reset</code> 参数,可以用来决定是每次执行创建新的application   对象还是可以重用上次的对象.主要用在测试中,以便可以重用.</li>
@@ -118,7 +123,7 @@ any_key_2 = ('mapping_str', 'replacement')</code></pre>
 <li>向 application 添加 <code>get_config()</code> 用来读取其它的 ini 配置文件.和settings.ini类似,会自动   对所有生效的app下的配置文件进行合并处理.</li>
 <li>向 <code>uliweb.contrib.auth</code> 中 <code>User</code> 表中添加 <code>auth_type</code> 字段,将用于区分用户登录使用的方法.感谢 zhangchunlin 的贡献</li>
 </ul>
-<h2 id="title_2-5">命令行变化<a class="anchor" href="#title_2-5">&para;</a></h2>
+<h2 id="title_3-6">命令行变化<a class="anchor" href="#title_3-6">&para;</a></h2>
 <ul>
 <li>增加 uliweb 命令中传入环境变量的参数支持,通过 <code>-Ea=b</code> 的形式,可以传多个.</li>
 <li><code>uliweb find -u url</code> 增加显示view函数的docstring的功能.</li>
@@ -128,7 +133,7 @@ any_key_2 = ('mapping_str', 'replacement')</code></pre>
 <li>增加 <code>relectdb</code> 命令,用于反向从数据库生成 <code>models.py</code> 文件</li>
 <li>增加 <code>uliweb makemodule</code> 命令,可以快速生成uliweb第三方模块的目录结构,要求以 <code>uliweb-</code> 开头,   但生成的模块名是 <code>uliweb_</code></li>
 </ul>
-<h2 id="title_2-6">ORM 变化<a class="anchor" href="#title_2-6">&para;</a></h2>
+<h2 id="title_3-7">ORM 变化<a class="anchor" href="#title_3-7">&para;</a></h2>
 <ul>
 <li>重构rawsql对postgresql的支持</li>
 <li>增强 <code>OneToOne</code> 的处理.修复结果不被缓存的bug.并且当访问 <code>OneToOne</code> 对象时,如果不存在,则会自动创建空对   象.并且当记录删除时,会自动将联带的 <code>OneToOne</code> 对象删除.</li>
@@ -141,7 +146,7 @@ any_key_2 = ('mapping_str', 'replacement')</code></pre>
 <li>增加 <code>relectdb</code> 命令,用于反向从数据库生成 <code>models.py</code> 文件</li>
 <li>增加除ID外,可以自定义主键的功能.</li>
 </ul>
-<h2 id="title_2-7">APP变化<a class="anchor" href="#title_2-7">&para;</a></h2>
+<h2 id="title_3-8">APP变化<a class="anchor" href="#title_3-8">&para;</a></h2>
 <ul>
 <li>增加 <code>model_config</code> APP.用来实现Model动态迁移的支持</li>
 <li>增加 <code>celery</code> 的支持</li>
@@ -155,7 +160,7 @@ any_key_2 = ('mapping_str', 'replacement')</code></pre>
 <li>xmlrpc</li>
 </ul></li>
 </ul>
-<h2 id="title_2-8">不再内置的模块<a class="anchor" href="#title_2-8">&para;</a></h2>
+<h2 id="title_3-9">不再内置的模块<a class="anchor" href="#title_3-9">&para;</a></h2>
 <ul>
 <li>pysimplesoap</li>
 </ul>

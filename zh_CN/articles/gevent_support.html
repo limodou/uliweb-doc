@@ -61,7 +61,9 @@
         <div class="chapter-prev chapter-top">
     <a prev-chapter href="../articles/tornado_support.html"><i class="icon-arrow-left"></i> Tornado的支持</a>
 </div>
-
+<div class="chapter-next chapter-top">
+    <a next-chapter href="../articles/nginx_cfg.html">Nginx配置例子 <i class="icon-arrow-right"></i></a>
+</div>
         
         <h1 id="title_1">在gevent及gevent-socketio上运行<a class="anchor" href="#title_1">&para;</a></h1>
 <p>在前面将tornado的支持添加到uliweb中之后，今天又完成了对gevent和gevent-socketio的支持。这里的支持是指可以在它们上面运行。因为tornado, gevent, gevent-socketio都可以作为服务器来跑wsgi的应用。我对两者的了解都不是太多。我之所以要研究它们，主要是想看一看能不能使用它们做一个基于socketio的聊天室的功能。使用socketio最主要的是使用websocket。当然socketio还支持其它的模式。这里我主要是想对socketio做支持。tornado有WebsocketHandler，不过看不去很难与uliweb集成，因为它的处理模式很特殊，很难用普通的view来处理。因此，我后面转到了gevent-socketio上。</p>
