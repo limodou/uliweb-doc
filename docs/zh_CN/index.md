@@ -120,6 +120,7 @@ app/objcache.md
 app/recorder.md
 app/sequence.md
 app/celery.md
+app/clean.md
 {% endtoc %}
 
 ### Plugs使用
@@ -169,3 +170,4 @@ articles/orm/multitable_query.md
 {% toc max_depth=1 %}
 articles/auth/auth_type.md
 {% endtoc %}
+
