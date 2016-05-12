@@ -156,18 +156,18 @@ articles/find_option.md
 articles/svg_mimetype_config.md
 articles/tornado_support.md
 articles/gevent_support.md
-articles/deploy/nginx_cfg.md
-articles/deploy/url_prefix.md
+articles/nginx_cfg.md
+articles/url_prefix.md
 {% endtoc %}
 
 ### ORM
 {% toc max_depth=1 %}
-articles/orm/sqlite_timeout.md
-articles/orm/multitable_query.md
+articles/sqlite_timeout.md
+articles/multitable_query.md
 {% endtoc %}
 
 ### Auth
 {% toc max_depth=1 %}
-articles/auth/auth_type.md
+articles/auth_type.md
 {% endtoc %}
 
