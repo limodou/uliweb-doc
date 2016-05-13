@@ -14,4 +14,4 @@
 
 这样就能在生成的html里加上相关的js文件
 
-使用方面请参考 https://github.com/carhartl/jquery-cookie#usage
+使用方面请参考 https://github.com/js-cookie/js-cookie#basic-usage
