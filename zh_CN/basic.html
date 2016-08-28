@@ -2,17 +2,70 @@
 <html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
+<link rel="stylesheet" href="./static/asset/light.css"/>
 <link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
 
 <title>Simple Todo (Uliweb 版本) 之 基础篇 - Uliweb-Doc</title>
 </head>
@@ -20,56 +73,67 @@
 
 
 
-<!-- Navbar
-================================================== -->
-<div class="navbar">
-  <div class="ui small secondary inverted borderless menu">
-    
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
-    
-    <div class="right menu">
-      
-        
-<div class="item">
-  <div class="ui icon input">
-    <form id="searchform">
-    <input name="q" type="text" placeholder="Search...">
-    </form>
-  </div>
-</div>
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
 
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
       
-      <div class="ui dropdown item">
-        Select Languages <i class="icon dropdown"></i>
-        <div class="menu">
-          <a class="item language" href="#" data-lang="en">English</a>
-          <a class="item language" href="#" data-lang="zh_CN">中文</a>
-        </div>
-      </div>
+        <li class="active"><a href="./index.html">Home</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
     </div>
   </div>
 </div>
 
 
-<div class="ui divided grid">
-    <div class="four wide column" id="side-bar">
-        <div id="toc" class="content"></div>
-    </div> 
-    
-    <div class="twelve wide column" id="markdown-content">
-    
-        <div class="chapter-prev chapter-top">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
     <a prev-chapter href="./hello_uliweb.html"><i class="icon-arrow-left"></i> Hello, Uliweb</a>
 </div>
-<div class="chapter-next chapter-top">
+<div class="chapter-next chapter-top pull-right">
     <a next-chapter href="./plugs_todo.html">Simple Todo (Uliweb 版本) 之 高级篇 <i class="icon-arrow-right"></i></a>
 </div>
-        
-        <h1 id="title_1">Simple Todo (Uliweb 版本) 之 基础篇<a class="anchor" href="#title_1">&para;</a></h1>
+
+      <h1 id="title_1">Simple Todo (Uliweb 版本) 之 基础篇<a class="anchor" href="#title_1">&para;</a></h1>
 <p>本版本是从 <a class="outter" href="http://simple-is-better.com/news/detail-309">http://simple-is-better.com/news/detail-309</a> 来的，原版本基于web.py开 发的，看到这个应用相对简单，因此我将其改造为uliweb的版本。在uliweb版本中，我会列 举详细的开发过程，同时会指出与web.py的一些差异，有兴趣的可以比较。不过，因为我 没有学过web.py，因此只能从原始代码中进行理解，并推测，如果有说得不对的地方欢迎 与我交流，共同学习。</p>
 <p>为什么叫基础篇？因为有基础必然有提高篇，其实目前uliweb已经提供了一些相对实用的 模块或app，可以用来快速开发。在提高篇中我希望使用这些内容重新再写一下Todo这个应 用。因此你会看到有关于plugs和generic view的一些使用。</p>
 <p>原始的web.py的版本代码可以从上面的网址找到，那么为了简化，我使用了它的一些文件， 比如样式之类的。好，下面让我们开始体验如何使用uliweb开发这样的todo程序。</p>
-<div class="ui warning message">
+<div class="alert alert-warning">
 <p>关于如何安装uliweb这里不再描述了，有兴趣地找一找Hello, Uliweb文档。</p>
 
 </div>
@@ -131,7 +195,7 @@ uliweb makeapp todo</code></pre>
 <p>使用{{=url_for_static()}}来生成静态链接。原来的程序是使用:</p>
 <pre class="prettyprint "><code>$config.static/styles/reset.css</code></pre>
 <p>这是不一样的地方。</p>
-<div class="ui warning message">
+<div class="alert alert-warning">
 <p>注意，整个uliweb的教程全部使用utf-8编码（主要指模板及程序文件），以后也建议你使用utf-8编码。</p>
 
 </div>
@@ -203,7 +267,7 @@ CONNECTION = 'sqlite:///database.db'
 AUTO_CREATE = False</code></pre>
 <p>这里的重点是添加'uliweb.contrib.orm'这个app，然后是将它要使用的配置信息放在[ORM] 中，这里主要是配置了sqlite数据库，并且使用了相对路径，因此，以后再运行时，database.db 将会在simple_todo这个目录下。</p>
 <p>注意AUTO_CREATE=False，它的作用就是当使用某个Model时，不自动创建Model。缺省情况 下是自动创建，这样只要Model不存在，Uliweb就会自动创建。但是发现对于sqlite，如果 在事务中，执行了非select, update, delete等语句，会引发事务自动提交，造成不一致。 因此这里我就把它关掉了。</p>
-<div class="ui warning message">
+<div class="alert alert-warning">
 <p>Uliweb有自已的ORM，你可以选择使用，也可以选择不使用。这里是使用了自带的ORM。 同时Uliweb的ORM是基于sqlalchemy开发的，因此上面的数据库连接串是和sqlalchemy 一致的。</p>
 
 </div><p>原来版本中使用的是mysql，如果你想试一下，可以将上面的CONNECTION的内容改为:</p>
@@ -221,7 +285,7 @@ class Todo(Model):
 <p>这里我们定义了3个字段。因为我没有发现web.py版本中有创建表的内容，所以我根据代码 理解大概有这么几个字段。不过原版本好象没有实现完成状态的设置，所以我这里预留了。</p>
 <p>让我看一下代码。在Uliweb中，可以通过从Model派生出新的子类。它和django的Model类似。 不过这里在定义字段时有两种方式，一种是直接使用真正的字段类，如：StringProperty, DatetimeProperty，不过这种不是很好记忆，而且输入字符比较多，因此还提供简化的定义 方式。通过Field()函数来定义，它的第一个参数是字段的类型，都是基本的Python type对象， 如：str, bool, int, flat, datetime, date等。但是有一些数据库结构中有，但是不存在 对应的Python类型，如：TEXT，等，或需要单独导入的某些特殊的类，如：decimal.Decimal 等，在uliweb，分别定义了大写的类型，如：TEXT, BLOB, DECIMAL可以直接使用。</p>
 <p>其它的参数相对直观。对于post_date字段，使用了auto_now_add=True，它的作用就是 当创建新记录时，会自动使用系统当前时间填充，这样你可以不用给它赋值。这一点和 django的一样。</p>
-<div class="ui warning message">
+<div class="alert alert-warning">
 <p>在定义Model时，我们一般使用首字母大写的单词作为Model的名字。但是uliweb会自 动将其转为小写。所以Todo类对应的表名，其实是todo。</p>
 
 </div><p>定义完Todo后，我们还有一项配置工作，那就是把Model配置到settings.ini中去。有两种 做法，一种是放到apps/settings.ini中去，但是这样不方便移植，所以还可以放到todo/settings.ini 中去。不过现在没有这个文件，因此让我们创建一个，然后输入以下内容:</p>
@@ -477,19 +541,23 @@ urls = (
 <p>非常感谢Ken提供了Todo的web.py的教程，才使得Uliweb版本的教程得以出现。我一直很想 把有关class view的内容讲得更清楚，这次多少涉及了大部分，还有一些没有涉及。另外就 是如何利用我已经实现的一些app来简化开发。从上面的处理可以看到，最基本的就是：CRUD 的操作了。django是通过generic view和admin来实现。Uliweb目前也有一个类似的generic view的东西，我想有机会在下一个提高教程中向大家展示这个东西。当然，它会基于更多的 依赖，所以未必会适合你，但是却是一个我认为不错的扩展的思路。</p>
 <p>写得比较仓促，欢迎与我讨论。程序代码可以从 <a class="outter" href="https://github.com/limodou/uliweb-doc">https://github.com/limodou/uliweb-doc</a> 中的simple_todo中找到，包括我使用sphinx写的教程。</p>
 
-        
-        <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./basic.md">View Source</a>
-        </div>
-        
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="./hello_uliweb.html"><i class="icon-arrow-left"></i> Hello, Uliweb</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="./plugs_todo.html">Simple Todo (Uliweb 版本) 之 高级篇 <i class="icon-arrow-right"></i></a>
+</div>
     </div>
+  </div>
 </div>
 
-<div class="ui page grid">
-    <div class="column">
-    <!-- disqus -->
-    
-        <div id="disqus_thread" style="margin:20px;"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -504,99 +572,21 @@ urls = (
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-    
-    </div>
-</div>
-
-<div class="ui page grid" id="footer">
-    <div class="column">
-    
-  <div class="ui three column stackable grid">
-    <div class="column">
-      <div class="ui header">Library</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Community</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
-        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
-        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
-
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Contact Us</div>
-      <addr>
-        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
-        Rendered by Par and Parm. <br>
-        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
-      </addr>
+      
     </div>
   </div>
+</div>
 
-    </div>
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
 
-
-    <script type="text/javascript">
-   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-   /* * * DON'T EDIT BELOW THIS LINE * * */
-   (function () {
-       var s = document.createElement('script'); s.async = true;
-       s.type = 'text/javascript';
-       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-   }());
-   </script>
-
-
-
-
-    
-<script type="text/javascript">
-$(function(){
-    var form = $('#searchform');
-    form.submit(function(e){
-        e.preventDefault();
-        var wq=$('input[name="q"]').val();
-        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
-        window.open(link);
-
-    });
-});
-</script>
-
-
-
-<script>
-$(function(){
-    $('.navbar .ui.dropdown').dropdown({
-        on: 'hover'
-    });
-    $('a.language').on('click', function(){
-        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
-    });
-});
-</script>
 </body>
 </html>

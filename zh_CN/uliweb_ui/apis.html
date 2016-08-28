@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>APIs - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      
+
+
+      <h1 id="title_1">APIs<a class="anchor" href="#title_1">&para;</a></h1>
+<p>Uliweb-UI 提供了常用的一些js的API,分别描述如下:</p>
+<h2 id="title_1-1">load<a class="anchor" href="#title_1-1">&para;</a></h2>
+<pre class="prettyprint "><code>load('module', callback)
+load(['module', ...], callback)
+
+function callback () {...}</code></pre>
+<p>load 用来实现动态装入某个ui的组件,其中第一个参数可以是一个组件名或组件数组,它也可以是一个真正的URL.为了方便 使用,Uliweb-UI将常用的组件定义在了 settings.ini 中, 采用 <code>TEMPLATE_USE</code> 的定义方式.这种定义方式可以在 模板中使用 <code>{{use "name"}}</code>, 但是不能直接用在 <code>load</code> 中,因此需要使用 <code>uliweb jsmodule -a uliweb_ui</code> 来生成一个叫 <code>jsmodules.js</code> 的文件,并且放在 <code>uliweb_ui/static/jsmodules.js</code> 下. 使用 <code>jsmodule</code>  命令时,需要在某个项目目录下运行,不能直接运行.</p>
+<p>通常在 Uliweb-UI 中定义的 module 命令都是以 <code>ui.</code> 开始,具体有哪些可以使用的组件,可以查看</p>
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

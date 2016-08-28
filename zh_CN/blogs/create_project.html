@@ -2,176 +2,37 @@
 <html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
-<link href="../static/asset/prettify.css" rel="stylesheet">
-<link href="../static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="../static/parm.css"/>
-<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
 <link rel="stylesheet" href="../static/ui.totop.css"/>
-
-<title>创建项目 - Uliweb-Doc</title>
-</head>
-<body>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
 
 
 
-<!-- Navbar
-================================================== -->
-<div class="navbar">
-  <div class="ui small secondary inverted borderless menu">
-    
-    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
-    
-    <div class="right menu">
-      
-        
-<div class="item">
-  <div class="ui icon input">
-    <form id="searchform">
-    <input name="q" type="text" placeholder="Search...">
-    </form>
-  </div>
-</div>
-
-      
-      <div class="ui dropdown item">
-        Select Languages <i class="icon dropdown"></i>
-        <div class="menu">
-          <a class="item language" href="#" data-lang="en">English</a>
-          <a class="item language" href="#" data-lang="zh_CN">中文</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 
-<div class="ui divided grid">
-    <div class="four wide column" id="side-bar">
-        <div id="toc" class="content"></div>
-    </div> 
-    
-    <div class="twelve wide column" id="markdown-content">
-    
-        <div class="chapter-prev chapter-top">
-    <a prev-chapter href="../blogs/introduction.html"><i class="icon-arrow-left"></i> 介绍</a>
-</div>
-<div class="chapter-next chapter-top">
-    <a next-chapter href="../blogs/globle_design.html">全局设计 <i class="icon-arrow-right"></i></a>
-</div>
-        
-        <h1 id="title_1">创建项目<a class="anchor" href="#title_1">&para;</a></h1>
-<p>请注意，我们很多操作是通过命令行完成的，所以请确认你可以在命令行上执行python和uliweb 命令。如果不行，需要将Python的安装目录，以及它下面的Scripts子目录添加到PATH环境中。</p>
-<h2 id="title_1-1">clone仓库<a class="anchor" href="#title_1-1">&para;</a></h2>
-<p>如果我们已经在github上创建了一个仓库，因此第一步就是将仓库clone到本地。</p>
-<pre class="prettyprint "><code>git clone git@github.com:limodou/uliweb-blogs-demo.git</code></pre>
-<p>这里你应该換成你所创建的仓库地址。这时，仓库还是空的。我们可以向仓库中添加常见 的一些文件，如：LICENSE, README.md等。具体如何使用git进行版本管理，本教程就不涉及 了，请大家自已查看git相关的一些书和教程。</p>
-<p>clone完成之后，将会在当前目录下生成一个名为 uliweb-blogs-demo 的子目录（目录名 应该換成你真正的项目名）。</p>
-<h2 id="title_1-2">创建项目<a class="anchor" href="#title_1-2">&para;</a></h2>
-<p>我们将在项目目录下创建一个uliweb_blogs子目录，作为存放uliweb项目源代码的地方， 这个目录才是真正的uliweb项目的目录，因为可以在这个目录下启动我们的项目。</p>
-<pre class="prettyprint "><code>uliweb makeproject uliweb_blogs</code></pre>
-<p>生成的目录结构如下：</p>
-<pre class="prettyprint "><code>|-- .gitignore
-|-- apps/
-|   |-- __init__.py
-|   |-- local_settings.ini
-|   `-- settings.ini
-|-- setup.py
-`-- wsgi_handler.py</code></pre>
-<p>如果是一个git仓库，它已经自动生成了一个.gitignore，所以你可以修改它，添加你不想放 在git中的文件。如果你打开它你会看到：</p>
-<pre class="prettyprint "><code>*.pyc
-*.bak
-local_settings.ini</code></pre>
-<p>因此local_settings.ini缺省是不会添加到git中去的，这样保证不同的环境下local_settings.ini 不会被覆盖。</p>
-<p>apps是一个标准的Python包结构，所以在引用它下面的模块时，其实可以使用 <code>apps.xxx</code>, 不过，Uliweb在启动时，会自动将Uliweb 项目目录以及apps目录添加到 <code>sys.path</code> 中， 因此可以在当前项目下直接使用apps下的模块，这一点在后面配置app时我们会看到。</p>
-<p>Uliweb的项目是由若干个app组成的，所以它们都将放在apps目录下。</p>
-<p>在 apps 下的两个 settings 文件，它们都是全局性的，一个是 local_settings.ini ，由于它不会被添加到 git 仓库中，所以不同的环境上， local_settings.ini 可以 不同，因此可以用来放置与环境相关的参数，比如数据库连接串等。</p>
-<p>这里为什么会有setup.py？这是为了实现项目之间想要复用app时，可以把当前项目通过执行 setup.py来安装，这样别的项目就可以方便引用本项目的app了。Uliweb在安装时做了处理， 因为app一般都在apps目录下，但是安装之后，只需要通过 <code>project.app</code> 就可以使用了，不 需要添加apps。</p>
-<p>wsgi_handler.py 是启动文件，在开发时不需要使用它。它是用在部署上，比如部署到 uwsgi下。</p>
-<h2 id="title_1-3">目录规划<a class="anchor" href="#title_1-3">&para;</a></h2>
-<p>与uliweb_blogs平级，我们还可以创建如 docs, test等目录，用来存放文档和测试代码。</p>
+<script>
+var relpath = '..';
+</script>
 
-        
-        <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="../blogs/create_project.md">View Source</a>
-        </div>
-        
-    </div>
-</div>
-
-<div class="ui page grid">
-    <div class="column">
-    <!-- disqus -->
-    
-        <div id="disqus_thread" style="margin:20px;"></div>
- <script type="text/javascript">
-     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-     /* * * DON'T EDIT BELOW THIS LINE * * */
-     (function() {
-         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-     })();
- </script>
- <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
- <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-    
-    </div>
-</div>
-
-<div class="ui page grid" id="footer">
-    <div class="column">
-    
-  <div class="ui three column stackable grid">
-    <div class="column">
-      <div class="ui header">Library</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Community</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
-        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
-        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
-
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Contact Us</div>
-      <addr>
-        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
-        Rendered by Par and Parm. <br>
-        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
-      </addr>
-    </div>
-  </div>
-
-    </div>
-</div>
-
-
-<script src="../static/jquery-1.7.2.min.js"></script>
-<script src="../static/semantic/javascript/semantic.min.js"></script>
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
 <script src="../static/asset/prettify.js"></script>
-<script src="../static/toc/toc.js"></script>
-<script src="../static/docs.js"></script>
-<script src="../static/comment.js"></script>
 <script src="../static/jquery.ui.totop.js"></script>
 <script src="../static/jquery.hotkeys.js"></script>
-<script src="../static/jquery.sticky-kit.min.js"></script>
-<script src="../../static/jquery.cookie.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
 
 
     <script type="text/javascript">
@@ -206,16 +67,145 @@ $(function(){
 
 
 
-<script>
-$(function(){
-    $('.navbar .ui.dropdown').dropdown({
-        on: 'hover'
-    });
-    $('a.language').on('click', function(){
-        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "../../"+$(this).data('lang')+'/index.html';
-    });
-});
-</script>
+<title>创建项目 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../blogs/introduction.html"><i class="icon-arrow-left"></i> 介绍</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../blogs/globle_design.html">全局设计 <i class="icon-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">创建项目<a class="anchor" href="#title_1">&para;</a></h1>
+<p>请注意，我们很多操作是通过命令行完成的，所以请确认你可以在命令行上执行python和uliweb 命令。如果不行，需要将Python的安装目录，以及它下面的Scripts子目录添加到PATH环境中。</p>
+<h2 id="title_1-1">clone仓库<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>如果我们已经在github上创建了一个仓库，因此第一步就是将仓库clone到本地。</p>
+<pre class="prettyprint "><code>git clone git@github.com:limodou/uliweb-blogs-demo.git</code></pre>
+<p>这里你应该換成你所创建的仓库地址。这时，仓库还是空的。我们可以向仓库中添加常见 的一些文件，如：LICENSE, README.md等。具体如何使用git进行版本管理，本教程就不涉及 了，请大家自已查看git相关的一些书和教程。</p>
+<p>clone完成之后，将会在当前目录下生成一个名为 uliweb-blogs-demo 的子目录（目录名 应该換成你真正的项目名）。</p>
+<h2 id="title_1-2">创建项目<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>我们将在项目目录下创建一个uliweb_blogs子目录，作为存放uliweb项目源代码的地方， 这个目录才是真正的uliweb项目的目录，因为可以在这个目录下启动我们的项目。</p>
+<pre class="prettyprint "><code>uliweb makeproject uliweb_blogs</code></pre>
+<p>生成的目录结构如下：</p>
+<pre class="prettyprint "><code>|-- .gitignore
+|-- apps/
+|   |-- __init__.py
+|   |-- local_settings.ini
+|   `-- settings.ini
+|-- setup.py
+`-- wsgi_handler.py</code></pre>
+<p>如果是一个git仓库，它已经自动生成了一个.gitignore，所以你可以修改它，添加你不想放 在git中的文件。如果你打开它你会看到：</p>
+<pre class="prettyprint "><code>*.pyc
+*.bak
+local_settings.ini</code></pre>
+<p>因此local_settings.ini缺省是不会添加到git中去的，这样保证不同的环境下local_settings.ini 不会被覆盖。</p>
+<p>apps是一个标准的Python包结构，所以在引用它下面的模块时，其实可以使用 <code>apps.xxx</code>, 不过，Uliweb在启动时，会自动将Uliweb 项目目录以及apps目录添加到 <code>sys.path</code> 中， 因此可以在当前项目下直接使用apps下的模块，这一点在后面配置app时我们会看到。</p>
+<p>Uliweb的项目是由若干个app组成的，所以它们都将放在apps目录下。</p>
+<p>在 apps 下的两个 settings 文件，它们都是全局性的，一个是 local_settings.ini ，由于它不会被添加到 git 仓库中，所以不同的环境上， local_settings.ini 可以 不同，因此可以用来放置与环境相关的参数，比如数据库连接串等。</p>
+<p>这里为什么会有setup.py？这是为了实现项目之间想要复用app时，可以把当前项目通过执行 setup.py来安装，这样别的项目就可以方便引用本项目的app了。Uliweb在安装时做了处理， 因为app一般都在apps目录下，但是安装之后，只需要通过 <code>project.app</code> 就可以使用了，不 需要添加apps。</p>
+<p>wsgi_handler.py 是启动文件，在开发时不需要使用它。它是用在部署上，比如部署到 uwsgi下。</p>
+<h2 id="title_1-3">目录规划<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>与uliweb_blogs平级，我们还可以创建如 docs, test等目录，用来存放文档和测试代码。</p>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../blogs/introduction.html"><i class="icon-arrow-left"></i> 介绍</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../blogs/globle_design.html">全局设计 <i class="icon-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
 </body>
 </html>

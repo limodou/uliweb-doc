@@ -2,17 +2,70 @@
 <html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
-<link href="../static/asset/prettify.css" rel="stylesheet">
-<link href="../static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="../static/parm.css"/>
-<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
 <link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
 
 <title>CSS，JS合并与压缩 - Uliweb-Doc</title>
 </head>
@@ -20,48 +73,59 @@
 
 
 
-<!-- Navbar
-================================================== -->
-<div class="navbar">
-  <div class="ui small secondary inverted borderless menu">
-    
-    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
-    
-    <div class="right menu">
-      
-        
-<div class="item">
-  <div class="ui icon input">
-    <form id="searchform">
-    <input name="q" type="text" placeholder="Search...">
-    </form>
-  </div>
-</div>
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
 
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
       
-      <div class="ui dropdown item">
-        Select Languages <i class="icon dropdown"></i>
-        <div class="menu">
-          <a class="item language" href="#" data-lang="en">English</a>
-          <a class="item language" href="#" data-lang="zh_CN">中文</a>
-        </div>
-      </div>
+        <li class="active"><a href="../index.html">Home</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
     </div>
   </div>
 </div>
 
 
-<div class="ui divided grid">
-    <div class="four wide column" id="side-bar">
-        <div id="toc" class="content"></div>
-    </div> 
-    
-    <div class="twelve wide column" id="markdown-content">
-    
-        
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
 
-        
-        <h1 id="title_1">CSS，JS合并与压缩<a class="anchor" href="#title_1">&para;</a></h1>
+    <div class="col-md-9" role="main" id="markdown-content">
+      
+
+
+      <h1 id="title_1">CSS，JS合并与压缩<a class="anchor" href="#title_1">&para;</a></h1>
 <p>在前端处理中，我们需要通过引入js,css来实现丰富的界面展示和交互功能，但是有时因为 使用众多的开源组件，造成我们的页面中存在大量的css和js文件。文件越多，与服务器交互 的次数越多，对整个的处理性能都有影响。因此现在有许多的方法来减少资源文件的数量 或延迟装载。在Uliweb中实现了一种简单的资源文件合并的支持，下面详细为大家介绍它 的使用方法。</p>
 <h2 id="title_1-1">使用与配置<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>Uliweb的静态文件合并压缩只能处理css和js的压缩。使用它的前提是我们在模板中要使用 <code>{{use}}</code> 和 <code>{{link}}</code> 来引用静态文件。这样在后续的处理中，才可以自动对资源链接进行 替换。</p>
@@ -97,19 +161,19 @@
 <p>一般 uliweb在定义静态文件时，会在每个app下的static下创建与app名字相同的子目录， 然后将静态文件放在这个目录，其目的是为了避免可能存在的同名冲突。但是压缩后， 原本可能在不同的目录下的文件会合并到一个文件中，并且输出到新的目录下，所以，原 来子目录的关系到了新的静态文件中可能就有存在问题。所以对于css中引入了其它的静态 资源的情况，如 <code>url(xxxxx)</code> ，uliweb会自动修改路径。但是如果js中也存在路径的问 题，则需要用户自已来解决。解决的方法：如使用绝对路径。这种方法也可以用在css文件中，即不 使用相对路径。但是这种做法，会修改引入的源文件，一旦升级还要再次修改，不是特别方便。 所以请用户自行选择。简单情况下，uliweb的处理应该可以满足要求。</p>
 <p>为了实现url的替換，uliweb是在原来的rmincss基础之上进行了修改，以便支持在原来的 url处理时合并指定路径的功能。</p>
 
-        
-        <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="../articles/css_js_combine.md">View Source</a>
-        </div>
-        
+
+      
+
     </div>
+  </div>
 </div>
 
-<div class="ui page grid">
-    <div class="column">
-    <!-- disqus -->
-    
-        <div id="disqus_thread" style="margin:20px;"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -124,99 +188,21 @@
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-    
-    </div>
-</div>
-
-<div class="ui page grid" id="footer">
-    <div class="column">
-    
-  <div class="ui three column stackable grid">
-    <div class="column">
-      <div class="ui header">Library</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Community</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
-        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
-        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
-
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Contact Us</div>
-      <addr>
-        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
-        Rendered by Par and Parm. <br>
-        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
-      </addr>
+      
     </div>
   </div>
+</div>
 
-    </div>
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
 </div>
 
 
-<script src="../static/jquery-1.7.2.min.js"></script>
-<script src="../static/semantic/javascript/semantic.min.js"></script>
-<script src="../static/asset/prettify.js"></script>
-<script src="../static/toc/toc.js"></script>
-<script src="../static/docs.js"></script>
-<script src="../static/comment.js"></script>
-<script src="../static/jquery.ui.totop.js"></script>
-<script src="../static/jquery.hotkeys.js"></script>
-<script src="../static/jquery.sticky-kit.min.js"></script>
-<script src="../../static/jquery.cookie.js"></script>
 
-
-    <script type="text/javascript">
-   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-   /* * * DON'T EDIT BELOW THIS LINE * * */
-   (function () {
-       var s = document.createElement('script'); s.async = true;
-       s.type = 'text/javascript';
-       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-   }());
-   </script>
-
-
-
-
-    
-<script type="text/javascript">
-$(function(){
-    var form = $('#searchform');
-    form.submit(function(e){
-        e.preventDefault();
-        var wq=$('input[name="q"]').val();
-        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
-        window.open(link);
-
-    });
-});
-</script>
-
-
-
-<script>
-$(function(){
-    $('.navbar .ui.dropdown').dropdown({
-        on: 'hover'
-    });
-    $('a.language').on('click', function(){
-        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "../../"+$(this).data('lang')+'/index.html';
-    });
-});
-</script>
 </body>
 </html>

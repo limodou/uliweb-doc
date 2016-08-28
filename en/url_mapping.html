@@ -2,17 +2,70 @@
 <html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
 <link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
 <link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/en "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
 
 <title>URL Mapping - Uliweb-Doc</title>
 </head>
@@ -20,52 +73,63 @@
 
 
 
-<!-- Navbar
-================================================== -->
-<div class="navbar">
-  <div class="ui small secondary inverted borderless menu">
-    
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
-    
-    <div class="right menu">
-      
-        
-<div class="item">
-  <div class="ui icon input">
-    <form id="searchform">
-    <input name="q" type="text" placeholder="Search...">
-    </form>
-  </div>
-</div>
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
 
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
       
-      <div class="ui dropdown item">
-        Select Languages <i class="icon dropdown"></i>
-        <div class="menu">
-          <a class="item language" href="#" data-lang="en">English</a>
-          <a class="item language" href="#" data-lang="zh_CN">中文</a>
-        </div>
-      </div>
+        <li class="active"><a href="./index.html">Home</a></li><li><a href="https://github.com/limodou/uliweb">Uliweb Project</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
     </div>
   </div>
 </div>
 
 
-<div class="ui divided grid">
-    <div class="four wide column" id="side-bar">
-        <div id="toc" class="content"></div>
-    </div> 
-    
-    <div class="twelve wide column" id="markdown-content">
-    
-        <div class="chapter-prev chapter-top">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
     <a prev-chapter href="./installation.html"><i class="icon-arrow-left"></i> Installation</a>
 </div>
-<div class="chapter-next chapter-top">
+<div class="chapter-next chapter-top pull-right">
     <a next-chapter href="./template.html">Template <i class="icon-arrow-right"></i></a>
 </div>
-        
-        <h1 id="title_1">URL Mapping<a class="anchor" href="#title_1">&para;</a></h1>
+
+      <h1 id="title_1">URL Mapping<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb uses Werkzeug's routing.py module to process URLs. When you use <code>makeapp</code> command to create a new app directory, it'll automatically create a <code>views.py</code>, and it'll automatically add some code for you, for example:</p>
 <pre class="prettyprint"><code>from uliweb.core.SimpleFrame import expose</code></pre>
 <p>So that you can directly use expose in view modules. <code>expose</code> is a decorator function. Using it you can binding an URL with a view function, and create reversed URL later by <code>url_for</code> function(It's another function provided by SimpleFrame).</p>
@@ -169,19 +233,23 @@ def index():
 <p>It'll match any of string listed.</p>
 </dd>
 </dl>
-        
-        <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./url_mapping.md">View Source</a>
-        </div>
-        
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="./installation.html"><i class="icon-arrow-left"></i> Installation</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="./template.html">Template <i class="icon-arrow-right"></i></a>
+</div>
     </div>
+  </div>
 </div>
 
-<div class="ui page grid">
-    <div class="column">
-    <!-- disqus -->
-    
-        <div id="disqus_thread" style="margin:20px;"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -196,12 +264,13 @@ def index():
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-    
+      
     </div>
+  </div>
 </div>
 
-<div class="ui page grid" id="footer">
-    <div class="column">
+<div class="footer" id="footer">
+  <div class="container text-center">
     
   <div class="ui three column stackable grid">
     <div class="column">
@@ -231,64 +300,10 @@ def index():
     </div>
   </div>
 
-    </div>
+  </div>
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
 
-
-    <script type="text/javascript">
-   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-   /* * * DON'T EDIT BELOW THIS LINE * * */
-   (function () {
-       var s = document.createElement('script'); s.async = true;
-       s.type = 'text/javascript';
-       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-   }());
-   </script>
-
-
-
-
-    
-<script type="text/javascript">
-$(function(){
-    var form = $('#searchform');
-    form.submit(function(e){
-        e.preventDefault();
-        var wq=$('input[name="q"]').val();
-        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/en "+wq;
-        window.open(link);
-
-    });
-});
-</script>
-
-
-
-<script>
-$(function(){
-    $('.navbar .ui.dropdown').dropdown({
-        on: 'hover'
-    });
-    $('a.language').on('click', function(){
-        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
-    });
-});
-</script>
 </body>
 </html>

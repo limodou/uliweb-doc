@@ -2,17 +2,70 @@
 <html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
+<link rel="stylesheet" href="./static/asset/light.css"/>
 <link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
 
 <title>全局环境 - Uliweb-Doc</title>
 </head>
@@ -20,50 +73,61 @@
 
 
 
-<!-- Navbar
-================================================== -->
-<div class="navbar">
-  <div class="ui small secondary inverted borderless menu">
-    
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
-    
-    <div class="right menu">
-      
-        
-<div class="item">
-  <div class="ui icon input">
-    <form id="searchform">
-    <input name="q" type="text" placeholder="Search...">
-    </form>
-  </div>
-</div>
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
 
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
       
-      <div class="ui dropdown item">
-        Select Languages <i class="icon dropdown"></i>
-        <div class="menu">
-          <a class="item language" href="#" data-lang="en">English</a>
-          <a class="item language" href="#" data-lang="zh_CN">中文</a>
-        </div>
-      </div>
+        <li class="active"><a href="./index.html">Home</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
     </div>
   </div>
 </div>
 
 
-<div class="ui divided grid">
-    <div class="four wide column" id="side-bar">
-        <div id="toc" class="content"></div>
-    </div> 
-    
-    <div class="twelve wide column" id="markdown-content">
-    
-        
-<div class="chapter-next chapter-top">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      
+<div class="chapter-next chapter-top pull-right">
     <a next-chapter href="./settings.html">Settings说明 <i class="icon-arrow-right"></i></a>
 </div>
-        
-        <h1 id="title_1">全局环境<a class="anchor" href="#title_1">&para;</a></h1>
+
+      <h1 id="title_1">全局环境<a class="anchor" href="#title_1">&para;</a></h1>
 <p>Uliweb提供了必要的运行环境和运行对象，因此我称之为全局环境。</p>
 <h2 id="title_1-1">对象<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>有一些全局性的对象可以方便地从 uliweb 中导入，如:</p>
@@ -106,19 +170,19 @@
 </dd>
 </dl><h3 id="title_1-1-4">Request<a class="anchor" href="#title_1-1-4">&para;</a></h3>
 <p>而这里的Request类是基于werkzeug的Request来派生的，区别在于：</p>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>增加了一些兼容性的内容。原来的werkzeug的Request是没有象GET, POST, params, FILES这 样的属性的，它们分别是：args, form, values, files，为了与其它的Request类兼容，我 添加了GET, POST, params, FILES属性。</p>
 
 </div>
 <h3 id="title_1-1-5">Response<a class="anchor" href="#title_1-1-5">&para;</a></h3>
 <p>它也对werkzeug提供的Response进行了派生，区别在于：</p>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>添加了一个write方法。而原werkzeug的Response类有一个stream属性，它有write方法。经过 扩展，可以直接使用write方法，会更方便一些。</p>
 
 </div>
 <h3 id="title_1-1-6">request<a class="anchor" href="#title_1-1-6">&para;</a></h3>
 <p>request 是上面 Request 类的实例的一个代理对象，并不是一个真正的 Request 对象， response 也是。但是你可以把它当成真正的 Request 和 Response 一样来使用。那么为什 么要这样，为了方便。真正的 Request 和 Response 对象会在收到一个请求时被创建 ，然后存放到 local 中，这样不同的线程将有不同实例。为了方便使用，采用代理方式， 这样用户就不用直接调用 local.reuqest 和 local.response ，而是简单使用 request 和 response 就可以根据不同的线程使用不同的对象了。</p>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>request和response是有生存周期的，就是在收到请求时创建，在返回后失效。因此在使用它们 时，要确保你是在它们的生存周期中进行使用的。</p>
 
 </div>
@@ -156,7 +220,7 @@
 <pre class="prettyprint "><code>def json(data, **json_kwargs):</code></pre>
 <p>将一个data处理成json格式，并返回一个Response对象。json_kwargs目前可以允许用户传 入 <code>content_type</code> 值。这样在特殊情况下可以将生成的json数据生成:</p>
 <pre class="prettyprint "><code>content_type = 'text/html; charset=utf-8'</code></pre>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>Ver0.5 增加对content_type的默认处理.当请求头中的 <code>Accept</code> 为 <code>'*/*'</code> 时, content_type 值为 <code>application/json</code>,当 <code>Accept</code> 的值中不含有 <code>application/json</code> 时, 则值为 <code>text/plain</code>, 否则为 <code>application/json</code></p>
 
 </div>
@@ -231,19 +295,21 @@ def hello():
 your_object_name = 'your.object.path'</code></pre>
 <p>其中，每项中的 key 是对象的名字，值是对象的路径。</p>
 
-        
-        <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./globals.md">View Source</a>
-        </div>
-        
+
+      
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="./settings.html">Settings说明 <i class="icon-arrow-right"></i></a>
+</div>
     </div>
+  </div>
 </div>
 
-<div class="ui page grid">
-    <div class="column">
-    <!-- disqus -->
-    
-        <div id="disqus_thread" style="margin:20px;"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -258,99 +324,21 @@ your_object_name = 'your.object.path'</code></pre>
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-    
-    </div>
-</div>
-
-<div class="ui page grid" id="footer">
-    <div class="column">
-    
-  <div class="ui three column stackable grid">
-    <div class="column">
-      <div class="ui header">Library</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Community</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
-        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
-        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
-
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Contact Us</div>
-      <addr>
-        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
-        Rendered by Par and Parm. <br>
-        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
-      </addr>
+      
     </div>
   </div>
+</div>
 
-    </div>
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
 
-
-    <script type="text/javascript">
-   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-   /* * * DON'T EDIT BELOW THIS LINE * * */
-   (function () {
-       var s = document.createElement('script'); s.async = true;
-       s.type = 'text/javascript';
-       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-   }());
-   </script>
-
-
-
-
-    
-<script type="text/javascript">
-$(function(){
-    var form = $('#searchform');
-    form.submit(function(e){
-        e.preventDefault();
-        var wq=$('input[name="q"]').val();
-        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
-        window.open(link);
-
-    });
-});
-</script>
-
-
-
-<script>
-$(function(){
-    $('.navbar .ui.dropdown').dropdown({
-        on: 'hover'
-    });
-    $('a.language').on('click', function(){
-        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
-    });
-});
-</script>
 </body>
 </html>

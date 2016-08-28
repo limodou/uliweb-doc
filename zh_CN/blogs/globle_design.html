@@ -2,17 +2,70 @@
 <html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="../static/semantic/css/semantic.min.css"/>
-<link href="../static/asset/prettify.css" rel="stylesheet">
-<link href="../static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="../static/parm.css"/>
-<link rel="stylesheet" href="../static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
 <link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
 
 <title>全局设计 - Uliweb-Doc</title>
 </head>
@@ -20,52 +73,63 @@
 
 
 
-<!-- Navbar
-================================================== -->
-<div class="navbar">
-  <div class="ui small secondary inverted borderless menu">
-    
-    <a class="active item" href="../index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
-    
-    <div class="right menu">
-      
-        
-<div class="item">
-  <div class="ui icon input">
-    <form id="searchform">
-    <input name="q" type="text" placeholder="Search...">
-    </form>
-  </div>
-</div>
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
 
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
       
-      <div class="ui dropdown item">
-        Select Languages <i class="icon dropdown"></i>
-        <div class="menu">
-          <a class="item language" href="#" data-lang="en">English</a>
-          <a class="item language" href="#" data-lang="zh_CN">中文</a>
-        </div>
-      </div>
+        <li class="active"><a href="../index.html">Home</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
     </div>
   </div>
 </div>
 
 
-<div class="ui divided grid">
-    <div class="four wide column" id="side-bar">
-        <div id="toc" class="content"></div>
-    </div> 
-    
-    <div class="twelve wide column" id="markdown-content">
-    
-        <div class="chapter-prev chapter-top">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
     <a prev-chapter href="../blogs/create_project.html"><i class="icon-arrow-left"></i> 创建项目</a>
 </div>
-<div class="chapter-next chapter-top">
+<div class="chapter-next chapter-top pull-right">
     <a next-chapter href="../blogs/blog_design.html">设计Blog表结构 <i class="icon-arrow-right"></i></a>
 </div>
-        
-        <h1 id="title_1">全局设计<a class="anchor" href="#title_1">&para;</a></h1>
+
+      <h1 id="title_1">全局设计<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">界面布局<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>一个典型的应用，根据用户不同，一般分为：普通用户和系统用户。当然，我们可以根据 实际情况进行更细的划分。因此界面也可以分为普通界面和管理界面。不同的页面它们的 风格应该是统一的，因此一般会考虑将界面通用部分放到统一的模板中，然后具体的页面 分别从这些模板继承。因此对于我们这个项目，我们将创建两个父模板： <code>layout.html</code> 和 <code>admin_layout.html</code>, 分别对应一般页面和管理页面。</p>
 <p>界面设计是一件复杂而又相对专业的工作，现在已经有不少优秀的开源CSS框架可以让我们 直接使用，常见的有 <a class="outter" href="http://getbootstrap.com/">Bootstrap</a>,  <a class="outter" href="http://semantic-ui.com/">Semantic-UI</a>, <a class="outter" href="http://foundation.zurb.com/">Fundation</a>. 这里我选择Semantic-UI这个css框架。</p>
@@ -77,7 +141,7 @@
 uliweb makeapp home
 uliweb makeapp admin
 uliweb makeapp semantic</code></pre>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>在uliweb 0.2.4版本之后，还可以使用 <code>uliweb makeapp home admin semantic</code> 一次性 创建多个app。</p>
 
 </div>
@@ -128,7 +192,7 @@ DEBUG_TEMPLATE = False
 <li><code>uliweb.contrib.i18n</code> 用来进行国际化处理</li>
 <li><code>uliweb.contrib.flashmessage</code> 用来实现静态化的flash信息显示，暂时不用</li>
 </ul>
-<div class="ui warning message">
+<div class="alert alert-warning">
 <p>有的时候，App的顺序很重要。因为Uliweb的一些机制，如：配置文件导入顺序，模板查找， 静态文件查找等都和顺序有关系。例如，两个App可能有重名的模板，那么Uliweb会最终使用 排列在最后那个App的模板， <strong>即后定义的会覆盖前面的同名资源</strong> 。</p>
 <p>这种机制还可以允许用户定义第三方的App，以替換原来的App的实现，以实现新的功能。</p>
 <p>所以，建议是把Uliweb内置的App放在最前，第三方的App放在中间，自定义的放在最后。</p>
@@ -138,7 +202,7 @@ DEBUG_TEMPLATE = False
 <h3 id="title_1-3-3">拷贝文件<a class="anchor" href="#title_1-3-3">&para;</a></h3>
 <p>为什么不直接把semantic的静态资源直接放到 home 或 admin 中呢？就是因为想要复用。</p>
 <p>访问 <a class="outter" href="https://github.com/Semantic-Org/Semantic-UI">semantic-ui</a> 的 github 页面， 可以直接下载 zip 文件或 clone 这个项目。找到其中的 <code>build\packaged</code> 子目录。将 其拷贝到 <code>semantic/static/semantic</code> 目录下。注意，<code>semantic</code> 要创建，原来是没有的。</p>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>通常，与app相关的静态资源，我都会在static目录下创建与app同名的子目录，将静态文件 放在这个目录下，主要是防止在进行静态文件抽时，万一有同名的文件会进行覆盖，而放在 不同的子目录下就可以避免这个问题。</p>
 
 </div>
@@ -157,7 +221,7 @@ semantic = {
 <pre class="prettyprint "><code>&lt;link rel="stylesheet" type="text/css" href="/static/semantic/css/semantic.min.css"/&gt;
 &lt;script type="text/javascript" src="/static/semantic/javascript/semantic.min.js"&gt;&lt;/script&gt;</code></pre>
 <p>可以看到， css 和 js都生成了正确的链接形式。同时它会自动添加到Html页面中的 <code>&lt;/head&gt;</code> 之前。而不是定义的地方。</p>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>理解这一点很重要，这样你就可以在模板中的任何地方使用 <code>{{use}}</code> 。use的使用顺序 也是要注意的，因为有些静态文件是有依赖如，如 jquery 的一些插件。所以要先引用 jquery ，然后才是其它的插件。所以 jquery 这样的就要写在前面。</p>
 <p>除了 use 还有一个只能引用一个文件的标签 <code>link</code> 。它可以引入 static 下的一个静态 文件并正确处理 css 和 js。如：</p>
 <pre class="prettyprint "><code>{{link "home.css"}}</code></pre>
@@ -171,7 +235,7 @@ semantic = {
 <p>如果你希望将链接插入到当前位置，而不是自动插入到 <code>&lt;/head&gt;</code> 之前，那么可以这样处理：</p>
 <pre class="prettyprint "><code>&lt;link rel="stylesheet" type="text/css" href="{{=url_for_static('home.css')}}"/&gt;</code></pre>
 <p>通过调用 <code>{{=url_for_static(filename)}}</code> 来生成路径，不过这里 filename 是一个相对 路径。同时你要手工生成完整的链接。</p>
-<div class="ui info message">
+<div class="alert alert-info">
 <p><code>url_for_static()</code> 是在配置了 <code>uliweb.contrib.staticfiles</code> 这个app之后自动注入到 模板中的，所以可以直接使用。</p>
 
 </div>
@@ -208,7 +272,7 @@ jquery_version = '1.9.1'</code></pre>
 def index():
     return {}</code></pre>
 <p>让它返回一个 dict 数据，这样就可以自动套用模板了。</p>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>自动套用模板是Uliweb的机制，当view函数（指使用 <code>@expose</code> 修饰的函数或类方法）返 回数据为dict时，Uliweb会自动根据是一般函数或是类方法来自动使用模板。模板名将与 函数名相同。如果是类方法，则模板映射为 <code>ClassName/FunctionName.html</code> 的文件名。</p>
 
 </div>
@@ -350,19 +414,23 @@ site = 'http://limodou.github.com/uliweb-doc'</code></pre>
 <p>如果想查看详细的命令，可以输入：</p>
 <pre class="prettyprint "><code>uliweb help command</code></pre>
 
-        
-        <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="../blogs/globle_design.md">View Source</a>
-        </div>
-        
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../blogs/create_project.html"><i class="icon-arrow-left"></i> 创建项目</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../blogs/blog_design.html">设计Blog表结构 <i class="icon-arrow-right"></i></a>
+</div>
     </div>
+  </div>
 </div>
 
-<div class="ui page grid">
-    <div class="column">
-    <!-- disqus -->
-    
-        <div id="disqus_thread" style="margin:20px;"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -377,99 +445,21 @@ site = 'http://limodou.github.com/uliweb-doc'</code></pre>
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-    
-    </div>
-</div>
-
-<div class="ui page grid" id="footer">
-    <div class="column">
-    
-  <div class="ui three column stackable grid">
-    <div class="column">
-      <div class="ui header">Library</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Community</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
-        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
-        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
-
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Contact Us</div>
-      <addr>
-        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
-        Rendered by Par and Parm. <br>
-        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
-      </addr>
+      
     </div>
   </div>
+</div>
 
-    </div>
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
 </div>
 
 
-<script src="../static/jquery-1.7.2.min.js"></script>
-<script src="../static/semantic/javascript/semantic.min.js"></script>
-<script src="../static/asset/prettify.js"></script>
-<script src="../static/toc/toc.js"></script>
-<script src="../static/docs.js"></script>
-<script src="../static/comment.js"></script>
-<script src="../static/jquery.ui.totop.js"></script>
-<script src="../static/jquery.hotkeys.js"></script>
-<script src="../static/jquery.sticky-kit.min.js"></script>
-<script src="../../static/jquery.cookie.js"></script>
 
-
-    <script type="text/javascript">
-   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-   /* * * DON'T EDIT BELOW THIS LINE * * */
-   (function () {
-       var s = document.createElement('script'); s.async = true;
-       s.type = 'text/javascript';
-       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-   }());
-   </script>
-
-
-
-
-    
-<script type="text/javascript">
-$(function(){
-    var form = $('#searchform');
-    form.submit(function(e){
-        e.preventDefault();
-        var wq=$('input[name="q"]').val();
-        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
-        window.open(link);
-
-    });
-});
-</script>
-
-
-
-<script>
-$(function(){
-    $('.navbar .ui.dropdown').dropdown({
-        on: 'hover'
-    });
-    $('a.language').on('click', function(){
-        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "../../"+$(this).data('lang')+'/index.html';
-    });
-});
-</script>
 </body>
 </html>

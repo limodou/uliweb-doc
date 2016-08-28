@@ -2,17 +2,70 @@
 <html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/semantic/css/semantic.min.css"/>
-<link href="./static/asset/prettify.css" rel="stylesheet">
-<link href="./static/toc/toc.css" rel="stylesheet">
-<link rel="stylesheet" href="./static/parm.css"/>
-<link rel="stylesheet" href="./static/asset/sons-of-obsidian.css"/>
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
+<link rel="stylesheet" href="./static/asset/light.css"/>
 <link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
 
 <title>Generic 说明 - Uliweb-Doc</title>
 </head>
@@ -20,58 +73,69 @@
 
 
 
-<!-- Navbar
-================================================== -->
-<div class="navbar">
-  <div class="ui small secondary inverted borderless menu">
-    
-    <a class="active item" href="./index.html">Home</a><a class="item" href="https://github.com/limodou/uliweb">Uliweb Project</a>
-    
-    <div class="right menu">
-      
-        
-<div class="item">
-  <div class="ui icon input">
-    <form id="searchform">
-    <input name="q" type="text" placeholder="Search...">
-    </form>
-  </div>
-</div>
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
 
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
       
-      <div class="ui dropdown item">
-        Select Languages <i class="icon dropdown"></i>
-        <div class="menu">
-          <a class="item language" href="#" data-lang="en">English</a>
-          <a class="item language" href="#" data-lang="zh_CN">中文</a>
-        </div>
-      </div>
+        <li class="active"><a href="./index.html">Home</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
     </div>
   </div>
 </div>
 
 
-<div class="ui divided grid">
-    <div class="four wide column" id="side-bar">
-        <div id="toc" class="content"></div>
-    </div> 
-    
-    <div class="twelve wide column" id="markdown-content">
-    
-        <div class="chapter-prev chapter-top">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
     <a prev-chapter href="./middleware.html"><i class="icon-arrow-left"></i> Middleware 开发</a>
 </div>
-<div class="chapter-next chapter-top">
+<div class="chapter-next chapter-top pull-right">
     <a next-chapter href="./test.html">如何测试 <i class="icon-arrow-right"></i></a>
 </div>
-        
-        <h1 id="title_1">Generic 说明<a class="anchor" href="#title_1">&para;</a></h1>
+
+      <h1 id="title_1">Generic 说明<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">Genric是什么？<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>在编写View相关的代码时，我们遇到最多的处理恐怕就是：列表显示、添加、删除、更新、修改 了，一般的叫法是CRUD(Create, Read, Update, Delete)这里没有List。那么Generic的目的 就是把这些常见的处理进行封装，并且它可以和Uliorm相结合，可以比较容易地对表中的 记录进行处理。在Uliweb的utils/generic.py中提供了上述的功能。</p>
 <p>generic的整个设计思路是为了将处理程流进行复用。首先是根据按执行的功能分为不同的类。 然后将完整的处理流程封装到类中。但是在实际处理过程中，总会有各种各样的特殊的要求， 因此，你有两种扩展的方式：一种是派生新的类，另一种是将必要的参数和回调传入初始化 函数。一般的方式是采用第二种，因为这种方式相对简单。</p>
 <p>generic主要是对Model的界面处理进行了自动化，所以它主要是和Model相结合使用。</p>
 <p>在generic中，针对不同的处理提供了不同的View Class，下面分别进行介绍。</p>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>本文档附带了一个示例，可以从 uliweb-doc/projects/genric_blog 中找到。</p>
 
 </div>
@@ -236,7 +300,7 @@ view = ListView(model, fields_convert_map=fields_convert_map)</code></pre>
 <h3 id="title_1-2-8">与jquery easyui的结合<a class="anchor" href="#title_1-2-8">&para;</a></h3>
 <h3 id="title_1-2-9">分页处理<a class="anchor" href="#title_1-2-9">&para;</a></h3>
 <p>ListView可以分页也可以不分页。缺省情况下 <code>pagination=True</code> 表示分页。当处于分页 情况下，用户可以传入pageno和rows_per_page来控制起始的页号和每页显示的条数。如何获 得这些信息，你需要在ListView之外进行获取。</p>
-<div class="ui info message">
+<div class="alert alert-info">
 <p>那么，为什么不将这个处理直接封装到 ListView中呢？因为随着前端使用的控件不同 可能会返回不同的分页关键字，比如有的使用 page和rows。所以你一般要在调用 ListView 之前进行转換。</p>
 
 </div>
@@ -658,19 +722,23 @@ class BlogView(object):
 </dd>
 </dl><p>如果你相把 <id> 放在动作前面，那么你要在每个方法前使用如:  <code>@expose('&lt;id&gt;/edit')</code> 这样的方式。如果这个view函数还有其它的decorator，那么你要把 <code>@expose</code> 放在前上面， 以保证函数名是正确的。同时其它的 decorator 在处理时一定要保证生成的新的函数名与 原来的函数名是一致的。</p>
 
-        
-        <div class="ui blue inverted small label">
-            <i class="icon download"></i><a href="./generic.md">View Source</a>
-        </div>
-        
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="./middleware.html"><i class="icon-arrow-left"></i> Middleware 开发</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="./test.html">如何测试 <i class="icon-arrow-right"></i></a>
+</div>
     </div>
+  </div>
 </div>
 
-<div class="ui page grid">
-    <div class="column">
-    <!-- disqus -->
-    
-        <div id="disqus_thread" style="margin:20px;"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
  <script type="text/javascript">
      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
      var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
@@ -685,99 +753,21 @@ class BlogView(object):
  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
-    
-    </div>
-</div>
-
-<div class="ui page grid" id="footer">
-    <div class="column">
-    
-  <div class="ui three column stackable grid">
-    <div class="column">
-      <div class="ui header">Library</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Community</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
-        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
-        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
-
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Contact Us</div>
-      <addr>
-        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
-        Rendered by Par and Parm. <br>
-        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
-      </addr>
+      
     </div>
   </div>
+</div>
 
-    </div>
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
 </div>
 
 
-<script src="./static/jquery-1.7.2.min.js"></script>
-<script src="./static/semantic/javascript/semantic.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/toc/toc.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/jquery.sticky-kit.min.js"></script>
-<script src="./../static/jquery.cookie.js"></script>
 
-
-    <script type="text/javascript">
-   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
-
-   /* * * DON'T EDIT BELOW THIS LINE * * */
-   (function () {
-       var s = document.createElement('script'); s.async = true;
-       s.type = 'text/javascript';
-       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-   }());
-   </script>
-
-
-
-
-    
-<script type="text/javascript">
-$(function(){
-    var form = $('#searchform');
-    form.submit(function(e){
-        e.preventDefault();
-        var wq=$('input[name="q"]').val();
-        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
-        window.open(link);
-
-    });
-});
-</script>
-
-
-
-<script>
-$(function(){
-    $('.navbar .ui.dropdown').dropdown({
-        on: 'hover'
-    });
-    $('a.language').on('click', function(){
-        $.cookie('language', $(this).data('lang'), { expires: 360, path: '/' });
-        window.location.href = "./../"+$(this).data('lang')+'/index.html';
-    });
-});
-</script>
 </body>
 </html>
