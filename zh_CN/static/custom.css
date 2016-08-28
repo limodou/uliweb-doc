@@ -340,3 +340,8 @@ padding:15px;
 #markdown-content dd {
 margin-left: 40px;
 }
+#markdown-content h2 {
+    margin-bottom: 1em;
+    border-bottom: 1px solid #ddd;
+    line-height: 40px;
+}

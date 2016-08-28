@@ -9,50 +9,33 @@ function viewport()
     return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
 }
 
-var sidemenu = function (element, level) {
-    var el = $(element),
-        buf = [],
-        selector = level || 'h2,h3', stack = [],
-        items,
-        i, len, item
-        name, last=''
-
-    items = $(selector)
-    buf.push('<nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix-top">')
-    buf.push('<ul class="nav bs-docs-sidenav">')
-
-    for(var i=0, len=items.length; i<len; i++) {
-      item = items[i]
-      name = item.tagName
-      if (i == 0)
-        stack.push(name)
-      if (last && last<name) { //new
-        buf.push('<ul class="nav">')
-        stack.push(name)
-      } else if (last && last > name) {
-        buf.push('</ul>')
-        stack.pop()
-      } else if (last) {
-        buf.push('</li>')
-      }
-      buf.push('<li><a href="#' + $(item).attr('id') + '">' + item.childNodes[0].textContent + '</a>')
-      last = name
-    }
-    for(var i=stack.length-1; i>0; i--) {
-      buf.push('</ul></li>')
-      stack.pop()
-    }
-    if (stack.length == 1)
-      buf.push('</li>')
-
-    el.html(buf.join('\n'))
-}
-
 $(function(){
 
     // make code pretty
     window.prettyPrint && prettyPrint()
 
+    function setup_toc(){
+        var toc = $('#toc');
+        if (toc.size() > 0)
+        {
+            toc.toc({
+                'selectors': 'h2,h3', //elements to use as headings
+                'highlightOffset': 0, //offset to trigger the next headline
+                'offset': 0
+            });
+            var h = viewport().height - $('#toc').offset()['top'] - 40;
+            if (h < toc.height())
+                toc.height(h);
+            toc.stick_in_parent();
+        }
+    }
+    
+    setup_toc();
+    
+    $(window).resize(function(){
+        setup_toc();
+    });
+     
     //add code comment process
     $('pre, .inline-tag').code_comment();
     
@@ -96,46 +79,10 @@ $(function(){
         $(this).find('a.anchor').css('color', 'white');
     });
 
-
-    //header process
-    sidemenu('#toc', 'h2,h3')
-
-    var $window = $(window)
-    var $body   = $(document.body)
-
-    $body.scrollspy({
-      target: '.bs-docs-sidebar'
-    })
-    $window.on('load', function () {
-      $body.scrollspy('refresh')
-    })
-
-    // Sidenav affixing
-    setTimeout(function () {
-      var $sideBar = $('.bs-docs-sidebar')
-
-      $sideBar.affix({
-        offset: {
-          top: function () {
-            var offsetTop      = $sideBar.offset().top
-            var sideBarMargin  = parseInt($sideBar.children(0).css('margin-top'), 10)
-            var navOuterHeight = $('.bs-docs-nav').height()
-
-            return (this.top = offsetTop - navOuterHeight - sideBarMargin)
-          },
-          bottom: function () {
-            return (this.bottom = $('.bs-docs-footer').outerHeight(true))
-          }
-        }
-      })
-    }, 100)
-
-    setTimeout(function () {
-      $('.bs-top').affix()
-    }, 100)
-
-
+    //initialize popup
+    $('.icon.help').popup();    
+    
     //goto top
-    $('#markdown-content').UItoTop({scrollSpeed: 500, text:'<i class="fa fa-arrow-up"></i>' });
+    $('#markdown-content').UItoTop({scrollSpeed: 500, text:'<i class="up icon"></i>' });
     
 });
