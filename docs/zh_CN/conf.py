@@ -8,6 +8,9 @@ You can change them to fit your needs.
 #available plugins
 plugins = []
 
+#mermaid init
+mermaid_init = {'startOnLoad':True}
+
 encoding = 'utf8'
 
 # The suffix of source filenames.
@@ -24,7 +27,7 @@ tag_class = {
 
 # pre code theme css only : sons-of-obsidian, sunburst
 # can be found in static/asset directory
-pre_css = 'sons-of-obsidian'
+pre_css = 'light'
 
 # The short X.Y version.
 version = '0.5'
@@ -32,16 +35,18 @@ version = '0.5'
 # General information about the project.
 project = u'Uliweb-Doc'
 project_url = './index.html'
-copyright = u'2014, Limodou'
+copyright = u'2016, Limodou'
 introduction = u'''<div><img src="_static/uliweb_media.png"/></div>
-<h2 class="ui header">Unlimited Python Web Framework</h2>
+<h1>Unlimited Python Web Framework</h1>
 <div>
-<a class="ui red large labeled icon button" href="https://pypi.python.org/packages/source/U/Uliweb/Uliweb-%s.tar.gz">
-<i class="awesome download cloud icon"></i> Download (%s)</a>
-<a class="ui green large labeled icon button" href="https://github.com/limodou/uliweb-doc/archive/master.zip">
-<i class="awesome download cloud icon"></i> Download Documentation</a>
+    <a class="btn btn-outline-inverse btn-lg" href="https://pypi.python.org/packages/87/40/3fd9198b13e1c578181fab859239a5dbf8fc893ae8dc779c278fd0e1cbe9/Uliweb-0.5.tar.gz" role="button">
+      <i class="fa fa-download"></i> Download({0})
+    </a>
+    <a class="btn btn-outline-inverse btn-lg" href="https://github.com/limodou/uliweb-doc/archive/master.zip" role="button">
+      <i class="fa fa-download"></i> Download  Documentation({0})
+    </a>
 </div>
-''' % (version, version)
+'''.format(version)
 
 # You can add custom css files, just like
 # custom_css = ['/static/custom.css']
@@ -51,7 +56,7 @@ custom_css = []
 # format: ('name', 'caption', 'link')
 menus = [
     ('home', 'Home', 'index.html'),
-    ('project', 'Uliweb Project', 'https://github.com/limodou/uliweb'),
+    # ('project', 'Uliweb Project', 'https://github.com/limodou/uliweb'),
 ]
 
 # in content footer you can config comment tool just like disque
@@ -67,34 +72,9 @@ footer = """<footer class="footer">
 """ % copyright
 
 footer = """
-  <div class="ui three column stackable grid">
-    <div class="column">
-      <div class="ui header">Library</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="http://github.com/limodou/par">Par</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/parm">Parm</a>
-        <a target="_blank" class="item" href="http://github.com/limodou/plugs">Plugs</a>
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Community</div>
-      <div class="ui inverted link list">
-        <a target="_blank" class="item" href="https://groups.google.com/forum/#!forum/uliweb">Mailing List</a>
-        <a target="_blank" class="item" href="http://uliweb.clkg.org">Forum</a>
-        <a target="_blank" class="item" href="http://shang.qq.com/wpa/qunwpa?idkey=25e50afc62437ff8579fec79cf794300b6c03e8d3e3f89ca235cbe43e4a72ac0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Uliweb@Python" title="Uliweb@Python"></a>
-
-      </div>
-    </div>
-    <div class="column">
-      <div class="ui header">Contact Us</div>
-      <addr>
-        Designed by <a href="mailto:limodou@gmail.com">Limodou</a> <br>
-        Rendered by Par and Parm. <br>
-        CSS framework <a href="http://semantic-ui.com/">Semantic-UI</a>
-      </addr>
-    </div>
-  </div>
-"""
+<p>Designed by Limodou, Copyright %s</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+""" % copyright
 
 # The master toctree document.
 master_doc = 'index'
@@ -135,7 +115,7 @@ disqus_js = '''<script type="text/javascript">
    </script>
 '''
 
-theme = 'semantic'
+theme = 'bootstrap'
 
 search = True
 domain = 'limodou.github.io/uliweb-doc/zh_CN'

@@ -1,8 +1,15 @@
-# 0.5 2016-2-19
+# 0.5 2016-5-21
 
 ## 功能优化
 
 * 增加 convert_bytes 函数,用来将大小转为 'K', 'M' 单位的字符串.
+* expand_path 增加expandvars和expanduser的处理 #1f3609d
+* 优化clean命令,增加排除参数 `-x` #9fcde0e
+* 优化认证处理,增加 auth_type 到 authenticate ,感谢 Chunlin Zhang #e3435d2
+* 在redis_cli中增加 get_lock, set_lock 函数, 增加一个mprpoplpush 的实现 #9dd6eb6
+* 优化ini的处理,支持dict中的环境变量使用
+* 优化reflectdb命令,支持dialect设置,如 `uliweb reflectdb user -d oracle`
+
 
 # 0.5b1 2016-2-13
 

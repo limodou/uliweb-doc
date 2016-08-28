@@ -131,6 +131,12 @@ plugs/dialog2.md
 plugs/menus.md
 {% endtoc %}
 
+### Uliweb-UI
+
+{% toc max_depth=1 %}
+uliweb_ui/apis.md
+{% endtoc %}
+
 ### 实用模块说明
 
 {% toc max_depth=1 %}
@@ -142,7 +148,6 @@ utils/workers.md
 ### 前端
 {% toc max_depth=1 %}
 articles/xhr_redirect_json.md
-articles/frontend/jqcookie.md
 {% endtoc %}
 
 ### 命令行
