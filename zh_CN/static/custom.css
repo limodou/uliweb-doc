@@ -345,3 +345,6 @@ margin-left: 40px;
     border-bottom: 1px solid #ddd;
     line-height: 40px;
 }
+#markdown-content img {
+max-width:100%;
+}
