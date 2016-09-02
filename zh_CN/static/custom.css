@@ -307,12 +307,11 @@ ul.nav li.main {
 
 #markdown-content h1 {
 padding-bottom:5px;
-border-bottom:1px solid gray
 }
 
 #markdown-content {
 padding-bottom:80px;
-font-size:1vw;
+font-size:1.1vw;
 }
 #markdown-content a.anchor, #index a.anchor {
     color: white;
