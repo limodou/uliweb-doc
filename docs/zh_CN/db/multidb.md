@@ -97,27 +97,17 @@ engine = get_connection()
 
 ### Model的连接设置
 
-
-在Uliweb中，每张表如果要使用首先要在settings.ini中进行配置，原来的写法是:
-
+在Uliweb中，有多数据库配置需求的可以增加 MODELS_CONFIG 配置，例子可以参考测试项目中的[代码](https://github.com/limodou/uliweb/blob/master/test/test_multidb/apps/blog/settings.ini)，例子：
 
 ```
 [MODELS]
-user = 'uliweb.contrib.auth.models.User'
+blog = '#{appname}.models.Blog'
+category = '#{appname}.models.Category'
+
+[MODELS_CONFIG]
+blog = {'engines':['default', 'b']}
+category = {'engines':'b'}
 ```
-
-现在的写法是:
-
-
-```
-[MODELS]
-user = 'uliweb.contrib.auth.models.User', 'test'
-user = 'uliweb.contrib.auth.models.User', ['default', 'test']
-```
-
-比原来多了一项，就是数据库连接名。如果可以同时在多个连接中使用，后面的连接将是
-一个list值。原来的写法依然是有效的，如果不提供，则会认为使用Model属性的定义，如
-果Model属性定义也没有，则认为使用 default 连接。
 
 当一个Model设置了多个连接名，要么在运行时动态指定，要么uliweb会抛出异常。
 所以为了动态指定，uliorm的许多函数和方法都添加了 `engine_name` 参数，比如:
