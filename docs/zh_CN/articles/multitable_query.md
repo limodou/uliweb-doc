@@ -91,3 +91,30 @@ def user_department(user=None):
     ).one()
     return d
 ```
+
+## 直接写sql的例子
+
+```
+@expose('/server_list')
+def server_list():
+    from uliweb.orm import do_
+
+    sql = '''select
+    server.id,
+    server.host_name,
+    server.ip_int as ip,
+    server.nickname,
+    server.site,
+    server.comment,
+    (select count(*) from service where service.server=server.id),
+    (select count(*) from backup inner join service where service.server=server.id and backup.service=service.id),
+    (select count(*) from backup where backup.backup_server=server.id)
+    from server where server.type!='workstation' and server.type!='jenkins_slave' and server.status='Active'
+'''
+    result = do_(sql)
+    keys = ["server_id","hostname","ip","nickname","site","comment","num_service","num_backup_from","num_backup_to"]
+    server_list = [dict(zip(keys,i)) for i in result]
+    return {"server_list":server_list}
+```
+
+此例子没有进行字符串拼接,如果有拼接的情况,为了防止SQL注入,可以参考[Using Textual SQL](http://docs.sqlalchemy.org/en/latest/core/tutorial.html#using-textual-sql)用text来防止
