@@ -108,7 +108,7 @@ default_column_width --
 total_fields --
     用于合计字段的计算。
 
-template_date --
+template_data --
     将传入模板中的变量dict。
 
 meta --
