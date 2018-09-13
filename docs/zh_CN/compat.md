@@ -94,3 +94,7 @@ def import_(module, objects=None, py2=None):
 情况下， `_compat.py` 未提供缺省映射时，可以指定在py2环境时，使用哪个py2的模块来导入 `objects`。
 
 关于哪些模块可以通用 `import_` 来导入，可以看 `uliweb/utils/_compat.py` 的源码。
+
+## 参考文档
+
+https://www.cnblogs.com/davidwang456/p/7493795.html
