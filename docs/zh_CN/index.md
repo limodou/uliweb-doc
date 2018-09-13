@@ -7,27 +7,6 @@ architecture.md
 whouse.md
 {% endtoc %}
 
-## 更新说明
-
-{% toc max_depth=1 %}
-update/update_0.5.md
-update/update_0.4.1.md
-update/update_0.4.md
-update/update_0.3.1.md
-update/update_0.3.md
-update/update_0.2.6.md
-update/update_0.2.5.md
-update/update_0.2.4.md
-update/update_0.2.3.md
-update/update_0.2.2.md
-update/update_0.2.1.md
-update/update_0.2.md
-update/update_0.1.7.md
-update/update_0.1.6.md
-update/update_0.1.5.md
-update/update_0.1.4.md
-{% endtoc %}
-
 ## 教程
 
 {% toc max_depth=1 %}
@@ -87,6 +66,7 @@ session.md
 cache.md
 command.md
 uliweb_apps.md
+common_apis.md
 {% endtoc %}
 
 ### 数据库
@@ -123,6 +103,12 @@ app/celery.md
 app/clean.md
 {% endtoc %}
 
+### Uliweb-UI
+
+{% toc max_depth=1 %}
+uliweb_ui/apis.md
+{% endtoc %}
+
 ### Plugs使用
 
 {% toc max_depth=1 %}
@@ -131,16 +117,11 @@ plugs/dialog2.md
 plugs/menus.md
 {% endtoc %}
 
-### Uliweb-UI
-
-{% toc max_depth=1 %}
-uliweb_ui/apis.md
-{% endtoc %}
-
 ### 实用模块说明
 
 {% toc max_depth=1 %}
 utils/workers.md
+compat.md
 {% endtoc %}
 
 ## 技术分享
@@ -177,3 +158,28 @@ articles/multitable_query.md
 articles/auth_type.md
 {% endtoc %}
 
+### 调试
+{% toc max_depth=1 %}
+debug_with_pycharm.md
+{% endtoc %}
+
+## 更新说明
+
+{% toc max_depth=1 %}
+update/update_0.5.md
+update/update_0.4.1.md
+update/update_0.4.md
+update/update_0.3.1.md
+update/update_0.3.md
+update/update_0.2.6.md
+update/update_0.2.5.md
+update/update_0.2.4.md
+update/update_0.2.3.md
+update/update_0.2.2.md
+update/update_0.2.1.md
+update/update_0.2.md
+update/update_0.1.7.md
+update/update_0.1.6.md
+update/update_0.1.5.md
+update/update_0.1.4.md
+{% endtoc %}

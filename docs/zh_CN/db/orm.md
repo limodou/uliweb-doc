@@ -1161,6 +1161,46 @@ User.filter(User.c.year<18).count()
 limit, group_by, join，在计数时统计的是结果集，而第一种只是根据条件来处理的。所以对于 limit 这样的查询要按
 结果集来统计。同时要注意，因为是对结果集来统计，所以它是先进行了一个子查询，从总体效果上来看，速度会慢一些。
 
+#### 树型关系处理
+
+有时我们需要在数据库中通过二维表来定义树型关系，比如定义 `parent` 字段表示父结点。为了省事，UliORM 提供了
+`get_tree` 方法可以方便遍历树型关系。
+
+基本使用如：
+
+```
+Depart.get_tree(parent=None)
+```
+
+上述例子表示，遍历父结点为 `None` 的树形结构。返回值是一个generator，可以使用for循环来获取结果。
+
+完整的API为：
+
+```
+get_tree(condition,
+        parent_field, #父结点字段名，缺省为 `parent`
+        parent,     #父结点的值
+        parent_order_by, #父结点查询排序字段
+        current,    #当前结点的值
+        order_by,   #子结点查询排序字段，
+        id_field,   #current值对应的字段名
+        mode,       #遍历顺序 'wide' 广度优先， 'deep' 深度优先，缺省为 'wide'
+        )
+```
+
+`get_tree` 的工作分为两步：
+
+1. 查询父结点。这里有两种方式:
+
+    1. 指定 `parent` 字段来查询，因此会用到 `parent_field` 和 `parent` 参数
+    2. 指定id为某个值，因此会用到 `current` 和 `id_field`
+
+    对于更加复杂的情况，可以传入parent参数, 它可以是一个条件
+
+2. 查出父结点之后，再递归查出子结点。
+
+    `condition` 是用在查子结点的。 `parent_order_by` 用在得到父结点时对父结点进行排序。
+
 #### 其它 API
 
 

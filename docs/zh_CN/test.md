@@ -1,5 +1,14 @@
 # 如何测试
 
+## 如何运行uliweb的单元测试
+
+uliweb的单元测试代码是放在 `uliweb/test` 目录下， test 开始的就是测试代码。运行它需要安装nose，然后进入
+test目录，在命令行下运行：
+
+```
+nosetests --with-doctest <test_xxx.py>
+```
+
 ## 介绍
 
 根据测试的要求，我们可以将其分为：函数测试，web测试。其中，函数测试大多数情况
