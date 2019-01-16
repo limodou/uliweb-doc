@@ -17,7 +17,7 @@ encoding = 'utf8'
 source_suffix = ['.md', '.markdown']
 
 #template setttings
-template_dirs = "../templates"
+template_dirs = "../../templates"
 templates = {'index':'index.html', '*':'default.html'}
 
 tag_class = {
@@ -56,7 +56,7 @@ custom_css = []
 # format: ('name', 'caption', 'link')
 menus = [
     ('home', 'Home', 'index.html'),
-    # ('project', 'Uliweb Project', 'https://github.com/limodou/uliweb'),
+    ('uliweb3', 'Uliweb3', '../uliweb3/index.html'),
 ]
 
 # in content footer you can config comment tool just like disque

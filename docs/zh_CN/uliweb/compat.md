@@ -27,20 +27,22 @@ from __future__ import print_function, absolute_import, unicode_literals
 |pickle      | cPickle    |     pickle |
 |input       | raw_input  |     input  |
 |open        | open       | from io import open |
-|StringIO    | StringIO   | from io import StringIO |
-|BytesIO     | BytesIO    | from io import BytesIO |
 |pickle      | import cPickle as pickle | import pickle |
 |u(转unicode) | 与unicode进行比较| 与str进行比较 |
 |b(转bytes) | 与unicode进行比较 | 与bytes进行比较 |
 |exec_       | exec 语句   | exec 函数   |
 |print       | 语句        | 函数        |
-|callable    | callable   | hasattr(x, '__call__' |
+|callable    | callable   | hasattr(x, '__call__') |
+|ismethod    | 使用inspect.ismethod | 判断 '.' in f.__qualname__ |
+|isfunction  | 使用inspect.isfunction | 判断 '.' not in f.__qualname__ |
 
 示例：
 
 ```
 from ._compat import input, with_metaclass, string_types
 ```
+
+StringIO, BytesIO 可以通一从io导入。
 
 ## metaclass 支持
 

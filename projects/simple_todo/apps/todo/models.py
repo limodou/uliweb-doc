@@ -4,7 +4,6 @@ from sqlalchemy import text
 
 class Todo(Model):    
     title = Field(str, verbose_name="标题", max_length=200, required=True, index=True, server_default="hello")
-    name = Field(str, unique=True)
     post_date = Field(datetime.datetime, verbose_name='提交时间', auto_now_add=True)
     post_time = Field(datetime.datetime, verbose_name='提交时间', auto_now_add=True)
     finished = Field(bool, verbose_name='是否完成')
