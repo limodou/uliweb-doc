@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
+<link rel="stylesheet" href="./static/asset/light.css"/>
+<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>使用_compat.py实现py2,py3的兼容 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="./index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="./index.html">Home</a></li><li><a href="./../uliweb3/index.html">Uliweb3</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../utils/workers.html"><i class="fa fa-long-arrow-left"></i> Workers - 多进程执行</a>
+</div>
+
+
+      <h1 id="title_1">使用_compat.py实现py2,py3的兼容<a class="anchor" href="#title_1">&para;</a></h1>
+<p>six是一个比较流行的py2和py3兼容的包，不过它有些大和复杂。在werkzeug中，提供了一个类似的包叫 _compat.py， 它比较轻量。因此uliweb在它的基础上进行了一些定制。那么使用 _compat.py 实现py2和py3的兼容应该如何做？</p>
+<h2 id="title_1-1">引入future特性<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>主要是引用 print, unicode, 绝对路径导入相关的future支持，如：</p>
+<pre class="prettyprint "><code>from __future__ import print_function, absolute_import, unicode_literals</code></pre>
+<p>以上导入，将使你的.py文件可以使用 <code>print()</code>，字符串缺省认为是unicode。</p>
+<h2 id="title_1-2">不兼容的语法支持<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>从 <code>_compat.py</code> 中设置了一些py2, py3不兼容的语法支持，主要有：</p>
+<table class="ui collapsing celled table segment">
+<thead>
+<tr><th>name</th><th>2.x</th><th>3.x</th></tr>
+</thead>
+<tbody>
+<tr><td>unichr</td><td>unichr</td><td>chr</td></tr>
+<tr><td>unicode</td><td>unicode</td><td>str</td></tr>
+<tr><td>range</td><td>xrange</td><td>range</td></tr>
+<tr><td>string_types</td><td>(str, unicode)</td><td>(str, )</td></tr>
+<tr><td>pickle</td><td>cPickle</td><td>pickle</td></tr>
+<tr><td>input</td><td>raw_input</td><td>input</td></tr>
+<tr><td>open</td><td>open</td><td>from io import open</td></tr>
+<tr><td>pickle</td><td>import cPickle as pickle</td><td>import pickle</td></tr>
+<tr><td>u(转unicode)</td><td>与unicode进行比较</td><td>与str进行比较</td></tr>
+<tr><td>b(转bytes)</td><td>与unicode进行比较</td><td>与bytes进行比较</td></tr>
+<tr><td>exec_</td><td>exec 语句</td><td>exec 函数</td></tr>
+<tr><td>print</td><td>语句</td><td>函数</td></tr>
+<tr><td>callable</td><td>callable</td><td>hasattr(x, '__call__')</td></tr>
+<tr><td>ismethod</td><td>使用inspect.ismethod</td><td>判断 '.' in f.<strong>qualname</strong></td></tr>
+<tr><td>isfunction</td><td>使用inspect.isfunction</td><td>判断 '.' not in f.<strong>qualname</strong></td></tr>
+</tbody></table>
+
+<p>示例：</p>
+<pre class="prettyprint "><code>from ._compat import input, with_metaclass, string_types</code></pre>
+<p>StringIO, BytesIO 可以通一从io导入。</p>
+<h2 id="title_1-3">metaclass 支持<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>示例：</p>
+<pre class="prettyprint "><code>from ._compat import with_metaclass
+
+class CommandMetaclass(type):
+    def __init__(cls, name, bases, dct):
+        option_list = list(dct.get('option_list', []))
+        for c in bases:
+            if hasattr(c, 'option_list') and isinstance(c.option_list, list):
+                option_list.extend(c.option_list)
+        cls.option_list = option_list
+
+class Command(with_metaclass(CommandMetaclass)):
+    option_list = ()
+    help = ''
+    args = ''
+
+    def create_parser(self, prog_name, subcommand):
+        """
+        Create and return the ``OptionParser`` which will be used to
+        parse the arguments to this command.
+
+        """</code></pre>
+<h2 id="title_1-4">导入位置结构变动模块<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>在py3中，有些模块的位置结构发生了变化，或者模块名改为了纯小写，所以为了兼容统一提供了 <code>import_</code> 函数，原型为：</p>
+<pre class="prettyprint "><code>def import_(module, objects=None, py2=None):
+    """
+    :param module: py3 compatiable module path
+    :param objects: objects want to imported, it should be a list
+    :param via: for some py2 module, you should give the import path according the
+        objects which you want to imported
+    :return: object or module
+
+    Usage:
+        import_('urllib.parse', 'urlparse')
+        import_('urllib.parse', ['urlparse', 'urljoin'])
+        import_('urllib.parse', py2='urllib2')
+    """</code></pre>
+<p>其中 <code>module</code> 为按py3的结构定义的模块路径，如 <code>urllib.parse</code>，<code>objects</code> 为计划导出的对象。<code>py2</code> 表示当特殊 情况下， <code>_compat.py</code> 未提供缺省映射时，可以指定在py2环境时，使用哪个py2的模块来导入 <code>objects</code>。</p>
+<p>关于哪些模块可以通用 <code>import_</code> 来导入，可以看 <code>uliweb/utils/_compat.py</code> 的源码。</p>
+<h2 id="title_1-5">参考文档<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p><a class="outter" href="https://www.cnblogs.com/davidwang456/p/7493795.html">https://www.cnblogs.com/davidwang456/p/7493795.html</a></p>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../utils/workers.html"><i class="fa fa-long-arrow-left"></i> Workers - 多进程执行</a>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

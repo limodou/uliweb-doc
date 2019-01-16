@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>Tornado的支持 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb3/index.html">Uliweb3</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../articles/svg_mimetype_config.html"><i class="fa fa-long-arrow-left"></i> svg mimetype在uliweb中的设置</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../articles/gevent_support.html">在gevent及gevent-socketio上运行 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">Tornado的支持<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">开发服务器的tornado支持<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>目前uliweb在启动开发服务器时，可以通过：</p>
+<pre class="prettyprint "><code>uliweb runserver --tornado</code></pre>
+<p>来启动tornado，并用它来跑uliweb应用。同时还支持reload和ssl。</p>
+<p>那么我是如何实现的，在这里描述一下：</p>
+<p>修改 manage.py 下的 RunserverCommand 类：</p>
+<ol>
+<li>増加 <code>--tornado</code> 选项支持</li>
+<li><p>増加对 tornado 模式的支持</p>
+<pre class="prettyprint "><code>if options.tornado:
+    try:
+        import tornado
+        import tornado.wsgi
+        import tornado.httpserver
+        import tornado.ioloop
+        import tornado.autoreload
+    except:
+        print 'Error: Please install tornado first'
+        sys.exit(1)
+       
+    if options.ssl:
+        ctx = {
+            "certfile": options.ssl_cert,
+            "keyfile": options.ssl_key,
+        }
+    else:
+        ctx = None
+
+    container = tornado.wsgi.WSGIContainer(app)
+    http_server = tornado.httpserver.HTTPServer(container, 
+        ssl_options=ctx)
+    http_server.listen(options.port, address=options.hostname)
+    loop=tornado.ioloop.IOLoop.instance()
+    if options.reload:
+        for f in extra_files:
+            tornado.autoreload.watch(f)
+        tornado.autoreload.start(loop)
+    loop.start()</code></pre></li>
+</ol>
+<p>如果需要启动ssl支持，则根据命令行参数（如果没提供则使用缺省的文件名）来生成ssl相关的配置信息。HTTPServer有一个参数是接收ssl的信息的，缺省为None。</p>
+<p>使用tornado来跑wsgi的应用，需要使用 wsgi.WSGIContainer 类，wsgi application对应作为参数传进去，它会得到一个对象， 这个对象可以传递给HTTPServer类。</p>
+<p>在listen时，可以传入命令行的端口及IP地址。</p>
+<p>为了支持reload，需要先创建IOLoop的实例，然后执行 <code>autoreload.start(loop)</code> 。缺省情况下，tonado只处理导入的模块，为了监听象配置文件的变化，可以调用 <code>autoreload.watch(filename)</code> 方法来添加额外的文件名。这里extra_files是uliweb原来就生成好的，主要是配置文件，可以直接拿过来用。</p>
+<p>处理好reload之后，启动服务即可。</p>
+<p>经过上面的努力，在开发时，可以直接使用tornado来启动uliweb应用了。</p>
+<h2 id="title_1-2">生产部署对tornado的支持<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>如果在生产上想使用tornado来跑uliweb，那可以执行：</p>
+<pre class="prettyprint "><code>uliweb support tornado</code></pre>
+<p>这样会在当前的项目目录下拷贝一个叫tornado_handler.py的文件，可以直接用它来运行。它支持 <code>-p port</code> 和 <code>-h host</code> 参数。缺省为 8000 和 127.0.0.1。</p>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../articles/svg_mimetype_config.html"><i class="fa fa-long-arrow-left"></i> svg mimetype在uliweb中的设置</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../articles/gevent_support.html">在gevent及gevent-socketio上运行 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

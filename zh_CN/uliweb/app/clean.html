@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>clean - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb3/index.html">Uliweb3</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../app/celery.html"><i class="fa fa-long-arrow-left"></i> celery</a>
+</div>
+
+
+      <h1 id="title_1">clean<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">说明<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>Uliweb提供了一个清理命令,目前支持对目录和Model的清理.目录清理可以直接使用,但是Model的清理要有相应的处理代码.</p>
+<p>clean 提供了两个子命令:</p>
+<dl>
+<dt>dir</dt>
+<dd><p>清理目录</p>
+</dd>
+<dt>model</dt>
+<dd><p>清理Model</p>
+</dd>
+</dl><h2 id="title_1-2">命令行说明<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-1">dir<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<p>使用格式为:</p>
+<pre class="prettyprint "><code>uliweb clean dir [options] directory</code></pre>
+<p>命令行选项:</p>
+<pre class="prettyprint "><code>Options:
+  -e EXTENSIONS, --extension=EXTENSIONS
+                        Only matches extension. E.g. .txt
+  -x EXCLUDE_EXTENSIONS, --exclude_extensions=EXCLUDE_EXTENSIONS
+                        Not matches extension.
+  -r, --recursion       Recursion the directory.
+  -d DAYS, --days=DAYS  Delta days before now.</code></pre>
+<dl>
+<dt>-e EXTENSIONS, --extension=EXTENSIONS</dt>
+<dd><p>表示要处理的扩展名,扩展名为 <code>.txt</code> 的形式.如果有多个扩展名可以设置多个,如: <code>-e .txt -e .bak</code>.</p>
+</dd>
+<dt>-x EXCLUDE_EXTENSIONS, --exclude_extensions=EXCLUDE_EXTENSIONS</dt>
+<dd><p>表示要排除的扩展名,可以是多个.</p>
+</dd>
+<dt>-r, --recursion</dt>
+<dd><p>表示对子目录进行递归处理.</p>
+</dd>
+<dt>-d DAYS, --days=DAYS</dt>
+<dd><p>表示要清除DAYS天前的文件</p>
+</dd>
+</dl><h3 id="title_1-2-2">model<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+<p>使用格式为:</p>
+<pre class="prettyprint "><code>uliweb clean model [options] model_name</code></pre>
+<p>命令行选项:</p>
+<pre class="prettyprint "><code>Options:
+  -d DAYS, --days=DAYS  Delta days before now.
+  -c COUNT, --count=COUNT
+                        Records count of cleaning at one time.</code></pre>
+<dl>
+<dt>-d DAYS, --days=DAYS</dt>
+<dd><p>表示要清除DAYS天前的文件</p>
+</dd>
+<dt>-c COUNT, --count=COUNT</dt>
+<dd><p>用来控制多少条记录一个事务.缺省是5000条.</p>
+</dd>
+</dl><p>使用此命令,需要对应的Model要定义 <code>clear_data</code> 方法,举例如下:</p>
+<pre class="prettyprint "><code>    @classmethod
+    def clear_data(cls, days, count=5000):
+        from datetime import timedelta
+
+        His = get_model('async_tasks_his')
+
+        now = date.now()
+
+        i = 0
+        for row in cls.filter(cls.c.status.in_(['C', '1', 'F']), cls.c.created_time&lt;(now-timedelta(days=days))):
+            his = His(**row.to_dict())
+            his.save(insert=True)
+            row.delete()
+
+            i += 1
+            if i == count:
+                yield i
+                i = 0
+        yield i</code></pre>
+<p>clear_data 是一个 classmethod 方法.它接受两个参数:days, count, 分别对应要清理的天数和每次处理的条数.</p>
+<p>返回结果可以是一个generator,也可以是一般函数. 每次返回处理的条数.</p>
+<p>在调用 clean model 时会自动处理事务,所以在clear_data中不需要处理事务.</p>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../app/celery.html"><i class="fa fa-long-arrow-left"></i> celery</a>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

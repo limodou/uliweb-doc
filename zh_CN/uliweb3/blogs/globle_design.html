@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>全局设计 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb/index.html">Uliweb</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../blogs/create_project.html"><i class="fa fa-long-arrow-left"></i> 创建项目</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../blogs/blog_design.html">设计Blog表结构 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">全局设计<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">界面布局<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>一个典型的应用，根据用户不同，一般分为：普通用户和系统用户。当然，我们可以根据 实际情况进行更细的划分。因此界面也可以分为普通界面和管理界面。不同的页面它们的 风格应该是统一的，因此一般会考虑将界面通用部分放到统一的模板中，然后具体的页面 分别从这些模板继承。因此对于我们这个项目，我们将创建两个父模板： <code>layout.html</code> 和 <code>admin_layout.html</code>, 分别对应一般页面和管理页面。</p>
+<p>界面设计是一件复杂而又相对专业的工作，现在已经有不少优秀的开源CSS框架可以让我们 直接使用，常见的有 <a class="outter" href="http://getbootstrap.com/">Bootstrap</a>,  <a class="outter" href="http://semantic-ui.com/">Semantic-UI</a>, <a class="outter" href="http://foundation.zurb.com/">Fundation</a>. 这里我选择Semantic-UI这个css框架。</p>
+<h2 id="title_1-2">创建 APP<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-1">创建 home, admin 和 semantic APP<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<p>让我们分别创建 home 和 admin 这两个app，其中 home 用来存放普通用户使用的全局性的 内容，包括整站的CSS，JS和模板。而 admin 用来存放后台管理使用的全局性的内容。</p>
+<p>为了存放semantic的静态资源，同时创建semantic app。</p>
+<pre class="prettyprint "><code>cd uliweb_blogs
+uliweb makeapp home
+uliweb makeapp admin
+uliweb makeapp semantic</code></pre>
+<div class="alert alert-info">
+<p>在uliweb 0.2.4版本之后，还可以使用 <code>uliweb makeapp home admin semantic</code> 一次性 创建多个app。</p>
+
+</div>
+<h3 id="title_1-2-2">配置 APP<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+<p>App创建之后，需要在 <code>apps/settings.ini</code> 中进行配置，如现在的 settings.ini 内容是：</p>
+<pre class="prettyprint "><code>[GLOBAL]
+DEBUG = False
+DEBUG_CONSOLE = False
+DEBUG_TEMPLATE = False
+
+#INSTALLED_APPS = [
+#    'uliweb.contrib.staticfiles',
+#    'uliweb.contrib.template',
+#    'uliweb.contrib.upload',
+#    'uliweb.contrib.orm',
+#    'uliweb.contrib.session',
+#    'uliweb.contrib.cache',
+#    'uliweb.contrib.auth',
+#    'uliweb.contrib.i18n',
+#    'uliweb.contrib.flashmessage',
+#    ]</code></pre>
+<p>前三个 <code>DEBUG*</code> 是与调试相关，在 <code>local_settings.ini</code> 又重新定义为了 <code>True</code> (DEBUG_TEMPLATE) 除外。其目的就是：当部署时，这些开关项不生效。但是在本地调试时生效。</p>
+<p><code>INSTALLED_APPS</code> 是最重要的用来设置哪些 App 生效的配置。在Uliweb中，App可以是任何 合法的python包，因此可以引入第三方的App。在配置的时候，需要使用字符串的表示形式， 它表示这个App的导入路径。例如 <code>uliweb.contrib.orm</code> 表示，在启动应用时，Uliweb可以 直接导入 <code>uliweb.contrib.orm</code> 这个包。</p>
+<p>上面这个是自动生成，已经列出了常见的一些App，只不过全部注释掉了，因此我们根据需要 去掉一些注释，并且将我们新建的App添加在后面。因此上面的代码改为：</p>
+<pre class="prettyprint "><code>INSTALLED_APPS = [
+    'uliweb.contrib.staticfiles',
+    'uliweb.contrib.template',
+    'uliweb.contrib.upload',
+    'uliweb.contrib.orm',
+    'uliweb.contrib.session',
+#    'uliweb.contrib.cache',
+    'uliweb.contrib.auth',
+    'uliweb.contrib.i18n',
+#    'uliweb.contrib.flashmessage',
+    'semantic',
+    'home',
+    'admin',
+    ]</code></pre>
+<p>其中：</p>
+<ul>
+<li><code>uliweb.contrib.staticfiles</code> 用来处理静态文件</li>
+<li><code>uliweb.contrib.template</code> 用来处理 use, link 标签</li>
+<li><code>uliweb.contrib.upload</code> 用来处理文件上传下载</li>
+<li><code>uliweb.contrib.orm</code> 用来处理数据库的ORM</li>
+<li><code>uliweb.contrib.session</code> 用来处理session</li>
+<li><code>uliweb.contrib.cache</code> 用来处理cache，暂时用不上</li>
+<li><code>uliweb.contrib.auth</code> 用来定义用户相关的表及用户认证</li>
+<li><code>uliweb.contrib.i18n</code> 用来进行国际化处理</li>
+<li><code>uliweb.contrib.flashmessage</code> 用来实现静态化的flash信息显示，暂时不用</li>
+</ul>
+<div class="alert alert-warning">
+<p>有的时候，App的顺序很重要。因为Uliweb的一些机制，如：配置文件导入顺序，模板查找， 静态文件查找等都和顺序有关系。例如，两个App可能有重名的模板，那么Uliweb会最终使用 排列在最后那个App的模板， <strong>即后定义的会覆盖前面的同名资源</strong> 。</p>
+<p>这种机制还可以允许用户定义第三方的App，以替換原来的App的实现，以实现新的功能。</p>
+<p>所以，建议是把Uliweb内置的App放在最前，第三方的App放在中间，自定义的放在最后。</p>
+
+</div>
+<h2 id="title_1-3">向 semantic App 添加资源<a class="anchor" href="#title_1-3">&para;</a></h2>
+<h3 id="title_1-3-3">拷贝文件<a class="anchor" href="#title_1-3-3">&para;</a></h3>
+<p>为什么不直接把semantic的静态资源直接放到 home 或 admin 中呢？就是因为想要复用。</p>
+<p>访问 <a class="outter" href="https://github.com/Semantic-Org/Semantic-UI">semantic-ui</a> 的 github 页面， 可以直接下载 zip 文件或 clone 这个项目。找到其中的 <code>build\packaged</code> 子目录。将 其拷贝到 <code>semantic/static/semantic</code> 目录下。注意，<code>semantic</code> 要创建，原来是没有的。</p>
+<div class="alert alert-info">
+<p>通常，与app相关的静态资源，我都会在static目录下创建与app同名的子目录，将静态文件 放在这个目录下，主要是防止在进行静态文件抽时，万一有同名的文件会进行覆盖，而放在 不同的子目录下就可以避免这个问题。</p>
+
+</div>
+<h3 id="title_1-3-4">删除 semantic/views.py 文件<a class="anchor" href="#title_1-3-4">&para;</a></h3>
+<p>因为semantic app只是用来存放静态文件，所以并不需要 <code>views.py</code>，因此我们把它删除。</p>
+<h3 id="title_1-3-5">创建 use 配置<a class="anchor" href="#title_1-3-5">&para;</a></h3>
+<p>uliweb.contrib.template app提供了在模板中可以使用的use标签，可以方便引用静态文件。 具体的详情可以参见 <a class="inner" href="../app_template.html">template app</a>。use 内容的定义可以使用 .py 文件和配置文件两种方式。这里我们简单使用配置文件的方式。</p>
+<p>在 semantic app下创建 settings.ini ，然后输入：</p>
+<pre class="prettyprint "><code>[TEMPLATE_USE]
+semantic = {
+    'toplinks':[
+        'semantic/css/semantic.min.css', 
+        'semantic/javascript/semantic.min.js']
+}</code></pre>
+<p>那么，当我们在模板中使用 <code>{{use semantic}}</code> 时，Uliweb在渲染模板时，会将它替換 成：</p>
+<pre class="prettyprint "><code>&lt;link rel="stylesheet" type="text/css" href="/static/semantic/css/semantic.min.css"/&gt;
+&lt;script type="text/javascript" src="/static/semantic/javascript/semantic.min.js"&gt;&lt;/script&gt;</code></pre>
+<p>可以看到， css 和 js都生成了正确的链接形式。同时它会自动添加到Html页面中的 <code>&lt;/head&gt;</code> 之前。而不是定义的地方。</p>
+<div class="alert alert-info">
+<p>理解这一点很重要，这样你就可以在模板中的任何地方使用 <code>{{use}}</code> 。use的使用顺序 也是要注意的，因为有些静态文件是有依赖如，如 jquery 的一些插件。所以要先引用 jquery ，然后才是其它的插件。所以 jquery 这样的就要写在前面。</p>
+<p>除了 use 还有一个只能引用一个文件的标签 <code>link</code> 。它可以引入 static 下的一个静态 文件并正确处理 css 和 js。如：</p>
+<pre class="prettyprint "><code>{{link "home.css"}}</code></pre>
+<p>将生成：</p>
+<pre class="prettyprint "><code>&lt;link rel="stylesheet" type="text/css" href="/static/home.css"/&gt;</code></pre>
+
+</div>
+<p>link 也会将生成的链接自动插入到 <code>&lt;/head&gt;</code> 之前。</p>
+<h3 id="title_1-3-6">静态URL的生成<a class="anchor" href="#title_1-3-6">&para;</a></h3>
+<p>从上面生成的链接可以看出，静态文件前面都是以 <code>/static/</code> 开始的，这主要是为了后 面部署到web server时更方便，并且可以规范项目结构，所以在app下的模板文件要放在 <code>templates</code> 目录下，也是一个道理。</p>
+<p>如果你希望将链接插入到当前位置，而不是自动插入到 <code>&lt;/head&gt;</code> 之前，那么可以这样处理：</p>
+<pre class="prettyprint "><code>&lt;link rel="stylesheet" type="text/css" href="{{=url_for_static('home.css')}}"/&gt;</code></pre>
+<p>通过调用 <code>{{=url_for_static(filename)}}</code> 来生成路径，不过这里 filename 是一个相对 路径。同时你要手工生成完整的链接。</p>
+<div class="alert alert-info">
+<p><code>url_for_static()</code> 是在配置了 <code>uliweb.contrib.staticfiles</code> 这个app之后自动注入到 模板中的，所以可以直接使用。</p>
+
+</div>
+<h3 id="title_1-3-7">引入 jquery<a class="anchor" href="#title_1-3-7">&para;</a></h3>
+<p>不过 semantic 还需要 jquery 才可以使用，因此我们还需要配置 jquery。在plugs项目 中已经包含了 jquery ，所以我们可以直接使用它。</p>
+<p>使用第三方包其实有两种办法，一种是在 <code>apps/settings.ini</code> 中的 <code>INSTALLED_APPS</code>  中进行配置，另一种是通过Uliweb提供的App依赖。第一种当别人复用你的app时，也要同 样对 settings.ini 进行配置。第二种则会在复用你的app时，自动引入依赖的app。所以 这里为了以后方便使用semantic app，使用第二种定义方法。</p>
+<p>在 semantic app下定义 <code>config.ini</code>，内容如下：</p>
+<pre class="prettyprint "><code>[DEPENDS]
+REQUIRED_APPS = [
+    'plugs.ui.jquery.jquery', 
+]</code></pre>
+<p>有了这个依赖，我们就不需要去修改 <code>apps/settings.ini</code> 了。</p>
+<p>但是在模板中使用 jquery 还不够。在 <code>plugs.ui.jquery.jquery</code> 中也提供了 <code>{{use jquery}}</code>, 不过，我们要显示地调用才可以。如果想省事，我们可以修改 <code>TEMPLATE_USE/semantic</code> 的 定义，改为：</p>
+<pre class="prettyprint "><code>[TEMPLATE_USE]
+semantic = {
+    'toplinks':[
+        'semantic/css/semantic.min.css',
+        'semantic/javascript/semantic.min.js'],
+    'depends':['jquery'],
+}</code></pre>
+<p>这里用到了 use 定义中的依赖处理，意味着，我们在 <code>{{use semantic}}</code> 时，会自动加 入 jquery 的链接。</p>
+<h3 id="title_1-3-8">修改jquery的版本<a class="anchor" href="#title_1-3-8">&para;</a></h3>
+<p>有些plugs中与UI相关的app，因为版本比较多，所以提供了对版本的设置支持。象jquery 就是一例。在plugs中缺省的jquery版本号是 <code>1.7.2</code>, 所以，如果你想使用其它的版本， 如 <code>1.9.1</code> 可以在 <code>semantic/settings.ini</code> 中定义：</p>
+<pre class="prettyprint "><code>[UI_CONFIG]
+jquery_version = '1.9.1'</code></pre>
+<h2 id="title_1-4">创建 layout.html<a class="anchor" href="#title_1-4">&para;</a></h2>
+<h3 id="title_1-4-9">修改 home, admin 的views.py<a class="anchor" href="#title_1-4-9">&para;</a></h3>
+<p>因为使用 <code>makeapp</code> 创建app时，会自动生成一个 views.py，它会缺省生成 <code>/</code> 的view函数, 所以会产生冲突，因为有两个 <code>/</code>。让我们把 <code>admin/views.py</code> 中的代码先注释掉，不让 它生效，如：</p>
+<pre class="prettyprint "><code>#@expose('/')
+#def index():
+#    return '&lt;h1&gt;Hello, Uliweb&lt;/h1&gt;'</code></pre>
+<p>然后把 <code>home/views.py</code> 中的views.py改为：</p>
+<pre class="prettyprint "><code>@expose('/')
+def index():
+    return {}</code></pre>
+<p>让它返回一个 dict 数据，这样就可以自动套用模板了。</p>
+<div class="alert alert-info">
+<p>自动套用模板是Uliweb的机制，当view函数（指使用 <code>@expose</code> 修饰的函数或类方法）返 回数据为dict时，Uliweb会自动根据是一般函数或是类方法来自动使用模板。模板名将与 函数名相同。如果是类方法，则模板映射为 <code>ClassName/FunctionName.html</code> 的文件名。</p>
+
+</div>
+<h3 id="title_1-4-10">创建 index.html<a class="anchor" href="#title_1-4-10">&para;</a></h3>
+<p><code>index()</code> 对应的模板文件是 <code>index.html</code> ，所以先让我们创建 <code>home/templates/index.html</code>  文件，内容为：</p>
+<pre class="prettyprint "><code>{{extend "layout.html"}}</code></pre>
+<p><code>extend</code> 说明 index.html 模板将从 <code>layout.html</code> 进行继承。</p>
+<p>首页和具体的blog展示页面可能有所不同，首页一般是信息的聚合，而每个blog只会展示 单篇文章。并且首页会有banner，可能设计得更好看。这里我们先留成空的，等后面细化时 再进行修改。</p>
+<h3 id="title_1-4-11">创建 layout.html<a class="anchor" href="#title_1-4-11">&para;</a></h3>
+<p>其实，如果不使用象 semantic 这样的css框架，我们还可以选择参考一些别人设计好的 展示页面，有一些免费的模板可以下载。然后根据模板的内容，将需要动态生成的使用模 板变量和block进行处理，以便与view提供的数据进行结合。</p>
+<p>这里我们将从头设计展示页面，但是和你改造一个现成的页面是类似的。</p>
+<p>我先简单设计一下，我想象中的首页大概是这样的：</p>
+<p><img src="../_static/blog_layout.jpg"/>
+</p>
+<p>其中，最上面的头，菜单以及最下面的页脚可以看成是比较通用的，因此我们的layout就 可以主要包含这里内容，而其它的内部只留出空间，让子模板来继承并覆盖即可。</p>
+<p>内容比较长，所以让我们一段段看：</p>
+<pre class="prettyprint "><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-type" content="text/html; charset=utf-8" /&gt;
+&lt;title&gt;{{=settings.HOME.title}}&lt;/title&gt;
+&lt;/head&gt;
+{{use "semantic"}}
+{{link "home.css"}}
+
+&lt;body&gt;</code></pre>
+<p>这是Html的头部分，其中 title 的值使用了模板语法, <code>{{=settings.HOME.title}}</code> 表示 从settings中获取 <code>HOME</code> 下的 <code>title</code> 值。</p>
+<p>在模板中可以直接使用settings中定义的配置项。为了方便修改，有些值是写到settings中 去了，如： title, name, site, description。</p>
+<p>然后模板中还使用了 <code>use</code> 和 <code>link</code> ，关于 use 和 link 的使用，前面已经说过了。</p>
+<p>我把 layout.html 中相关的自定义 CSS 都写在了 <code>home.css</code> 中，就不再细说了。</p>
+<pre class="prettyprint "><code>&lt;!-- Header --&gt;
+&lt;div class="ui page grid" id="introduction"&gt;
+    &lt;div class="column"&gt;
+        &lt;h1 class="ui header"&gt;{{=settings.HOME.name}}
+            &lt;h2 class="sub header"&gt;{{=settings.HOME.description}}&lt;/h2&gt;
+        &lt;/h1&gt;
+        &lt;form action="http://www.google.com/search" method="GET"&gt;
+            &lt;input name="sitesearch" value="{{=settings.HOME.site}}" type="hidden"&gt;
+            &lt;input id="search_bar" name="q" type="text" placeholder="Search..."&gt;&lt;/input&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<p>这是Banner的定义，使用了 settings 中定义的 <code>name</code> (即应用名称) 和 <code>description</code> (应 用描述)。同时还添加了一个搜索框，使用google来搜索。为了限制在当前网站，所以还 使用了 settings 中的 <code>site</code> 。所以你要在settings中定义这些值。</p>
+<pre class="prettyprint "><code>&lt;!-- Menus --&gt;
+&lt;div class="ui page grid" id="menus"&gt;
+    &lt;div class="ui blue inverted menu"&gt;
+        &lt;a href="/" class="item"&gt;Home&lt;/a&gt;
+        &lt;a href="/about" class="item"&gt;About&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<p>这里定义了一个菜单，目前只有两项，并且没处理活动菜单的高亮。</p>
+<pre class="prettyprint "><code>&lt;!-- CONTENT --&gt;
+{{block content_container}}
+&lt;div class="ui page grid"&gt;
+    &lt;div class="ui divided grid" id="blogs"&gt;
+        &lt;div class="twelve wide column"&gt;
+            {{block content}}
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            &lt;p&gt;Content&lt;/p&gt;
+            {{end}}
+        &lt;/div&gt; 
+        
+        &lt;div class="four wide column"&gt;
+            {{block sidebar}}
+            &lt;p&gt;SideBar&lt;/p&gt;
+            &lt;p&gt;SideBar&lt;/p&gt;
+            &lt;p&gt;SideBar&lt;/p&gt;
+            &lt;p&gt;SideBar&lt;/p&gt;
+            &lt;p&gt;SideBar&lt;/p&gt;
+            &lt;p&gt;SideBar&lt;/p&gt;
+            {{end}}
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+{{end}}</code></pre>
+<p>这里定义了三个block(块)： <code>content_container</code>, <code>content</code> 和 <code>sidebar</code> 因此你可以在子模 板中覆盖它们的内容，并且 <code>content_container</code> 包含了其它两个block。</p>
+<pre class="prettyprint "><code>&lt;!-- FOOTER --&gt;
+&lt;div class="ui page grid" id="footer"&gt;
+    &lt;div class="column"&gt;
+        &lt;div class="ui two column stackable grid"&gt;
+          &lt;div class="column"&gt;
+            &lt;div class="ui header"&gt;Links&lt;/div&gt;
+            &lt;div class="ui inverted link list"&gt;
+              &lt;a target="_blank" class="item" href="http://github.com/limodou/uliweb-blogs-demo"&gt;Uliweb Blogs Demo&lt;/a&gt;
+              &lt;a target="_blank" class="item" href="http://github.com/limodou/uliweb"&gt;Uliweb Project&lt;/a&gt;
+              &lt;a target="_blank" class="item" href="http://github.com/limodou/plugs"&gt;Plugs Project&lt;/a&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="column"&gt;
+            &lt;div class="ui header"&gt;Contact&lt;/div&gt;
+            &lt;div class="ui inverted link list"&gt;
+              &lt;a target="_blank" class="item" href="mailto:limodou@gmail.com"&gt;Designed by Limodou&lt;/a&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>这里定义了页脚。</p>
+<p>上面元素中使用的是semantic的定义方式，具体的涵义不是本教程的重点，所以不细说了。</p>
+<h2 id="title_1-5">添加配置信息<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>前面在模板中用到了 <code>settings.HOME</code> 中的一些值，所以让我们在 <code>apps/settings.ini</code> 中定义它。你也可以定义在 <code>home/settings.ini</code> 中，不过它更多是关于应用本身，所以 一般就放在了 <code>apps/settings.ini</code> 下了。在文件最后添加：</p>
+<pre class="prettyprint "><code>[HOME]
+title = 'uliweb blog demo'
+name = 'Uliweb Blog Demo'
+description = 'This is a demo project.'
+site = 'http://limodou.github.com/uliweb-doc'</code></pre>
+<p>其中site是用来实现站内搜索的，所以应该改成你所用的网站地址。</p>
+<h2 id="title_1-6">测试效果<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>到这里，我们可以先看一下我们已经实现的成果。</p>
+<p>在 <code>uliweb_blogs</code> 目录下运行 :</p>
+<pre class="prettyprint "><code>uliweb runserver</code></pre>
+<p>这样就启动了开发服务器，并且可以看到日志输出是带有颜色的。如果不想要颜色输出，可以添加 <code>--nocolor</code> 参数。 输出结果大概是这个样子：</p>
+<pre class="prettyprint "><code>[INFO]  * Loading DebuggedApplication...
+[INFO]  * Running on http://localhost:8000/
+[INFO]  * Restarting with reloader
+[INFO]  * Loading DebuggedApplication...</code></pre>
+<p>说明启动成功，并且自动启动了Debug调试功能。根据提示，我们打开浏览器，输入地址  <code>http://localhost:8000/</code> ，如果运行正确的话，这里我们会看到：</p>
+<p><img src="../_static/blog_run_first.png"/>
+</p>
+<h2 id="title_1-7">关于开发服务器<a class="anchor" href="#title_1-7">&para;</a></h2>
+<p>Uliweb的开发服务器在缺省情况下可以自动探测代码的变化，然后自动重启。所以通常情况 下，你只要修改，然后刷新页面就可以了。不过有些情况要特别注意：</p>
+<ol>
+<li>修改了模板文件，因为它不会缓存到内存，所以服务器不会重启，但是会立刻生效</li>
+<li>添加新的文件，如模板，views.py等，因为Uliweb在启动时会对文件名进行记录，所以    新増文件由于没有记录，所以不会自动重启。需要手工重启。</li>
+</ol>
+<h2 id="title_1-8">关于命令行<a class="anchor" href="#title_1-8">&para;</a></h2>
+<p>Uliweb的命令行在只输入 <code>uliweb</code> 时会显示可用命令及全局的参数，并且会根据配置的 app来显示app下可用的使用。所以，配置不同的app，可能可以使用的命令是不同的。</p>
+<p>如果想查看详细的命令，可以输入：</p>
+<pre class="prettyprint "><code>uliweb help command</code></pre>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../blogs/create_project.html"><i class="fa fa-long-arrow-left"></i> 创建项目</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../blogs/blog_design.html">设计Blog表结构 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

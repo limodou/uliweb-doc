@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>celery - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb/index.html">Uliweb</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../app/sequence.html"><i class="fa fa-long-arrow-left"></i> sequence(序号生成)</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../app/clean.html">clean <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">celery<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">初始化<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>启用celery，需要在 <code>settings.ini</code> 中的 <code>INSTALLED_APPS</code> 中添加 <code>'uliweb.contrib.celery'</code> ，同时要 安装celery包</p>
+<h2 id="title_1-2">配置<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p><code>uliweb.contrib.celery</code> 本身提供了一些配置项</p>
+<pre class="prettyprint "><code>[CELERY]
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT=['json']
+CELERY_ENABLE_UTC = True
+CELERYBEAT_SCHEDULE = {}
+
+[BINDS]
+celery.after_init_apps = 'after_init_apps', 'uliweb.contrib.celery.after_init_apps'
+
+[FUNCTIONS]
+async_task = 'uliweb.contrib.celery:app.task'
+async_run = 'uliweb.contrib.celery.tasks.common_celery_task'</code></pre>
+<p>其中 <code>BROKER_URL</code> 和 <code>CELERY_RESULT_BACKEND</code> 分别使用了redis，所以如果你继续使用redis，要自已安装redis， 然后启动它。也可以按celery的文档换成其它的后端。 <code>CELERYBEAT_SCHEDULE</code> 目前主要是想用来实现一些调度的功能， 但是这块还没有真正完成，可能要修改。</p>
+<p><code>FUNCTIONS</code> 中定义了两个函数，一个是用于将某个函数声明为celery的任务，而另一个则是不用声明直接以celery的 方式来调用一个函数。</p>
+<h2 id="title_1-3">命令行<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p><code>uliweb.contrib.celery</code> 提供了命令行工具，可以通过 <code>uliweb celery</code> 看到它的帮助。不过具体的celery 的命令，还是要参考celery的文档，如启动celery服务为 :  <code>uliweb celery worker</code> 。好象-A app 不指定也可以。</p>
+<h2 id="title_1-4">定义任务<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>celery的任务函数编写提供了两种方法，一种是和celery一样，要声明。那么 这样的任务可以写在每个app下的 <code>tasks.py</code> 中，例如：</p>
+<pre class="prettyprint "><code>from uliweb import functions
+
+@functions.async_task
+def add(x, y):
+    return x+y</code></pre>
+<p>然后在调用的view中可以：</p>
+<pre class="prettyprint "><code>@expose('/celery')
+def celery():
+    from tasks import add
+
+    result = add.delay(4,4)
+    return result.get()</code></pre>
+<p>另一种写法是不用事先定义task，而是使用uliweb.celery定义好的一个方法来直接调用，如：</p>
+<pre class="prettyprint "><code>def p(name):
+    return name
+
+@expose('/celery_common')
+def celery_common():
+    result = functions.async_run.delay('test1.views:p', 'hello')
+    return result.get()</code></pre>
+<p>上面代码p是一个普通函数，如果想要异步调用它，可以直接通过functions.async_run.delay()来调用，第一个 参数是p这个函数的路径，采用 module:function_name的方式。后面是对应的参数。</p>
+<p>不过这两种方法，async_task可以接受原celery可以接受的参数，这样就更灵活。而async_run则相当于预先写好 了一个task，所以它的参数相对固定，不太灵活，可能对于简单使用足够了。你也可以仿照async_run的作法预定义一 些固定的场景。</p>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../app/sequence.html"><i class="fa fa-long-arrow-left"></i> sequence(序号生成)</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../app/clean.html">clean <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

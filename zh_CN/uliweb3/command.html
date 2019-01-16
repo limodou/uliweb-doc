@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
+<link rel="stylesheet" href="./static/asset/light.css"/>
+<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>如何编写自已的命令 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="./index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="./index.html">Home</a></li><li><a href="./../uliweb/index.html">Uliweb</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="./cache.html"><i class="fa fa-long-arrow-left"></i> Cache使用说明</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="./uliweb_apps.html">Uliweb App 清单 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">如何编写自已的命令<a class="anchor" href="#title_1">&para;</a></h1>
+<p>Uliweb内置了一个命令系统，其中在uliweb/manage.py中已经内置了一些常用命令。同时 你也可以在某个app中，按照命令编写的要求来编写app相关的命令。这样一旦在settings.ini 中的 <code>INSTALLED_APPS</code> 里引入了这个app，这些命令就可以被 Uliweb 使用。你可以 输入 <code>uliweb</code> 来查看当前有哪些可用的命令。</p>
+<p>下面就来介绍一下如何编写自已的命令。</p>
+<h2 id="title_1-1">创建commands.py文件<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>在你的app下创建一个commands.py的文件，文件结构如下:</p>
+<pre class="prettyprint "><code>from uliweb.core.commands import Command
+from optparse import make_option
+
+class DemoCommand(Command):
+    name = 'demo'
+    option_list = (
+        make_option('-d', '--demo', dest='demo', default=False, action='store_true',
+            help='Demo command demo.'),
+    )
+    help = ''
+    args = ''
+    check_apps_dirs = True
+    has_options = False
+    check_apps = False
+
+    def handle(self, options, global_options, *args):
+        print 'This is a demo of DemoCommand, you can enter: '
+        print
+        print '    uliweb help demo'
+        print
+        print 'to test this command'
+        print
+        print 'options=', options
+        print 'global_options=', global_options
+        print 'args=', args</code></pre>
+<p>以上是一个命令的示例，仔细解释一下。</p>
+<h2 id="title_1-2">命令类<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-1">类属性<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<p>每个命令都应该从Command类派生而来。这个类有几个属性可以覆盖，分别为：</p>
+<dl>
+<dt>name</dt>
+<dd><p>命令的名字。你将使用它来执行，执行方式如:</p>
+<pre class="prettyprint "><code>uliweb demo</code></pre>
+</dd>
+<dt>option_list</dt>
+<dd><p>它是参数列表。定义形式为 <code>optparse</code> 所要求的格式。每个参数都使用 <code>make_option</code> 来定义。它支持短参数和长参数。其中短参数就是类似 <code>-d</code> ，长参数就是 <code>--demo</code> 。 <code>dest</code> 表示解析后的参数将使用的变量名。 <code>default</code> 为缺省值。 <code>action</code> 表示解析后的值如何存储，这里为 <code>store_true</code> ，表示一旦给出参数，则将保存为 <code>True</code> 。所以，这种方式会将参数解析为 <code>Boolean</code> 值。那么如果要解析为字符 串怎么做，只要去掉 <code>action</code> 即可，缺省就是字符串，这样可以在参数后面接收 参数。 <code>help</code> 为此参数的帮助信息。</p>
+</dd>
+<dt>help</dt>
+<dd><p>它会额外输出当前命令的帮助信息。用于对当前命令进行解释。</p>
+</dd>
+<dt>args</dt>
+<dd><p>将用在帮助信息的显示上。它与下面的 <code>has_options</code> 一起用在帮助信息的显示上。 对命令的执行没有影响。如果定义 <code>has_options</code> 为 <code>True</code> ，则命令帮助显示 为:</p>
+<pre class="prettyprint "><code>uliweb demo [options] &lt;args&gt;</code></pre>
+<p>如果为 <code>False</code> ，则命令显示为:</p>
+<pre class="prettyprint "><code>uliweb demo &lt;args&gt;</code></pre>
+</dd>
+<dt>has_options</dt>
+<dd><p>用于帮助信息的显示。</p>
+</dd>
+<dt>check_apps_dirs</dt>
+<dd><p>用来显示是否检查当前目录下存在 <code>apps</code> 子目录。缺省为 <code>True</code> 。</p>
+</dd>
+<dt>check_apps</dt>
+<dd><p>用来检查app是否存在。如果设置为 <code>True</code> ，则假定传入的参数应该是 app 。这里 的参数是进行过命令行参数解析之后剩下的参数。</p>
+</dd>
+</dl><h3 id="title_1-2-2">类方法<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+<dl>
+<dt>def get_apps(self, global_options, include_apps=None)</dt>
+<dd><p>返回当前项目所有app的清单。类似于uliweb中的get_apps，不过它因为使用了global_options 所以使用会更为简单</p>
+</dd>
+<dt>def get_application(self, global_options)</dt>
+<dd><p>根据配置信息创建一个application的实例，它会调用 <code>make_simple_application</code> 。</p>
+</dd>
+<dt>def handle(self, options, global_options, *args)</dt>
+<dd><p>用于子类继承的方法。用户自定义的命令应该覆盖这个方法。</p>
+</dd>
+</dl><h2 id="title_1-3">handler方法<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>handler方法是命令类的主体，它接三个参数:</p>
+<dl>
+<dt>options</dt>
+<dd><p>为本命令专有的参数，它是与类中的 <code>option_list</code> 的定义相对应的。</p>
+</dd>
+<dt>global_options</dt>
+<dd><p>为命令全局参数。Uliweb的命令系统提供了缺省的全局参数，如 <code>-h</code> , <code>-v</code> 等 参数。因此用户在定义自已的命令参数时，注意不要与全局的参数重复。</p>
+</dd>
+<dt>args</dt>
+<dd><p>它就是参数解析之后剩下的参数。</p>
+</dd>
+</dl><h2 id="title_1-4">常用在命令中的uliweb方法<a class="anchor" href="#title_1-4">&para;</a></h2>
+<dl>
+<dt>extract_dirs</dt>
+<dd><p>从指定的模块的子目录下抽取相应的目录和文件到指定目录下。</p>
+<pre class="prettyprint "><code>from uliweb.utils.common import extract_dirs</code></pre>
+<p>函数定义为:</p>
+<pre class="prettyprint "><code>extract_dirs(module, path, dest_path, options)</code></pre>
+<dl>
+<dt>module</dt>
+<dd><pre class="prettyprint "><code>模块名。</code></pre>
+</dd>
+<dt>path</dt>
+<dd><pre class="prettyprint "><code>模块下的目录路径。</code></pre>
+</dd>
+<dt>dest_path</dt>
+<dd><pre class="prettyprint "><code>目标目录。</code></pre>
+</dd>
+<dt>options</dt>
+<dd><pre class="prettyprint "><code>可使用参数。如:</code></pre>
+<pre class="prettyprint "><code>verbose=global_options.verbose</code></pre>
+</dd>
+</dl></dd>
+<dt>get_apps</dt>
+<dd><p>获得当前项目下所有的app名字</p>
+<pre class="prettyprint "><code>from uliweb import get_apps</code></pre>
+<p>函数定义为:</p>
+<pre class="prettyprint "><code>get_apps(apps_dir, settings_file, local_settings_file)</code></pre>
+<dl>
+<dt>apps_dir</dt>
+<dd><pre class="prettyprint "><code>当前项目下的apps目录。使用时如:</code></pre>
+<pre class="prettyprint "><code>global_options.apps_dir</code></pre>
+</dd>
+<dt>settings_file</dt>
+<dd><pre class="prettyprint "><code>settings.ini文件路径。使用时如:</code></pre>
+<pre class="prettyprint "><code>global_options.settings</code></pre>
+</dd>
+<dt>local_settings_file</dt>
+<dd><pre class="prettyprint "><code>local_settings.ini文件路径，使用时如:</code></pre>
+<pre class="prettyprint "><code>global_options.local_settings</code></pre>
+</dd>
+</dl></dd>
+</dl><h2 id="title_1-5">常用global_options属性<a class="anchor" href="#title_1-5">&para;</a></h2>
+<dl>
+<dt>verbose</dt>
+<dd><p>对应于 <code>-v</code> 参数。表示是否要冗余输出。</p>
+</dd>
+<dt>apps_dir</dt>
+<dd><p>项目下的 <code>apps</code> 子目录。</p>
+</dd>
+<dt>project</dt>
+<dd><p>项目目录。</p>
+</dd>
+<dt>settings</dt>
+<dd><p>当前项目的settings.ini文件。用户可以使用非settings.ini名字。</p>
+</dd>
+<dt>local_settings</dt>
+<dd><p>当前项目下的local_settings.ini文件。用户可以使用非local_settings.ini名字。</p>
+</dd>
+</dl><h2 id="title_1-6">Command类<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p><code>Command</code> 类是所有命令的基类。大多数方法请参见 <code>uliweb/core/commands.py</code> 文件。 其中有 <code>get_apps</code> 方法，功能和uliweb中的一样，不过需要传入的参数不同，如:</p>
+<dl>
+<dt>get_apps</dt>
+<dd><pre class="prettyprint "><code>get_apps(global_options, include_apps=None)</code></pre>
+<p>使用起来比uliweb下的get_apps要简单一些。</p>
+</dd>
+<dt>get_application</dt>
+<dd><pre class="prettyprint "><code>get_application(global_options)</code></pre>
+<p>获得当前应用的实例，它将完成整个应用的初始化工作</p>
+</dd>
+</dl><h2 id="title_1-7">模块方法<a class="anchor" href="#title_1-7">&para;</a></h2>
+<dl>
+<dt>get_answer(message, answers='Yn', default='Y', quit='n')</dt>
+<dd><p>从命令行获得一个应答。</p>
+<dl>
+<dt>message</dt>
+<dd><pre class="prettyprint "><code>提示信息</code></pre>
+</dd>
+<dt>answers</dt>
+<dd><pre class="prettyprint "><code>为待提受的可选字符集合</code></pre>
+</dd>
+<dt>default</dt>
+<dd><pre class="prettyprint "><code>为输入回车时的缺省值</code></pre>
+</dd>
+<dt>quit</dt>
+<dd><pre class="prettyprint "><code>为退出输入字符</code></pre>
+</dd>
+</dl><p>示例:</p>
+<pre class="prettyprint "><code>ans = get_answer(message, answers='Yn', quit='q')</code></pre>
+</dd>
+<dt>get_input(prompt, default=None, choices=None, option_value=None)</dt>
+<dd><p>判断命令行参数值是否存在，如果不存在则在命令行提示用户输入</p>
+<dl>
+<dt>prompt</dt>
+<dd><pre class="prettyprint "><code>提示信息</code></pre>
+</dd>
+<dt>default</dt>
+<dd><pre class="prettyprint "><code>按回车时的缺省值</code></pre>
+</dd>
+<dt>choices</dt>
+<dd><pre class="prettyprint "><code>可选输入值的范围</code></pre>
+</dd>
+<dt>option_value</dt>
+<dd><pre class="prettyprint "><code>命令输入的可选项，如果不为None，则会直接返回</code></pre>
+</dd>
+</dl><p>示例:</p>
+<pre class="prettyprint "><code>get_input(prompt, default=url_prefix, option_value=options.url)
+get_input("Creation Theme([a]ngularjs):", default="a", choices=['a'],
+    option_value=options.theme)</code></pre>
+</dd>
+</dl>
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="./cache.html"><i class="fa fa-long-arrow-left"></i> Cache使用说明</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="./uliweb_apps.html">Uliweb App 清单 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

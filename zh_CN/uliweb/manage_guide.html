@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
+<link rel="stylesheet" href="./static/asset/light.css"/>
+<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>命令行命令说明 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="./index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="./index.html">Home</a></li><li><a href="./../uliweb3/index.html">Uliweb3</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="./mail.html"><i class="fa fa-long-arrow-left"></i> Mail 处理</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="./template.html">模板(Template) <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">命令行命令说明<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">uliweb<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>当运行不带参数的uliweb命令时，会显示一个帮助信息，但是因为命令很多，所以这个帮 助只是列出可用命令的清单，如:</p>
+<pre class="prettyprint "><code>Usage: uliweb [global_options] [subcommand [options] [args]]
+
+Global Options:
+  --help                show this help message and exit.
+  -v, --verbose         Output the result in verbose mode.
+  -s SETTINGS, --settings=SETTINGS
+                        Settings file name. Default is "settings.ini".
+  -L LOCAL_SETTINGS, --local_settings LOCAL_SETTINGS
+                        Local settings file name. Default is
+                        "local_settings.ini".
+  --project PROJECT     Project "apps" directory.
+  --pythonpath PYTHONPATH
+                        A directory to add to the Python path, e.g.
+                        "/home/myproject".
+  --version             show program's version number and exit
+
+Type 'uliweb help &lt;subcommand&gt;' for help on a specific subcommand.
+
+Available subcommands:
+  call
+  develop
+  export
+  exportstatic
+  find
+  i18n
+  makeapp
+  makecmd
+  makepkg
+  makeproject
+  runserver
+  shell
+  support</code></pre>
+<p>在uliweb中，有一些是全局性的命令，有一些是由某个app提供的命令。因此当你在一个 project目录下运行uliweb命令时，它会根据当前project所安装的app来显示一个完整的 命令清单。上面的示例只显示了在没有任何项目时的全局命令。比如你安装了orm app，则 可能显示的清单为:</p>
+<pre class="prettyprint "><code>Available subcommands:
+  call
+  createsuperuser
+  dbinit
+  develop
+  droptable
+  dump
+  dumptable
+  dumptablefile
+  export
+  exportstatic
+  find
+  i18n
+  load
+  loadtable
+  loadtablefile
+  makeapp
+  makecmd
+  makepkg
+  makeproject
+  reset
+  resettable
+  runserver
+  shell
+  sql
+  sqldot
+  support
+  syncdb</code></pre>
+<p>其中象 dump*, load*, sql*, syncdb, reset* 等命令都是由orm app提供的。</p>
+<p>如果想看单个命令的帮助信息，可以执行:</p>
+<pre class="prettyprint "><code>#&gt; uliweb help sql
+Usage: uliweb sql &lt;appname, appname, ...&gt;
+
+Display the table creation sql statement. If no apps, then process the whole dat
+abase.</code></pre>
+<h3 id="title_1-1-1">常用全局选项说明<a class="anchor" href="#title_1-1-1">&para;</a></h3>
+<p>除了命令，uliweb还提供了全局可用的参数，它与单个命令自已的参数不同，它是对 所有命令都可以使用的参数。</p>
+<h3 id="title_1-1-2">runserver<a class="anchor" href="#title_1-1-2">&para;</a></h3>
+<p>启动开发服务器:</p>
+<pre class="prettyprint "><code>Usage: uliweb runserver [options]
+
+Start a new development server.
+
+Options:
+  -h HOSTNAME           绑定IP，缺省为localhost，如果希望让别人访问，可以绑定 0.0.0.0
+  -p PORT               绑定的端口号，缺省为8000
+  --no-reload           禁止服务器自动重启。缺省是自动重启
+  --no-debug            禁止服务器进入调试模式。缺省是进入
+  --color               输出彩色日志，缺省为不输出
+  --thread              如果设置，则进入多线程工作模式。缺省是单线程
+  --processes=PROCESSES
+                        进程方式启动的个数。缺省是1个。在windows下无法使用
+  --ssl                 以https方式启动服务。此方式将自动使用pyOpenSSH来创建证书
+  --ssl-key=SSL_KEY     如果不想自动创建证书，则可以指定ssl-key和ssl-cert来使用已经
+  --ssl-cert=SSL_CERT   生成好的证书。ssl-key和ssl-cert可以同时使用。ssl为单独使用。
+  --tornado             使用tornado来提供服务
+  --gevent              使用gevent来提供服务
+  --gevent-socketio     使用gevent-socketio来提供服务</code></pre>
+<p>参数说明:</p>
+<div class="alert alert-info">
+<p>在werkzeug的文档中有如何生成key和cert文件的方法，示例如下:</p>
+<pre class="prettyprint "><code>$ openssl genrsa 1024 &gt; ssl.key
+$ openssl req -new -x509 -nodes -sha1 -days 365 -key ssl.key &gt; ssl.cert</code></pre>
+<p>其中在生成cert文件时，会提许多的问题，按要求回答一下就好了。在windows下我是装了git环境，它带了一个openssl的工具，用起来很方便。</p>
+
+</div>
+<p>示例：</p>
+<pre class="prettyprint "><code>uliweb runserver #启动缺省服务器</code></pre>
+<p>如果你想修改日志颜色，可以在settings.ini设置：</p>
+<pre class="prettyprint "><code>[LOG.COLORS]
+DEBUG = 'white'
+INFO = 'green'
+WARNING = 'yellow'
+ERROR = 'red'
+CRITICAL = 'red'</code></pre>
+<p>可用颜色为：BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE. 颜色值不区分大小写。</p>
+<h3 id="title_1-1-3">develop<a class="anchor" href="#title_1-1-3">&para;</a></h3>
+<p>功能同runserver，但是会自动包含develop这个App。</p>
+<div class="alert alert-info">
+<p>使用这个命令，需要安装plugs。</p>
+
+</div>
+<h3 id="title_1-1-4">export<a class="anchor" href="#title_1-1-4">&para;</a></h3>
+<p>将已安装的app目录下的文件导出到指定目录。它的作用是当部署到某些受限环境时，需要 将用到的模块源码打包上传，通过这个命令可以导出uliweb项目中已经安装的模块的源码， 未安装的app源码将不会导出。同时也可以导出指定模块的源码，如导出uliweb的源码。</p>
+<pre class="prettyprint "><code>Usage: uliweb export [options] [module1 module2]</code></pre>
+<p>参数说明:</p>
+<p>示例：</p>
+<pre class="prettyprint "><code>uliweb export -d ../lib
+#将所有已安装的app导出到 ``../lib`` 目录下，不包含 static 目录。
+
+uliweb export -d ../lib uliweb
+#uliweb包导出到 ``../lib`` 目录下。</code></pre>
+<h3 id="title_1-1-5">exportstatic<a class="anchor" href="#title_1-1-5">&para;</a></h3>
+<p>将所有已安装的app下的static文件和子目录复制到一个统一的目录下。注意，如果你在apps的 settings.py中设定了INSTALLED_APPS参数，则所有设定的app将被处理，如果没有设置，则 按缺省方式，将apps目录下的所有app都进行处理。对于存在同名的文件，此命令缺省将进行检 查，如果发现文件名相同，但内容不同的文件将会给出指示，并且放弃对此文件的拷贝。可以 在命令行使用-no-check来关闭检查。</p>
+<pre class="prettyprint "><code>Usage: uliweb exportstatic [options] output_directory [app1, app2, ...]
+
+Export all installed apps static directory to output directory.
+
+Options:
+  -c, --check  检查输出文件或目录是否有冲突，即同名但是内容不同的文件,或相同的子目录名
+  --js         允许javascript压缩处理（缺省使用rminjs）
+  --css        允许css压缩处理（缺省使用rmincss）
+  --auto       允许js和css同时压缩处理</code></pre>
+<p>参数说明:</p>
+<p>可以在输出路径后面再指定若干个app的名字，这样只会导出指定app的静态文件。</p>
+<p>示例：</p>
+<pre class="prettyprint "><code>uliweb exportstatic static
+#将所有已安装的app下的static文件拷贝到static目录下。</code></pre>
+<p>目前exportstatic支持将css和js进行打包，合并，压缩的功能，具体描述详见 <a class="inner" href="css_js_combine.html">CSS, JS合并与压缩</a></p>
+<h3 id="find">find<a class="anchor" href="#find">&para;</a></h3>
+<p>查找对象，包括：模板、URL对应的view、静态文件、Model定义及配置项的定义位置的模块</p>
+<pre class="prettyprint "><code>Usage: uliweb find -u url
+or
+Usage: uliweb find -t template --tree --blocks --with-filename --source --comment
+or
+Usage: uliweb find -c static
+or
+Usage: uliweb find -m model_name
+or
+Usage: uliweb find -o option</code></pre>
+<p>关于模板查找</p>
+<dl>
+<dt>uliweb find -t template</dt>
+<dd><p>查找某个模板的实际路径，如果存在多个同名的模板，则按照查找顺序依次列出。但是系统真正使用的只是第一个。</p>
+</dd>
+<dt>uliweb find -t template --tree</dt>
+<dd><p>查找某个模板的实际路径，同时列出这个模板继承或包含其它模板的信息，如：</p>
+<pre class="prettyprint "><code>apps/project/templates/layout.html
+
+-------------- Tree --------------
+     /Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html
+         (extend)/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html
+             (extend)/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html
+---------------&gt; (extend)apps/project/templates/layout.html
+                     (include)/Users/limodou/mywork/uliweb/uliweb/contrib/csrf/templates/inc_jquery_csrf.html
+                 (include)/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/menu.html
+                 (include)/Users/limodou/mywork/plugs/plugs/ui/jquery/pnotify/templates/inc_show_flashes.html</code></pre>
+<p>其中箭头表示当前模板的位置。</p>
+</dd>
+<dt>uliweb find -t template --blocks --with-filename</dt>
+<dd><p>查找某个模板的实际路径，同时列出这个模板中所有block定义及继承的情况。如果同时给出 <code>--with-filename</code> 参数，则同时显示此block定义所在的文件名，如：</p>
+<pre class="prettyprint "><code>apps/project/templates/layout.html
+/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html
+/Users/limodou/mywork/plugs/plugs/layout/default/templates/layout.html
+
+-------------- Blocks --------------
+    html_tag   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+    meta   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+    title   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+    _css   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+    body_tag   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+    before_header   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+    header   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+        project   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+        nav   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+            menu   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+        user_info   (apps/project/templates/layout.html)
+            message_number_show   (apps/project/templates/layout.html)
+    content   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+        content_sidebar   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+        content_tool_container   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+            content_tool   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+        content_main   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_fluid_layout.html)
+    footer_container   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)
+        footer   (/Users/limodou/mywork/plugs/plugs/layout/bootstrap/templates/layout.html)
+    after_footer   (/Users/limodou/mywork/plugs/plugs/ui/bootstrap/templates/bootstrap/bootstrap_layout.html)</code></pre>
+<p>从上面的结果可以看出block之间的包含关系，并且每个block最终生效的是定义在哪个文件中。</p>
+</dd>
+<dt>uliweb find -t template --source (0.4)</dt>
+<dd><p>打印当前模板转换为python后的源代码，不包含相关的生成注释，如：</p>
+<pre class="prettyprint "><code>/Users/limodou/mywork/test/test/apps/test1/templates/index.html
+
+---------------- source of index.html ---------------
+def _tt_execute():
+    _tt_buffer = []
+    _tt_append = _tt_buffer.append
+    def _tt_write(t, escape=True):
+        if escape:
+            _tt_append(xhtml_escape(t))
+        else:
+            _tt_append(t)
+            pass
+        pass
+    out_write = _tt_append
+    _tt_append('&lt;h1&gt;')
+    _tt_tmp = escape(name)
+    if isinstance(_tt_tmp, _tt_string_types):
+        _tt_tmp = _tt_utf8(_tt_tmp)
+    else:
+        _tt_tmp = _tt_utf8(str(_tt_tmp))
+        pass
+    _tt_append(_tt_tmp)
+    _tt_append(' 1&lt;/h1&gt;\n')
+    return _tt_utf8('').join(_tt_buffer)</code></pre>
+</dd>
+<dt>uliweb find -t template --source --comment (0.4)</dt>
+<dd><p>打印当前模板转换为python后的源代码，包含相关的生成行号及注释，如：</p>
+<pre class="prettyprint "><code>/Users/limodou/mywork/test/test/apps/test1/templates/index.html
+
+---------------- source of index.html ---------------
+ 1  def _tt_execute():  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+ 2      _tt_buffer = []  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+ 3      _tt_append = _tt_buffer.append  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+ 4      def _tt_write(t, escape=True):  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+ 5          if escape:  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+ 6              _tt_append(xhtml_escape(t))  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+ 7          else:  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+ 8              _tt_append(t)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+ 9              pass  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+10          pass  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+11      out_write = _tt_append  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0
+12      _tt_append('&lt;h1&gt;')  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+13      _tt_tmp = escape(name)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+14      if isinstance(_tt_tmp, _tt_string_types):  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+15          _tt_tmp = _tt_utf8(_tt_tmp)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+16      else:  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+17          _tt_tmp = _tt_utf8(str(_tt_tmp))  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+18          pass  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+19      _tt_append(_tt_tmp)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:1
+20      _tt_append(' 1&lt;/h1&gt;\n')  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:2
+21      return _tt_utf8('').join(_tt_buffer)  # /Users/limodou/mywork/test/test/apps/test1/templates/index.html:0</code></pre>
+</dd>
+</dl><h3 id="validatetemplate">validatetemplate(0.4)<a class="anchor" href="#validatetemplate">&para;</a></h3>
+<p>校验模板正确性，可以用于升级到0.4的模板语法检查</p>
+<pre class="prettyprint "><code>Usage: uliweb validatetemplate #整个项目检查
+or
+Usage: uliweb validatetemplate appname #只对appname进行检查
+or
+Usage: uliweb validatetemplate -f template #只对template进行检查</code></pre>
+<p>其中第三种用法，template是可以是相对路径，即从 <code>templates</code> 目录开始的相对路径, 或者是绝对路径。</p>
+<h3 id="title_1-1-6">makeproject<a class="anchor" href="#title_1-1-6">&para;</a></h3>
+<p>生成一个project框架，它将自动按给定的名字生成一个project目录，同时包含有初始子目录和文件。</p>
+<pre class="prettyprint "><code>Usage: uliweb makeproject [-f] projectname</code></pre>
+<p>参数说明:</p>
+<p>示例：</p>
+<pre class="prettyprint "><code>uliweb makeproject project</code></pre>
+<p>创建project项目目录。</p>
+<h3 id="title_1-1-7">makeapp<a class="anchor" href="#title_1-1-7">&para;</a></h3>
+<p>生成一个app框架，它将自动按给定的名字生成一个app目录，同时包含有初始子目录和文件。</p>
+<pre class="prettyprint "><code>Usage: uliweb makeapp [-f] appname</code></pre>
+<p>参数说明:</p>
+<p>示例：</p>
+<pre class="prettyprint "><code>uliweb makeapp Hello</code></pre>
+<p>创建Hello应用。如果当前目前下有apps目录，则将在apps目录下创建一个Hello的目录， 并带有初始的文件和结构。如果当前目前下没有apps目录，则直接创建Hello的目录。</p>
+<h3 id="title_1-1-8">makecmd<a class="anchor" href="#title_1-1-8">&para;</a></h3>
+<p>向指定的app或当前目录下生成一个commands.py模板。</p>
+<pre class="prettyprint "><code>Usage: uliweb makecmd [appname, ...]</code></pre>
+<p>示例：</p>
+<pre class="prettyprint "><code>uliweb makecmd Hello</code></pre>
+<h3 id="title_1-1-9">makepkg<a class="anchor" href="#title_1-1-9">&para;</a></h3>
+<p>生成一个Python包结构目录，即带有__init__.py文件。</p>
+<pre class="prettyprint "><code>Usage: uliweb makepkg pkgname</code></pre>
+<h3 id="title_1-1-10">makemodule (0.5 new)<a class="anchor" href="#title_1-1-10">&para;</a></h3>
+<p>生成一个独立的uliweb app目录结构,可以独立安装.</p>
+<pre class="prettyprint "><code>Usage: uliweb makemodule uliweb-hello</code></pre>
+<p>模块名字需要以 <code>uliweb-</code> 开头,生成的模块名会把 <code>-</code> 替换成 <code>_</code>.</p>
+<h3 id="title_1-1-11">i18n<a class="anchor" href="#title_1-1-11">&para;</a></h3>
+<p>i18n处理工具，用来从项目中提取_()形式的信息，并生成.pot文件。可以按app或全部app或整个 项目为单位进行处理。对于app或全部app方式，将在每个app下创建： <code>app/locale/[zh]/LC_MESSAGES/uliweb.pot</code> 这样的文件。其中[zh]根据语言的不同而不同。并且它还会把.pot文件自动合并到uliweb.po文件上。</p>
+<pre class="prettyprint "><code>Usage: uliweb i18n [options] &lt;appname, appname, ...&gt;</code></pre>
+<p>参数说明:</p>
+<p>如果最后给出app的列表，则会按指定的app进行处理。但一旦给出了--apps参数， 则app列表将无效。</p>
+<p>示例：</p>
+<pre class="prettyprint "><code>uliweb i18n -d plugs -l zh_CN #处理plugs目录
+uliweb i18n --apps -l zh_CN   #全部全部app的处理
+uliweb i18n -l zh_CN Test     #只处理 Test app
+uliweb i18n -p                #整个项目，使用en</code></pre>
+<h3 id="title_1-1-12">call<a class="anchor" href="#title_1-1-12">&para;</a></h3>
+<pre class="prettyprint "><code>Usage: uliweb call name</code></pre>
+<p>执行所有安装的App下的名为<name>.py程序。如果是 'moduleA.moduleB' 则导入指定的模块 执行其中的call()或main()方法。</p>
+<h3 id="title_1-1-13">config(0.2.2)<a class="anchor" href="#title_1-1-13">&para;</a></h3>
+<pre class="prettyprint "><code>Usage: uliweb config supported_type</code></pre>
+<p>输出支持的配置信息。缺省支持nginx和supervisor配置模板，你可以基于它们进行修改。</p>
+<p>你也可以自定义config输出，只要在app下创建 <code>template_files/config</code> 的目录结构，然后创建 <code>xxxx.conf</code> 和 <code>xxxx.ini</code> 文件。在 <code>xxxx.ini</code> 中用来定义一些 变量，这些变量将用于 <code>xxxx.conf</code> 中。</p>
+<p>ini格式定义示例为：</p>
+<pre class="prettyprint "><code>[INPUT]
+port = '', 80
+path =</code></pre>
+<p>port为变量名，值为一个tuple或者不定义，第一个值为提示用的文本，如果为空则表示没有额外 说明。第二个表示缺省值。</p>
+<p>xxxx.conf 为uliweb格式的模板，如果存在模板变量，则需要与ini中的一致。同时 有一些预定义的变量，如: project 表示项目目录名称，project_dir 表示项目目录。</p>
+<p>执行时可以： <code>uliweb config xxxx</code></p>
+<h3 id="title_1-1-14">install(0.2)<a class="anchor" href="#title_1-1-14">&para;</a></h3>
+<pre class="prettyprint "><code>Usage: uliweb install [appname,...]</code></pre>
+<p>执行在项目目录下或app目录下的requirements.txt。如果不指定appname，则是扫描整个项 目，如果指定app，则只扫描指定app下的requirements.txt。</p>
+<h3 id="title_1-1-15">support<a class="anchor" href="#title_1-1-15">&para;</a></h3>
+<pre class="prettyprint "><code>Usage: uliweb support supported_type</code></pre>
+<p>向当前的项目添加某种平台的支持文件。目前支持gae, doccloud, fcgi, bae, heroku, sae, tornado, gevent, gevent-socketio。</p>
+<dl>
+<dt>gae</dt>
+<dd><p>将额外拷贝app.yaml和gae_handler.py。</p>
+</dd>
+<dt>dotcloud</dt>
+<dd><p>将额外拷贝requirements.txt和wsgi.py。不过一般情况下你有可能要修改requirements.txt 以满足你的要求。</p>
+</dd>
+<dt>bae</dt>
+<dd><p>将额外拷贝app.conf和index.py。</p>
+</dd>
+<dt>heroku</dt>
+<dd><p>将额外拷贝app.py, lib, Procfile和 requirements.txt.</p>
+</dd>
+<dt>sae</dt>
+<dd><p>将额外拷贝index.wsgi和lib.</p>
+</dd>
+<dt>fcgi</dt>
+<dd><p>将额外拷贝 fcgi_handler.py.</p>
+</dd>
+<dt>tornado</dt>
+<dd><p>将额外拷贝 tornado_handler.py.</p>
+</dd>
+<dt>gevent</dt>
+<dd><p>将额外拷贝 gevent_handler.py</p>
+</dd>
+<dt>gevent-socketio</dt>
+<dd><p>将额外拷贝 gevent_socketio_handler.py</p>
+</dd>
+</dl><p>在0.2.2中，可以象config命令一样，在你的app下创建 <code>template_files/support/xxxx</code> 这样的目录结构，下面放执行 <code>uliweb support xxxx</code> 时将要拷贝的文件及目录即可。</p>
+<h3 id="title_1-1-16">shell<a class="anchor" href="#title_1-1-16">&para;</a></h3>
+<p>在当前项目目录下，进入shell环境。可以直接使用如application, settings.ini等全局 变量。</p>
+<p>可以带一个文件名参数，这样在进入shell交互环境之前可以先运行指定的文件。</p>
+<p>在缺省情况下,如果运行环境中安装了ipython,则缺省会使用ipython进行入使用.当执行 <code>uliweb shell --notebook</code> 时, 如果安装了 <code>jupyter notebook</code> 则会自动进入 notebook 的环境.这样,当进入notebook环境后,执行: <code>%loadext uliweb</code> 会自动装入 <code>settings</code>, <code>functions</code>, <code>application</code> 等环境变量.</p>
+<h2 id="title_1-2">其它App包含的命令<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-17">orm app<a class="anchor" href="#title_1-2-17">&para;</a></h3>
+<p>orm app带有一系列针对数据库操作的命令，从0.1版本开始，uliorm开始支持多数据连接的 设置，具体的使用参见 ORM 的文档。同时在命令行工具上也支持对不同数据连接，它们共 同使用 <code>--engine</code> 参数。缺省为 <code>default</code> 。其它的数据库连接要在 <code>settings.ini</code> 中进行设置。</p>
+<p>可用命令列举如下：</p>
+<h4 id="title_1-2-17-1">alembic<a class="anchor" href="#title_1-2-17-1">&para;</a></h4>
+<p><a class="outter" href="http://readthedocs.org/docs/alembic/en/latest/index.html">alembic</a> 是用于 sqlalchemy的数据库迁移工具。目前Uliweb已经集成了alembic的部分命令，分别为:</p>
+<pre class="prettyprint "><code>init                        初始化alembic环境
+revision                    生成一个版本
+    -m --message Message    可选的消息
+    --autogenerate          自动生成版本
+diff                        相当于使用revision时自动带autogenerate
+    -m --message Message    可选的消息
+    -f --force              强制比较。如果不设，则当上一个版本没有更新
+                            时，则不能进行新的比较
+upgrade revision            升级指定的版本，当前版本为head
+    --sql                   不真正执行升级，而是生成sql
+    --tag TAG               指定一个tag（不是太明白作用）
+help &lt;subcommand&gt;           查看某个子命令的帮助</code></pre>
+<p>全部选项：</p>
+<p>和数据库的命令一样，alembic也支持加入 <code>--engine</code> 选项，用来选择数据库的连接。 上面所有的alembic的子命令都支持 <code>--engine</code> 选项。如果没有设置，缺省为 <code>default</code>.</p>
+<p>在使用时，一般先执行 <code>init</code> 进行初始化，如:</p>
+<pre class="prettyprint "><code>uliweb alembic init [--engine other]</code></pre>
+<p>如果是使用缺省数据库连接，则不用带其它的参数。如果要指定其它的数据库连接，则要 使用 <code>--engine</code> 来指定。执行后，uliweb会在当前的目录下创建形为:</p>
+<pre class="prettyprint "><code>project/
+    alembic/
+        &lt;engine&gt;/
+            alembic.ini
+            versions/
+            env.py
+            script.py.mako</code></pre>
+<p><code>alembic.ini</code> 为alembic使用的配置文件。 <code>env.py</code> 为自动处理时要调用的脚本。 uliweb主要是针对这两个文件进行了定制性的处理。上面的目录结构将会为每个数据库连接 创建一个目录。这样不同的数据库的脚本将分别存放。</p>
+<p>在使用alembic命令前，首先要安装它，简单的命令为:</p>
+<pre class="prettyprint "><code>pip install alembic</code></pre>
+<div class="alert alert-info">
+<p>为了更好的支持uliweb和mysql，我在原生的alembic上进行了修改，因此建议下载这个 版本 <a class="outter" href="https://github.com/limodou/alembic">https://github.com/limodou/alembic</a></p>
+
+</div>
+<h4 id="title_1-2-17-2">syncdb<a class="anchor" href="#title_1-2-17-2">&para;</a></h4>
+<p>自动根据已安装的app中settings.ini中所配置的MODELS信息，在数据库中创建不存在的表。 如果只是写在models.py中，但是未在settings.ini中进行配置，则不能自动创建。</p>
+<p>settings.ini中的写法如:</p>
+<pre class="prettyprint "><code>[MODELS]
+question = 'ticket.models.Question'</code></pre>
+<p>其中key是与Model对应的真正的表名，不能随便起。</p>
+<h4 id="title_1-2-17-3">sql<a class="anchor" href="#title_1-2-17-3">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb sql &lt;appname, appname, ...&gt;</code></pre>
+<p>用于显示对应app的Create语句。但是目前还无法显示创建Index的信息。</p>
+<p>命令后面可以跟若干app名字，如果没有给出，则表示整个项目。</p>
+<h4 id="title_1-2-17-4">sqldot<a class="anchor" href="#title_1-2-17-4">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb sqldot &lt;appname, appname, ...&gt;</code></pre>
+<p>类似sql命令，但是它会将表及表的关系生成.dot文件，可以使用graphviz将dot文件转 为图形文件。</p>
+<h4 id="title_1-2-17-5">droptable<a class="anchor" href="#title_1-2-17-5">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb droptable &lt;tablename, tablename, ...&gt;</code></pre>
+<p>从数据库中删除某些表。</p>
+<h4 id="title_1-2-17-6">dump<a class="anchor" href="#title_1-2-17-6">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb dump [options] &lt;appname, appname, ...&gt;</code></pre>
+<p>将数据从数据库中卸载下来。</p>
+<p>参数说明:</p>
+<div class="alert alert-info">
+<p>dump系列函数在0.1版本后有所变化。因为支持了多数据库，所以缺省情况下，dump 出来的文件将存放到 <code>data/default</code> 目录下。如果指定了 <code>--engine other</code> 参数，则 文件将存放到 <code>data/other</code> 目录下。同时load系列函数也会作相同的处理。</p>
+
+</div>
+<h4 id="title_1-2-17-7">dumptable<a class="anchor" href="#title_1-2-17-7">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb dumptable [options] &lt;tablename, tablename, ...&gt;</code></pre>
+<p>将指定的表中的数据卸载下来。参数说明同dump。</p>
+<h4 id="title_1-2-17-8">dumptablefile<a class="anchor" href="#title_1-2-17-8">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb dumptablefile [options] tablename text_filename</code></pre>
+<p>将指定的表数据卸载到指定的文件中。此命令与dump和dumptable不同的地方是：这个命令 只处理一个表，并且可以指定输出文件名。而后两个命令不能指定文件名，它将按表名生 成文件名，并且放到指定的目录下。</p>
+<p>参数说明:</p>
+<h4 id="title_1-2-17-9">load<a class="anchor" href="#title_1-2-17-9">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb load [options] &lt;appname, appname, ...&gt;</code></pre>
+<p>将数据装入到数据库中。</p>
+<p>参数说明:</p>
+<pre class="prettyprint "><code>Options:
+  -d DIR                输出目录，缺省为当前项目下的data目录
+  -b BULK               批量插入条数，缺省为100条
+  -t, --text            以文本格式装入数据
+  --delimiter=DELIMITER
+                        文本文件使用的字段分隔符，缺省为 ','
+  --encoding=ENCODING   文本文件编码，缺省为 'utf-8'
+  -p, --project         只处理项目中的所有表。缺省为False，表示可以处理整个数据库中的表，可能在项目之外
+  -z ZIPFILE            导出数据为zip文件名
+  --engine=ENGINE       指定数据库连接名.</code></pre>
+<p>当使用 <code>-z</code> 参数时，如果不指定 <code>-d</code> 参数，则会自动在 <code>./data</code> 下创建一个临时文件夹，如果指定，则在 指定目录下创建临时文件夹，如果给出 <code>-v</code> 则可以在导出前看到输出的目录。并且在导出完成之后，会自动将临时 文件夹删除。</p>
+<h4 id="title_1-2-17-10">loadtable<a class="anchor" href="#title_1-2-17-10">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb loadtable [options] &lt;tablename, tablename, ...&gt;</code></pre>
+<p>只装入指定的表名数据到数据库中。参数同load。</p>
+<h4 id="title_1-2-17-11">loadtablefile<a class="anchor" href="#title_1-2-17-11">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb loadtablefile [options] tablename text_filename</code></pre>
+<p>将指定的文件装入到对应的表中。</p>
+<p>参数说明:</p>
+<h4 id="title_1-2-17-12">reset<a class="anchor" href="#title_1-2-17-12">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb reset &lt;appname, appname, ...&gt;</code></pre>
+<p>重置整个数据库或指定的app。</p>
+<h4 id="title_1-2-17-13">resettable<a class="anchor" href="#title_1-2-17-13">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb resettable &lt;tablename, tablename, ...&gt;</code></pre>
+<p>重置指定的表。</p>
+<h4 id="title_1-2-17-14">sqlhtml<a class="anchor" href="#title_1-2-17-14">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb sqlhtml &lt;appname, appname, ...&gt; &gt; output.html</code></pre>
+<p>对指定的app或整个数据库生成表结构的说明文档。</p>
+<h4 id="title_1-2-17-15">validatedb<a class="anchor" href="#title_1-2-17-15">&para;</a></h4>
+<pre class="prettyprint "><code>Usage: uliweb validatedb [-t] &lt;appname, appname, ...&gt;</code></pre>
+<p>对指定的app或整个数据库进行结构校验，检查数据库中的字段与源码中的Model定义是否 一致。</p>
+<h3 id="title_1-2-18">auth app<a class="anchor" href="#title_1-2-18">&para;</a></h3>
+<h4 id="title_1-2-18-16">createsuperuser<a class="anchor" href="#title_1-2-18-16">&para;</a></h4>
+<p>创建超级用户。</p>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="./mail.html"><i class="fa fa-long-arrow-left"></i> Mail 处理</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="./template.html">模板(Template) <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>0.2.4 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb3/index.html">Uliweb3</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../update/update_0.2.5.html"><i class="fa fa-long-arrow-left"></i> 0.2.5</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../update/update_0.2.3.html">0.2.3 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">0.2.4<a class="anchor" href="#title_1">&para;</a></h1>
+<ul>
+<li><p>修正 ORM 与 SQLAlchemy 0.9.1 不兼容的Bug. 旧的写法:</p>
+<pre class="prettyprint "><code>cond = None
+cond = (Blog.c.id==5) &amp; None</code></pre>
+<p>在 0.9.1 中将不是正确的，因为 None 不会被忽略掉（0.8.x 只在 and 时会这样）， 所以你可以将 <code>cond = None</code> 改为：</p>
+<pre class="prettyprint "><code>from sqlalchemy.sql import true
+cond = true()</code></pre>
+<p>或者</p>
+<pre class="prettyprint "><code>from uliweb.orm import true
+cond = true()</code></pre></li>
+<li><p>向 functions 中添加 <code>__contains__</code> , 这样如果要检查一个 API 是否在 functions   中存在，只要:</p>
+<pre class="prettyprint "><code>'flash' in functions</code></pre></li>
+<li>重构 generic.py, 删除对 <code>functions.flash</code> 和 <code>functions.get_fileserving</code>   的缺省依赖。</li>
+<li><p>修复在 view 函数中对 <code>yield</code> 的支持， 你还可以在 gevent 环境中使用，例如：</p>
+<pre class="prettyprint "><code>@expose('/test')
+def test():
+    yield "&lt;ul&gt;"
+    for i in range(10):
+        yield "&lt;li&gt;%d&lt;/li&gt;" % (i + 1)
+        sleep(1)
+    yield "&lt;/ul&gt;"</code></pre></li>
+<li>修复 <code>rawsql()</code> 在不同数据库引擎中出错的 bug</li>
+<li>修复 <code>jsonp()</code> 在处理中文时的 bug</li>
+<li><p>添加 <code>trim_path()</code> 函数向 <code>utils/common.py</code>这，可以用它将一个路径处理为指定长   度，过长的部分会转为 <code>...</code></p>
+<pre class="prettyprint "><code>&gt;&gt;&gt; a = '/project/apps/default/settings.ini'
+&gt;&gt;&gt; trim_path(a, 30)
+'.../apps/default/settings.ini'</code></pre>
+<p>缺省的限制长度是 30。</p></li>
+<li><p>在命令行使用了 <code>-v</code> 参数时，将输出 ORM 连接信息。并且口令将会替換为 <code>'*'</code> ，例如：</p>
+<pre class="prettyprint "><code>$&gt;uliweb syncdb -v
+Connection : mysql://blog:***@localhost/blog?charset=utf8
+
+[default] Creating [1/1, blog] blog...EXISTED</code></pre></li>
+<li><p>添加 <code>makeapp</code> 命令可以一次创建多个 app 的支持，如使用：</p>
+<pre class="prettyprint "><code>uliweb makeapp a b c</code></pre>
+<p>一次创建 <code>a</code>, <code>b</code>, <code>c</code> app。</p></li>
+<li><p>重构 <code>save_file()</code> 的处理, 添加 <code>headers</code> 和 <code>convertors</code> 参数。</p>
+<p><code>headers</code> 用于创建 csv 的头时，以替換原来字段的名字，但是你也可以象下面来 创建别名：</p>
+<pre class="prettyprint "><code>User.c.username.label(u"Name")</code></pre>
+<p>而 <code>convertors</code> 用于转換字段的值，例如：</p>
+<pre class="prettyprint "><code>def name(value, data):
+    """
+    value is the column value
+    data is the current record object
+    """
+    return value + 'test'
+save_file(do_(select([User.c.name])), 'test.csv', convertors={'name':name})</code></pre></li>
+<li>修复 <code>call_view()</code> 调用 <code>wrap_result</code> bug。</li>
+</ul>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../update/update_0.2.5.html"><i class="fa fa-long-arrow-left"></i> 0.2.5</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../update/update_0.2.3.html">0.2.3 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

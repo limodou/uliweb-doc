@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>介绍 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb3/index.html">Uliweb3</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../blogs/create_project.html">创建项目 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">介绍<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">目的<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>Web开发需要大量知识的汇集，Uliweb框架本身也提供了非常多的实现手段。单纯地看文档 可能未必能够了解某些功能的使用场景，因此我开始写这个教程，希望把一些新的、方便的 用法介绍给大家，并且尽量展示更多框架如何与其它的功能结合的一些示例。</p>
+<ul>
+<li>常见命令行的使用</li>
+<li>原始的Form交互处理</li>
+<li>使用Generic交互处理</li>
+<li>使用generic命令行自动生成代码框架</li>
+<li>如何处理文件上传及下载</li>
+<li>Ajax的使用示例</li>
+<li>如何将常用的一些js,css库封装为app</li>
+<li>邮件处理、守护及异步调用框架示例</li>
+<li>如何部署</li>
+</ul>
+<h2 id="title_1-2">准备uliweb环境<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>在开始项目前，需要安装: python环境，以及 setuptools, pip, uliweb, plugs,  sqlalchemy, alembic等模块。</p>
+<p>其中python版本目前只支持2.6和2.7。3.3+还在准备中。</p>
+<p><a class="outter" href="http://pypi.python.org/pypi/setuptools">setuptools</a> 和  <a class="outter" href="http://pypi.python.org/pypi/pip">pip</a> 可以去 pypi 上下载最新的版本进行安装。</p>
+<p>安装Uliweb和Plugs可以：</p>
+<pre class="prettyprint "><code>pip install uliweb
+pip install plugs</code></pre>
+<p>因为Uliweb和plugs会经常变化，所以最好的方式是使用源码。你可以使用git将Uliweb和 plugs的仓库clone到本地，然后通过：</p>
+<pre class="prettyprint "><code>python setup.py develop</code></pre>
+<p>来进行安装。这样以后如果要保持代码是最新的，只要执行：</p>
+<pre class="prettyprint "><code>git pull</code></pre>
+<p>就可以了。</p>
+<p>至于sqlalchemy, alembic可以在后面再安装。</p>
+<h2 id="title_1-3">准备git环境<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>这里假设你将要使用git作为你的版本管理工具，并且会将代码放在github上。所以你需要 安装git环境。git工具有很多，这里我使用的是 <a class="outter" href="http://git-scm.com/downloads">git官网</a> 上的命令行工具，github本身还提 供了GUI的工具。在安装好git命令行之后，在windows环境下确认可以进入git bash。在linux 下可以启动git。</p>
+<p>本项目的代码已经放在github上，地址是： <a class="outter" href="https://github.com/limodou/uliweb-blogs-demo">https://github.com/limodou/uliweb-blogs-demo</a> 所以你可以clone这个仓库来查看源码。</p>
+<p>欢迎大家在阅读中提出问题，一起完善这个教程。</p>
+<p>这个教程本身是放在 <a class="outter" href="https://github.com/limodou/uliweb-doc">https://github.com/limodou/uliweb-doc</a> 项目中的。</p>
+<h2 id="title_1-4">功能需求<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>下面把本教程打算实现的功能列在下面，希望我能够全部完成。也希望大家一起来添加内容， 让这个教程更完善。</p>
+<p>简要说明一下：我打算实现一个多人共同编写的博客，所以整体上还是一个博客，但是可以 一起展示，也可以按人来分别展示。评论则采用第三方的功能。页面功能尽量考虑实现静态 化。实现基本的用户管理功能。可以记录用户操作。实现邮件异步发送。博客将采用Markdown 语法来写作，可以支持图片上传。</p>
+<ul>
+<li><p>blog功能</p>
+<ul>
+<li>blog首页展示</li>
+<li>blog分页</li>
+<li>单个blog文章展示</li>
+<li>disqus评论集成</li>
+<li>blog创建</li>
+<li>blog编辑</li>
+<li>分类创建</li>
+<li>分类管理</li>
+<li>Tag管理</li>
+<li>RSS生成</li>
+</ul></li>
+<li><p>后台管理</p>
+<ul>
+<li><p>用户管理</p>
+<ul>
+<li>用户注册</li>
+<li>用户审批(超级用户)</li>
+</ul></li>
+<li>操作日志</li>
+</ul></li>
+<li><p>守护</p>
+<ul>
+<li>邮件发送</li>
+</ul></li>
+</ul>
+
+
+      
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../blogs/create_project.html">创建项目 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

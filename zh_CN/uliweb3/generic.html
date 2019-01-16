@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
+<link rel="stylesheet" href="./static/asset/light.css"/>
+<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>Generic 说明 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="./index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="./index.html">Home</a></li><li><a href="./../uliweb/index.html">Uliweb</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="./middleware.html"><i class="fa fa-long-arrow-left"></i> Middleware 开发</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="./test.html">如何测试 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">Generic 说明<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">Genric是什么？<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>在编写View相关的代码时，我们遇到最多的处理恐怕就是：列表显示、添加、删除、更新、修改 了，一般的叫法是CRUD(Create, Read, Update, Delete)这里没有List。那么Generic的目的 就是把这些常见的处理进行封装，并且它可以和Uliorm相结合，可以比较容易地对表中的 记录进行处理。在Uliweb的utils/generic.py中提供了上述的功能。</p>
+<p>generic的整个设计思路是为了将处理程流进行复用。首先是根据按执行的功能分为不同的类。 然后将完整的处理流程封装到类中。但是在实际处理过程中，总会有各种各样的特殊的要求， 因此，你有两种扩展的方式：一种是派生新的类，另一种是将必要的参数和回调传入初始化 函数。一般的方式是采用第二种，因为这种方式相对简单。</p>
+<p>generic主要是对Model的界面处理进行了自动化，所以它主要是和Model相结合使用。</p>
+<p>在generic中，针对不同的处理提供了不同的View Class，下面分别进行介绍。</p>
+<div class="alert alert-info">
+<p>本文档附带了一个示例，可以从 uliweb-doc/projects/genric_blog 中找到。</p>
+
+</div>
+<h2 id="title_1-2">ListView<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>ListView用来处理列表显示。在最简单的情况下，你可能只需要在view中返回一个结果集， 然后在模板中对它进行展示。不过，这样一些处理将会集中在模板中。而ListView通过丰 富的参数，可以比较方便地进行：设置条件、处理字段、字段值的加工、不同的展示方式、 下载支持等。</p>
+<h3 id="title_1-2-1">ListView参数说明<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<pre class="prettyprint "><code>class ListView(SimpleListView):
+    def __init__(self, model, condition=None, query=None, pageno=0, order_by=None,
+        fields=None, rows_per_page=10, types_convert_map=None, pagination=True,
+        fields_convert_map=None, id='listview_table', table_class_attr='table',
+        table_width=True, total_fields=None, template_data=None,
+        default_column_width=100, meta='Table', render=None):</code></pre>
+<p>上面是ListView的初始化函数的定义，可以看到它提供了大量的参数。同时用户也可以根 据需要从ListView类进行派生。ListView是从SimpleListView派生来的，它主要用来处理 与Model相关的列表展示，而SimpleListView主要是处理查询后的结果，不直接与Model 绑定。下面对每个参数进行说明:</p>
+<dl>
+<dt>model</dt>
+<dd><p>ListView要绑定的Model，这个Model将是显示的主体。</p>
+</dd>
+<dt>condition</dt>
+<dd><p>查询条件。在执行时，ListView将会按 model.filter(condition)的形式来获得结果 集。</p>
+</dd>
+<dt>query</dt>
+<dd><p>结果集。如果用户传入了一个在model上的结果集，则它将结合condition条件，使用 query.filter(condition)来获得结果。这里就不再是model对象了，而是传入的query 对象。所以用户要保证这个query是操作model得到的结果集。</p>
+</dd>
+<dt>order_by</dt>
+<dd><p>对查询结果进行排序。它可以是排序字段的列表，写法要符合sqlalchemy的要求，比如:</p>
+<pre class="prettyprint "><code>(Model.c.name, Model.c.age.desc())</code></pre>
+<p>可以有多个排序字段，可以按升序或降序排序。</p>
+</dd>
+<dt>pageno</dt>
+<dd><p>页号。ListView支持分页查询。第一页是从0开始。</p>
+</dd>
+<dt>rows_per_page</dt>
+<dd><p>每页显示的记录条数。</p>
+</dd>
+<dt>pagination</dt>
+<dd><p>是否使用分页方式的标志。缺省为使用。如果为False则不使用分页方式。</p>
+</dd>
+<dt>fields</dt>
+<dd><p>用于传入需要显示的字段列表。如果没有给出，则自动使得后面的meta字段所指定的， 定义在Model中的特殊子类的fields属性。具体的参见下面的关于字段列表定义的说明。</p>
+</dd>
+<dt>types_convert_map</dt>
+<dd><p>用来定义字段类型与显示值处理函数的映射。具体说明，参见下面关于字段的展示的 说明。它同下面的fields_convert_map类似，只不过fields_convert_map只处理特定 名字的字段，只能是一个字段；而types_convert_map是处理特定类型的字段，可能是 多个字段。</p>
+</dd>
+<dt>fields_convert_map</dt>
+<dd><p>用来定义字段与显示值处理函数的映射。具体说明，参见下面关于字段的展示的 说明。</p>
+</dd>
+<dt>id</dt>
+<dd><p>生成页面时<table>元素的id属性名。</p>
+</dd>
+<dt>table_class_attr</dt>
+<dd><p>用于指明<table>元素的class属性值。</p>
+</dd>
+<dt>table_width</dt>
+<dd><p>是否指定表格以像素计算的宽度，如果是，则会根据每列的宽度进行计算总宽度，然后 设置表格的总宽度。</p>
+</dd>
+<dt>default_column_width</dt>
+<dd><p>缺省每列的像素宽度，缺省为100px。</p>
+</dd>
+<dt>total_fields</dt>
+<dd><p>用于合计字段的计算。</p>
+</dd>
+<dt>template_data</dt>
+<dd><p>将传入模板中的变量dict。</p>
+</dd>
+<dt>meta</dt>
+<dd><p>如果使用Model中的字段定义，则使用指定名字的子类中的fields属性。缺省为 <code>'Table'</code> ， 你可以指定其它的名字。</p>
+</dd>
+<dt>render</dt>
+<dd><p>如果不希望ListView按缺省的数据加工方法对数据进行处理，可以传入自定义的render 函数。它是一个回调，调用形式为: <code>render(record, obj)</code> ，record为正在处理的记录， 它的值是一个二元的tuple，形式为: <code>(name, display)</code> 。obj为当前正在处理的对 象。</p>
+</dd>
+</dl><h3 id="title_1-2-2">字段列表定义<a class="anchor" href="#title_1-2-2">&para;</a></h3>
+<p>在ListView中，用户可以有两种定义列表显示字段的方式：</p>
+<ol>
+<li>通过fields字段，传入字段列表</li>
+<li>通过在Model类中定义一个子类，来定义字段列表</li>
+</ol>
+<p>第一种方法可以在运行时根据需要动态修改显示字段的列表，而第二种相对静态。代码示 例如下:</p>
+<pre class="prettyprint "><code>fields = ['name', 'age',
+            {'name':'plan_stat','verbose_name':'计划状态', 'width':80},
+        ]</code></pre>
+<p>上面代码是在view代码中定义fields的示例。它支持简单的字段，即只列出字段名称。一 般这种情况下，字段名称在Model中应有对应的属性。比如上例中，应该在传入的Model 对象中有'name, 'age', 'main_sys'这几个字段。对于复杂的字段，如上例中的dict方式 定义的字段，它主要是用于Model中不存在的字段，因此你需要定义以下几个属性:</p>
+<dl>
+<dt>name</dt>
+<dd><p>字段的名字，英文名</p>
+</dd>
+<dt>verbose_name</dt>
+<dd><p>显示用的名字。如果没有，则使用name值</p>
+</dd>
+<dt>width</dt>
+<dd><p>可选，这个是与生成的表格相关的。generic.py缺省可以提供使用<table>生成的清 单。也支持使用jquery easyui的datagrid生成的表格。这个参数是用来定义列的宽 度。缺省不定义的话宽度是100px。</p>
+</dd>
+<dt>sortable</dt>
+<dd><p>可选。这个也是与使用jquery easyui有关的，其它的情况下，要么你从ListView派生 新的子类，对生成<table>进行了处理，可以考虑定义它，如果不是，则没有什么用。</p>
+</dd>
+</dl><p>因此上面name和verbose_name一般是必须的，其它的根据需要来使用。并且，定义哪些值 还和将来展示时使用的包有关系，这块也可以自已去扩展。</p>
+<p>第二种方法示例:</p>
+<pre class="prettyprint "><code>class Test(Model):
+    name = Field(str, max_length=30, verbose_name='姓名')
+    age = Field(int, verbose_name='年龄'
+
+    class Table:
+        fields = [
+            {'name':'name', 'width':150},
+            'age',
+        ]</code></pre>
+<p>上面的定义也支持不存在的字段，支持简单定义和复杂定义。</p>
+<h3 id="title_1-2-3">执行流程描述<a class="anchor" href="#title_1-2-3">&para;</a></h3>
+<p>先给出代码示例:</p>
+<pre class="prettyprint "><code>def list(self):
+    from uliweb.utils.generic import ListView
+
+    def title(value, obj):
+        return obj.get_url()
+
+    view = ListView(self.model, fields_convert_map={'title':title})
+    return view.run()</code></pre>
+<ol>
+<li>从 generic 中导入 ListView 。</li>
+<li>根据需要对需要传入 ListView 中的参数或回调函数进行处理</li>
+<li>创建 ListView 实例</li>
+<li><p>返回 view.run()，它将返回一个 dict ，包含内容为:</p>
+<pre class="prettyprint "><code>{'table':以table方式显示的表格数据,
+ 'table_id':table的id,
+ 'total':总条数,
+ 'pageno':当前页号,
+ 'page_rows':每页显示的条数
+}</code></pre></li>
+</ol>
+<p>同时它还包含了传入到template_data中的数据。</p>
+<p>所以在最简单的情况下，对应的模板可以写为:</p>
+<pre class="prettyprint "><code>{{extend "BlogView/layout.html"}}
+
+{{block content}}
+&lt;a href="/add"&gt;添加Blog&lt;/a&gt;
+{{&lt;&lt; table}}
+{{end}}</code></pre>
+<p>直接展示 <code>{{&lt;&lt;table}}</code> 即可。</p>
+<h3 id="title_1-2-4">字段转換<a class="anchor" href="#title_1-2-4">&para;</a></h3>
+<p>ListView中可以对某个字段的值进行转換，同时这种转換支持对不存在的字段进行处理。 这里要使用 fields_convert_map 这个参数，它是一个 dict ，key就是要转換的字段名， value是对应的转換函数。转換函数定义为:</p>
+<pre class="prettyprint "><code>def convert(value, obj):</code></pre>
+<p>其中value为对应字段的值，obj为对应的记录对象。你需要返回一个字符串。举例如下:</p>
+<pre class="prettyprint "><code>def title(value, obj):
+    return '&lt;a href="/view/%d"&gt;%s&lt;/a&gt;' % (obj.id, value)
+
+fields_convert_map = {'title':title}
+view = ListView(model, fields_convert_map=fields_convert_map)</code></pre>
+<p>这样就可以在显示 title 字段时调用 title() 函数返回一个链接。</p>
+<p>如果返回值是 <code>None</code> 时，则表示将使用缺省的转換处理。它有着特殊的用途，主要是 在下载处理时。 <code>ListView</code> 在下载时，也可以指定 <code>fields_convert_map</code> ，但同时 展示时，你也可以也指定 <code>fields_convert_map</code> ，这样就存在两个转換映射。 generic 在处理时，会将这两个 <code>fields_convert_map</code> 进行合并。但是如果某个convert函数不想 要怎么办，一种方法是删除相应的 key，另一种方法是定义新的convert，简单地让它返回  <code>None</code> 就可以了。</p>
+<h3 id="title_1-2-5">不存在字段或自定义字段支持<a class="anchor" href="#title_1-2-5">&para;</a></h3>
+<p>如果是处理不存在或自定义字段，第一步是在传入的 fields 中或在 class Table 中定义这个字 段的复杂方式，即至少要定义为一个dict，而且包含: name, verbose_name 属性。然后定义 一个convert函数，并且配置到 fields_convert_map 中。要记住，因为字段本身在 Model 中可能不存在，所以 value 是无值的，你只能使用 obj 或通过缺省值来传入其它的参数。 举例:</p>
+<pre class="prettyprint "><code>fields = ['title', {'name':'action', 'verbose_name':'操作'}]
+
+def action(value, obj):
+    return '&lt;a href="/delete/%d"&gt;删除&lt;/a&gt;' % obj.id
+
+fields_convert_map = {'action':action}
+view = ListView(model, fields_convert_map=fields_convert_map)</code></pre>
+<p>采用这种方式，我们定义了一个不存在的 action 字段，它的内容是删除链接。</p>
+<h3 id="title_1-2-6">跳转到 View 页面<a class="anchor" href="#title_1-2-6">&para;</a></h3>
+<p>View页面一般是用来显示详细信息的，因此在显示 List 内容时，我们需要某种方法从 List 页面跳转到 View 页面。那么通常的办法就是选一个合适的字段，对它写一个 convert 函数， 返回一个跳转到view页面的链接即可。代码不再提供。</p>
+<h3 id="title_1-2-7">Ajax请求处理<a class="anchor" href="#title_1-2-7">&para;</a></h3>
+<h3 id="title_1-2-8">与jquery easyui的结合<a class="anchor" href="#title_1-2-8">&para;</a></h3>
+<h3 id="title_1-2-9">分页处理<a class="anchor" href="#title_1-2-9">&para;</a></h3>
+<p>ListView可以分页也可以不分页。缺省情况下 <code>pagination=True</code> 表示分页。当处于分页 情况下，用户可以传入pageno和rows_per_page来控制起始的页号和每页显示的条数。如何获 得这些信息，你需要在ListView之外进行获取。</p>
+<div class="alert alert-info">
+<p>那么，为什么不将这个处理直接封装到 ListView中呢？因为随着前端使用的控件不同 可能会返回不同的分页关键字，比如有的使用 page和rows。所以你一般要在调用 ListView 之前进行转換。</p>
+
+</div>
+<h3 id="title_1-2-10">查询与条件<a class="anchor" href="#title_1-2-10">&para;</a></h3>
+<p>在ListView中，第一个参数是Model的名字或类，那么为了返回正确的记录，你还可以传入 condition或query。其中condition对应合适查询条件，而query则对应合适的结果集。最终 的结果将由于传入这些参数而发生变化。整个查询的伪代码为:</p>
+<pre class="prettyprint "><code>if 传入了query:
+    结果集 = query
+else:
+    结果集 = self.model.all()
+if condition is not None:
+    结果集 = 结果集.filter(condition)
+if 需要分页:
+    结果集 = 结果集.offset((页号-1)*每页条数).limit(每页条数)</code></pre>
+<h3 id="title_1-2-11">下载处理<a class="anchor" href="#title_1-2-11">&para;</a></h3>
+<p>ListView 提供下载功能，包括 .csv 和 .xls 下载功能。对于 xls 格式的下载，还需要 安装 xlrd, xlutils, xlwt 这几个 Exccel 读取和写入的模块。</p>
+<p>简单的示例：</p>
+<pre class="prettyprint "><code>elif 'download' in request.GET:
+    def plan_type(value, obj):
+        return
+    def planedit_status(value, obj):
+        return
+    
+    fields_convert_map = {
+        'plan.type':plan_type,
+        'planexecute.status':planedit_status,
+    }
+    return view.download('tasks_planlist.xls', action='download', timeout=0,
+        fields_convert_map=fields_convert_map)</code></pre>
+<p>view为ListView的实例。先根据 URL 来判断是否需要下载，则调用 view 的 <code>download</code>  方法来下载。</p>
+<p>download 函数的原型为：</p>
+<pre class="prettyprint "><code>def download(self, filename, timeout=3600, action=None, 
+    query=None, fields_convert_map=None, type=None, domain=None):</code></pre>
+<p>参数的说明分别为：</p>
+<dl>
+<dt>filename</dt>
+<dd><p>下载的文件名。如果后缀为 <code>.csv</code> 则自动转为 csv 格式。如果后缀是 <code>.xls</code> 则自动 转为Excel格式。</p>
+</dd>
+<dt>timeout</dt>
+<dd><p>下载后的文件可以实现缓存。缺省是3600秒钟。在上面的示例中被设置为 0，表示不缓存 ，这样每次都将重新生成。</p>
+</dd>
+<dt>action</dt>
+<dd><p>可以选择 <code>'download'</code>, <code>'inline'</code> ，如果是 <code>'download'</code> 则浏览器将下载。如果 是 <code>'inline'</code> 则浏览器将直接打开（有些浏览器可能无法支持，主要是针对IE）。</p>
+</dd>
+<dt>query</dt>
+<dd><p>有时下载的查询语句可能和显示不同，所以这里还可以指定新的查询语句。如果没有指 定，则使用缺省的查询结果（和显示结果条件相同）。</p>
+</dd>
+<dt>fields_convert_map</dt>
+<dd><p>字段数据转換映射。当希望将某些列的值转为易于理解的方式是，通过定义转換函数来 实现数据的转換。它将与查询中已经存在的 fields_convert_map 进行合并，而不是简单 地替換。所以查询时使用的转換函数，在下载时依然可以使用，你只需要定义有变化的 转換函数即可。</p>
+</dd>
+<dt>type</dt>
+<dd><p>用来指明生成的下载文件的格式，可选值为 <code>csv</code> 和 <code>xls</code> 。如果没有指定，则根据文件 名后缀来自动判断。目前仅支持这两种格式。</p>
+</dd>
+<dt>domain</dt>
+<dd><p>当数据中存在 <code>&lt;a href="xxxx"&gt;yyyy&lt;/a&gt;</code> 数据时，并且下载的格式为 xls ，则会自动 转为Excel中的链接。在转換链接时，domain 将会和链接的地址进行合并处理，这样 可以把形式为相对路径的链接转为绝对路径。从而在点击时是正确的。</p>
+</dd>
+</dl><h2 id="title_1-3">SimpleListView<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>因为ListView是针对某个Model的，因此它也有一定的局限，比如在处理复杂的多表关联或 数据加工的结果就无能为力。所以SimpleListView是不与某个Model关联的，也因此你需要 定义一个表头，然后将其传入SimpleListView中。同时在convert中的obj参数值也将不再是 某个Model的对象，而有可能是一个dict或SQLAlchemy的ResultProxy对象。同时SimpleListView 也支持简单的select语句，但是在这种情况下表头还是要定义的。</p>
+<p>SimpleListView 是 ListView 的父类，除了不能直接使用 Model 外，基本功能与 ListView 是 一致的。</p>
+<h3 id="title_1-3-12">参数说明<a class="anchor" href="#title_1-3-12">&para;</a></h3>
+<pre class="prettyprint "><code>class SimpleListView(object):
+    def __init__(self, fields=None, query=None,
+        pageno=0, rows_per_page=10, id='listview_table', fields_convert_map=None,
+        table_class_attr='table', table_width=False, pagination=True, total_fields=None,
+        template_data=None, default_column_width=100, total=None, manual=False, render=None):</code></pre>
+<p>SimpleListView的参数和 ListView的差不多，与ListView相似的参数就不再解释了，只 强调一下与ListView不同或新増的参数：</p>
+<dl>
+<dt>total</dt>
+<dd><p>记录总数。与后面的manual一般联用。这是为了避免通过循环的方式得到记录总数。</p>
+</dd>
+<dt>manual</dt>
+<dd><p>是否手动传入记录总数。如果不是手动，则表示SimpleListView会自动对结果进行计数， 它一般是采用循环的方式，这样每次显示都要从头到尾遍历一遍，效率会很低。所以 可以在外部先统计好再传入，从而提高效率。</p>
+</dd>
+</dl><h2 id="title_1-4">SelectListView(0.1.7新増)<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>从上面我们可以看到已经有两类的列表展示类： <code>ListView</code> 和 <code>SimpleListView</code> 。一种 主要是针对一张表的情况，另一种主要是针对自定义结果的情况。还有一种情况就是：我们 希望把一条 <code>select</code> 语句作为列表的方式显示出来，这样有可能涉及的表就不只一张，采用 上面的方式就无法满足。因此我们可以考虑 <code>SelectListView</code> 。它的主要特点就是：</p>
+<ul>
+<li>通过定义fields来列举将要在select中显示的字段</li>
+<li>通过condition来定义条件</li>
+</ul>
+<p>这样， <code>SelectListView</code> 会自动生成 <code>select</code> 语句。</p>
+<p><code>SelectListView</code> 是从 <code>ListView</code> 继承来的。所以使用上基本上与 <code>ListView</code> 是一致的。</p>
+<h3 id="title_1-4-13">fields定义<a class="anchor" href="#title_1-4-13">&para;</a></h3>
+<p>定义方式和fields的类似。 <code>SelectListView</code> 的第一个参数仍然是 Model 类。每个 fields 项可以是一个字典或是一个字符串。如：</p>
+<pre class="prettyprint "><code>fields = [
+    'username',
+    {'name':'group.id', 'hidden':True},
+    {'name':'group.name', 'verbose_name':'小组名称', 'width':150}
+]</code></pre>
+<p>上面即有字符串的形式，也有字典的形式。这里对 <code>name</code> 有特殊的要求。如果name中存在 <code>.</code> 则 <code>SelectListView</code> 会认为是 <code>model.fieldname</code> 的形式，因此它会尝试导入 <code>model</code> 然后去查看是否存在 <code>fieldname</code> 的字段。如果没找到，则视为未定义的字段，将在后续按 <code>fields_convert_map</code> 来处理。所以，通过这种方式就可以实现定义不同的表中的字段。</p>
+<p>上面的示例中， <code>hidden</code> 可以用来控制展示时是否隐藏。</p>
+<h3 id="title_1-4-14">数据转換<a class="anchor" href="#title_1-4-14">&para;</a></h3>
+<p>在显示时，有些值我们想进行必要的数据加工，比如文字改变显示的样式，添加一个链接等， 我们可以定义一个convert函数，如：</p>
+<pre class="prettyprint "><code>def _group(value, obj):
+    return '&lt;a href="/group/%d"&gt;%s&lt;/a&gt;' % (obj['group.id'], obj['group.name'])</code></pre>
+<p><code>obj</code> 在 <code>SelectListView</code> 中将是一个 <strong>dict</strong> ，所以你可以直接通过 <code>obj</code> 来引用每条记录 中的其它值。所以上述的代码就是根据 <code>group.id</code> 和 <code>group.name</code> 来生成一个链接。</p>
+<h2 id="title_1-5">AddView<a class="anchor" href="#title_1-5">&para;</a></h2>
+<h3 id="title_1-5-15">参数说明<a class="anchor" href="#title_1-5-15">&para;</a></h3>
+<pre class="prettyprint "><code>class AddView(object):
+    success_msg = _('The information has been saved successfully!')
+    fail_msg = _('There are somethings wrong.')
+    builds_args_map = {}
+
+    def __init__(self, model, ok_url=None, ok_template=None, form=None,
+        success_msg=None, fail_msg=None, use_flash=True,
+        data=None, default_data=None, fields=None, form_cls=None, form_args=None,
+        static_fields=None, hidden_fields=None, pre_save=None, post_save=None,
+        post_created_form=None, layout=None, file_replace=True, template_data=None,
+        success_data=None, meta='AddForm', get_form_field=None, post_fail=None,
+        types_convert_map=None, fields_convert_map=None, json_func=None,
+        file_convert=True, upload_to=None, upload_to_sub=None, 
+        fileserving_config='UPLOAD', protect=False, protect_field_name=None):</code></pre>
+<dl>
+<dt>model</dt>
+<dd><p>此AddView所要处理的Model类或名称</p>
+</dd>
+<dt>ok_url</dt>
+<dd><p>成功后转換的URL地址。注意，它可以是一个回调函数，形式为:</p>
+<pre class="prettyprint "><code>def get_url(id):
+    return '&lt;a href="/view/%d"&gt;查看&lt;/a&gt;' % id</code></pre>
+<p>为什么需要使用回调。因为它是基于这样的处理：在添加完记录后，需要跳转到view页 面。但是在调用AddView时，因为相应的对象还没有创建，所以没有对应的id，这样就 没有办法在调用时就传入还不存在的URL。因此采用回调的方式，会将保存后的id传入 回调函数，这样就可以动态创建新对象的URL地址了。如果不是跳转到view页面，则可 以考虑不采用回调。</p>
+</dd>
+<dt>ok_template</dt>
+<dd><p>如果用户没有定义ok_template，并且不是json的返回方式，则将使用这个参数定义的 模板来展示页面。</p>
+</dd>
+<dt>form</dt>
+<dd><p>对应的form对象。在缺省情况下，用户不需要传入Form相关的参数，AddView会自动根 据model、fields或meta参数来自动生成一个Form对象。但是在某些特殊的情况下，也 可以将一个生成好的form对象传给AddView，这样AddView就不会自动创建Form对象了。</p>
+</dd>
+<dt>form_cls</dt>
+<dd><p>form是对应Form的对象。而form_cls是对应的Form类本身。AddView会自动使用form_cls 来创建form对象。使用form_cls的主要作用是定义校验处理，详情见下面的[数据校验处理]。</p>
+</dd>
+<dt>form_args</dt>
+<dd><p>此参数将在生成Form实例时传入。它是一个dict，主要可以使用的参数如:</p>
+<pre class="prettyprint "><code>{'action':提交对应的url,
+ 'method':提交方法，缺省为POST,
+ 'html_attrs':创建&lt;form&gt;时将使用的HTML的样式,
+        #它也是一个dict，可以使用 {'id':Form的id值, 'class':类名} 等
+ 'buttons':对应的按钮
+}</code></pre>
+</dd>
+<dt>static_fields</dt>
+<dd><p>标识哪些是静态字段。有时我们定义在fiells或AddForm中的字段并不都是需要编辑的， 而是只读的字段，通过这个参数可以指定哪些是只读字段。不过要注意的是，这些字段 在用户提交后不会在提交数据中存在。</p>
+</dd>
+<dt>hidden_fields</dt>
+<dd><p>隐藏字段。指定的字段将生成为 <code>&lt;input type="hidden" name="field_name" value="xxx"&gt;&lt;/input&gt;</code></p>
+</dd>
+<dt>success_msg</dt>
+<dd><p>成功后的提示信息。这里AddView会自动调用flash函数。在uliweb中缺省提供了一个 uliweb.contrib.flashmessage的app，你需要把它加入到settings.ini中的INSTALLED_APPS中去。 flash的工作原理是通过session来保存下一个页面要显示的内容。所以在返回结果或跳 转到新页面时，新的页面或模板需要对session中的flash的信息进行处理。如果你使用 plugs项目，它有一个 ui.jquery.pnofity 的app是flashmessage的jquery的版本，可以 通过js的方式显示一个弹出窗口来展示，效果要好于flashmessage。因为flashmessage 是静态信息。</p>
+</dd>
+<dt>fail_msg</dt>
+<dd><p>出错后的提示消息。</p>
+</dd>
+<dt>use_flash</dt>
+<dd><p>是否信息提示采用flash方式，缺省为True。如果为False，则不会使用flash函数来显示 提示信息。</p>
+</dd>
+<dt>data</dt>
+<dd><p>传入到Form对象中的数据，它将作为初始值传入。如果用户提交后出错，则只会显示 用户提交的数据。data只是在第一次显示时生效。它是一个dict，key就是对应的字段 名。value为对应的字段类型的值。</p>
+</dd>
+<dt>default_data</dt>
+<dd><p>在保存数据到Model中时，如果用户没有输入值，则使用default_data中的数据，它作 为相应字段的缺省值。与data的区别：data是作为Form的初始值，default_data作为 Model的初始值。</p>
+</dd>
+<dt>fields</dt>
+<dd><p>可添加字段的列表。一个Model中可能有很多字段，但不是所有字段都需要在添加时录 入数据，因此可以通过fields来传入可编辑的字段列表。它也支持添加不存在的字段。 如果存在，则还需要提供get_form_field回调函数，详情见[处理不存在或自定义字段]的说明。 fields的处理和ListView的类似，它是一种动态的处理方式。如果是相对静态，可以 直接在Model中定义一个 AddForm 的class，在其中定义 fields。如果不想用AddForm 的名字，那么可以通过传入meta参数来改变。</p>
+</dd>
+<dt>get_form_field</dt>
+<dd><p>如果在fields或AddForm中给出Model中不存在的字段时，AddView会自动调用这个回调 函数来获得想要的字段对象。具体描述参见下面的[处理不存在或自定义字段]。</p>
+</dd>
+<dt>pre_save</dt>
+<dd><p>在保存前要执行的回调函数，它的定义为:</p>
+<pre class="prettyprint "><code>def pre_save(data):
+    ...</code></pre>
+<p>其中，data是一个dict，并且它将直接会传入到AddView所关联的Model中，所以你可以 在这里通过修改data的值或添加新的值，从而影响保存到Model的数据。因此可以在这里 来设置缺省值，或对数据进行进一步加工。</p>
+</dd>
+<dt>post_save</dt>
+<dd><p>在保存后要执行的回调函数，它的定义为:</p>
+<pre class="prettyprint "><code>def post_save(obj, data):
+    """
+    obj 为保存后创建的对象
+    data 为保存时使用的data数据
+    """</code></pre>
+<p>如果在保存完某个对象后，还要进行其它的Model的操作，那么在post_save中是合适的 位置。</p>
+</dd>
+<dt>post_created_form</dt>
+<dd><p>在创建完Form实例后将要调用的回调函数。它允许你对生成的Form作进一步的加工，比 如将原来非必输项的某个字段的required属性改为True，从而变成必输项。它的定义为:</p>
+<pre class="prettyprint "><code>def post_created_form(fcls, model):
+    """
+    fcls 是对应的Form类
+    model 是对应的Model类
+    """</code></pre>
+</dd>
+<dt>layout</dt>
+<dd><p>uliweb中的Form支持不同的布局处理。一个布局是用来处理Form展示的类，它可以决 定是使用table还是div来展示一个form。具体layout的用途和对应的layout_cls有关。 详情参见[Form的布局处理]</p>
+</dd>
+<dt>file_replace</dt>
+<dd><p>AddForm可以支持在上传Form数据时同时上传文件。这个参数用来控制，如果出现同名 文件时，是否要替換重名的文件。现在Uliweb在上传时，可以控制是不是要对文件名 进行特殊处理，比如使用UUID来生成文件名。这样其实是不会重名的。但是如果不进 行特殊处理是有可能重名。如果重名，并且不进行替換，那么文件名会自动在后面添 加 <code>(n)</code> 这样的信息。</p>
+</dd>
+<dt>file_convert</dt>
+<dd><p>是否对上传的文件名进行转換，如果不转換则将保留原来的文件名。同时结合上面的 <code>file_replace</code> 将会对重名文件进行特殊的处理。</p>
+</dd>
+<dt>template_data</dt>
+<dd><p>将同时传入模板中的其它的数据。</p>
+</dd>
+<dt>success_data</dt>
+<dd><p>此参数可以有几个值，它是与返回json数据有关。如果在执行run()时传入了 run(json_result=True) 则表示返回结果为一个json的数据。这时，如果成功则会根据success_data的值来决定 返回的json内容。</p>
+<dl>
+<dt>True</dt>
+<dd><p>表示使用缺省的结果返回，那么它会简单的调用创建对象的to_dict()方法生成一个 dict，然后返回。</p>
+</dd>
+<dt>function</dt>
+<dd><p>如果要自已加工，则可以传入一个回调函数，形式为:</p>
+<pre class="prettyprint "><code>def success_data(obj, data):
+    """
+    obj为新创建的对象
+    data为保存时使用的数据
+    """</code></pre>
+<p>这个函数需要返回一个dict值。</p>
+</dd>
+</dl></dd>
+<dt>json_func</dt>
+<dd><p>当返回结果为json是，一般情况下会使用uliweb的json函数。但是有些情况，如在ie中使用 了iframe处理方式来调用jquery的jquery.form插件时，会有问题，原因是json返回的content_type 不正确。这里不能简单地返回 <code>application/json</code> 的类型，而是要返回 <code>text/html</code> 类型，示例代码如:</p>
+<pre class="prettyprint "><code>json_func=partial(json, content_type='text/html;charset=utf-8')</code></pre>
+</dd>
+<dt>meta</dt>
+<dd><p>静态字段集定义所对应的class名。</p>
+</dd>
+<dt>post_fail</dt>
+<dd><p>上传数据校验失败后的回调函数处理。</p>
+</dd>
+<dt>types_convert_map</dt>
+<dd><p>类型转換映射。</p>
+</dd>
+<dt>fields_convert_map</dt>
+<dd><p>字段转換映射。它与上面的types_convert_map都是用来对静态字段进行转換处理的。 关于字段转換，详情参见ListView中的[字段转換]说明。</p>
+</dd>
+<dt>json_func</dt>
+<dd><p>在返回json数据时使用的json函数。缺省为uliweb中的json，在特殊情况下，如需要指 定json数据的content_type时可以：</p>
+<pre class="prettyprint "><code>from functools import partial
+partial(json, content_type='text/html;charset=utf-8')</code></pre>
+</dd>
+<dt>file_convert</dt>
+<dd><p>是否进行文件名转換。在保存文件时，如果置为True，则可以根据文件服务的配置使用 相应的文件名转换方法对上传的文件进行转換。缺省使用的是UPLOAD的配置。</p>
+</dd>
+<dt>upload_to</dt>
+<dd><p>保存文件时对应的起始目录。缺省是使用UPLOAD的配置地址 <code>./uploads</code> 。可以指定为 其它的目录。</p>
+</dd>
+<dt>upload_to_sub</dt>
+<dd><p>保存文时对应的子目录。它将与 upload_to 合并生成最终的目录。</p>
+</dd>
+<dt>fileserving_config</dt>
+<dd><p>使用哪个文件服务配置，缺省为UPLOAD。</p>
+</dd>
+<dt>protect(0.2.2新増)</dt>
+<dd><p>是否对表单进行保护。缺省为False。当打开时，在展示表单时，将在后台自动生成一个 token，将其保存在Session中，并将token的值插入到Form的一个隐含字段中。当Form 下次再提交时，先检查这个token是否存在，如果不存在则报错。如果存在，则取出后删除。 这样可以防止多次提交。</p>
+</dd>
+</dl><h3 id="title_1-5-16">简单代码示例<a class="anchor" href="#title_1-5-16">&para;</a></h3>
+<pre class="prettyprint "><code>def add(self):
+    from uliweb.utils.generic import AddView
+
+    def get_url(id):
+        return url_for(BlogView.view, id=id)
+
+    view = AddView(self.model, ok_url=get_url)
+    return view.run()</code></pre>
+<p>这是一段View的代码。它创建了一个AddView，而是定义了一个get_url函数用以响应保存 成功后的URL跳转。</p>
+<p>对应的模板为:</p>
+<pre class="prettyprint "><code>{{extend "BlogView/layout.html"}}
+
+{{block content}}
+&lt;h2&gt;添加&lt;/h2&gt;
+{{&lt;&lt; form}}
+{{end}}</code></pre>
+<p>View中会返回一个form对象，它就是用来接受用户输入的表格。可以直接在模板中通过 <code>{{&lt;&lt;form}}</code> 来显示出来。</p>
+<h3 id="title_1-5-17">执行流程描述<a class="anchor" href="#title_1-5-17">&para;</a></h3>
+<p>在处理完列表展示之后，我们一般要做的第一件事就是添加记录。在添加记录前应该先有一 个入口，我们一般会放在 List 的页面中。作为一个标准的 HTML 的页面编辑的处理，先 考虑采用以下的处理流程:</p>
+<pre class="prettyprint "><code>from uliweb import request
+
+self.form = self.make_form(form)    #创建form
+
+if request.method == 'POST':        #如果是POST则表示用户进行了提交
+    flag = self.form.validate(request.values, request.files) #对数据进行校验
+    if flag:    #返回True，表示校验成功
+        d = self.default_data.copy()    #对缺省值进行拷贝
+        d.update(self.form.data)        #与提交的数据进行合并
+        if self.pre_save:               #处理pre_save回调
+            self.pre_save(d)
+
+        r = self.process_files(d)       #处理文件
+        obj = self.model(**data)        #保存Model对象
+        obj.save()
+
+        if self.post_save:              #处理post_save回调
+            self.post_save(obj, d)
+        if json_result:                 #如果需要json数据，则进行json化处理
+            return to_json_result(True, self.success_msg,
+                self.on_success_data(obj, d), json_func=self.json_func)
+        else:
+            flash = functions.flash     #如果是普通的HTML方式，则获得flash函数
+            flash(self.success_msg)     #显示成功信息
+            if self.ok_url:             #如果指定了ok_url则进行跳转
+                return redirect(get_url(self.ok_url, id=obj.id))
+            else:                       #否则根据传入的模板进行处理
+                response.template = self.ok_template
+                return d
+    else:       #返回False，表示校验失败，进行出错处理
+        d = self.template_data.copy()   #拷贝模板数据
+        data = self.prepare_static_data(self.form.data) #准备静态数据
+        self.form.bind(data)            #将数据与Form进行绑定，作为初始值
+        d.update({'form':self.form})    #将form对象放入模板数据中
+        if self.post_fail:              #处理post_fail回调函数
+            self.post_fail(d)
+        if json_result:                 #如果需要json数据，则进行json化处理
+            return to_json_result(False, self.fail_msg,
+                self.form.errors, json_func=self.json_func)
+        else:
+            flash = functions.flash
+            flash(self.fail_msg, 'error')#显示出错信息
+            return d
+else:                               #显示编辑页面
+    data = self.prepare_static_data(self.form.data) #对静态数据进行处理
+    self.form.bind(data)            #将数据与Form进行绑定，作为初始值
+    return self.display(json_result)#展示页面</code></pre>
+<p>从上面的流程我们大概可以了解整个AddView所做的处理。上面并不是真正的代码，不过已 经和真正的代码非常接近。简单描述起来，一个添加或编辑处理大概分三个步骤:</p>
+<ol>
+<li>如果是 GET 请求，则显示编辑界面</li>
+<li>如果是 POST 请求，则对数据进行校验，如果成功则保存，返回结果</li>
+<li>如果失败，则返回出错结果</li>
+</ol>
+<p>上面的代码之所以看上去复杂，是因为要支持用户的扩展，所以在许多地方都添加了回调 和参数，允许用户对执行过程进行扩展。用户可以根据需要传入不同的回调来进行特殊的 处理。除了采用回调方式外，用户也可以对AddView类进行继承。</p>
+<h3 id="title_1-5-18">录入字段的配置<a class="anchor" href="#title_1-5-18">&para;</a></h3>
+<p>前面说到，AddView支持通过fields参数来设定哪些字段可以编辑，也可以支持在Model中 定义一个AddForm的class，示例如下:</p>
+<pre class="prettyprint "><code>class Blog(Model):
+    __verbose_name__ = 'Blog'
+
+    #author = Reference('user', verbose_name='作者', required=True)
+    create_date = Field(datetime.datetime, verbose_name='发表时间', auto_now_add=True)
+    title = Field(str, max_length=255, verbose_name='标题', required=True)
+    content = Field(TEXT, verbose_name='内容', required=True)
+    deleted = Field(bool, verbose_name='删除标志')
+
+    class AddForm:
+        fields = ['title', 'content']</code></pre>
+<p>这样，在AddForm中我们只定义了两个可录入的字段，其它的字段，要么使用缺省值，要么 可以自动生成，要么是在特殊情况下使用的。</p>
+<h3 id="title_1-5-19">处理不存在或自定义字段<a class="anchor" href="#title_1-5-19">&para;</a></h3>
+<p>如果在添加时希望有一些不在Model中的字段，可以先在fields或AddForm中定义这个字段名， 然后在写一个get_form_field的回调，再将其传入AddView中即可，示例如下:</p>
+<pre class="prettyprint "><code>def get_form_field(name):
+    #其中name为对应的字段名
+    from uliweb.form import StringField
+
+    if name == 'undefined': #这里只是以'undefined'为例，实际可能叫别的
+        return StringField('不存在的字段')
+
+fields = ['title', 'content', 'undefeined']
+view = AddView('blog', ok_url=get_url, fields=fields,
+    get_form_field=get_form_field)
+return view.run()</code></pre>
+<p>上面是通过动态传入fields参数来添加不存在的字段，也可以在Model中的AddForm中定义。</p>
+<h3 id="title_1-5-20">数据校验处理<a class="anchor" href="#title_1-5-20">&para;</a></h3>
+<p>从AddView的功能，我们大概可以了解到它会自动将Model转为一个Form，并且会有一些简单 的校验。如果在Field定义时我们指定了required=True，则这个字段在Form中将成为必输 项，如果用户不输入内容或输入为空的内容，则校验会失败。除了必输项，我们有可能需要 对某个字段或某几个字段进行校验，该如何操作。这里其实就直接使用了Form类本身的校验 功能。Form的校验分为两种，一种是单个字段的校验，一种是多个字段的联合校验。示例 代码如下:</p>
+<pre class="prettyprint "><code>class RegisterForm(Form):
+    form_buttons = Submit(value=_('Register'), _class="button")
+    form_title = _('Register')
+
+    username = StringField(label=_('Username'), required=True)
+    password = PasswordField(label=_('Password'), required=True)
+    password1 = PasswordField(label=_('Password again'), required=True)
+    next = HiddenField()
+
+    def validate_username(self, data):
+        from uliweb.orm import get_model
+
+        User = get_model('user')
+        user = User.get(User.c.username==data)
+        if user:
+            return _('User "%s" is already existed!') % data
+
+    def form_validate(self, all_data):
+        if all_data.password != all_data.password1:
+            return {'password1' : _('Passwords are not match.')}</code></pre>
+<p>上面是一个用户注册的Form，它要对用户名进行校验，还要对两次输入的密码进行校验。 对于用户名的校验采用了定义一个validate_fieldname的方式，其中fieldname是Form 中的字段。另一种方法是定义form_validate，它可以传入所有数据all_data，这样可以 同时检查多个字段。而validate_fieldname方法，只传入指定的字段值，所以无法同时检 查其它字段的值。如果有错误，对于validate_fieldname则只要返回一行出错原因的文本 即可。而form_validate则要返回一个出错的dict。其中key是出错的字段名。如果返回 None，则认为无错。在简单的情况下，你可以只写一个form_validate即可，所有的校验 都放在这里面处理。</p>
+<p>这里的Form只是一个示例，在一般使用AddView或EditView时，你并不需要在Form中定义 任何Field。如果定义的话，它会和Model中的字段同时展示出来。</p>
+<h3 id="title_1-5-21">Form的布局处理<a class="anchor" href="#title_1-5-21">&para;</a></h3>
+<h2 id="title_1-6">其它说明事项<a class="anchor" href="#title_1-6">&para;</a></h2>
+<h3 id="title_1-6-22">URL定义规范<a class="anchor" href="#title_1-6-22">&para;</a></h3>
+<p>为了处理的一致性，我们一般可以假设CRUD的功能采用以下的URL定义规则，假设我们采用 class-based View的写法，如:</p>
+<pre class="prettyprint "><code>#coding=utf8
+
+from uliweb import expose
+from uliweb.orm import get_model
+
+@expose('/blog')
+class BlogView(object):
+    def __init__(self):
+        self.model = get_model('blog')
+
+    @expose('')
+    def list(self):
+
+    def add(self):
+
+    def edit(self, id):
+
+    def view(self, id):
+
+    def delete(self, id):</code></pre>
+<p>整个View有一个前缀，所以后面的方法都是以这个前缀为基础，你可以根据需要调整路径， 每个功能对应的 URL 为:</p>
+<dl>
+<dt>list</dt>
+<dd><p><code>/prefix</code> 这里因为 list 对应的URL和前缀是一样的，所以我们使用 <code>expose('')</code> 生成 和前缀一样的 URL。</p>
+</dd>
+<dt>add</dt>
+<dd><p><code>/prefix/add</code> 这里直接使用class-based的缺省函数映射方式，即: 前缀+'/'+方法</p>
+</dd>
+<dt>edit</dt>
+<dd><p><code>/prefix/edit/&lt;id&gt;</code> 方法同上</p>
+</dd>
+<dt>view</dt>
+<dd><p><code>/prefix/view/&lt;id&gt;</code> 方法同上</p>
+</dd>
+<dt>delete</dt>
+<dd><p><code>/prefix/delete/&lt;id&gt;</code> 方法同上</p>
+</dd>
+</dl><p>如果你相把 <id> 放在动作前面，那么你要在每个方法前使用如:  <code>@expose('&lt;id&gt;/edit')</code> 这样的方式。如果这个view函数还有其它的decorator，那么你要把 <code>@expose</code> 放在前上面， 以保证函数名是正确的。同时其它的 decorator 在处理时一定要保证生成的新的函数名与 原来的函数名是一致的。</p>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="./middleware.html"><i class="fa fa-long-arrow-left"></i> Middleware 开发</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="./test.html">如何测试 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

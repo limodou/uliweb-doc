@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>API - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb/index.html">Uliweb</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../db/faq.html"><i class="fa fa-long-arrow-left"></i> F&amp;Q</a>
+</div>
+
+
+      <h1 id="title_1">API<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">functions API<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>为了方便使用某些方法，在 settings.ini 中定义了常用的一些API：</p>
+<dl>
+<dt>get_model(model, engine_name=None)</dt>
+<dd><p>返回指定连接的 <code>model</code> 对应的Class。如果是字符串值，则需要根据Model配置的要求在settings.ini 中定义Model的信息才有效果。也可以传入Model的类。 如果engine_name不为None，则根据给定的engine_name来查找Model。如果不存在，则 抛出异常。 如果engine_name为空时，将会智能搜索。如果某个Model只设置了一个数据库连接， 则自动使用这个连接，如果存在多个则会抛出异常。</p>
+</dd>
+<dt>get_object(model, id, cache=False, use_local=False)</dt>
+<dd><p>返回某个Model对应的记录。其中 model 为 Model 名，id为对应的记录的id值。如果指定了 <code>cache=True</code> ，则可以从 cache 中获得缓存的值。（它需要与objcache APP相配合，否则无效）如果指定了 <code>use_local=True</code> ，则会从本地的内存缓存 中获得值。它不使用cache，是直接使用内存。它可以与cache合用，则访问顺序是： use_local &gt; cache &gt; db</p>
+</dd>
+<dt>get_cached_object(model, id, cache=True, use_local=True)</dt>
+<dd><p>它就是 <code>get_object()</code> 的一个简写。</p>
+</dd>
+</dl><h2 id="title_1-2">配置相关 API<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>uliweb.orm 提供了一些配置相关的 API，用于控制整个uliorm的工作模式。不过，如果 你不是在脱离uliweb的框架环境下来使用orm模块的话，以下的一些方法在settings.ini 中有相应的配置，因此不需要去手工调用相应的函数。但如果是在其它的非uliweb的环境 下使用uliorm，则有可能需要手工调用这些函数来控制uliorm的行为。</p>
+<dl>
+<dt>set_auto_create(flag)</dt>
+<dd><p>设置是否自动建表。flag取值为True或False。缺省为False。这一功能在开发时比较 有用，因为可以不使用uliweb syncdb来建表，但是在生产环境中建议关闭，手动来 处理。</p>
+<div class="alert alert-info">
+<p>在使用sqlite时，发现有问题。当处于一个事务中，如果出现非select, update 之类的语句，sqlite会自动提交事务，造成事务处理不是按你的预期，所以也需 要关闭这个功能。</p>
+
+</div></dd>
+<dt>set_debug_query(flag)</dt>
+<dd><p>设置调试模式。如果flag为True，则生成的SQL语句将输出到日志中。如果你是通过 <code>get_connection()</code> 得到的一个数据库连接对象，可以简单地设置 <code>db.echo = True</code> 来激活调试模式。</p>
+</dd>
+<dt>set_encoding(encoding)</dt>
+<dd><p>设置缺省编码。缺省为 <code>utf-8</code> 。</p>
+</dd>
+</dl><h2 id="title_1-3">常用 API<a class="anchor" href="#title_1-3">&para;</a></h2>
+<dl>
+<dt>get_connection(connection='', engine_name='default', connection_type='long', **args)</dt>
+<dd><p>建立一个数据库连接，并返回连接对象。</p>
+<p>connection需要按SQLAlchemy的要求来编写。 get_connection既可以支持原来的单数据库连接模式，也可以支持多数据库连接模式， 还可以通过 <code>engine_name</code> 来直接使用某个定义好的连接。</p>
+</dd>
+<dt>local_connection(engine_name=None, auto_transaction=False): conn</dt>
+<dd><p>返回缓存的数据库连接。如果不存在，则创建。 <code>auto_transaction</code> 是用来控制 是否自动创建事务。</p>
+</dd>
+<dt>Connect(engine_name=None): None</dt>
+<dd><p>清除缓存的线程连接，保证下次再访问时可以重建连接。</p>
+</dd>
+<dt>Begin(ec=None): transaction object</dt>
+<dd><p>开始一个事务。如果存在线程连接对象同时如果不存在当前线程内的连接对象，则自动从连接池中取一个连接 并绑定到当前线程环境中。ec为数据库引擎对象名，如果没提供，则缺省为 'default'. ec也可以为连接对象。</p>
+</dd>
+<dt>Commit(ec=None, trans=None)</dt>
+<dd><p>提交一个事务。使用当前线程的连接对象。</p>
+</dd>
+<dt>CommitAll()</dt>
+<dd><p>提交所有线程事务。</p>
+</dd>
+<dt>Rollback(ec=None, trans=None)</dt>
+<dd><p>回滚一个事务。使用当前线程的连接对象。</p>
+</dd>
+<dt>RollbackAll()</dt>
+<dd><p>回滚所有线程事务。</p>
+</dd>
+<dt>do_(sql, ec=None)</dt>
+<dd><p>执行一条SQL语句。使用当前的线程连接。只有当使用非ORM的API时才需要使用它 来处理，比如直接使用SQLAlchemy提供的：select, update, delete, insert时，可 以这样:</p>
+<pre class="prettyprint "><code>from uliweb.orm import do_
+
+result = do_(select(User.c, User.c.username=='limodou'))</code></pre>
+<p>也可以直接写SQL语句,如:</p>
+<pre class="prettyprint "><code>result = do_('select * from user')</code></pre>
+</dd>
+<dt>set_echo(flag, time=None, explain=False, caller=True, session=None)</dt>
+<dd><p>用于控制当执行 <code>do_</code> 时是否显示底层的SQL语句的开关函数.</p>
+<ul>
+<li><code>time</code> 表示当执行超过指定时间时才显示,否则总显示</li>
+<li><code>explain</code> 表示是否自动执行 <code>EXPLAIN SQL</code></li>
+<li><code>caller</code> 表示是否显示上层调用的函数</li>
+<li><code>session</code> 表示是否显示执行时的session名字</li>
+</ul>
+</dd>
+<dt>reflect_table(tablename, engine_name='default')</dt>
+<dd><p>用于直接从数据库中获得某张表对象 (Table)</p>
+</dd>
+<dt>reflect_table_data(tablename, engine_name='default')</dt>
+<dd><p>获得某张表的结构化数据.返回一个 <code>dict</code>,形式为: <code>{'columns':{}, 'indexes':[]}</code></p>
+<p>其中 <code>columns</code> 是一个有序字典,分别对应表中的每个字段.形式为: <code>'column_name':('type', {ATTRS})</code></p>
+</dd>
+<dt>reflect_table_model(tablename, engine_name='default')</dt>
+<dd><p>直接将某个表转为 Model 的类形式.</p>
+</dd>
+</dl><h2 id="title_1-4">常用Class<a class="anchor" href="#title_1-4">&para;</a></h2>
+<dl>
+<dt>Bulk (0.5b1)</dt>
+<dd><p>用于简化直接使用原始SQL进行查询/修改等处理.在批量操作情况下,使用ORM性能效低,所以可以考虑使用原始的 SQL.同时为了更加简化,也没有直接使用SQLAlchemy的Select,而是使用了更底层的SQL+占位符的形式.使用Bulk 有以下几个特性:</p>
+<ol>
+<li>可以预先根据输入的SQL转为占位符的形式</li>
+<li>可以设置批量操作的大小,当缓存数据达到大小时,一次性提交,提高性能</li>
+<li>根据预编译好的SQL计算点位符的顺序,根据传入的数据进行匹配,用于数据执行时</li>
+<li>支持:select, update, insert ,delete的处理</li>
+<li>提供 <code>put</code> 用于批量提交数据, <code>do_</code> 用于逐条运行 , <code>prepare</code> 用于准备SQL</li>
+<li>提供 <code>close</code> 来提交未处理的数据</li>
+<li>支持内置事务,缺省使用提用者事务</li>
+</ol>
+<pre class="prettyprint "><code>b = Bulk(size=10)
+b.prepare('insert', User.table.insert().values(username='username', year='year'))
+b.put('insert', username='u1', year=12)
+b.put('insert', username='u2', year=13)
+b.close()</code></pre>
+<pre class="prettyprint "><code>b = Bulk()
+b.prepare('select', User.table.select().where(User.c.username=='username'))
+print b.do_('select', username='u3').fetchone()</code></pre>
+</dd>
+</dl>
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../db/faq.html"><i class="fa fa-long-arrow-left"></i> F&amp;Q</a>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

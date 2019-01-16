@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>0.4 2014-9-19 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb/index.html">Uliweb</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../update/update_0.4.1.html"><i class="fa fa-long-arrow-left"></i> 0.4.1 2014-11-22</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../update/update_0.3.1.html">0.3.1 2014-07-04 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">0.4 2014-9-19<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">问题修复<a class="anchor" href="#title_1-1">&para;</a></h2>
+<ul>
+<li>修正 Pickle 缺省值Bug，将不会自动将空值转为 ''</li>
+<li>修正当存在 group_by, limit, join 时的 count 的实现，将使用 <code>select count(*) from (select * from table)</code></li>
+<li>修正 uliweb load 在处理cvs格式时的Bug，感谢 taogeT</li>
+<li>修正 <code>tmp/templates_temp</code> 创建Bug</li>
+<li>修正显示模板块顺序不正确的Bug</li>
+</ul>
+<h2 id="title_1-2">功能优化<a class="anchor" href="#title_1-2">&para;</a></h2>
+<ul>
+<li>使用tornado的模板代码重构uliweb的模板实现，具体变化内容详见 <a class="inner" href="../template.html">模板</a></li>
+<li>添加 staticize 命令，实现静态化</li>
+<li>添加 <code>__debug__</code> 参数用于跟踪 i18n 语言的变化</li>
+<li>ORM多数据库配置时，增加复制的支持，你可以在 CONNECTIONS 配置项中进行设置</li>
+<li>向 ORM 中添加 <code>set_session()</code> 函数</li>
+<li>向ORM中的 Property 类添加 <code>fieldname</code> 参数</li>
+<li>向 <code>load</code> 和 <code>loadtable</code> 添加 <code>-z</code> 参数，感谢 linuxr</li>
+<li>向模板的 <code>Loader.load()</code> 方法添加 <code>layout</code> 参数，可以用来实现动态模板继承</li>
+<li>添加 <code>validatetemplate</code> 命令，可以用来检查项目，app或单个模板的语法是否正确。可以方便用来检查升级到0.4后的模板问题。 详情参见 <a class="inner" href="../manage_guide.html#validatetemplate">validatetemplate</a></li>
+</ul>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../update/update_0.4.1.html"><i class="fa fa-long-arrow-left"></i> 0.4.1 2014-11-22</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../update/update_0.3.1.html">0.3.1 2014-07-04 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

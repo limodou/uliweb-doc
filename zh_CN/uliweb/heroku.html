@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
+<link rel="stylesheet" href="./static/asset/light.css"/>
+<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>Heroku 部署说明 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="./index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="./index.html">Home</a></li><li><a href="./../uliweb3/index.html">Uliweb3</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      
+
+
+      <h1 id="title_1">Heroku 部署说明<a class="anchor" href="#title_1">&para;</a></h1>
+<p>Heroku本为提供Ruby云环境的平台，不过现在也支持 Python ，下面将描述如何在它上面 部署 Uliweb。此应用以 simple_todo 为例，可以从 <code>uliweb-doc/projects</code> 中得到。</p>
+<h2 id="title_1-1">客户端下载及登录<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>首先保证你已经有了 heroku 的帐号。然后去它的客户端页面下载合适的客户端，这里我 以windows客户端为例。下载并安装后，首先执行:</p>
+<pre class="prettyprint "><code>heroku login</code></pre>
+<p>根据提示输入你的邮箱和密码，然后它会自动查找本地的ssh公钥，如果找到，则会问你是 否要上传。因为我以前已经安装过 git 所以已经生成过公钥。</p>
+<h2 id="title_1-2">创建项目<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>首先在本地创建一个目录作为你的项目目录，如: heroku。进入这个目录，然后执行:</p>
+<pre class="prettyprint "><code>heroku create --stack cedar</code></pre>
+<p>执行如图:</p>
+<p><img alt="image" src="_static/heroku1.png"/>
+</p>
+<p>我们可以从结果中看到已经生成了可访问的URL和git仓库地址。在后面我们可以改个名。 不过我试了，如果还没有上传过代码，好象改不了。</p>
+<p>文本没有使用virtualenv来创建 Python 环境，所以省略了这块的处理。</p>
+<h2 id="title_1-3">编写代码<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>首先保证你的uliweb的版本在 0.1.1 以上，因为从 0.1.1 才支持 heroku 。在项目目录 下执行:</p>
+<pre class="prettyprint "><code>uliweb support heroku</code></pre>
+<p>这样会在当前目录下生成:</p>
+<pre class="prettyprint "><code>lib/
+.gitignore
+app.py
+Procfile
+requirements.txt</code></pre>
+<p>其中:</p>
+<dl>
+<dt>lib/</dt>
+<dd><p>用来存放你想上传的一些库。不过在一般情况下，你可以通过 requirements.txt 来安装，因此不一定需要。不过在 app.py 中会将 lib 目录添加到 sys.path 中。</p>
+</dd>
+<dt>.gitignore</dt>
+<dd><p>因为 heroku 使用的是 git 上传版本，所以这里提供了一个简单的 .gitignore 文件， 你可以根据需要进行修改。</p>
+</dd>
+<dt>app.py</dt>
+<dd><p>启动文件。它会自动识别 <code>os.environ['PORT']</code> 如果没有缺省使用 5000 端口， 同时将 IP 绑定到 <code>0.0.0.0</code> 上。</p>
+</dd>
+<dt>Procfile</dt>
+<dd><p>Heroku 会采用 foreman 来启动应用，你可以在本地用它来启动 uliweb 项目。访问 地址可以是 <code>http://localhost:5000</code></p>
+<div class="alert alert-info">
+<p>因为我更熟悉nginx+uwsgi的模式，因此使用foreman的话不知道有没有性能问题。 并且没有看到如何配置静态文件？所以在我的试验中能用开发服务器来提供服务和 静态文件的支持。</p>
+
+</div></dd>
+<dt>requirements.txt</dt>
+<dd><p>pip 安装需求文件，缺省要安装:</p>
+<pre class="prettyprint "><code>Uliweb==0.1.1
+psycopg2==2.4.5
+SQLAlchemy==0.7.7</code></pre>
+<p>因为 heroku 采用的是 postgreSql 数据库。</p>
+</dd>
+</dl><p>然后将 simple_todo (在uliweb-doc/projects/simple_todo下) 的代码拷贝到项目目录下。 注意，这里没有单独创建一个project的项目目录，而是直接使用项目目录。所以在这个目 录下应该直接有 apps 子目录。当前目录结构如:</p>
+<p><img alt="image" src="_static/heroku2.png"/>
+</p>
+<p>因为 heroku 可以直接运行后端的命令，因此就可以直接运行 uliweb 的命令行工具，如 同步数据库。所以将项目目录直接做为uliweb项目是为了方便执行命令行。</p>
+<p>接着修改 <code>apps/settings.ini</code> ，内容为:</p>
+<pre class="prettyprint "><code>[GLOBAL]
+DEBUG = True
+
+INSTALLED_APPS = [
+    'uliweb.contrib.staticfiles',
+    'uliweb.contrib.orm',
+    'uliweb.contrib.heroku',
+    'todo',
+    ]
+
+[SITE]
+SITE_NAME = '任务跟踪'
+EMAIL = 'limodou@gmail.com'</code></pre>
+<p>在Heroku是可以使用 Debug 调试的。上面在 <code>uliweb.contrib.orm</code> 后面安装了 <code>uliweb.contrib.heroku</code> 。 在 <code>uliweb.contrib.heroku</code> 中可以自动从 <code>os.environ</code> 中获得 <code>DATABASE_URL</code> 的信息。</p>
+<p>上面的代码基本上写好了。然后我们直接上传。</p>
+<h2 id="title_1-4">上传代码<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>首先在本地创建GIT创建，把所有代码提交进去:</p>
+<pre class="prettyprint "><code>git init
+git add .
+git commit -m "message"</code></pre>
+<p>然后检查一下remote中是不是有heroku:</p>
+<pre class="prettyprint "><code>git remote</code></pre>
+<p>如果没有则将上面的git地址添加到remote中去:</p>
+<pre class="prettyprint "><code>git remote add heroku &lt;heroku地址&gt;</code></pre>
+<p>然后开始push代码:</p>
+<pre class="prettyprint "><code>git push heroku master</code></pre>
+<p>在push成功时，会根据相关的requirements.txt等信息开始后台的部署和服务启动。但是 此时很有可能数据库还未生效。前面已经说了，uliweb.contrib.heroku 会从环境变量中 获得数据库连接的串，而uliorm所使用的数据库连接和 heroku 提供的是一致的。这块都 已经由这个 app 处理了。现在的关键就是要创建数据库的实现。</p>
+<h2 id="title_1-5">创建数据库<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>可以先用:</p>
+<pre class="prettyprint "><code>heroku config</code></pre>
+<p>结果如图:</p>
+<p><img alt="image" src="_static/heroku3.png"/>
+</p>
+<p>可以看到有 <code>DATABASE_URL</code> 的信息。如果没有，说明数据库实例没有创建，则可以执行:</p>
+<pre class="prettyprint "><code>heroku addons:add shared-database</code></pre>
+<h2 id="title_1-6">应用改名<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>前面说了，如果觉得自建的应用名不好看，可以修改一下，使用:</p>
+<pre class="prettyprint "><code>heroku rename &lt;你想改的名字&gt;</code></pre>
+<p>一旦名字修改了，你的服务URL和git的地址都将发生变化。不过服务地址会自动变化，所以 不用做什么特殊处理。</p>
+<h2 id="title_1-7">数据库表的同步<a class="anchor" href="#title_1-7">&para;</a></h2>
+<p>代码传完了，名字也改了，数据库也建了，但是访问 simple_todo 还是有问题，因为这个 例子需要创建一个 todo 的表。heroku没有提供phpadmin，不过它可以在本地执行远端的 命令，所以很方便，下面执行:</p>
+<pre class="prettyprint "><code>heroku run uliweb syncdb</code></pre>
+<p>这里你会看到 todo 表被创建的信息。这样就可以访问你的应用了。我的例子是 <a class="outter" href="http://uliweb.herokuapp.com/">http://uliweb.herokuapp.com/</a></p>
+<h2 id="title_1-8">调试<a class="anchor" href="#title_1-8">&para;</a></h2>
+<p>在heroku上可以直接查看出错页面，所以还是挺方便。同时如果想看日志，可以执行:</p>
+<pre class="prettyprint "><code>heroku logs</code></pre>
+<h2 id="title_1-9">参考<a class="anchor" href="#title_1-9">&para;</a></h2>
+<p>参考原 Heroku 的文档有些问题并不能解决，有些是通过这篇文档来解决的。</p>
+<p><a class="outter" href="http://www.tylerlong.me/1336566394/">部署Python网站到Heroku云平台</a></p>
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

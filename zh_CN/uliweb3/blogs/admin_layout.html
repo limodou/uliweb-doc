@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>管理界面布局 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb/index.html">Uliweb</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../blogs/blog_design.html"><i class="fa fa-long-arrow-left"></i> 设计Blog表结构</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../blogs/blog_add.html">添加博客 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">管理界面布局<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">介绍<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>一个网站，除了普通的展示界面以外，一般还有专门用来进行后台管理的功能。在我们这个例子中就有这样的功能，比如：</p>
+<ul>
+<li>用户管理</li>
+<li>博客管理</li>
+<li>链接管理</li>
+</ul>
+<p>其中博客管理可能还包括：</p>
+<ul>
+<li>博客分类的管理</li>
+<li>博客内容的管理</li>
+</ul>
+<p>等内容。所以在编写博客管理功能之前，我们先把管理的展示框架先搭起来，这样，后面的管理功能就可以直接使用这些页面 布局了。我们的管理界面主要是有：</p>
+<ul>
+<li>导航</li>
+<li>侧边菜单</li>
+<li>内容区</li>
+</ul>
+<h2 id="title_1-2">创建 admin APP<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>在项目目录下执行：</p>
+<pre class="prettyprint "><code>uliweb makeapp admin</code></pre>
+<h2 id="title_1-3">修改 views.py<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>将对应的 <code>index()</code> 改为：</p>
+<pre class="prettyprint "><code>@expose('/admin')
+def admin_layout():
+    return {}</code></pre>
+<p>注意，上面的链接改为了 <code>/admin</code> 。</p>
+<h2 id="title_1-4">创建 admin_layout.html<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>在 <code>apps/admin/templates</code> 目录下创建 <code>admin_layout.html</code>，它将作为所有管理的基础模板。</p>
+<p>其内容为：</p>
+<pre class="prettyprint linenums"><code>&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-type" content="text/html; charset=utf-8" /&gt;
+&lt;title&gt;{{block title}}Uliweb BLog Demo Admin{{end title}}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;!-- resource --&gt;
+{{link "admin_layout.css"}}
+{{use "semantic"}}
+&lt;!-- end resource --&gt;
+
+{{block content}}
+
+&lt;!-- head --&gt;
+&lt;div class="head"&gt;
+    &lt;div class="ui secondary inverted menu"&gt;
+        &lt;div class="item"&gt;Uliweb Blog Demo Admin&lt;/div&gt;
+        &lt;a class="item" href="/"&gt;
+            &lt;i class="home icon"&gt;&lt;/i&gt; Home
+        &lt;/a&gt;
+        &lt;div class="right menu"&gt;
+          &lt;div class="ui pointing dropdown item"&gt;
+            {{if request.user:}}
+                &lt;i class="icon user"&gt;&lt;/i&gt; {{=unicode(request.user)}}
+                &lt;i class="icon dropdown"&gt;&lt;/i&gt;
+                &lt;div class="menu"&gt;
+                  &lt;a class="item" href="/logout"&gt;&lt;i class="sign out icon"&gt;&lt;/i&gt; Logout&lt;/a&gt;
+                &lt;/div&gt;
+            {{else:}}
+                &lt;a href="/login"&gt;登录&lt;/a&gt;
+            {{pass}}
+          &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- end head --&gt;
+
+&lt;!-- container --&gt;
+&lt;div class="container"&gt;
+    &lt;div class="side-menu"&gt;
+        {{block side_menu}}
+            &lt;div class="ui vertical small menu"&gt;
+              &lt;div class="header item"&gt;
+                &lt;i class="user icon"&gt;&lt;/i&gt;
+                Communities
+              &lt;/div&gt;
+              &lt;div class="item"&gt;
+                College
+                &lt;div class="menu"&gt;
+                  &lt;a class="active item"&gt;Baseball&lt;/a&gt;
+                  &lt;a class="item"&gt;Basketball&lt;/a&gt;
+                  &lt;a class="item"&gt;Golf&lt;/a&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;a class="active item"&gt;
+                Dance
+              &lt;/a&gt;
+              &lt;a class="item"&gt;
+                Aerobics
+              &lt;/a&gt;
+            &lt;/div&gt;
+        {{end}}
+    &lt;/div&gt;
+    &lt;div class="content"&gt;
+    {{block main}}
+         main
+    {{end}}
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- end container --&gt;
+
+&lt;!-- script --&gt;
+&lt;script&gt;
+$(function(){
+    $('.head .ui.dropdown').dropdown({
+        on: 'hover',
+        action: 'nothing'
+    });
+
+});
+&lt;/script&gt;
+&lt;!-- end script --&gt;
+
+{{end}}
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<p>在 <code>apps/admin/static</code> 目录下创建 <code>admin_layout.css</code>,它用来存放自定义的一些CSS。</p>
+<p>其内容为：</p>
+<pre class="prettyprint linenums"><code>html, body {margin:0;background-color:white;padding:0;height:100%;}
+.head {background-color:#00B5AD;color:white;margin:0em;padding:4px;}
+.container {margin-left:210px;position:relative;min-height:100%;background-color:white;}
+.side-menu {position:absolute; top: 5px; left:-205px;width:210px;}
+.content {padding:10px;}
+.content .grid {margin-left:0;margin-right:0;}
+.mmGrid table {font-size:14px;}
+.mmPaginator {font-size:14px;}
+.mmGrid .mmg-backboard label {font-size:14px;width:120px;}
+.ui.secondary.inverted.menu .active.item {
+background-color: rgba(255, 255, 255, 0.3);
+}
+.ui.form span.field_required {font-weight:bold;color:red;font-size:1.5em;}
+.ui-pnotify-text {font-size:0.6em;}</code></pre>
+
+<h2 id="title_1-5">展示效果<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>当我们在浏览器中查看 <code>/admin</code> 地址时，我们可以看到以下的展示效果</p>
+<p><img src="../_static/blogs/admin_layout.png"/>
+</p>
+<p>上面的代码主要有几个重要的地方：</p>
+<h3 id="title_1-5-1">title block<a class="anchor" href="#title_1-5-1">&para;</a></h3>
+<p><code>{{block title}}Uliweb BLog Demo Admin{{end title}}</code> 用来定义页面的标题。这样不同的子模板通过覆盖它，可以 在不同的页面显示不同的标题。</p>
+<h3 id="title_1-5-2">引用资源<a class="anchor" href="#title_1-5-2">&para;</a></h3>
+<pre class="prettyprint linenums"><code>...
+&lt;!-- resource --&gt;
+{{link "admin_layout.css"}}
+{{use "semantic"}}
+&lt;!-- end resource --&gt;
+...</code></pre>
+
+<p>其中 <code>{{link}}</code> 将引用为admin界面客户化的一个css文件。这个文件放在 <code>static</code> 目录下。</p>
+<p>后面的 <code>{{use}}</code> 将引用相应的 <code>sementic</code> 的资源。其中 semantic 依赖的 jquery 将会被自动引入（根据前面在 <code>sementic/settings.ini</code> 中的依赖配置）。</p>
+<h3 id="title_1-5-3">定义导航条<a class="anchor" href="#title_1-5-3">&para;</a></h3>
+<pre class="prettyprint linenums"><code>...
+&lt;!-- head --&gt;
+&lt;div class="head"&gt;
+    &lt;div class="ui secondary inverted menu"&gt;
+        &lt;div class="item"&gt;Uliweb Blog Demo Admin&lt;/div&gt;
+        &lt;a class="item" href="/"&gt;
+            &lt;i class="home icon"&gt;&lt;/i&gt; Home
+        &lt;/a&gt;
+        &lt;div class="right menu"&gt;
+          &lt;div class="ui pointing dropdown item"&gt;
+            {{if request.user:}}
+                &lt;i class="icon user"&gt;&lt;/i&gt; {{=unicode(request.user)}}
+                &lt;i class="icon dropdown"&gt;&lt;/i&gt;
+                &lt;div class="menu"&gt;
+                  &lt;a class="item" href="/logout"&gt;&lt;i class="sign out icon"&gt;&lt;/i&gt; Logout&lt;/a&gt;
+                &lt;/div&gt;
+            {{else:}}
+                &lt;a href="/login"&gt;登录&lt;/a&gt;
+            {{pass}}
+          &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- end head --&gt;
+...</code></pre>
+
+<p>用来定义导航条。</p>
+<p>具体菜单的结构不再做解释了，详情参见 sementic 中关于 menu 的描述和示例。</p>
+<p>这里用到了 <code>{{=unicode(request.user)}}</code> ，它用来显示对应的登录用户名。但是因为我们还没有用户登录，所以在展 示界面中它是一个 <code>None</code> 。那么在模板中，除了可以使用由 view 函数传递过来的一些变量，还有一些全局的变量可以使用， 如： request, settings, functions, json_dumps 等。</p>
+<p>那么 <code>request.user</code> 是怎么来的？它是因为我们在 <code>apps/settings.ini</code> 中 <code>INSTALLED_APPS</code> 添加了 <code>uliweb.contrib.auth</code> 这个APP后，由相应的middleware自动获得用户的信息，然后注入到 request 对象上的，所以可以直接使用。但是，当 <code>request.user</code> 的值为 <code>None</code> 是表示没有用户登录。</p>
+<p>上面关于用户信息的显示，会根据 request.user 是否存在还决定显示 <code>登录</code> 还是显示已登录用户名及一个用于退出的下 拉菜单。</p>
+<h3 id="title_1-5-4">dropdown 菜单初始化<a class="anchor" href="#title_1-5-4">&para;</a></h3>
+<p>如果用户登录了，把鼠标移动到用户名上时，会显示一个弹出菜单，这里使用了 sementic 的下拉菜单功能，它需要初始化一下 才能生效，所以下面的代码就是初始化使用：</p>
+<pre class="prettyprint linenums"><code>...
+&lt;!-- script --&gt;
+&lt;script&gt;
+$(function(){
+    $('.head .ui.dropdown').dropdown({
+        on: 'hover',
+        action: 'nothing'
+    });
+
+});
+&lt;/script&gt;
+&lt;!-- end script --&gt;
+...</code></pre>
+
+<p>如果用户没有登录，则下拉菜单将不会生成。</p>
+<p><code>on:'hover'</code> 表示当鼠标移上去时就显示。</p>
+<h3 id="title_1-5-5">内容布局<a class="anchor" href="#title_1-5-5">&para;</a></h3>
+<p><code>container</code> 用来定义布局，这里只是简单地定义了两栏的布局，左侧用来后面定义侧边菜单，右侧为主要的内容展示区。</p>
+<p>所以在 <code>container</code> 这个 block 下又定义了两个子 block ，它们将在子模板中被覆盖。</p>
+<p><code>side_menu</code> 定义菜单。这里弄了一个缺省的展示用的菜单结构，后面我们将根据需要按这个结构来生成菜单。</p>
+<p>从展示效果来看，这个菜单结构还是挺复杂的，它大概可以理解为：</p>
+<ul>
+<li><p>菜单块</p>
+<ul>
+<li><p>嵌套菜单</p>
+<ul>
+<li>子菜单项</li>
+</ul></li>
+</ul></li>
+<li><p>菜单块</p>
+<ul>
+<li><p>嵌套菜单</p>
+<ul>
+<li>子菜单项</li>
+</ul></li>
+</ul></li>
+<li>单个菜单</li>
+</ul>
+<p>菜单块主要是用来定义一组菜单。单个菜单就是独立的菜单，没有子结点。</p>
+<p>每个菜单根据需要可以有对应的图标，以及设置激活的状态。这个示例结构中，通过对菜单项添加了 <code>class="active"</code> 来 设置当前活动菜单。</p>
+<p>开始的时候为了简单，我们可以先手工定义这个菜单结构，等到后面改为使用配置的方式，用函数来自动生成菜单。</p>
+<h2 id="title_1-6">关于权限处理<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>其实管理界面应该都是需要用户登录的，应该根据用户的权限来显示不同的菜单，并且对操作也进行权限校验。所以象直接 就能够进入管理界面应该是不允许的，应该先登录。不过登录及用户的处理，我们放到后面去做。</p>
+<p>如果直接使用 plugs 的layout，是可以直接使用它的用户登录和管理功能的，不过在本教程中我们将自已实现简单的用户管理 功能。</p>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../blogs/blog_design.html"><i class="fa fa-long-arrow-left"></i> 设计Blog表结构</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../blogs/blog_add.html">添加博客 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

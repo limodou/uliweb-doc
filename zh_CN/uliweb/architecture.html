@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="./static/asset/prettify.css">
+<link rel="stylesheet" href="./static/asset/light.css"/>
+<link rel="stylesheet" href="./static/ui.totop.css"/>
+<link rel="stylesheet" href="./static/docs.css"/>
+<link rel="stylesheet" href="./static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '.';
+</script>
+
+<script src="./static/jquery.min.js"></script>
+<script src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script src="./static/asset/prettify.js"></script>
+<script src="./static/jquery.ui.totop.js"></script>
+<script src="./static/jquery.hotkeys.js"></script>
+<script src="./static/docs.js"></script>
+<script src="./static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>体系结构和机制 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="./index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="./index.html">Home</a></li><li><a href="./../uliweb3/index.html">Uliweb3</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="./installation.html"><i class="fa fa-long-arrow-left"></i> 安装说明</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="./whouse.html">使用Uliweb的网站或项目 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">体系结构和机制<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">组织结构<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>Uliweb 认为一个项目是由不同的模块组成，而采用了类似于Django App的方式来进行 项目的组织，它们都统一放在 apps 目录下。同时 Uliweb 的App可以是任何符合Uliweb 要求的Python包（使用uliweb makeapp appname创建即可），并且可以是独立的Python 模块放在非apps的地方，只要可以导入就可以了。Uliweb 的 app 的组织重点考虑了功能 及开发的独立性、复用性和配置化，每个 app 可以有自已独立的：</p>
+<ul>
+<li>settings.ini 它是配置文件</li>
+<li>templates目录用于存放模板</li>
+<li>static目录用于存放静态文件</li>
+<li>views文件，用于存放view代码</li>
+</ul>
+<p>这种组织方式使得Uliweb的App重用更为方便。</p>
+<p>apps的结构为：</p>
+<pre class="prettyprint "><code>apps/
+    .gitignore
+    __init__.py
+    settings.ini
+    local_settings.ini
+    app1/
+        __init__.py
+        settings.ini
+        templates/
+        static/
+    app2/
+        __init__.py
+        settings.ini
+        templates/
+        static/
+    fcgi_handler.fcgi
+    wsgi_handler.py</code></pre>
+<p>通过运行 <code>uliweb makeproject projectname</code> 就可以创造一个空的项目。同时在 0.1.6 中会自动添加 <code>.gitignore</code> 和 <code>local_settings.ini</code> 文件。其中 <code>.gitignore</code> 已经自动添加了 <code>local_settings.ini</code> 文件。因为 <code>local_settings.ini</code> 主要是 解决不同环境的不同配置问题，所以不应该放入版本中。</p>
+<h2 id="title_1-2">App管理<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>一个项目可以由一个App或多个App组成，而且每个App的结构不一定要求完整，因此一个App可以：</p>
+<ul>
+<li>只有一个settings.ini 这样可以做一些初始化配置的工作，比如：数据库配置，i18n的     配置等</li>
+<li>只有templates，可以提供一些公共的模板</li>
+<li>只有static，可以提供一些公共的静态文件</li>
+<li>其它的内容</li>
+</ul>
+<p>Uliweb在启动时对于apps下的App有两种处理策略：</p>
+<ol>
+<li>认为全部App都是有效的(这种情况比较少见)</li>
+<li>根据 <code>apps/settings.ini</code> 和 <code>apps/local_settings.ini</code> 中的配置项 <code>INSTALLED_APPS</code> 来决     定哪些App是有效的</li>
+</ol>
+<p>Uliweb在启动时会根据有效的App来导入它们自已的settings.ini文件，并将其中配置项进行合 并最终形成一个完整的 <code>settings</code> 变量供App来使用。同时在处理生效的App的同时， 会自动查找所有 <code>views</code> 开头的文件和 <code>views</code> 子目录并进行导入，这块工作主要是为 了收集所有定义在views文件中的URL。</p>
+<p>这样当Uliweb启动完毕，所有App下的settings.ini和views文件将被导入。因此，你可以 在App下的 <code>__init__.py</code> 文件中做一些初始化的工作。不过对于大部分的配置工作，建 议采用在 <code>settings.ini</code> 中定义，然后再绑定对应的事件主题的方式，其目的是实现配置化。</p>
+<h2 id="title_1-3">App依赖<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>不同的App之间由于功能上的相互关系可能会产生依赖，因此Uliweb允许在定义App时定义所依赖 的其它的App，这样在配置有效App时，可以减少配置的工作量，在启动时，会自动处理依赖的 App。</p>
+<h2 id="title_1-4">Settings处理<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>Uliweb会按以下顺序来处理 <code>settings.ini</code> 文件:</p>
+<ol>
+<li><code>uliweb/core/default_settings.ini</code> 它是最初始的settings信息</li>
+<li>按定义的顺序导入每个App下的 <code>settings.ini</code> 信息</li>
+<li>导入 <code>apps/settings.ini</code> 信息</li>
+<li>导入 <code>apps/local_settings.ini</code> 信息</li>
+</ol>
+<p>如果出现同名配置项，则对于不可变数据类型，后定义的项将覆盖前面定义的值。如果是可 变数据类型，则将进行数据合并。</p>
+<h2 id="title_1-5">分散开发，集中使用<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>Uliweb采用分模块开发，集中使用的原则。即开发时，代码和资源分散在不同的App中，但是 在使用时，将把它看成一个整体进行处理。比如查找某个模板，将在所有的App的templates 中进行查找，按照定义时的倒序进行处理。</p>
+<h2 id="title_1-6">URL处理<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>目前Uliweb支持两种URL的定义方式。</p>
+<p>一种是将URL定义在每个view模块中，通过expose来定义。</p>
+<p>另一种是在settings.ini中的[EXPOSES]中进行定义。这种方式更适合配置化。</p>
+<p>URL的格式采用werkzeug的routing模块处理方式。可以定义参数，可以反向生成URL。在 Uliweb中定义了两个方便的函数：</p>
+<ul>
+<li>expose 用来将URL与view方法进行映射</li>
+<li>url_for 用来根据view方法反向生成URL</li>
+</ul>
+<h2 id="title_1-7">MVT框架<a class="anchor" href="#title_1-7">&para;</a></h2>
+<p>Uliweb 也采用 MVT 的框架。</p>
+<dl>
+<dt>Model</dt>
+<dd><p>目前 Model 是基于 SqlAlchemy 封装的 ORM 。</p>
+</dd>
+<dt>View</dt>
+<dd><p>则采函数或类的方式。当 Uliweb 在调用 view 函数时，会自动向函数注入一些对象， 这一点有些象 web2py 。不过 web2py 是基于 exec ，而 Uliweb 是通过向函数注入 变量 (func_globals) 来实现的。这种方式会在某种程序上减少一些导入代码，非常 方便。不过，它只对直接的 view 方法有效，对于 view 函数中又调用的函数无效。 因此你还可以直接通过</p>
+<pre class="prettyprint "><code>from uliweb import request, response</code></pre>
+<p>这样的方式来导入一些全局性的对象。</p>
+</dd>
+<dt>Template</dt>
+<dd><p>一般你不需要主动来调用， Uliweb 采用自动映射的做法，即当一个 view 函数返回 一个 dict 变量时，会自动查找模板并进行处理。当返回值不是 dict 对象时将不自 动套用模板。如果在 response 中直接给 response.template 指定模板名，可以不 使用缺省的模板。缺省模板文件名是与 view 函数名一样，但扩展名为 .html 。</p>
+</dd>
+</dl><p>在使用模板时也有一个环境变量，你可以直接在模板中直接使用预置的对象。同时Uliweb 还提供了对view函数和模板环境的扩展能力。</p>
+<h2 id="title_1-8">扩展处理<a class="anchor" href="#title_1-8">&para;</a></h2>
+<p>Uliweb提供了多种扩展的能力：</p>
+<ul>
+<li>plugin 扩展。这是一种插件处理机制。 Uliweb 已经预设了一些调用点，这些调用点     会在特殊的地方被执行。你可以针对这些调用点编写相应的处理，并且将其放在     settings.py 中，当 Uliweb 在启动时会自动对其进行采集，当程序运行到调用点位置     时，自动调用对应的插件函数。</li>
+<li>middleware 扩展。它与 Django 的机制完全类似。你可以在配置文件中配置     middleware 类。每个 middleware 可以处理请求和响应对象。</li>
+<li>views 模块的初始化处理。在 views 模块中，如果你写了一个名为 <strong>begin</strong> 的函数     ，它将在执行要处理的 view 函数之前被处理，它相当于一个入口。因此你可以在这里     面做一些模块级别的处理，比如检查用户的权限。因此建议你根据功能将 view 函数分     到不同的模块中。</li>
+</ul>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="./installation.html"><i class="fa fa-long-arrow-left"></i> 安装说明</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="./whouse.html">使用Uliweb的网站或项目 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>
