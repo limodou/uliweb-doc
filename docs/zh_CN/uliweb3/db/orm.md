@@ -424,6 +424,7 @@ Python type和字段类的对应关系为:
 || decimal.Decimal || DecimalProperty, ||
 || DECIMAL || DecimalProperty, ||
 || PICKLE || PickleProperty, ||
+|| json || JsonProperty, ||
 
 小写的，都是Python内置的类型或类。大写的都是uliorm为了方便记忆而创建的。而上面
 看到的关于Node的示例就是使用Field来定义字段的。

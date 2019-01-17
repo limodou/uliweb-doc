@@ -1,0 +1,12 @@
+{{extend "base.html"}}
+{{block content}}
+{{if message:}}
+	<p class="warning">{{=message}}</p>
+{{pass}}
+<h1>New Comment</h1>
+<div class="form">
+{{<<form}}
+</div>
+{{#use "ckeditor"}}
+{{#<< ckeditor_set("message", {'toolbar':'Basic', 'uiColor' : '# 9AB8F3'}) }}
+{{end}}

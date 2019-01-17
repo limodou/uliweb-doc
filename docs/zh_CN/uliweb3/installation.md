@@ -4,7 +4,7 @@
 ## 要求
 
 
-* Python 2.6+ 目前不支持3.X
+* Python 2.6+ 3.6+
 * setuptools 0.6c11+
 
 
@@ -13,19 +13,18 @@
 
 * SQLAlchemy 0.6+ (如果使用Uliweb ORM需要安装它)
 
-最简单的方法是使用easy_install或pip，如:
+最简单的方法是使用 pip，如(因为uliweb3暂时还未正式发布,所以请使用git中的版本):
 
 
 ```
-easy_install Uliweb
-pip install Uliweb
+pip install -e git+https://github.com/limodou/uliweb3.git#egg=uliweb
 ```
 
 另外如果你想跟踪最新的代码，可以使用git来下载代码，
 
 ```
-git clone git://github.com/limodou/uliweb.git
-cd uliweb
+git clone https://github.com/limodou/uliweb3.git
+cd uliweb3
 python setup.py develop
 ```
 
@@ -38,4 +37,3 @@ python setup.py develop
 ```
 python setup.py install
 ```
-

@@ -10,14 +10,11 @@ whouse.md
 ## 教程
 
 {% toc max_depth=1 %}
-hello_uliweb.md
-basic.md
-plugs_todo.md
-guestbook.md
+tutorial/hello_uliweb.md
+tutorial/todo_basic.md
+tutorial/todo_apijson.md
+tutorial/guestbook.md
 {% endtoc %}
-* [uliweb入门教程基础版本](http://uliweb.clkg.org/tutorial/read/22)
-* [uliweb入门教程--blog(1天体验版本)](http://uliweb.clkg.org/tutorial/read/3)
-* [uliweb中级篇--CMS](http://uliweb.clkg.org/tutorial/read/19)
 
 ## 多人博客教程
 
@@ -89,14 +86,12 @@ deployment.md
 
 {% toc max_depth=1 %}
 app_staticfiles.md
-app_soap.md
 app_auth.md
 app_rbac.md
 app_template.md
 app_upload.md
 app_csrf.md
 app_secretkey.md
-app/objcache.md
 app/recorder.md
 app/sequence.md
 app/celery.md
@@ -107,14 +102,6 @@ app/clean.md
 
 {% toc max_depth=1 %}
 uliweb_ui/apis.md
-{% endtoc %}
-
-### Plugs使用
-
-{% toc max_depth=1 %}
-plugs/apps.md
-plugs/dialog2.md
-plugs/menus.md
 {% endtoc %}
 
 ### 实用模块说明

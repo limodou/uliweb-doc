@@ -1,0 +1,6 @@
+*.pyc
+*.pyo
+.svn
+_project
+local_settings.ini
+*.db

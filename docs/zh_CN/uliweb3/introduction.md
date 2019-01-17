@@ -123,8 +123,6 @@ Uliweb按照BSD协议进行发布。
 ## 链接
 
 
-* Uliweb 项目主页 https://github.com/limodou/uliweb
+* Uliweb 项目主页 https://github.com/limodou/uliweb3
 * Uliweb-doc 文档项目 [http://github.com/limodou/uliweb-doc](http://github.com/limodou/uliweb-doc)
 * Uliweb-doc 在线文档查看链接 [http://limodou.github.com/uliweb-doc/](http://limodou.github.com/uliweb-doc/)
-* plugs Uliweb apps收集项目 https://github.com/limodou/plugs
-

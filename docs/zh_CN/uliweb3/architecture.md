@@ -3,7 +3,7 @@
 
 ## 组织结构
 
-Uliweb 认为一个项目是由不同的模块组成，而采用了类似于Django App的方式来进行
+Uliweb 认为一个项目是由不同的模块组成，所以采用了类似于Django App的方式来进行
 项目的组织，它们都统一放在 apps 目录下。同时 Uliweb 的App可以是任何符合Uliweb
 要求的Python包（使用uliweb makeapp appname创建即可），并且可以是独立的Python
 模块放在非apps的地方，只要可以导入就可以了。Uliweb 的 app 的组织重点考虑了功能

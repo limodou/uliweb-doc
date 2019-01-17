@@ -1,0 +1,126 @@
+{{extend "base.html"}}
+
+{{block title}}Todo{{end title}}
+
+{{block mainmenu}}
+{{<< mainmenu('todo')}}
+{{end mainmenu}}
+
+{{block content_main}}
+{{use "ui.vue"}}
+{{use "ui.iview"}}
+<style>
+.disabled_todo {
+    text-decoration: line-through;
+    color: grey;
+}
+</style>
+<div id="app">
+    <i-input v-model="new_todo" @on-enter="add_todo" placeholder="Enter new todo..." style="width: 300px"></i-input>
+    <i-button type="primary" @click="add_todo">Add</i-button>
+    <br><br>
+    <hr>
+    <div v-for="todo in todos" :key="todo.id">
+        <checkbox v-model="todo.finished" v-bind:class="{ disabled_todo: todo.finished }" @on-change="on_change(todo)">{todo.title}</checkbox> <i-button type="text" icon="close-circled" @click="remove_todo(todo)"></i-button>
+    </div>
+</div>
+
+<script>
+var vm = new Vue({
+    el: '#app',
+    delimiters: ['{', '}'],
+    data:{
+        new_todo : "",
+        todos:[]
+    },
+    methods: {
+        update_list: function(){
+            var thisp = this
+            var params = {
+                "[]":{
+                    "@query":2,
+                    "todo":{
+                        "@order":"finished+,id-"
+                    }
+                },
+                "total@":"/[]/total"
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{=url_for('uliweb_apijson.apijson.views.ApiJson.get')}}",
+                contentType: 'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    if (data.code==200) {
+                        thisp.todos = data["[]"]
+                    }
+                }
+            })
+        },
+        add_todo: function(){
+            var thisp = this
+            var params = {
+                "todo": {
+                    "title": thisp.new_todo,
+                },
+                "@tag": "todo"
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{=url_for('uliweb_apijson.apijson.views.ApiJson.post')}}",
+                contentType: 'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    if (data.code==200) {
+                        vm.new_todo = ""
+                        vm.update_list()
+                    }
+                }
+            })
+        },
+        remove_todo: function(todo){
+            var thisp = this
+            var params = {
+                "todo": {
+                    "id": todo.id,
+                },
+                "@tag": "todo"
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{=url_for('uliweb_apijson.apijson.views.ApiJson.delete')}}",
+                contentType: 'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    if (data.code==200) {
+                        vm.update_list()
+                    }
+                }
+            })
+        },
+        on_change: function(todo){
+            var thisp = this
+            var params = {
+                "todo": {
+                    "id": todo.id,
+                    "finished": todo.finished
+                },
+                "@tag": "todo"
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{=url_for('uliweb_apijson.apijson.views.ApiJson.put')}}",
+                contentType: 'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    if (data.code==200) {
+                        vm.update_list()
+                    }
+                }
+            })
+        }
+    }
+})
+vm.update_list()
+</script>
+{{end content_main}}

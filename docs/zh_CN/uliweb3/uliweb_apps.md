@@ -7,12 +7,6 @@
 * 用户认证处理App，提供User Model，及相应的用户认证的处理。
 
 
-## uliweb.contrib.bae
-
-
-* BAE(百度云)支持App。提供对数据连接的配置功能。
-
-
 ## uliweb.contrib.cache
 
 
@@ -33,12 +27,6 @@
 * 提供CSRF保护机制。
 
 详细信息参见 [csrf](app_csrf.html)
-
-
-## uliweb.contrib.dbupload
-
-
-* 采用数据库来保存上传文件机制
 
 
 ## uliweb.contrib.flashmessage
@@ -74,14 +62,6 @@
 详情参见 [generic](generic.html)
 
 
-## uliweb.contrib.heroku
-
-
-* 提供heroku部署的支持功能。主要提供数据库配置信息。
-
-详情参见 [Heroku](heroku.html)
-
-
 ## uliweb.contrib.i18n
 
 
@@ -96,12 +76,6 @@
 * 邮件发送配置设置
 
 详情参见 [mail](mail.html)
-
-
-## uliweb.contrib.objcache
-
-
-* 提供对Uliorm中单条对象的缓存处理。
 
 
 ## uliweb.contrib.orm
@@ -124,14 +98,6 @@
 详情参见 [RBAC](app_rbac.html)
 
 
-## uliweb.contrib.sae
-
-
-* 提供SAE支持功能
-
-详情参见 [SAE](sae.html)
-
-
 ## uliweb.contrib.secretkey(0.1.6)
 
 
@@ -144,14 +110,6 @@
 * 提供session处理功能
 
 详情参见 [session](session.html)
-
-
-## uliweb.contrib.soap
-
-
-* 提供SOAP协议的WEB Service服务
-
-详情参见 [SOAP](app_soap.html)
 
 
 ## uliweb.contrib.staticfiles
@@ -190,12 +148,4 @@
 * 提供文件上传后相关的API
 
 详情参见 [upload](app_upload.html)
-
-
-## uliweb.contrib.xmlrpc
-
-
-* 提供XMLRPC接入机制
-
-详情参见 [xmlrpc](xmlrpc.html)
 

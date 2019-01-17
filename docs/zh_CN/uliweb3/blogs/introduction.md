@@ -1,4 +1,4 @@
-# 介绍
+# 介绍(注意此教程还未修改为uliweb3下可运行版本)
 
 ## 目的
 
@@ -21,7 +21,7 @@ Web开发需要大量知识的汇集，Uliweb框架本身也提供了非常多�
 在开始项目前，需要安装: python环境，以及 setuptools, pip, uliweb, plugs, 
 sqlalchemy, alembic等模块。
 
-其中python版本目前只支持2.6和2.7。3.3+还在准备中。
+注意: 本教程只支持在python2.7下运行的uliweb
 
 [setuptools](http://pypi.python.org/pypi/setuptools) 和 
 [pip](http://pypi.python.org/pypi/pip) 可以去 pypi 上下载最新的版本进行安装。

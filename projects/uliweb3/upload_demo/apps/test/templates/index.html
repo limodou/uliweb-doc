@@ -1,0 +1,15 @@
+<html>
+<head>
+<meta charset="utf8">
+<title>Upload Form</title>
+</head>
+<body>
+{{block content}}
+{{from uliweb import functions}}
+{{for f in objects:}}
+	<li>{{<< functions.get_url(f.slug)}} <a href='/deletefile?filename={{=f.slug}}'>Delete</a></li>
+{{pass}}
+{{<< form}}
+{{end}}
+</body>
+</head>
