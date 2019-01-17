@@ -9,7 +9,7 @@
 <body>
 <div class="links">
 <a href="en/index.html">English Version</a>
-<a href="zh_CN/index.html">中文版本</a>
+<a href="zh_CN/uliweb/index.html">中文版本</a>
 </div>
 <script>
 $(function(){
@@ -22,7 +22,7 @@ $(function(){
     else lang = 'en';
 */
     var lang = 'zh_CN'
-    window.location.href = lang + '/uliweb/index.html';
+    setTimeout(function(){ window.location.href = lang + '/uliweb/index.html'; }, 2000);
 });
 </script>
 </body>
