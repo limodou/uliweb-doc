@@ -152,7 +152,7 @@ favicon.ico
 中。所以我们要保留 uliweb 子目录，以便可以直接导入 uliweb 。这里这样的处理是因为
 bae中还没有预装 uliweb 所以我们要自已上传。
 
-然后我们创建 project 目录，把 uliweb-doc/projects/simple_todo 的代码拷贝过来。这样
+然后我们创建 project 目录，把 uliweb-doc/projects/uliweb/simple_todo 的代码拷贝过来。这样
 我们的目录结构基本上就是:
 
 

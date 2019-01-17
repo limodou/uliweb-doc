@@ -291,7 +291,7 @@ Service ( UliwebSoapService ) tns="http://localhost:8000/SOAP"
 test1: Hello:limodou
 ```
 
-更详细的示例，可以参考 [uliweb-doc/projects/soap_test](https://github.com/limodou/uliweb-doc) 中的代码。
+更详细的示例，可以参考 [uliweb-doc/projects/uliweb/soap_test](https://github.com/limodou/uliweb-doc) 中的代码。
 
 另，通过设置apps/settings.ini:
 

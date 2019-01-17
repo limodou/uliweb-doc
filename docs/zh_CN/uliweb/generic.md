@@ -19,7 +19,7 @@ generic主要是对Model的界面处理进行了自动化，所以它主要是�
 
 
 {% alert class=info %}
-本文档附带了一个示例，可以从 uliweb-doc/projects/genric_blog 中找到。
+本文档附带了一个示例，可以从 uliweb-doc/projects/uliweb/genric_blog 中找到。
 {% endalert %}
 
 ## ListView

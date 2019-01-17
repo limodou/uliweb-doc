@@ -1,7 +1,7 @@
 # Heroku 部署说明
 
 Heroku本为提供Ruby云环境的平台，不过现在也支持 Python ，下面将描述如何在它上面
-部署 Uliweb。此应用以 simple_todo 为例，可以从 `uliweb-doc/projects` 中得到。
+部署 Uliweb。此应用以 simple_todo 为例，可以从 `uliweb-doc/projects/uliweb` 中得到。
 
 
 ## 客户端下载及登录
@@ -96,7 +96,7 @@ requirements.txt --
     因为 heroku 采用的是 postgreSql 数据库。
 
 
-然后将 simple_todo (在uliweb-doc/projects/simple_todo下) 的代码拷贝到项目目录下。
+然后将 simple_todo (在uliweb-doc/projects/uliweb/simple_todo下) 的代码拷贝到项目目录下。
 注意，这里没有单独创建一个project的项目目录，而是直接使用项目目录。所以在这个目
 录下应该直接有 apps 子目录。当前目录结构如:
 

@@ -11,7 +11,7 @@
 
 ```
 git clone git@github.com:limodou/uliweb-doc.git
-cd uliweb-doc/projects/guestbook
+cd uliweb-doc/projects/uliweb3/guestbook
 uliweb runserver
 ```
 
