@@ -8,29 +8,29 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="./static/bootstrap/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css"/>
-<link rel="stylesheet" href="./static/asset/prettify.css">
-<link rel="stylesheet" href="./static/asset/light.css"/>
-<link rel="stylesheet" href="./static/ui.totop.css"/>
-<link rel="stylesheet" href="./static/docs.css"/>
-<link rel="stylesheet" href="./static/custom.css"/>
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
 
 
 
 
 
 <script>
-var relpath = '.';
+var relpath = '..';
 </script>
 
-<script src="./static/jquery.min.js"></script>
-<script src="./static/bootstrap/js/bootstrap.min.js"></script>
-<script src="./static/asset/prettify.js"></script>
-<script src="./static/jquery.ui.totop.js"></script>
-<script src="./static/jquery.hotkeys.js"></script>
-<script src="./static/docs.js"></script>
-<script src="./static/comment.js"></script>
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
 
 
 
@@ -88,7 +88,7 @@ $(function(){
       </button>
 
       <!-- Main title -->
-      <a class="navbar-brand" href="./index.html">Uliweb-Doc</a>
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
     </div>
 
     <!-- Expanded navigation -->
@@ -97,7 +97,7 @@ $(function(){
       <!-- Main navigation -->
       <ul class="nav navbar-nav">
       
-        <li class="active"><a href="./index.html">Home</a></li><li><a href="./../uliweb/index.html">Uliweb</a></li>
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb/index.html">Uliweb</a></li>
       
       </ul>
 
@@ -122,8 +122,12 @@ $(function(){
     </div>
 
     <div class="col-md-9" role="main" id="markdown-content">
-      
-
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../tutorial/hello_uliweb.html"><i class="fa fa-long-arrow-left"></i> Hello, Uliweb</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../tutorial/todo_apijson.html">Simple Todo (Uliweb 版本) 之 高级篇 <i class="fa fa-long-arrow-right"></i></a>
+</div>
 
       <h1 id="title_1">Simple Todo (Uliweb 版本) 之 基础篇<a class="anchor" href="#title_1">&para;</a></h1>
 <p>本版本是从 <a class="outter" href="http://simple-is-better.com/news/detail-309">http://simple-is-better.com/news/detail-309</a> 来的，原版本基于web.py开 发的，看到这个应用相对简单，因此我将其改造为uliweb的版本。在uliweb版本中，我会列 举详细的开发过程，同时会指出与web.py的一些差异，有兴趣的可以比较。不过，因为我 没有学过web.py，因此只能从原始代码中进行理解，并推测，如果有说得不对的地方欢迎 与我交流，共同学习。</p>
@@ -240,7 +244,7 @@ def index():
 * Restarting with reloader...
 * Loading DebuggedApplication...</code></pre>
 <p>说明，开发服务器已经准备完毕了，可以通过访问 <a class="outter" href="http://localhost:8000">http://localhost:8000</a> 来看效果了。 可以看到如下的效果:</p>
-<p><img alt="image" src="_static/first.png"/>
+<p><img alt="image" src="../_static/first.png"/>
 </p>
 <h2 id="title_1-7">添加数据库配置<a class="anchor" href="#title_1-7">&para;</a></h2>
 <p>基本架子已经搭好。下面是进行数据库配置。</p>
@@ -252,7 +256,7 @@ INSTALLED_APPS = [
     'uliweb.contrib.staticfiles',
     'uliweb.contrib.orm',
     'todo',
-    ]
+]
 
 [SITE]
 SITE_NAME = '任务跟踪'
@@ -376,7 +380,7 @@ class Todo(object):
 <p>不好，报错了，说是使用了“Default Template”，这是怎么回事？</p>
 <p>因为我们使用了class view的方式，所以对于模板目录有一个小小的变化，那就是要在 templates中定义一个和Todo一样的目录，然后将index.html放到这个下面。这样，所有 在class view中定义的方法对应的模板都放到相应的类目录中。</p>
 <p>改完以后，再运行，结果是这个样子。</p>
-<p><img alt="image" src="_static/view_index.png"/>
+<p><img alt="image" src="../_static/view_index.png"/>
 </p>
 <h2 id="title_1-10">实现新增Todo<a class="anchor" href="#title_1-10">&para;</a></h2>
 <p>只要能添加就好办了。下面写添加代码:</p>
@@ -400,11 +404,11 @@ class Todo(object):
 </ol>
 <p>上面的代码将判断是否有title，如果没有则报错。如果有，则保存。让我们运行一下。</p>
 <p>让我们输入：这是一个测试</p>
-<p><img alt="image" src="_static/new.png"/>
+<p><img alt="image" src="../_static/new.png"/>
 </p>
 <p>如果我们什么都不输会怎么样？</p>
 <p>怎么回事，又报错！晕啊，程序真是不好写，Uliweb不好玩啊。先看下界面吧:</p>
-<p><img alt="image" src="_static/error.png"/>
+<p><img alt="image" src="../_static/error.png"/>
 </p>
 <p>这是一个调试界面，在Uliweb中使用了werkzeug的调试器，可以在Debug状态下，当出错时 显示出错界面，非常不错。上面的错误就是找不到error.html模板。为什么？因为我们没 有定义这样的一个模板。好吧，让我们在todo/templates下创建一个，因为它不是与class view 对应，所以不需要放在Todo目录下。</p>
 <p>创建的error.html代码如下:</p>
@@ -538,8 +542,12 @@ urls = (
 <p>写得比较仓促，欢迎与我讨论。程序代码可以从 <a class="outter" href="https://github.com/limodou/uliweb-doc">https://github.com/limodou/uliweb-doc</a> 中的simple_todo中找到，包括我使用sphinx写的教程。</p>
 
 
-      
-
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../tutorial/hello_uliweb.html"><i class="fa fa-long-arrow-left"></i> Hello, Uliweb</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../tutorial/todo_apijson.html">Simple Todo (Uliweb 版本) 之 高级篇 <i class="fa fa-long-arrow-right"></i></a>
+</div>
     </div>
   </div>
 </div>

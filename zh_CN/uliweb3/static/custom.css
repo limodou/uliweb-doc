@@ -363,7 +363,3 @@ filter:alpha(opacity=50);
 .chapter-prev a, .chapter-next a{color:#666;}
 .chapter-top{top:8px;}
 .chapter-down{bottom:5px;}
-#markdown-content h3 {
-margin-top: 20px;
-margin-bottom: 10px;
-}

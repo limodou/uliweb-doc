@@ -132,19 +132,18 @@ $(function(){
       <h1 id="title_1">安装说明<a class="anchor" href="#title_1">&para;</a></h1>
 <h2 id="title_1-1">要求<a class="anchor" href="#title_1-1">&para;</a></h2>
 <ul>
-<li>Python 2.6+ 目前不支持3.X</li>
+<li>Python 2.6+ 3.6+</li>
 <li>setuptools 0.6c11+</li>
 </ul>
 <h2 id="title_1-2">额外要求<a class="anchor" href="#title_1-2">&para;</a></h2>
 <ul>
 <li>SQLAlchemy 0.6+ (如果使用Uliweb ORM需要安装它)</li>
 </ul>
-<p>最简单的方法是使用easy_install或pip，如:</p>
-<pre class="prettyprint "><code>easy_install Uliweb
-pip install Uliweb</code></pre>
+<p>最简单的方法是使用 pip，如(因为uliweb3暂时还未正式发布,所以请使用git中的版本):</p>
+<pre class="prettyprint "><code>pip install -e git+https://github.com/limodou/uliweb3.git#egg=uliweb</code></pre>
 <p>另外如果你想跟踪最新的代码，可以使用git来下载代码，</p>
-<pre class="prettyprint "><code>git clone git://github.com/limodou/uliweb.git
-cd uliweb
+<pre class="prettyprint "><code>git clone https://github.com/limodou/uliweb3.git
+cd uliweb3
 python setup.py develop</code></pre>
 <p>使用develop安装只会在Python/site-packages下建一个链接，并不会真正安装，好处就是更新方便。 不过，当Uliweb的版本升级了，还是要再执行一下安装过程的。</p>
 <p>当然你也可以直接通过 install 来安装。</p>

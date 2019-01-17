@@ -98,7 +98,7 @@ $(function(){
 
 
     //header process
-    sidemenu('#toc', '#markdown-content>h2,#markdown-content>h3')
+    sidemenu('#toc', 'h2,h3')
 
     var $window = $(window)
     var $body   = $(document.body)

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>Simple Todo (Uliweb 版本) 之 高级篇 - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb/index.html">Uliweb</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="../tutorial/todo_basic.html"><i class="fa fa-long-arrow-left"></i> Simple Todo (Uliweb 版本) 之 基础篇</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="../tutorial/guestbook.html">迷你留言板 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">Simple Todo (Uliweb 版本) 之 高级篇<a class="anchor" href="#title_1">&para;</a></h1>
+<p>本版本是从 <a class="outter" href="http://simple-is-better.com/news/detail-309">http://simple-is-better.com/news/detail-309</a> 来的，并且已经使用Uliweb 实现了一个 <a class="inner" href="todo_basic.html">基础版本</a> ，不过这个基础版本讲述的是最基本的Uliweb的用法，因此叫基础篇。 在这个高级篇中，我希望向大家介绍更加高级一些的内容。其中有些功能要依赖于 uliweb-ui 系列模块。</p>
+<h2 id="title_1-1">uliweb-ui 系列模块介绍<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>因为uliweb原有的app集合项目plugs有支持的css框架过老,比较臃肿,所以uliweb3选择不兼容plugs,所以这里介绍后来发展的uliweb-ui系列模块的配合开发</p>
+<ol>
+<li><a class="outter" href="https://github.com/uliwebext/uliweb-ui">uliweb-ui</a> : 为uliweb加上常用的前端模块支持如jquery插件,select2,vuejs等等</li>
+<li><a class="outter" href="https://github.com/uliwebext/uliweb-layout">uliweb-layout</a> : 为uliweb加上常用的页面布局的支持,基于 <a class="outter" href="https://adminlte.io/">AdminLTE</a></li>
+<li><a class="outter" href="https://github.com/uliwebext/uliweb-menu">uliweb-menu</a> : 为uliweb加上菜单功能</li>
+<li><a class="outter" href="https://github.com/limodou/uliweb-apps">uliweb-apps</a> : uliweb功能类app集合</li>
+<li><a class="outter" href="https://github.com/zhangchunlin/uliweb-comui">uliweb-comui</a> : 类似于uliweb-ui (zhangchunlin维护)</li>
+<li><a class="outter" href="https://github.com/zhangchunlin/uliweb-apijson">uliweb-apijson</a> : apijson的uliweb实现,加上通用的数据库后端api</li>
+</ol>
+<p>这些模块可以参考requirements.txt手动安装,也可以直接使用 <code>pip install -r requirements.txt</code>安装</p>
+<h2 id="title_1-2">构建流程<a class="anchor" href="#title_1-2">&para;</a></h2>
+<h3 id="title_1-2-1">构建初始环境<a class="anchor" href="#title_1-2-1">&para;</a></h3>
+<p>在基础篇中讲过的内容，这里不再赘述。假定目前初始为$project，操作如下:</p>
+<pre class="prettyprint "><code>uliweb makeproject apijson_todo
+cd apijson_todo
+uliweb makeapp todo</code></pre>
+<h2 id="title_1-3">settings.ini配置<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>修改apps/settings.ini为以下内容:</p>
+<pre class="prettyprint "><code>[GLOBAL]
+DEBUG = False
+DEBUG_CONSOLE = False
+DEBUG_TEMPLATE = False
+
+INSTALLED_APPS = [
+    'uliweb.contrib.orm',
+    'uliweb_apps.site',
+    'uliweb_comui',
+    'uliweb_apijson.apijson',
+    'todo',
+]</code></pre>
+<h2 id="title_1-4">基本布局<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>前面我们看到，已经加入了几个app，其中 <code>uliweb_apijson.apijson</code> 提供了通用的Model的CRUD(Create Read Update Delete)的后端api接口,再经过简单settings配置以后就可以提供给前端页面里用javascript直接调用了。</p>
+<p>而 <code>uliweb_apps.site</code>会引入依赖的 <code>uliweb_layout.layout</code> 以提供了基本的布局。在layout中的settings.ini中有几个参数可以设置</p>
+<p>我们可以修改一部分，添加到apps/settings.ini中去:</p>
+<pre class="prettyprint "><code>[LAYOUT]
+logo_lg = "Todo"
+logo_mini = "T"
+footer = '''    &lt;div class="pull-right hidden-xs"&gt;
+      &lt;b&gt;Version&lt;/b&gt; 1.0
+    &lt;/div&gt;
+    &lt;strong&gt;Copyright &amp;copy; 2018-2019 Apijson Todo. &lt;/strong&gt;
+'''</code></pre>
+<p>另外<code>uliweb_layout.menu</code>加上了menu支持,可以用以下方式加上导航菜单</p>
+<pre class="prettyprint "><code>[MENUS]
+MAINMENU &lt;= {
+    'subs':[
+        {'name': 'todo', 'link':'/', 'title':u'Todo'},
+    ]
+}</code></pre>
+<p>这里有一个特别的地方，那就是MENUS <= 它的作用是替换原来的值。因为pyini在处理时， 如果遇到相同名字的两个变量，如果变量是不可变对象，则直接替换，如：str, int等。但 如果值是可变对象，如：list, dict，则会进行合并。因为上面的MENUS是list，所以缺省 情况下会进行合并，而我们的目的是想替换，所以使用 <code>&lt;=</code> 就可以替换了。</p>
+<p>然后我们在uliweb_apps/site/templates/site/layout1.html的基础上，来创建一个通用的基础模板，如命名为base.html, 内容如下:</p>
+<pre class="prettyprint "><code>{{extend "site/layout1.html"}}
+
+{{block header_custom_menu}}{{end header_custom_menu}}</code></pre>
+<p>因为layout.html中还有用户的信息，但是我们这里并不使用，因此，我们将相关的header_custom_menu置为空。</p>
+<p>然后在todo/templates下创建index.html，内容为:</p>
+<pre class="prettyprint "><code>{{extend "base.html"}}</code></pre>
+<p>好，目前差不多了，让我们回到命令行，在plugs_todo目录下运行:</p>
+<pre class="prettyprint "><code>uliweb runserver</code></pre>
+<p>如果没有错误，可以通过访问 <a class="outter" href="http://localhost:8000">http://localhost:8000</a> 看到如下界面:</p>
+<p><img alt="image" src="../_static/apijson_todo_01.png"/>
+</p>
+<h2 id="title_1-5">创建Todo的Model<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>下面就是创建Todo表的结构。在todo下创建models.py文件，写入以下内容:</p>
+<pre class="prettyprint "><code>#coding=utf-8
+from uliweb.orm import *
+
+class Todo(Model):
+    title = Field(str, verbose_name="标题", max_length=255, required=True)
+    post_date = Field(datetime.datetime, verbose_name='提交时间', auto_now_add=True)
+    finished = Field(bool, verbose_name='是否完成')</code></pre>
+<p>在todo下创建settings.ini，然后输入以下内容:</p>
+<pre class="prettyprint "><code>[MODELS]
+todo = 'todo.models.Todo'</code></pre>
+<p>这样我们就将todo表做成配置化的了。关于配置化，详情可以查看 <a class="outter" href="http://limodou.github.com/uliweb-doc/orm.html">Uliweb ORM</a> 的文档。</p>
+<p>在命令行下运行:</p>
+<pre class="prettyprint "><code>uliweb syncdb</code></pre>
+<p>来创建表。</p>
+<h2 id="title_1-6">处理Todo<a class="anchor" href="#title_1-6">&para;</a></h2>
+<p>之前在settings中加入了<code>uliweb_apijson.apijson</code>,为了让Todo这个model能被前端使用apijson的接口访问,还需在settings里增加一些配置,例子如下,主要是将Todo的CRUD接口让未登入访问(UNKNOWN)就能操作,对uliweb-apijson做进一步了解可以访问 <a class="outter" href="https://github.com/zhangchunlin/uliweb-apijson">github上的项目</a></p>
+<pre class="prettyprint "><code>[APIJSON_MODELS]
+todo = {
+    "GET" : { "roles" : ["UNKNOWN"] },
+    "HEAD" : { "roles" : ["UNKNOWN"] },
+    "POST" : { "roles" : ["UNKNOWN"] },
+    "PUT" : { "roles" : ["UNKNOWN"] },
+    "DELETE" : { "roles" : ["UNKNOWN"] },
+}
+
+[APIJSON_REQUESTS]
+todo = {
+    "todo": {
+        "POST" :{
+            "DISALLOW" : ["id"],
+            "NECESSARY" : ["title"],
+        },
+        "PUT" :{
+            "NECESSARY" : ["id"],
+        },
+    }
+}</code></pre>
+<p>现在uliweb-apijson的接口已经可以操作Todo这个表了,现在开始写前端的页面,在index.html里改写title和导航menu</p>
+<pre class="prettyprint "><code>{{block title}}Todo{{end title}}
+
+{{block mainmenu}}
+{{&lt;&lt; mainmenu('todo')}}
+{{end mainmenu}}</code></pre>
+<p>接下来开始开始写主要的部分,改写content_main.下面增加的ui.vue和ui.iview是加入前端的框架支持.</p>
+<pre class="prettyprint "><code>{{block content_main}}
+{{use "ui.vue"}}
+{{use "ui.iview"}}
+{{end content_main}}</code></pre>
+<p>然后是具体的前端展示相关代码</p>
+<pre class="prettyprint "><code>&lt;style&gt;
+.disabled_todo {
+    text-decoration: line-through;
+    color: grey;
+}
+&lt;/style&gt;
+&lt;div id="app"&gt;
+    &lt;i-input v-model="new_todo" @on-enter="add_todo" placeholder="Enter new todo..." style="width: 300px"&gt;&lt;/i-input&gt;
+    &lt;i-button type="primary" @click="add_todo"&gt;Add&lt;/i-button&gt;
+    &lt;br&gt;&lt;br&gt;
+    &lt;hr&gt;
+    &lt;div v-for="todo in todos" :key="todo.id"&gt;
+        &lt;checkbox v-model="todo.finished" v-bind:class="{ disabled_todo: todo.finished }" @on-change="on_change(todo)"&gt;{todo.title}&lt;/checkbox&gt; &lt;i-button type="text" icon="close-circled" @click="remove_todo(todo)"&gt;&lt;/i-button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+var vm = new Vue({
+    el: '#app',
+    delimiters: ['{', '}'],
+    data:{
+        new_todo : "",
+        todos:[]
+    },
+    methods: {
+        update_list: function(){
+            var thisp = this
+            var params = {
+                "[]":{
+                    "@query":2,
+                    "todo":{
+                        "@order":"finished+,id-"
+                    }
+                },
+                "total@":"/[]/total"
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{=url_for('uliweb_apijson.apijson.views.ApiJson.get')}}",
+                contentType: 'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    if (data.code==200) {
+                        thisp.todos = data["[]"]
+                    }
+                }
+            })
+        },
+        add_todo: function(){
+            var thisp = this
+            var params = {
+                "todo": {
+                    "title": thisp.new_todo,
+                },
+                "@tag": "todo"
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{=url_for('uliweb_apijson.apijson.views.ApiJson.post')}}",
+                contentType: 'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    if (data.code==200) {
+                        vm.new_todo = ""
+                        vm.update_list()
+                    }
+                }
+            })
+        },
+        remove_todo: function(todo){
+            var thisp = this
+            var params = {
+                "todo": {
+                    "id": todo.id,
+                },
+                "@tag": "todo"
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{=url_for('uliweb_apijson.apijson.views.ApiJson.delete')}}",
+                contentType: 'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    if (data.code==200) {
+                        vm.update_list()
+                    }
+                }
+            })
+        },
+        on_change: function(todo){
+            var thisp = this
+            var params = {
+                "todo": {
+                    "id": todo.id,
+                    "finished": todo.finished
+                },
+                "@tag": "todo"
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{=url_for('uliweb_apijson.apijson.views.ApiJson.put')}}",
+                contentType: 'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    if (data.code==200) {
+                        vm.update_list()
+                    }
+                }
+            })
+        }
+    }
+})
+vm.update_list()
+&lt;/script&gt;</code></pre>
+<p>这里具体用到了<a class="outter" href="https://cn.vuejs.org/">vuejs</a>和<a class="outter" href="https://iviewui.com/">iview</a>,进一步了解可以访问对应的网站.</p>
+<p>最后这个例子在浏览器中的显示效果为:</p>
+<p><img alt="image" src="../_static/apijson_todo_02.png"/>
+</p>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="../tutorial/todo_basic.html"><i class="fa fa-long-arrow-left"></i> Simple Todo (Uliweb 版本) 之 基础篇</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="../tutorial/guestbook.html">迷你留言板 <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>
