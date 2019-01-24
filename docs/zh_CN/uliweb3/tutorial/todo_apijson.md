@@ -111,7 +111,7 @@ MAINMENU <= {
 {{extend "base.html"}}
 ```
 
-好，目前差不多了，让我们回到命令行，在plugs_todo目录下运行:
+好，目前差不多了，让我们回到命令行，在 apijson_todo 目录下运行:
 
 
 ```
