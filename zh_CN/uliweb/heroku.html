@@ -126,7 +126,7 @@ $(function(){
 
 
       <h1 id="title_1">Heroku 部署说明<a class="anchor" href="#title_1">&para;</a></h1>
-<p>Heroku本为提供Ruby云环境的平台，不过现在也支持 Python ，下面将描述如何在它上面 部署 Uliweb。此应用以 simple_todo 为例，可以从 <code>uliweb-doc/projects</code> 中得到。</p>
+<p>Heroku本为提供Ruby云环境的平台，不过现在也支持 Python ，下面将描述如何在它上面 部署 Uliweb。此应用以 simple_todo 为例，可以从 <code>uliweb-doc/projects/uliweb</code> 中得到。</p>
 <h2 id="title_1-1">客户端下载及登录<a class="anchor" href="#title_1-1">&para;</a></h2>
 <p>首先保证你已经有了 heroku 的帐号。然后去它的客户端页面下载合适的客户端，这里我 以windows客户端为例。下载并安装后，首先执行:</p>
 <pre class="prettyprint "><code>heroku login</code></pre>
@@ -172,7 +172,7 @@ psycopg2==2.4.5
 SQLAlchemy==0.7.7</code></pre>
 <p>因为 heroku 采用的是 postgreSql 数据库。</p>
 </dd>
-</dl><p>然后将 simple_todo (在uliweb-doc/projects/simple_todo下) 的代码拷贝到项目目录下。 注意，这里没有单独创建一个project的项目目录，而是直接使用项目目录。所以在这个目 录下应该直接有 apps 子目录。当前目录结构如:</p>
+</dl><p>然后将 simple_todo (在uliweb-doc/projects/uliweb/simple_todo下) 的代码拷贝到项目目录下。 注意，这里没有单独创建一个project的项目目录，而是直接使用项目目录。所以在这个目 录下应该直接有 apps 子目录。当前目录结构如:</p>
 <p><img alt="image" src="_static/heroku2.png"/>
 </p>
 <p>因为 heroku 可以直接运行后端的命令，因此就可以直接运行 uliweb 的命令行工具，如 同步数据库。所以将项目目录直接做为uliweb项目是为了方便执行命令行。</p>
