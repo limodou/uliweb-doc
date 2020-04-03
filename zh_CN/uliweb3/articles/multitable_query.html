@@ -218,7 +218,7 @@ def server_list():
     keys = ["server_id","hostname","ip","nickname","site","comment","num_service","num_backup_from","num_backup_to"]
     server_list = [dict(zip(keys,i)) for i in result]
     return {"server_list":server_list}</code></pre>
-<p>此例子没有进行字符串拼接,如果有拼接的情况,为了防止SQL注入,可以参考[Using Textual SQL](http://docs.sqlalchemy.org/en/latest/core/tutorial.html#using-textual-sql)用text来防止</p>
+<p>此例子没有进行字符串拼接,如果有拼接的情况,为了防止SQL注入,可以参考 <a class="outter" href="http://docs.sqlalchemy.org/en/latest/core/tutorial.html#using-textual-sql">Using Textual SQL</a> 用text来防止</p>
 
 
       <div class="chapter-prev chapter-down pull-left">

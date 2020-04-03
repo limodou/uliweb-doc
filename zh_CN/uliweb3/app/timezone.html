@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="../static/asset/prettify.css">
+<link rel="stylesheet" href="../static/asset/light.css"/>
+<link rel="stylesheet" href="../static/ui.totop.css"/>
+<link rel="stylesheet" href="../static/docs.css"/>
+<link rel="stylesheet" href="../static/custom.css"/>
+
+
+
+
+
+<script>
+var relpath = '..';
+</script>
+
+<script src="../static/jquery.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/asset/prettify.js"></script>
+<script src="../static/jquery.ui.totop.js"></script>
+<script src="../static/jquery.hotkeys.js"></script>
+<script src="../static/docs.js"></script>
+<script src="../static/comment.js"></script>
+
+
+
+
+    <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function () {
+       var s = document.createElement('script'); s.async = true;
+       s.type = 'text/javascript';
+       s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+   </script>
+
+
+
+
+    
+<script type="text/javascript">
+$(function(){
+    var form = $('#searchform');
+    form.submit(function(e){
+        e.preventDefault();
+        var wq=$('input[name="q"]').val();
+        var link="http://www.google.com/search?q=site:limodou.github.io/uliweb-doc/zh_CN "+wq;
+        window.open(link);
+
+    });
+});
+</script>
+
+
+
+<title>timezone(时区支持) - Uliweb-Doc</title>
+</head>
+<body>
+
+
+
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
+    <!-- Collapsed navigation -->
+    <div class="navbar-header">
+
+      <!-- Expander button -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <!-- Main title -->
+      <a class="navbar-brand" href="../index.html">Uliweb-Doc</a>
+    </div>
+
+    <!-- Expanded navigation -->
+    <div class="navbar-collapse collapse">
+
+      <!-- Main navigation -->
+      <ul class="nav navbar-nav">
+      
+        <li class="active"><a href="../index.html">Home</a></li><li><a href="../../uliweb/index.html">Uliweb</a></li>
+      
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/limodou/uliweb">
+            <i class="fa fa-home"></i>
+            uliweb
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" id="side-bar">
+      <div id="toc" class="content"></div>
+    </div>
+
+    <div class="col-md-9" role="main" id="markdown-content">
+      <div class="chapter-prev chapter-top pull-left">
+    <a prev-chapter href="./app_upload.html"><i class="fa fa-long-arrow-left"></i> upload(文件上传及显示处理)</a>
+</div>
+<div class="chapter-next chapter-top pull-right">
+    <a next-chapter href="./app_csrf.html">CSRF <i class="fa fa-long-arrow-right"></i></a>
+</div>
+
+      <h1 id="title_1">timezone(时区支持)<a class="anchor" href="#title_1">&para;</a></h1>
+<h2 id="title_1-1">依赖的Python包<a class="anchor" href="#title_1-1">&para;</a></h2>
+<p>经过比较采用Pendulum,理由:</p>
+<ul>
+<li><a class="outter" href="https://github.com/sdispater/pendulum#why-not-arrow">比Arrow接口更合理</a></li>
+<li><a class="outter" href="https://pendulum.eustace.io/blog/a-faster-alternative-to-pyz.html">比pytz性能更好</a></li>
+<li><a class="outter" href="https://python.libhunt.com/compare-pytz-vs-pendulum">更活跃</a></li>
+</ul>
+<h2 id="title_1-2">settings<a class="anchor" href="#title_1-2">&para;</a></h2>
+<p>settings.GLOBAL.TIME_ZONE</p>
+<ul>
+<li>意义: 服务端时区配置</li>
+<li><p>值:</p>
+<ol>
+<li>默认为None,<strong>None表示不开启时区功能</strong></li>
+<li>时区可取值可用pendulum.timezones,具体可见pytzdata里的 <a class="outter" href="https://github.com/sdispater/pytzdata/blob/master/pytzdata/_timezones.py">这个列表</a></li>
+</ol></li>
+</ul>
+<p>settings.GLOBAL.LOCAL_TIME_ZONE</p>
+<ul>
+<li>意义: 客户端的默认时区配置</li>
+<li>可取值为pendulum.timezones</li>
+</ul>
+<h2 id="title_1-3">contrib.timezone.startup_installed<a class="anchor" href="#title_1-3">&para;</a></h2>
+<p>这里新增一个改变环境变量的步骤,类似于 <a class="outter" href="https://juejin.im/post/5848b301128fe1006907d5ed">django里的做法</a>,例如: os.environ['TZ'] = 'UTC', 目的是直接影响 datetime/time这些标准库的返回值,会返回和settings.GLOBAL.TIME_ZONE符合的时间</p>
+<h2 id="title_1-4">user表<a class="anchor" href="#title_1-4">&para;</a></h2>
+<p>增加 timezone 字段,可取值为pendulum.timezones,可以参考 <a class="outter" href="https://github.com/jamesmfriedman/django-easytz/blob/master/easytz/models.py#L30">django-easytz里的实现</a></p>
+<h2 id="title_1-5">TimezoneMiddleware<a class="anchor" href="#title_1-5">&para;</a></h2>
+<p>参考<a class="outter" href="https://www.calazan.com/adding-a-time-zone-setting-to-your-django-app/">django里有人采用的做法</a>或者<a class="outter" href="https://github.com/jamesmfriedman/django-easytz/blob/master/easytz/middleware.py">django-easytz里的实现</a>,使用一个middleware,如果TIME_ZONE开启,那么通过处理user.timezone(或者匿名用户可以从cookie获取,cookie key为'timezone',可以通过settings更改)获取时区设置,然后(这里做法和django不一样)将时区保存在 **request.tz **里,供其他地方使用</p>
+<table class="ui collapsing celled table segment">
+<thead>
+<tr><th>request.tz</th><th>时区(字符串)</th><th></th></tr>
+</thead>
+<tbody>
+<tr><td align="left">request.tzinfo</td><td align="left">时区信息(tzinfo object),使用 pendulum.timezone(request.tz) 得到</td><td></td></tr>
+</tbody></table>
+
+<h2 id="title_1-6">获取客户端时区的逻辑<a class="anchor" href="#title_1-6">&para;</a></h2>
+<ul>
+<li>优先从request.tzinfo里读取</li>
+<li>否则尝试从cookie里读取 ( key 为 settings.TIMEZONE.cookie_key )</li>
+<li>否则使用 settings.GLOBAL.LOCAL_TIME_ZONE</li>
+<li>如果settings.GLOBAL.TIME_ZONE!=None,但是settings.GLOBAL.LOCAL_TIME_ZONE=None,那么会把默认的local timezone值当成和TIME_ZONE一致</li>
+</ul>
+<h2 id="title_1-7">时区打开与否的差别<a class="anchor" href="#title_1-7">&para;</a></h2>
+<table class="ui collapsing celled table segment">
+<thead>
+<tr><th>模块</th><th>settings.GLOBAL.TIME_ZONE = None  (即关闭时区功能情况下)</th><th>settings.GLOBAL.TIME_ZONE != None  (即开启时区功能情况下)</th><th></th></tr>
+</thead>
+<tbody>
+<tr><td align="left">uliorm</td><td align="left">DateTime: 只接受naive datetime,如果传递了一个带时区信息的datetime会报错(参考[django做法](https://juejin.im/post/5848b301128fe1006907d5ed))</td><td align="left">DateTime: 保存datetime的时候会将所有的时间都转为UTC时间,如果是不带时区的naive datetime,那么会打印一个warning,并视为TIME_ZONE 这个时区的时间来转换  增加functions.**to_ltimezone**()提供根据request.tzinfo转换成客户端本地时间</td><td align="center"></td></tr>
+<tr><td align="left"></td><td align="left">DateTimeProperty存取的时候不会处理时区</td><td align="left">在形成object的时候会将时间数据转成用户本地时区( DateTimeProperty._convert_func() )  在保存到数据库之前会将时间数据转成UTC时间( Model.save() )</td><td align="center"></td></tr>
+</tbody></table>
+
+<h2 id="title_1-8">相关链接<a class="anchor" href="#title_1-8">&para;</a></h2>
+<ol>
+<li><a class="outter" href="https://docs.djangoproject.com/en/2.1/topics/i18n/timezones/">Django time zone文档</a></li>
+<li><a class="outter" href="https://github.com/jamesmfriedman/django-easytz">django-easytz</a></li>
+</ol>
+
+
+      <div class="chapter-prev chapter-down pull-left">
+    <a prev-chapter href="./app_upload.html"><i class="fa fa-long-arrow-left"></i> upload(文件上传及显示处理)</a>
+</div>
+<div class="chapter-next chapter-down pull-right">
+    <a next-chapter href="./app_csrf.html">CSRF <i class="fa fa-long-arrow-right"></i></a>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <!-- disqus -->
+      
+          <div id="disqus_thread" style="margin:20px;"></div>
+ <script type="text/javascript">
+     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+     var disqus_shortname = 'uliwebdoc'; // required: replace example with your forum shortname
+
+     /* * * DON'T EDIT BELOW THIS LINE * * */
+     (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+ </script>
+ <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+      
+    </div>
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="container text-center">
+    
+<p>Designed by Limodou, Copyright 2016, Limodou</p>
+<p>CSS framework <a href="https://github.com/twitter/bootstrap">Bootstrap</a>, Markdown parser lib <a href="https://github.com/limodou/par">Par</a> and this page is created by <a href="https://github.com/limodou/parm">Parm</a> tool.</p>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>
