@@ -90,6 +90,7 @@ app_auth.md
 app_rbac.md
 app_template.md
 app_upload.md
+app/timezone.md
 app_csrf.md
 app_secretkey.md
 app/recorder.md

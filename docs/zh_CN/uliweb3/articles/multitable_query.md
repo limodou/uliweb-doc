@@ -117,4 +117,4 @@ def server_list():
     return {"server_list":server_list}
 ```
 
-此例子没有进行字符串拼接,如果有拼接的情况,为了防止SQL注入,可以参考[Using Textual SQL](http://docs.sqlalchemy.org/en/latest/core/tutorial.html#using-textual-sql)用text来防止
+此例子没有进行字符串拼接,如果有拼接的情况,为了防止SQL注入,可以参考 [Using Textual SQL](http://docs.sqlalchemy.org/en/latest/core/tutorial.html#using-textual-sql) 用text来防止
