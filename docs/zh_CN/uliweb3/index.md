@@ -85,14 +85,14 @@ deployment.md
 ### Uliweb内置APP文档
 
 {% toc max_depth=1 %}
-app_staticfiles.md
-app_auth.md
-app_rbac.md
-app_template.md
-app_upload.md
+app/staticfiles.md
+app/auth.md
+app/rbac.md
+app/template.md
+app/upload.md
 app/timezone.md
-app_csrf.md
-app_secretkey.md
+app/csrf.md
+app/secretkey.md
 app/recorder.md
 app/sequence.md
 app/celery.md
