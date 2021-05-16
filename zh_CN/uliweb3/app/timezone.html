@@ -123,10 +123,10 @@ $(function(){
 
     <div class="col-md-9" role="main" id="markdown-content">
       <div class="chapter-prev chapter-top pull-left">
-    <a prev-chapter href="./app_upload.html"><i class="fa fa-long-arrow-left"></i> upload(文件上传及显示处理)</a>
+    <a prev-chapter href="../app/upload.html"><i class="fa fa-long-arrow-left"></i> upload(文件上传及显示处理)</a>
 </div>
 <div class="chapter-next chapter-top pull-right">
-    <a next-chapter href="./app_csrf.html">CSRF <i class="fa fa-long-arrow-right"></i></a>
+    <a next-chapter href="../app/csrf.html">CSRF <i class="fa fa-long-arrow-right"></i></a>
 </div>
 
       <h1 id="title_1">timezone(时区支持)<a class="anchor" href="#title_1">&para;</a></h1>
@@ -160,10 +160,10 @@ $(function(){
 <p>参考<a class="outter" href="https://www.calazan.com/adding-a-time-zone-setting-to-your-django-app/">django里有人采用的做法</a>或者<a class="outter" href="https://github.com/jamesmfriedman/django-easytz/blob/master/easytz/middleware.py">django-easytz里的实现</a>,使用一个middleware,如果TIME_ZONE开启,那么通过处理user.timezone(或者匿名用户可以从cookie获取,cookie key为'timezone',可以通过settings更改)获取时区设置,然后(这里做法和django不一样)将时区保存在 **request.tz **里,供其他地方使用</p>
 <table class="ui collapsing celled table segment">
 <thead>
-<tr><th>request.tz</th><th>时区(字符串)</th><th></th></tr>
+<tr><th>request.tz</th><th>时区(字符串)</th></tr>
 </thead>
 <tbody>
-<tr><td align="left">request.tzinfo</td><td align="left">时区信息(tzinfo object),使用 pendulum.timezone(request.tz) 得到</td><td></td></tr>
+<tr><td align="left">request.tzinfo</td><td align="left">时区信息(tzinfo object),使用 pendulum.timezone(request.tz) 得到</td></tr>
 </tbody></table>
 
 <h2 id="title_1-6">获取客户端时区的逻辑<a class="anchor" href="#title_1-6">&para;</a></h2>
@@ -176,11 +176,11 @@ $(function(){
 <h2 id="title_1-7">时区打开与否的差别<a class="anchor" href="#title_1-7">&para;</a></h2>
 <table class="ui collapsing celled table segment">
 <thead>
-<tr><th>模块</th><th>settings.GLOBAL.TIME_ZONE = None  (即关闭时区功能情况下)</th><th>settings.GLOBAL.TIME_ZONE != None  (即开启时区功能情况下)</th><th></th></tr>
+<tr><th>模块</th><th>settings.GLOBAL.TIME_ZONE = None  (即关闭时区功能情况下)</th><th>settings.GLOBAL.TIME_ZONE != None  (即开启时区功能情况下)</th></tr>
 </thead>
 <tbody>
-<tr><td align="left">uliorm</td><td align="left">DateTime: 只接受naive datetime,如果传递了一个带时区信息的datetime会报错(参考[django做法](https://juejin.im/post/5848b301128fe1006907d5ed))</td><td align="left">DateTime: 保存datetime的时候会将所有的时间都转为UTC时间,如果是不带时区的naive datetime,那么会打印一个warning,并视为TIME_ZONE 这个时区的时间来转换  增加functions.**to_ltimezone**()提供根据request.tzinfo转换成客户端本地时间</td><td align="center"></td></tr>
-<tr><td align="left"></td><td align="left">DateTimeProperty存取的时候不会处理时区</td><td align="left">在形成object的时候会将时间数据转成用户本地时区( DateTimeProperty._convert_func() )  在保存到数据库之前会将时间数据转成UTC时间( Model.save() )</td><td align="center"></td></tr>
+<tr><td align="left">uliorm</td><td align="left">DateTime: 只接受naive datetime,如果传递了一个带时区信息的datetime会报错,参考 [django做法](https://juejin.im/post/5848b301128fe1006907d5ed)</td><td align="left">DateTime: 保存datetime的时候会将所有的时间都转为UTC时间,如果是不带时区的naive datetime,那么会打印一个warning,并视为TIME_ZONE 这个时区的时间来转换.从数据库读取的时候如果支持时区,则将读取的datetime认为是UTC时间.<br />增加functions.**to_ltimezone**()提供根据request.tzinfo转换成客户端本地时间</td></tr>
+<tr><td align="left"></td><td align="left">DateTimeProperty存取的时候不会处理时区</td><td align="left">在形成object的时候会将时间数据转成用户本地时区( DateTimeProperty._convert_func() )  在保存到数据库之前会将时间数据转成UTC时间( Model.save() )</td></tr>
 </tbody></table>
 
 <h2 id="title_1-8">相关链接<a class="anchor" href="#title_1-8">&para;</a></h2>
@@ -191,10 +191,10 @@ $(function(){
 
 
       <div class="chapter-prev chapter-down pull-left">
-    <a prev-chapter href="./app_upload.html"><i class="fa fa-long-arrow-left"></i> upload(文件上传及显示处理)</a>
+    <a prev-chapter href="../app/upload.html"><i class="fa fa-long-arrow-left"></i> upload(文件上传及显示处理)</a>
 </div>
 <div class="chapter-next chapter-down pull-right">
-    <a next-chapter href="./app_csrf.html">CSRF <i class="fa fa-long-arrow-right"></i></a>
+    <a next-chapter href="../app/csrf.html">CSRF <i class="fa fa-long-arrow-right"></i></a>
 </div>
     </div>
   </div>
