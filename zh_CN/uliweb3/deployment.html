@@ -157,6 +157,9 @@ include /etc/nginx/conf.d/*.conf;
 <p>同时应用中对于存在二级代理的情况要对IP进行特殊处理，才可以得到正确的客户端的IP，所以可以在 settings.ini 或local_settings.ini中添加：</p>
 <pre class="prettyprint "><code>﻿[WSGI_MIDDLEWARES]
 proxyfix = 'werkzeug.contrib.fixers.ProxyFix', 50</code></pre>
+<p>如果使用高版本的werkzeug(&gt;0.15.0)，应该使用这样的配置：</p>
+<pre class="prettyprint "><code>﻿[WSGI_MIDDLEWARES]
+proxyfix = 'werkzeug.middleware.proxy_fix.ProxyFix', 50</code></pre>
 <p>上面就把Nginx设置好了。如果要使用Nignx提供静态文件服务，可以在上面的server中添加:</p>
 <pre class="prettyprint "><code>location ~ ^/static/ {
     root /your/path/to;
@@ -266,30 +269,21 @@ exitcodes=0,1,2</code></pre>
 <h2 id="title_1-2">Apache<a class="anchor" href="#title_1-2">&para;</a></h2>
 <h3 id="title_1-2-5">mod_wsgi<a class="anchor" href="#title_1-2-5">&para;</a></h3>
 <ol>
-<li><p>按 <a class="outter" href="http://code.google.com/p/modwsgi/">mod_wsgi</a> 的说明安装mod_wsgi到apache下。</p>
+<li>按 <a class="outter" href="http://code.google.com/p/modwsgi/">mod_wsgi</a> 的说明安装mod_wsgi到apache下。</li>
+</ol>
 <ul>
-<li>拷贝mod_wsgi.so到apache的modules目录下</li>
+<li><p>拷贝mod_wsgi.so到apache的modules目录下</p>
+<p>   Window环境可以看：</p>
+<p>   <a class="outter" href="http://code.google.com/p/modwsgi/wiki/InstallationOnWindows">http://code.google.com/p/modwsgi/wiki/InstallationOnWindows</a></p>
+<p>   Linux环境可以看：</p>
+<p>   <a class="outter" href="http://code.google.com/p/modwsgi/wiki/InstallationOnLinux">http://code.google.com/p/modwsgi/wiki/InstallationOnLinux</a></p></li>
 </ul>
-<p>Window环境可以看：</p>
-<p><a class="outter" href="http://code.google.com/p/modwsgi/wiki/InstallationOnWindows">http://code.google.com/p/modwsgi/wiki/InstallationOnWindows</a></p>
-<p>Linux环境可以看：</p>
-<p><a class="outter" href="http://code.google.com/p/modwsgi/wiki/InstallationOnLinux">http://code.google.com/p/modwsgi/wiki/InstallationOnLinux</a></p></li>
+<ol>
 <li><p>配置 apache 的httpd.conf文件</p>
-<pre class="prettyprint "><code>LoadModule wsgi_module modules/mod_wsgi.so
-WSGIScriptAlias / /path/to/uliweb/wsgi_handler.py
-
-&lt;Directory /path/to/youruliwebproject&gt;
-Order deny,allow
-Allow from all
-&lt;/Directory&gt;</code></pre>
-<p>上面是将起始的URL设为/，你可以根据需要换为其它的起始URL，如/myproj。</p>
-<p>如果在windows下，示例为：</p>
-<pre class="prettyprint "><code>WSGIScriptAlias / d:/project/svn/uliweb/wsgi_handler.py
-
-&lt;Directory d:/project/svn/uliweb&gt;
-Order deny,allow
-Allow from all
-&lt;/Directory&gt;</code></pre></li>
+<p>   <code>`    LoadModule wsgi_module modules/mod_wsgi.so    WSGIScriptAlias / /path/to/uliweb/wsgi_handler.py     &lt;Directory /path/to/youruliwebproject&gt;    Order deny,allow    Allow from all    &lt;/Directory&gt;    `</code></p>
+<p>   上面是将起始的URL设为/，你可以根据需要换为其它的起始URL，如/myproj。</p>
+<p>   如果在windows下，示例为：</p>
+<p>   <code>`    WSGIScriptAlias / d:/project/svn/uliweb/wsgi_handler.py     &lt;Directory d:/project/svn/uliweb&gt;    Order deny,allow    Allow from all    &lt;/Directory&gt;    `</code></p></li>
 <li>重启apache</li>
 <li>测试。启动浏览器输入： <a class="outter" href="http://localhost/YOURURL">http://localhost/YOURURL</a> 来检测你的网站可否可以正常访问。</li>
 </ol>

@@ -179,7 +179,7 @@ $(function(){
 <tr><th>模块</th><th>settings.GLOBAL.TIME_ZONE = None  (即关闭时区功能情况下)</th><th>settings.GLOBAL.TIME_ZONE != None  (即开启时区功能情况下)</th></tr>
 </thead>
 <tbody>
-<tr><td align="left">uliorm</td><td align="left">DateTime: 只接受naive datetime,如果传递了一个带时区信息的datetime会报错(参考 [django做法](https://juejin.im/post/5848b301128fe1006907d5ed))</td><td align="left">DateTime: 保存datetime的时候会将所有的时间都转为UTC时间,如果是不带时区的naive datetime,那么会打印一个warning,并视为TIME_ZONE 这个时区的时间来转换.从数据库读取的时候如果支持时区,则读取的datetime会被认为是UTC时间.<br />增加functions.**to_ltimezone**()提供根据request.tzinfo转换成客户端本地时间</td></tr>
+<tr><td align="left">uliorm</td><td align="left">DateTime: 只接受naive datetime,如果传递了一个带时区信息的datetime会报错(参考 [django做法](https://juejin.im/post/5848b301128fe1006907d5ed))</td><td align="left">DateTime: 保存datetime的时候会将所有的时间都转为UTC时间,如果是不带时区的naive datetime,那么会打印一个warning,并视为TIME_ZONE 这个时区的时间来转换.从数据库读取的时候如果支持时区,则读取的datetime会被认为是UTC时间.<br />增加functions.to_ltimezone()提供根据request.tzinfo转换成客户端本地时间</td></tr>
 <tr><td align="left"></td><td align="left">DateTimeProperty存取的时候不会处理时区</td><td align="left">在形成object的时候会将时间数据转成用户本地时区( DateTimeProperty._convert_func() )  在保存到数据库之前会将时间数据转成UTC时间( Model.save() )</td></tr>
 </tbody></table>
 
